@@ -1,0 +1,36 @@
+{
+	"nodes":[
+		{"id":"ruler","type":"text","text":"The Ruler\n8 slots = 2! + 3!","x":0,"y":-200,"width":300,"height":80,"color":"1"},
+		{"id":"r0","type":"text","text":"ruler[0]\ndiagonal\nXOR of all six\n⚓ the origin","x":-400,"y":0,"width":200,"height":100,"color":"2"},
+		{"id":"r1","type":"text","text":"ruler[1]\nsize\nunit count, base 1","x":-200,"y":0,"width":200,"height":100,"color":"3"},
+		{"id":"r2","type":"text","text":"ruler[2]\ntop","x":0,"y":0,"width":150,"height":80,"color":"4"},
+		{"id":"r3","type":"text","text":"ruler[3]\nbottom","x":150,"y":0,"width":150,"height":80,"color":"5"},
+		{"id":"r4","type":"text","text":"ruler[4]\nright","x":300,"y":0,"width":150,"height":80,"color":"6"},
+		{"id":"r5","type":"text","text":"ruler[5]\nleft","x":450,"y":0,"width":150,"height":80,"color":"1"},
+		{"id":"r6","type":"text","text":"ruler[6]\nforward","x":600,"y":0,"width":150,"height":80,"color":"2"},
+		{"id":"r7","type":"text","text":"ruler[7]\nbackward","x":750,"y":0,"width":150,"height":80,"color":"3"},
+		{"id":"frame","type":"text","text":"Frame\nindices 0,1 = {diagonal, size}\n2! = the frame","x":-300,"y":200,"width":250,"height":80,"color":"4"},
+		{"id":"content","type":"text","text":"Content\nindices 2..7 = six operations\n3! = the content","x":300,"y":200,"width":250,"height":80,"color":"5"},
+		{"id":"delta","type":"text","text":"delta16\nfolds the 16-byte ruler\nperiod 8","x":0,"y":350,"width":250,"height":80,"color":"6"}
+	],
+	"edges":[
+		{"id":"e1","fromNode":"ruler","fromSide":"bottom","toNode":"r0","toSide":"top"},
+		{"id":"e2","fromNode":"ruler","fromSide":"bottom","toNode":"r1","toSide":"top"},
+		{"id":"e3","fromNode":"ruler","fromSide":"bottom","toNode":"r2","toSide":"top"},
+		{"id":"e4","fromNode":"ruler","fromSide":"bottom","toNode":"r3","toSide":"top"},
+		{"id":"e5","fromNode":"ruler","fromSide":"bottom","toNode":"r4","toSide":"top"},
+		{"id":"e6","fromNode":"ruler","fromSide":"bottom","toNode":"r5","toSide":"top"},
+		{"id":"e7","fromNode":"ruler","fromSide":"bottom","toNode":"r6","toSide":"top"},
+		{"id":"e8","fromNode":"ruler","fromSide":"bottom","toNode":"r7","toSide":"top"},
+		{"id":"e9","fromNode":"r0","fromSide":"bottom","toNode":"frame","toSide":"top"},
+		{"id":"e10","fromNode":"r1","fromSide":"bottom","toNode":"frame","toSide":"top"},
+		{"id":"e11","fromNode":"r2","fromSide":"bottom","toNode":"content","toSide":"top"},
+		{"id":"e12","fromNode":"r3","fromSide":"bottom","toNode":"content","toSide":"top"},
+		{"id":"e13","fromNode":"r4","fromSide":"bottom","toNode":"content","toSide":"top"},
+		{"id":"e14","fromNode":"r5","fromSide":"bottom","toNode":"content","toSide":"top"},
+		{"id":"e15","fromNode":"r6","fromSide":"bottom","toNode":"content","toSide":"top"},
+		{"id":"e16","fromNode":"r7","fromSide":"bottom","toNode":"content","toSide":"top"},
+		{"id":"e17","fromNode":"frame","fromSide":"right","toNode":"content","toSide":"left","label":"2! + 3! = 8"},
+		{"id":"e18","fromNode":"content","fromSide":"bottom","toNode":"delta","toSide":"top","label":"folded by"}
+	]
+}

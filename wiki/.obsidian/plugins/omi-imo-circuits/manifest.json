@@ -1,0 +1,9 @@
+{
+  "id": "omi-imo-circuits",
+  "name": "OMI-IMO Circuits",
+  "version": "1.0.0",
+  "minAppVersion": "1.9.0",
+  "description": "Render OMI-IMO transistor XOR circuits (5T, 6T, 8T, 10T) as interactive SVG diagrams",
+  "author": "OMI-IMO",
+  "isDesktopOnly": false
+}

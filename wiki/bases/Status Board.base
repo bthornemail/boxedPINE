@@ -1,0 +1,81 @@
+filters:
+  and:
+    - file.inFolder("spec/60-verification")
+    - file.ext == "md"
+formulas:
+  is_tests: 'id == "SPEC-60"'
+  is_status: 'id == "SPEC-61"'
+  is_draft: 'status == "draft"'
+  is_canonical: 'status == "canonical"'
+  sources_count: "list(sources).length"
+  code_count: "list(code).length"
+  dimensions_count: "list(dimensions).length"
+  symbols_count: "list(symbols).length"
+  tags_count: "list(tags).length"
+properties:
+  id:
+    displayName: ID
+  title:
+    displayName: Title
+  status:
+    displayName: Status
+  formula.sources_count:
+    displayName: Sources
+  formula.code_count:
+    displayName: Code refs
+views:
+  - type: table
+    name: Verification
+    order:
+      - file.name
+      - id
+      - title
+      - status
+  - type: table
+    name: Test Vectors
+    filters:
+      and:
+        - 'id == "SPEC-60"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Implementation Status
+    filters:
+      and:
+        - 'id == "SPEC-61"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Drafts
+    filters:
+      and:
+        - 'status == "draft"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Canonical
+    filters:
+      and:
+        - 'status == "canonical"'
+    order:
+      - id
+      - title
+  - type: table
+    name: With Sources
+    filters:
+      and:
+        - "formula.sources_count > 0"
+    order:
+      - id
+      - title
+  - type: table
+    name: With Code
+    filters:
+      and:
+        - "formula.code_count > 0"
+    order:
+      - id
+      - title

@@ -210,35 +210,6 @@ BLOCK_3 = /^[0123]$/;  // 48-51  low digits
 
 The transition from the low half (0–63) to the high half (64–127). This toggles the execution context between the printable control region and the boundary enclosure.
 
-### 3.5 The Negative Walk
-
-The orbit of 60 covers the lower half of seven-bit ASCII. Its negative covers the upper half.
-
-The negative of a seven-bit pattern is its complement: XOR with all seven bits set.
-
-```
-127 = 1111111      the seven-bit NOT mask
-60 ^ 127 = 67 = 1000011
-```
-
-Walking 67 through the same sixty-four steps covers 64–127 exactly once:
-
-```
-67 ^ n   for n = 0..63   →   every value from 64 to 127
-```
-
-Each step is the positive step with all seven bits flipped: `67 ^ n = 127 − (60 ^ n)`.
-
-The ten delimiters divide between the two walks:
-
-- Positive walk, base 60, covers 0–63: `<` at step 0, `=` at 1, `>` at 2, `?` at 3, `:` at 6, `;` at 7.
-- Negative walk, base 67, covers 64–127: `{` at step 56, `~` at 61, `}` at 62, `|` at 63.
-
-Six from the positive walk, four from the negative walk, ten in all. Together the two walks cover all 128 seven-bit values with no overlap.
-
-Step 64 in 3.4 is the same boundary seen from the other side. For m in 0..63, `60 ^ (64 + m) = 64 + (60 ^ m)`, so continuing the positive walk past 63 repeats its characters shifted up by 64. In particular `{ | } ~` are `; < = >` plus 64.
-
-
 ---
 
 ## Part IV: The Binary Quadratic Form
@@ -322,24 +293,12 @@ Three rotations are the parity checks:
 
 ### 5.2 Period 8
 
-On 16-bit words the delta law returns to its start after 8 steps, for every input and every correction:
+The delta law has exact period 8:
 
 ```
-delta⁸(x, c) = x   for all 16-bit x, c
+delta⁸(x, c) = x  for all x, c
+deltaᵏ(x, c) ≠ x  for 1 ≤ k ≤ 7
 ```
-
-The smallest return time divides 8. For each correction tested (0x0000, 0x1D1D, 0xFFFF) the 65,536 possible 16-bit states split the same way:
-
-| Return time | States |
-|-------------|--------|
-| 1 | 8 |
-| 2 | 56 |
-| 4 | 4,032 |
-| 8 | 61,440 |
-
-So 8 is the return time of almost every state (61,440 of 65,536), not of every state.
-
-Width matters. Scanning widths 3 to 64, delta⁸ is the identity for all inputs only at 3, 4, 6, 8, 12 and 16 bits, and at 3, 4, 6 and 8 bits it already returns after 4. It does not return after 8 steps for a single rotation across 32 or 64 bits (four 64-bit seeds tested). The 8-byte state in 5.3 therefore has to be processed as 16-bit words, as the Haskell reference does, not as one 64-bit rotation.
 
 ### 5.3 The 16/8 Fold
 
@@ -880,11 +839,8 @@ The orbit visits 64 values. The regex keeps 60. The 4 skipped are the boundaries
 ### 14.1 Derivation
 
 ```
-T₄(n) = n(n+1)(n+2)/6        the tetrahedral numbers
-240 = 2 × T₄(8) = 2 × 120 = 2 × 5!
+240 = 2 × T(8) = 2 × 120 = 2 × 5!
 ```
-
-Not to be confused with the triangular number 8·9/2 = 36.
 
 ### 14.2 The Period Hierarchy
 
@@ -1033,8 +989,6 @@ A difference is read (`compareExchange`); from the zero condition (`xor = 0`) a 
 | Sexagesimal base | 60 | 30 + 30 |
 | High-bit toggle | 64 | 2⁶ |
 | Fold result | 124 | 60 ⊕ 64 |
-| Seven-bit NOT mask | 127 | 2⁷ − 1, all seven bits set |
-| Negative base | 67 | 60 ⊕ 127 |
 | BQF discriminant | −704 | 16² − 4·60·4 |
 | Affine discriminant | 0 | 16² − 4·16·4 |
 | Lift | 44x² | 60x² − 16x² |
@@ -1055,7 +1009,7 @@ A difference is read (`compareExchange`); from the zero condition (`xor = 0`) a 
 | Layer | Document | Derives |
 |-------|----------|---------|
 | Law | PURE_ALGORITHMS.md | delta, replay, Fano schedule |
-| Clock | [clock document: file name still to be filled in] | period 8, prime 73, block B, W=36 |
+| Clock | the 7-months-ago doc | period 8, prime 73, block B, W=36 |
 | Symbols | Base36 document | alphabet, emoji, domino |
 
 ---

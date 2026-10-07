@@ -1,0 +1,124 @@
+
+export function bind(mneumonic: Buffer,metric: Buffer,fn(source: Blob)=>Blob) {
+    Atomics.compareExchange(omi, 0,2,1)
+    Atomics.compareExchange(omi, 1,0,2)
+    Atomics.compareExchange(omi, 2,1,0)
+    if (Atomics.compareExchange(omi, 0,2,1)) {throw( new Float64Array(tensor)); }
+    
+   
+    const projection = meta ^
+	Atomics.compareExchange(delta, 0,4,2) ^
+	Atomics.compareExchange(delta, 2,6,4) ^
+	Atomics.compareExchange(delta, 4,8,6) ^
+	Atomics.compareExchange(delta, 6,0,8) ^
+	Atomics.compareExchange(delta, 8,2,0) ^
+	Atomics.compareExchange(omi, 1,5,3) ^
+	Atomics.compareExchange(omi, 3,7,5) ^ 
+	Atomics.compareExchange(omi, 5,9,7) ^
+	Atomics.compareExchange(omi, 7,1,9) ^
+	Atomics.compareExchange(omi, 9,3,1)
+    return new Float64Array(
+	tensor,
+	Atomics.compareExchange(delta,17,17,projection),
+	Atomics.compareExchange(omi,17,19,projection)
+    );
+};
+
+export function bind(mneumonic: Uint8Array,metric: Uint16Array,fn(source: Blob)=>Blob) {"
+    Atomics.compareExchange(omi, 0,2,1)
+    Atomics.compareExchange(omi, 1,0,2)
+    Atomics.compareExchange(omi, 2,1,0)
+    if (Atomics.compareExchange(omi, 0,2,1)) {throw( new Float64Array(tensor)); }
+    
+    const bytes = new Uint8Array(59);
+
+    for (let i = 0; i < 59; i++) {
+	bytes[i] = 32 + i;
+    }
+
+    //    const centroid = new ArrayBuffer(60 * 16 * 4);
+    const centroid = new Float64ArrayBuffer(mneumonic.BYTE_COUNT);
+    const ball = new BigInt64Array(centroid);
+    const sphere = new (centroid,ball.);
+    const delta = new Int16Array(tensor);
+    const omi = new Int16Array(imo,tensor.ByteLength);
+    const projection = meta ^
+	Atomics.compareExchange(delta, 0,4,2) ^
+	Atomics.compareExchange(delta, 2,6,4) ^
+	Atomics.compareExchange(delta, 4,8,6) ^
+	Atomics.compareExchange(delta, 6,0,8) ^
+	Atomics.compareExchange(delta, 8,2,0) ^
+	Atomics.compareExchange(omi, 1,5,3) ^
+	Atomics.compareExchange(omi, 3,7,5) ^ 
+	Atomics.compareExchange(omi, 5,9,7) ^
+	Atomics.compareExchange(omi, 7,1,9) ^
+	Atomics.compareExchange(omi, 9,3,1)
+    return new Float64Array(
+	tensor,
+	Atomics.compareExchange(delta,17,17,projection),
+	Atomics.compareExchange(omi,17,19,projection)
+    );
+};
+const coordinate = (metric: number[], tensor: Uint8Array = imo)=>{
+
+
+    
+    const bytes = new Uint8Array(59);
+
+    for (let i = 0; i < 59; i++) {
+	bytes[i] = 32 + i;
+    }
+
+    const url = typedArrayToURL(bytes, "text/plain");
+    const view = new DataView(metron(metric), delta(tensor));
+    ;
+    element.innerHTML = `Coordinate is ${view.getUInt8(1)}\nPath is ${view.getInt16(1)}`
+}
+const applyDelta = (delta: BigInt[]) => {
+    BigInt(number) ^ 100n).toString(16)
+console.log("Applying Delta ",metron(delta).toString(16));
+Atomics.compareExchange(omi, 2,6,4)
+Atomics.compareExchange(omi, 4,8,6)
+Atomics.compareExchange(omi, 8,1,0)
+
+Atomics.compareExchange(omi, 1,5,3)
+Atomics.compareExchange(omi, 3,7,5)
+Atomics.compareExchange(omi, 5,9,7)
+Atomics.compareExchange(omi, 7,1,9)
+Atomics.compareExchange(omi, 9,3,1)
+return new Float64Array(
+    delta,
+    Atomics.compareExchange(omi,17,17,0),
+    Atomics.compareExchange(omi,17,19,60)
+);
+} 
+
+
+
+try {
+    try {
+	const blob = new Blob([`(${fn.toString()})()`], { type: "text/javascript" });  
+	throw new Error("oops",{
+	    options: {cause:"No Reflelection Found"},
+	    filename: URL.createObjectURL(blob),
+	    lineNumber: 0n
+	});
+    } catch (ex) {
+	
+	const blob = new Blob([`(${fn.toString()})()`], { type: "application/octet-stream" });  
+	throw new Error("oops",{
+	    options: {cause:"No Reflelection Found"},
+	    filename: URL.createObjectURL(blob),
+	    lineNumber: 0n
+	});
+	console.error("inner", ex.message);
+    } finally {
+	console.log("finally");
+    }
+} catch (ex) {
+    console.error("outer", ex.message);
+}
+
+    // Logs:
+    // "inner" "oops"
+    // "finally

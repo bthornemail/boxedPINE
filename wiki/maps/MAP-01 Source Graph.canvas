@@ -1,0 +1,25 @@
+{
+	"nodes":[
+		{"id":"src00","type":"text","text":"SRC-00\nProtocol Review\nand Bug Fixes\n322 pages","x":-400,"y":-200,"width":250,"height":120,"color":"1"},
+		{"id":"src01","type":"text","text":"SRC-01\nXOR Tetrahedron\nTransform\n357 pages","x":-100,"y":-200,"width":250,"height":120,"color":"2"},
+		{"id":"src02","type":"text","text":"SRC-02\nXOR Gate\nTransistor Circuits\n744 pages","x":200,"y":-200,"width":250,"height":120,"color":"3"},
+		{"id":"src03","type":"text","text":"SRC-03\nProtocol Sequence\nAnalysis\n2218 pages","x":500,"y":-200,"width":250,"height":120,"color":"4"},
+		{"id":"src04","type":"text","text":"SRC-04\nAssembly Register\nProgramming\n1820 pages","x":-400,"y":100,"width":250,"height":120,"color":"5"},
+		{"id":"src05","type":"text","text":"SRC-05\nConspiracy\nCheck\n1071 pages","x":-100,"y":100,"width":250,"height":120,"color":"6"},
+		{"id":"src06","type":"text","text":"SRC-06\nPhases vs Attributes\nGoogle Search\n78 pages","x":200,"y":100,"width":250,"height":120,"color":"1"},
+		{"id":"src07","type":"text","text":"SRC-07\nComplete\nSynthesis\n16 pages","x":500,"y":100,"width":250,"height":120,"color":"2"},
+		{"id":"src08","type":"text","text":"SRC-08\nXOR Gate\nTransistors\n40 pages","x":200,"y":350,"width":250,"height":120,"color":"3"},
+		{"id":"synthesis","type":"text","text":"OMI-IMO\nProtocol\nSpecification","x":100,"y":500,"width":300,"height":100,"color":"4"}
+	],
+	"edges":[
+		{"id":"e1","fromNode":"src00","fromSide":"bottom","toNode":"synthesis","toSide":"top","label":"contributes to"},
+		{"id":"e2","fromNode":"src01","fromSide":"bottom","toNode":"synthesis","toSide":"top","label":"contributes to"},
+		{"id":"e3","fromNode":"src02","fromSide":"bottom","toNode":"synthesis","toSide":"top","label":"contributes to"},
+		{"id":"e4","fromNode":"src03","fromSide":"bottom","toNode":"synthesis","toSide":"top","label":"contributes to"},
+		{"id":"e5","fromNode":"src04","fromSide":"bottom","toNode":"synthesis","toSide":"top","label":"origin of"},
+		{"id":"e6","fromNode":"src05","fromSide":"bottom","toNode":"synthesis","toSide":"top","label":"audits"},
+		{"id":"e7","fromNode":"src06","fromSide":"bottom","toNode":"synthesis","toSide":"top","label":"hypothesizes"},
+		{"id":"e8","fromNode":"src07","fromSide":"bottom","toNode":"synthesis","toSide":"top","label":"is the"},
+		{"id":"e9","fromNode":"src08","fromSide":"left","toNode":"src02","toSide":"bottom","label":"references"}
+	]
+}

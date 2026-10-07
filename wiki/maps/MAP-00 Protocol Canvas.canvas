@@ -1,0 +1,34 @@
+{
+	"nodes":[
+		{"id":"omi-imo","type":"text","text":"OMI-IMO Protocol","x":0,"y":0,"width":400,"height":100,"color":"1"},
+		{"id":"canonical","type":"text","text":"Canonical\nSPEC-00 Statement\nSPEC-01 Laws\nSPEC-02 Conformance\nSPEC-03 Notation","x":-600,"y":-300,"width":300,"height":150,"color":"2"},
+		{"id":"foundations","type":"text","text":"Foundations\nSPEC-10 Primitive\nSPEC-11 Primitives\nSPEC-12 Ruler\nSPEC-13 XOR\nSPEC-14 Knots\nSPEC-15 Delta\nSPEC-16 Fano","x":-200,"y":-300,"width":300,"height":200,"color":"3"},
+		{"id":"architecture","type":"text","text":"Architecture\nSPEC-20 Dimensions\nSPEC-21 Inversion\nSPEC-22 Blob\nSPEC-23 Rosetta\nSPEC-24 Observers\nSPEC-25 Iff","x":200,"y":-300,"width":300,"height":200,"color":"4"},
+		{"id":"grammar","type":"text","text":"Grammar\nSPEC-30 Symbols\nSPEC-31 Declarations\nSPEC-32 Mnemonics\nSPEC-33 Forms\nSPEC-34 Phases\nSPEC-35 Orbits","x":600,"y":-300,"width":300,"height":200,"color":"5"},
+		{"id":"hardware","type":"text","text":"Hardware\nSPEC-40 6T\nSPEC-41 8T\nSPEC-42 Sourcemap\nSPEC-43 Primes","x":-400,"y":200,"width":300,"height":150,"color":"6"},
+		{"id":"runtime","type":"text","text":"Runtime\nSPEC-50 Stream\nSPEC-51 Canvas\nSPEC-52 REPL\nSPEC-53 Clocks\nSPEC-54 Web\nSPEC-55 ASCII","x":0,"y":200,"width":300,"height":200,"color":"1"},
+		{"id":"verification","type":"text","text":"Verification\nSPEC-60 Tests\nSPEC-61 Status","x":400,"y":200,"width":300,"height":100,"color":"2"},
+		{"id":"extension","type":"text","text":"Extension\nEXT-00 Guide\nEXT-01 Dimension\nEXT-02 Symbol\nEXT-03 Substrate\nEXT-04 Workflow\nEXT-05 Checklist","x":-600,"y":400,"width":300,"height":200,"color":"3"},
+		{"id":"open","type":"text","text":"Open\nOPEN-00 Contradictions\nOPEN-01 Questions\nOPEN-02 Bugs\nOPEN-03 Glossary\nOPEN-04 Discarded","x":600,"y":400,"width":300,"height":200,"color":"4"},
+		{"id":"sources","type":"text","text":"Sources\nSRC-00 Review\nSRC-01 Tetrahedron\nSRC-02 Circuits\nSRC-03 Sequence\nSRC-04 Assembly\nSRC-05 Conspiracy\nSRC-06 Phases\nSRC-07 Synthesis\nSRC-08 Transistors","x":0,"y":500,"width":400,"height":250,"color":"5"}
+	],
+	"edges":[
+		{"id":"e1","fromNode":"omi-imo","fromSide":"left","toNode":"canonical","toSide":"right","label":"specifies"},
+		{"id":"e2","fromNode":"omi-imo","fromSide":"left","toNode":"foundations","toSide":"right","label":"builds on"},
+		{"id":"e3","fromNode":"omi-imo","fromSide":"right","toNode":"architecture","toSide":"left","label":"structures"},
+		{"id":"e4","fromNode":"omi-imo","fromSide":"right","toNode":"grammar","toSide":"left","label":"constrains"},
+		{"id":"e5","fromNode":"omi-imo","fromSide":"bottom","toNode":"hardware","toSide":"top","label":"realizes"},
+		{"id":"e6","fromNode":"omi-imo","fromSide":"bottom","toNode":"runtime","toSide":"top","label":"executes"},
+		{"id":"e7","fromNode":"omi-imo","fromSide":"bottom","toNode":"verification","toSide":"top","label":"verifies"},
+		{"id":"e8","fromNode":"omi-imo","fromSide":"bottom","toNode":"extension","toSide":"top","label":"extends"},
+		{"id":"e9","fromNode":"omi-imo","fromSide":"bottom","toNode":"open","toSide":"top","label":"questions"},
+		{"id":"e10","fromNode":"omi-imo","fromSide":"bottom","toNode":"sources","toSide":"top","label":"derived from"},
+		{"id":"e11","fromNode":"foundations","fromSide":"bottom","toNode":"hardware","toSide":"top","label":"implements"},
+		{"id":"e12","fromNode":"architecture","fromSide":"bottom","toNode":"runtime","toSide":"top","label":"runs on"},
+		{"id":"e13","fromNode":"grammar","fromSide":"bottom","toNode":"runtime","toSide":"top","label":"parsed by"},
+		{"id":"e14","fromNode":"hardware","fromSide":"right","toNode":"runtime","toSide":"left","label":"drives"},
+		{"id":"e15","fromNode":"runtime","fromSide":"right","toNode":"verification","toSide":"left","label":"tested by"},
+		{"id":"e16","fromNode":"sources","fromSide":"top","toNode":"canonical","toSide":"bottom","label":"synthesized in"},
+		{"id":"e17","fromNode":"sources","fromSide":"top","toNode":"open","toSide":"bottom","label":"audited in"}
+	]
+}

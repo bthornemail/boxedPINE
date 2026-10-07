@@ -1,0 +1,154 @@
+filters:
+  and:
+    - file.inFolder("spec")
+    - file.ext == "md"
+formulas:
+  dimensions_count: "list(dimensions).length"
+  symbols_count: "list(symbols).length"
+  has_dimensions: "list(dimensions).length > 0"
+  has_symbols: "list(symbols).length > 0"
+  is_canonical: 'status == "canonical"'
+  is_draft: 'status == "draft"'
+  is_foundations: 'layer == "foundations"'
+  is_architecture: 'layer == "architecture"'
+  is_grammar: 'layer == "grammar"'
+  is_hardware: 'layer == "hardware"'
+  is_runtime: 'layer == "runtime"'
+  is_verification: 'layer == "verification"'
+  is_canonical_layer: 'layer == "meta"'
+  dimensions_list: 'list(dimensions).join(", ")'
+  symbols_list: 'list(symbols).join(", ")'
+properties:
+  id:
+    displayName: ID
+  title:
+    displayName: Title
+  layer:
+    displayName: Layer
+  status:
+    displayName: Status
+  dimensions:
+    displayName: Dimensions
+  symbols:
+    displayName: Symbols
+  formula.dimensions_count:
+    displayName: Dimension count
+  formula.symbols_count:
+    displayName: Symbol count
+views:
+  - type: table
+    name: All Specs
+    order:
+      - id
+      - title
+      - layer
+      - status
+  - type: table
+    name: Foundations
+    filters:
+      and:
+        - 'layer == "foundations"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Architecture
+    filters:
+      and:
+        - 'layer == "architecture"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Grammar
+    filters:
+      and:
+        - 'layer == "grammar"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Hardware
+    filters:
+      and:
+        - 'layer == "hardware"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Runtime
+    filters:
+      and:
+        - 'layer == "runtime"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Verification
+    filters:
+      and:
+        - 'layer == "verification"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Canonical
+    filters:
+      and:
+        - 'status == "canonical"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Drafts
+    filters:
+      and:
+        - 'status == "draft"'
+    order:
+      - id
+      - title
+  - type: table
+    name: With Dimensions
+    filters:
+      and:
+        - "formula.has_dimensions"
+    order:
+      - id
+      - title
+      - formula.dimensions_count
+  - type: table
+    name: With Symbols
+    filters:
+      and:
+        - "formula.has_symbols"
+    order:
+      - id
+      - title
+      - formula.symbols_count
+  - type: table
+    name: By Layer
+    groupBy:
+      property: layer
+      direction: ASC
+    order:
+      - layer
+      - id
+      - title
+  - type: table
+    name: Dimensions Used
+    filters:
+      and:
+        - "formula.has_dimensions"
+    order:
+      - formula.dimensions_list
+      - id
+      - title
+  - type: table
+    name: Symbols Used
+    filters:
+      and:
+        - "formula.has_symbols"
+    order:
+      - formula.symbols_list
+      - id
+      - title

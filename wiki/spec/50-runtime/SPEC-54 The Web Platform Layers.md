@@ -1,0 +1,152 @@
+---
+id: SPEC-54
+title: "The Web Platform Layers"
+kind: spec
+layer: runtime
+status: canonical
+spec: OMI-IMO-2026
+up: "[[SPEC-50 Stream Transport]]"
+down: []
+related:
+  - "[[SPEC-50 Stream Transport]]"
+  - "[[SPEC-51 JSON Canvas Interchange]]"
+  - "[[SPEC-52 The REPL and the Digest]]"
+  - "[[SPEC-53 Clocks and Periods]]"
+  - "[[SPEC-55 ASCII Folds]]"
+  - "[[SPEC-24 Observers]]"
+sources:
+  - "[[SRC-07 The OMI-IMO Complete Synthesis]]"
+  - "[[SRC-00 Protocol Review and Bug Fixes]]"
+  - "[[SRC-03 Protocol Sequence Analysis]]"
+  - "[[SRC-04 Assembly Register Programming]]"
+code:
+  - "rosetta/src/main.ts"
+  - "rosetta/src/bin.ts"
+dimensions: []
+symbols: []
+tags: [omi-imo, web, platform, layers, HTTP, DOM, PannerNode, Blob, Worklet]
+---
+
+# The Web Platform Layers
+
+## The Composed System
+
+The protocol's runtime is the composition of seven layers:
+
+| Layer | Role |
+|-------|------|
+| HTTP/1.1 | wire carrier (transport) |
+| Regex constraints | token grammar (admissibility) |
+| DOM geometry | spatial projection (position, extent) |
+| Hit lists | interpolation anchors (semantics) |
+| PannerNode | 0D transparent translation (observability) |
+| Blobs as media | the substrate for the canvas |
+| Worklets + polyfills | execution contexts (browser and Node) |
+
+Each layer speaks to the next through a standard interface. None knows about the others' internals.
+
+## HTTP/1.1 as Wire Carrier
+
+```
+X-VTT-Cue-0x00: 00:01.000 --> 00:02.000; block=FF001C1D1E1F20FF;
+context=B36_Q0; token=FRONT:^A1F9$; layer=-1D
+```
+
+The Service Worker intercepts, parses, and emits WebVTT cues. The cues are consumed by the DOM's `<track>` element.
+
+## DOM Geometry Overlay
+
+The DOM provides the spatial primitives:
+
+| Primitive | Role |
+|-----------|------|
+| DOMPoint | a coordinate in the canvas |
+| DOMRect | an axis-aligned bounding box |
+| DOMQuad | a four-corner polygon (with rotation) |
+| DOMMatrix | a 4x4 transform (composition of transforms) |
+
+## Hit Lists as Overlay Anchors
+
+```html
+<dl id="omi-canvas-overlay">
+     <dt id="cell-0" data-omi-mnemonic="A1F9" data-omi-band="1">Mnemonic</dt>
+     <dd data-omi-bpe-constraint="2" data-omi-offset="32">Vector</dd>
+</dl>
+```
+
+The `<dt>` carries the mnemonic (the semantic label). The `<dd>` carries the spatial constraints (the geometry). The `<dl>` wraps the pair as a description list.
+
+## The PannerNode as 0D Translation
+
+```javascript
+panner.positionX.setValueAtTime(x, audioCtx.currentTime);
+panner.positionY.setValueAtTime(y, audioCtx.currentTime);
+panner.positionZ.setValueAtTime(z, audioCtx.currentTime);
+```
+
+The PannerNode is the transparent 0D translator. Any web consumer can read the observer's position through it.
+
+## Blobs as Media Elements
+
+Each media element is backed by a Blob — a binary large object. The Blob is the substrate for the media element. Its content is decoded and rendered by the browser's native pipeline.
+
+## Worklets and Polyfills
+
+The protocol runs in:
+
+| Context | Role |
+|---------|------|
+| Main thread | DOM access, rendering |
+| AudioWorklet | audio synthesis |
+| PaintWorklet | custom CSS painting |
+| LayoutWorklet | custom layout |
+| AnimationWorklet | compositor animation |
+| Node.js | server-side execution |
+
+The protocol runs everywhere, in the same way.
+
+## The SSE Server
+
+From `rosetta/src/main.ts`:
+
+```typescript
+const sse = http
+    .createServer((request, response) => {
+        if (request.url?.toLowerCase() === "/events") {
+            response.writeHead(200, {
+                Connection: "keep-alive",
+                "Content-Type": "text/event-stream",
+                "Cache-Control": "no-cache",
+                "Access-Control-Allow-Origin": "*"
+            });
+            sendEvents(response, eventHistory);
+        }
+    });
+sse.listen(8000);
+```
+
+The SSE server sends events to the client. The events are flight state updates.
+
+## The REPL Server
+
+From `rosetta/src/main.ts`:
+
+```typescript
+const server = http
+    .createServer((request, response) => {
+        response.setHeader('content-type', 'multipart/octet-stream');
+        replServer = repl.start({
+            prompt: 'curl repl> ',
+            input: request,
+            output: response,
+            terminal: false,
+            useColors: true,
+            useGlobal: false,
+            eval: myEval,
+            writer: myWriter
+        });
+    });
+server.listen(3000);
+```
+
+The REPL server is an HTTP server that starts a Node.js REPL on each request.

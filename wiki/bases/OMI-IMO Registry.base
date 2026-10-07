@@ -1,0 +1,184 @@
+filters:
+  and:
+    - file.ext == "md"
+    - not:
+        - file.inFolder(".obsidian")
+formulas:
+  folder: "file.folder"
+  outgoing: "file.links.length"
+  incoming: "file.backlinks.length"
+  up_count: "list(up).length"
+  down_count: "list(down).length"
+  sources_count: "list(sources).length"
+  code_count: "list(code).length"
+  dimensions_count: "list(dimensions).length"
+  symbols_count: "list(symbols).length"
+  tags_count: "list(tags).length"
+  has_up: "list(up).length > 0"
+  has_down: "list(down).length > 0"
+  has_sources: "list(sources).length > 0"
+  has_code: "list(code).length > 0"
+  is_spec: 'kind == "spec"'
+  is_source: 'kind == "source" || kind == "source-part"'
+  is_extension: 'kind == "extension"'
+  is_open: 'kind == "open"'
+  is_meta: 'kind == "meta"'
+  is_canonical: 'status == "canonical"'
+  is_draft: 'status == "draft"'
+  is_contested: 'status == "contested"'
+  is_root: 'kind == "root-index"'
+properties:
+  id:
+    displayName: ID
+  title:
+    displayName: Title
+  kind:
+    displayName: Kind
+  layer:
+    displayName: Layer
+  status:
+    displayName: Status
+  spec:
+    displayName: Spec
+  formula.folder:
+    displayName: Folder
+  formula.outgoing:
+    displayName: Outgoing
+  formula.incoming:
+    displayName: Incoming
+views:
+  - type: table
+    name: All Notes
+    order:
+      - file.name
+      - id
+      - kind
+      - layer
+      - status
+      - formula.folder
+  - type: table
+    name: Spec Notes
+    filters:
+      and:
+        - 'kind == "spec"'
+    order:
+      - id
+      - title
+      - layer
+      - status
+  - type: table
+    name: Source Notes
+    filters:
+      and:
+        - 'kind == "source" || kind == "source-part"'
+    order:
+      - id
+      - title
+      - status
+  - type: table
+    name: Extension Guides
+    filters:
+      and:
+        - 'kind == "extension"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Open Threads
+    filters:
+      and:
+        - 'kind == "open"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Meta
+    filters:
+      and:
+        - 'kind == "meta"'
+    order:
+      - id
+      - title
+  - type: table
+    name: By Layer
+    groupBy:
+      property: layer
+      direction: ASC
+    order:
+      - layer
+      - id
+      - title
+  - type: table
+    name: By Status
+    groupBy:
+      property: status
+      direction: ASC
+    order:
+      - status
+      - id
+      - title
+  - type: table
+    name: Canonical Only
+    filters:
+      and:
+        - 'status == "canonical"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Drafts
+    filters:
+      and:
+        - 'status == "draft"'
+    order:
+      - id
+      - title
+  - type: table
+    name: With Sources
+    filters:
+      and:
+        - "formula.has_sources"
+    order:
+      - id
+      - title
+  - type: table
+    name: With Code
+    filters:
+      and:
+        - "formula.has_code"
+    order:
+      - id
+      - title
+  - type: table
+    name: With Dimensions
+    filters:
+      and:
+        - "formula.dimensions_count > 0"
+    order:
+      - id
+      - title
+  - type: table
+    name: With Symbols
+    filters:
+      and:
+        - "formula.symbols_count > 0"
+    order:
+      - id
+      - title
+  - type: table
+    name: Orphans
+    filters:
+      and:
+        - "!formula.has_up"
+        - 'kind != "root-index"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Root
+    filters:
+      and:
+        - 'kind == "root-index"'
+    order:
+      - id
+      - title

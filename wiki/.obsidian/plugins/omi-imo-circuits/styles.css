@@ -1,0 +1,53 @@
+.omi-imo-circuit-container {
+  padding: 16px;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.omi-imo-circuit-container h2 {
+  margin-top: 0;
+  color: var(--text-normal);
+}
+
+.omi-imo-circuit-container p {
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.omi-imo-circuit-svg {
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+
+.omi-imo-circuit-svg svg {
+  display: block;
+  margin: 0 auto;
+}
+
+.omi-imo-circuit-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.omi-imo-circuit-container th,
+.omi-imo-circuit-container td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.omi-imo-circuit-container th {
+  font-weight: 600;
+  color: var(--text-normal);
+  background: var(--background-secondary);
+}
+
+.omi-imo-circuit-container td {
+  color: var(--text-muted);
+  font-size: 0.9em;
+}

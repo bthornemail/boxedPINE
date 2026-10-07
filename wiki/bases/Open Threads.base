@@ -1,0 +1,116 @@
+filters:
+  and:
+    - file.inFolder("open")
+    - file.ext == "md"
+formulas:
+  is_contradictions: 'id == "OPEN-00"'
+  is_questions: 'id == "OPEN-01"'
+  is_bugs: 'id == "OPEN-02"'
+  is_glossary: 'id == "OPEN-03"'
+  is_discarded: 'id == "OPEN-04"'
+  is_canonical: 'status == "canonical"'
+  is_draft: 'status == "draft"'
+  tags_count: "list(tags).length"
+  sources_count: "list(sources).length"
+  code_count: "list(code).length"
+  dimensions_count: "list(dimensions).length"
+  symbols_count: "list(symbols).length"
+properties:
+  id:
+    displayName: ID
+  title:
+    displayName: Title
+  status:
+    displayName: Status
+  formula.sources_count:
+    displayName: Sources
+  formula.code_count:
+    displayName: Code refs
+views:
+  - type: table
+    name: All Open Threads
+    order:
+      - file.name
+      - id
+      - title
+      - status
+  - type: table
+    name: Contradictions
+    filters:
+      and:
+        - 'id == "OPEN-00"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Open Questions
+    filters:
+      and:
+        - 'id == "OPEN-01"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Broken Code
+    filters:
+      and:
+        - 'id == "OPEN-02"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Glossary
+    filters:
+      and:
+        - 'id == "OPEN-03"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Discarded Claims
+    filters:
+      and:
+        - 'id == "OPEN-04"'
+    order:
+      - id
+      - title
+  - type: table
+    name: Canonical
+    filters:
+      and:
+        - 'status == "canonical"'
+    order:
+      - id
+      - title
+  - type: table
+    name: With Sources
+    filters:
+      and:
+        - "formula.sources_count > 0"
+    order:
+      - id
+      - title
+  - type: table
+    name: With Code
+    filters:
+      and:
+        - "formula.code_count > 0"
+    order:
+      - id
+      - title
+  - type: table
+    name: With Dimensions
+    filters:
+      and:
+        - "formula.dimensions_count > 0"
+    order:
+      - id
+      - title
+  - type: table
+    name: With Symbols
+    filters:
+      and:
+        - "formula.symbols_count > 0"
+    order:
+      - id
+      - title

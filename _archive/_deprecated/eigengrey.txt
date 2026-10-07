@@ -1,0 +1,57 @@
+#16161d
+--eigengrau: color(xyz pow(10, -5) pow(10, -5) pow(10, -5));
+#5a4fcf Color Information
+Information
+ 
+Conversion
+ 
+Schemes
+ 
+Alternatives
+ 
+Preview
+ 
+Shades and Tints
+ 
+Tones
+ 
+Blindness Simulator
+In a RGB color space, hex #5a4fcf (also known as Iris) is composed of 35.3% red, 31% green and 81.2% blue. Whereas in a CMYK color space, it is composed of 56.5% cyan, 61.8% magenta, 0% yellow and 18.8% black. It has a hue angle of 245.2 degrees, a saturation of 57.1% and a lightness of 56.1%. #5a4fcf color hex could be obtained by blending #b49eff with #00009f. Closest websafe color is: #6666cc.
+Vivid sky blue
+change
+A vivid shade of sky blue
+
+Celeste
+change
+A lighter shade of cyan
+
+colour	name	C	M	Y	K	R	G	B	HEX
+ 	celeste (sky blue, heavenly blue)	030	000	000	000	178	255	255	B2FFFF
+ 	celeste polvere (powdery)	010	000	000	000	230	255	255	E6FFFF
+ 	celeste pallido (pale)	016	000	003	000	204	255	255	CCFFFF
+ 	celeste velato (veiled / overcast)	020	010	010	000	204	230	230	CCE6E6
+ 	celeste opaco (opaque)	050	020	020	000	128	204	204	80CCCC
+Deep sky blue
+change
+A deep shade of sky blue
+
+Color codes
+
+change
+Sky blue
+change
+In hex:#87CEEB
+Vivid skyblue
+change
+In hex:#00CCFF
+Celeste
+change
+In hex:#B2FFFF
+Deep skyBlue
+change
+In hex:#00BFFF
+Related pages
+python3 -c "import math, time; s=0
+while True:
+ print(' ' * int((math.sin(s) + 1) * 20) + '*')
+ time.sleep(0.05); s += 0.1"
