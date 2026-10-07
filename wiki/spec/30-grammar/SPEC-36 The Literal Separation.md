@@ -42,7 +42,40 @@ The two sides are balanced against each other, and `e`/`E` is the hinge between 
 
 An earlier pasted chat wrote a model of this; the author says that model is incorrect. This note follows the concept above and the author's own draft regex.
 
-## The Author's Draft Form
+## The Current Draft (author, 2026-10-07)
+
+> We now only use capital `PINE` and lowercase `boxed`: `/0?[boxd]?\d+[eE\.]?\d[PIN]/`. This is my best try to be reducible to `0n` concatenation notation, so that the XOR of the form is the XNOR of a `0n` Hamming distance.
+
+```
+0?        optional frame
+[boxd]?   value radix, lowercase
+\d+       the value
+[eE\.]?   e exponent, E exception, . decimal dot
+\d        the scale (one digit)
+[PIN]     the index axis, uppercase
+```
+
+**What running it shows (verified):**
+
+| Input | Read as | |
+|-------|---------|---|
+| `0x5e3P` | hex, value 5, exponent 3, Point | ✅ |
+| `0d12E3I` | decimal, value 12, exception 3, Index | ✅ |
+| `0b101.1N` | binary, value 101, dot, 1, Number | ✅ the dot is now a marker |
+| `1e5N` | value 1, exponent 5, Number | ✅ the leading 0 is optional |
+| `0x5e30P` | no match | ⚠️ the scale is one digit |
+| `0P`, `0x5P` | no match | ⚠️ two digits are always required |
+| `0x55P` | value 5, scale 5 | ⚠️ unmarked digits split arbitrarily |
+
+**XOR and XNOR (verified).** At a fixed width, `popcount(a XNOR b) = width − popcount(a XOR b)`. XOR counts the differing bits (the Hamming distance), XNOR the agreeing bits, so they carry the same information. A BigInt `0n` has no width, though: `~(5n ^ 3n)` is `-7n`. XNOR becomes a Hamming count only once a width is fixed, and the radix can fix it, since each `b`, `o` or `x` digit is exactly 1, 3 or 4 bits. Decimal (`d`, `.`) has no whole number of bits per digit.
+
+**Open on this draft:**
+- ⟦How does a literal reduce to `0n` "concatenation notation"? For example, is `0x5e3P` the BigInt of the concatenated digits `0x53n`, with `e` and `P` as tags?⟧
+- ⟦Is the scale meant to be one digit?⟧
+- ⟦Should `0P`, `0I`, `0N` themselves be admitted?⟧
+- ⟦What width does a decimal literal have?⟧
+
+## The Earlier Draft Form
 
 ```
 /0[box]?[d\.]?\d+[eE]?\d+[PIN]/
