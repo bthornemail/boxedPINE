@@ -28,7 +28,20 @@ tags: [omi-imo, grammar, literal, index, value, iExtant, omicron]
 
 # The Literal Separation
 
-The author's first-principles model of the literals, from a later chat (2026-10-07). It supersedes `/pinEboxed/` and `/pinboxd/`. Statements marked **author** are the author's; **verified** means it was run.
+**Read this first.** The author says the model from the later chat (2026-10-07) is admittedly incorrect. What matters is the **concept** it is trying to encode. This note states the concept first. Everything after it, the case table, the regex and the Omicron reading, is a *draft encoding* that is still being worked out. The tests check the draft, not a fixed specification.
+
+## The Concept
+
+1. **Indices and values are different kinds of literal, and the notation must show which is which.** An index is a position (calculated). A value is a quantity (interpreted). The draft uses letter case for this: uppercase for indices, lowercase for values.
+2. **Between them is one interface, the iExtant, holding two mutually exclusive states:**
+   - the *exponent offset*: where in the buffer, counted from 0 in `BYTES_PER_ELEMENT`;
+   - the *exception buffer*: what remains when the frame does not close.
+
+   Only one is active at a time.
+3. **A literal is admitted by a comparison, not an interpretation.** A value's offset is compared with an environmental (global) delta. Physically this is two signals meeting at a switch, and the breadboard shows where: the 5T node.
+4. **The shortest full form doubles as a name.** `/PINEboxed/` is a tagname for the whole form, not a structural element.
+
+Statements below marked **author** are the author's, taken from the draft; **verified** means it was run.
 
 ## Three Kinds of Literal
 
@@ -88,7 +101,7 @@ The tests are in `src/testbed/rosetta.test.ts`.
 - **Which transistors are the switches** (the chat's last question). The breadboard already answers it. The XNOR physically exists at the 5T's collector node: BOOT0, the terminal read, where the two inputs meet. The 6T's Q6 inverts it to XOR to drive onward ([[OPEN-00 Contradiction Register]] #1, [[SPEC-44 The Virtual Breadboard]]). Every transistor is a switch; the XNOR is *read* at the 5T endpoint.
 - **Hex and the marker.** Admitting hex digits would collide with the marker: `e`/`E` (and `b`, `d`) are hex digits, so `0x1E5N` could be the value `1E5` or the value `1`, exception, scale `5`. Keeping value digits decimal (`\d`), as the form does, avoids this.
 
-## Decisions for the Author
+## Decisions for the Author (on the draft encoding)
 
 1. ⟦**Optional or required marker?** If `[eE]` is optional, the form needs the marker and the scale to go together, e.g. `/^0[boxd]?\d+(?:[eE]\d+)?[PIN]$/`. Then `0x5N` matches and `0x0005N` reads value `0005` with no scale. If the marker is always present, write `[eE]` without `?`.⟧
 2. ⟦**Is `.` a third marker** (pure place-value), so the form is `[eE.]`?⟧

@@ -166,7 +166,7 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 
 **Proxy / Reflect** — The two Fano points where iExtant meets the user: Reflect = try ⊕ finally (the operation, witnessed), Proxy = catch ⊕ finally (the trap, witnessed), and Proxy ⊕ Reflect = throw. In `core/src/broadcast.ts`, `proxy()` steps forward and `reflect()` steps back.
 
-**/PINE/, /boxed/, /eE/** — The three kinds of literal ([[SPEC-36 The Literal Separation]]): `/PINE/` the uppercase index literals (Simplex), `/boxed/` the lowercase value literals (Point), `/eE/` the iExtant interface between them, where `E` is the exception buffer and `e` the exponent offset in `BYTES_PER_ELEMENT`. `/PINEboxed/` is the tagname for the base form `/0[boxd]?\d+[eE]?\d+[PIN]/`.
+**/PINE/, /boxed/, /eE/** — The draft encoding of the literal-separation concept ([[SPEC-36 The Literal Separation]]; the concept is authoritative, not this encoding): `/PINE/` the uppercase index literals (Simplex), `/boxed/` the lowercase value literals (Point), `/eE/` the iExtant interface between them, where `E` is the exception buffer and `e` the exponent offset in `BYTES_PER_ELEMENT`. `/PINEboxed/` is the tagname for the base form `/0[boxd]?\d+[eE]?\d+[PIN]/`.
 
 **pinch** — The 0-sphere: two points.
 
