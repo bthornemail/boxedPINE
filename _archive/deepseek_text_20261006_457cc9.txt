@@ -1,0 +1,12 @@
+block 0    60-63      < = > ?        four comparison operators
+block 1    56-59      8 9 : ;        four characters
+block 2    52-55      4 5 6 7        four characters
+block 3    48-51      0 1 2 3        four characters
+block 4    44-47      , - . /        four punctuations
+block 5    40-43      ( ) * +        four punctuations (only 40 shown)
+block 6    36-39      $ % & '        four punctuations (only 36 shown)
+block 7    28-31                      four values (28 shown)
+block 8    24-27                      four values (24 shown)
+block 9    12-15                      four values (12, 14, 15 shown)
+block 10   0-7                        eight values (0-3, 7 shown)
+block 11   124+                        the high boundary
