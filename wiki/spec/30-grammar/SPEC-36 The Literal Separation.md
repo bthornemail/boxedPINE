@@ -99,7 +99,11 @@ The faces and reflections of G (`core/src/index.ts`) and `/PIN/` are not true of
 
 **`/PIN/` asks which axis the whole literal stands on.** `0b101.1N` is, as a whole, a `PINEBOXED` literal on axis N; the 3-character window around its dot, `1.1`, is a CENTER face (the decimal dot of `[d\.]`). The same characters are read at two widths, the way a byte is a row and a column at once.
 
-⟦If the four face cells are meant to line up with P, I, N and the plain dot, which is which?⟧
+**Author:** the plain dot is the **exception**. The dot belongs inside numbers (CENTER, LEFT, RIGHT); a dot with no number on either side is the exception case. So the four face cells are the four letters of PINE: three ways a dot sits in a number, and E, the exception. That matches `E` as the exception buffer. It is in the grammar as the `EXCEPTION` face.
+
+**Verified:** the four cells never overlap. But 44 of the 9,025 printable `x.y` strings fall in no cell, all with signs (`+.5`, `5.+`, `+.+`): LEFT and RIGHT count `+`/`-` as numeric, and CENTER takes digits only. With `[0-9+-]` on both sides of CENTER the four cells are an exact partition.
+
+⟦Should CENTER accept signs?⟧ ⟦Which of P, I, N is CENTER, which LEFT, which RIGHT?⟧
 
 ## Why Base36 (verified)
 
