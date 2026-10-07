@@ -37,8 +37,8 @@ Every note in the vault has YAML frontmatter. The frontmatter is the crosslink l
 |-------|------|-------------|
 | `id` | string | A stable unique identifier (e.g., `SPEC-12`, `SRC-03a`, `EXT-01`) |
 | `title` | string | A human-readable title |
-| `kind` | string | One of: `root-index`, `source`, `source-part`, `spec`, `extension`, `open`, `map`, `meta` |
-| `layer` | string | One of: `root`, `sources`, `meta`, `foundations`, `architecture`, `grammar`, `hardware`, `runtime`, `verification`, `extension`, `open`, `map` |
+| `kind` | string | One of: `root-index`, `source`, `source-part`, `spec`, `extension`, `open`, `progress`, `map`, `meta` |
+| `layer` | string | One of: `root`, `sources`, `meta`, `foundations`, `architecture`, `grammar`, `hardware`, `runtime`, `verification`, `extension`, `open`, `progress`, `map` |
 | `status` | string | One of: `draft`, `review`, `canonical`, `contested`, `deprecated` |
 | `spec` | string | The protocol version (e.g., `OMI-IMO-2026`) |
 | `up` | list | Parent notes in the hierarchy |
@@ -60,6 +60,9 @@ Every note in the vault has YAML frontmatter. The frontmatter is the crosslink l
 | `extracted` | string | The extraction date |
 | `extraction` | string | The extraction method |
 | `lines` | string | The line range in the source |
+| `goal` | string | The goal a progress tracker measures against |
+| `current_level` | number | The highest level a progress tracker marks ✅ Working |
+| `updated` | string | The date a progress tracker was last updated |
 
 ## The Folder Structure
 
@@ -82,6 +85,7 @@ wiki/
 │   └── 60-verification/          — test vectors, implementation status
 ├── extend/                       — extension guides
 ├── open/                         — contradictions, questions, glossary, discarded
+├── progress/                     — trackers of progress toward a goal
 ├── maps/                         — canvases
 ├── bases/                        — Obsidian Bases
 └── tools/                        — validation scripts
@@ -112,6 +116,10 @@ An extension guide in `extend/`. A guide for extending the protocol.
 ### Open
 
 An open question, contradiction, or glossary in `open/`.
+
+### Progress
+
+A tracker in `progress/`. Measures the state of the code against a goal, level by level, with a dated discovery log.
 
 ### Map
 

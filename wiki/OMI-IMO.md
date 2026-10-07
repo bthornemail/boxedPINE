@@ -49,6 +49,7 @@ down:
   - "[[OPEN-02 Broken Code Inventory]]"
   - "[[OPEN-03 Glossary]]"
   - "[[OPEN-04 Discarded Claims]]"
+  - "[[PROG-00 Homoiconic Syntax Tracker]]"
   - "[[SRC-99 Source Index]]"
   - "[[META-00 Vault Schema]]"
   - "[[META-01 Extractive Method]]"
@@ -188,7 +189,7 @@ Built from three JavaScript primitives:
 
 The kernel is self-generating: the grammar is mutable, the handler reads it from the closure scope chain, and `learn` extends it.
 
-A working small-scale example: [[SPEC-44 The Virtual Breadboard]] generates the four XOR builds, their audio graph, canvas and sourcemap from one description, and `learn` adds gate rules to it.
+Progress toward full homoiconic syntax is tracked in [[PROG-00 Homoiconic Syntax Tracker]]. A working small-scale example: [[SPEC-44 The Virtual Breadboard]] generates the four XOR builds, their audio graph, canvas and sourcemap from one description, and `learn` adds gate rules to it.
 
 ## The Web Environment
 

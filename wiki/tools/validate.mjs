@@ -68,7 +68,7 @@ for (const [name, note] of notes) {
   if (!fm.layer) errors.push(`${name}: missing layer`);
   if (!fm.status) errors.push(`${name}: missing status`);
 
-  const validKinds = ['root-index', 'source', 'source-part', 'spec', 'extension', 'open', 'map', 'meta'];
+  const validKinds = ['root-index', 'source', 'source-part', 'spec', 'extension', 'open', 'progress', 'map', 'meta'];
   if (fm.kind && !validKinds.includes(fm.kind)) errors.push(`${name}: invalid kind "${fm.kind}"`);
 
   const validStatuses = ['draft', 'review', 'canonical', 'contested', 'deprecated'];

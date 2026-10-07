@@ -155,6 +155,11 @@ tags: [omi-imo, meta, changelog, history]
 - Checked DeepSeek3 lines 42400–44719, the author's switch from rotations to swaps: swap delta is self-inverse, `fullCycle` hits zero at step 3, the 155 triples are XOR lines of 5-bit indices
 - Left open: the 6T sourcemap gap (needs the Rosetta YAML), the role of `{17, 19}`, and whether `regenerate` restores state
 
+### Homoiconic Syntax Tracker
+
+- Added `progress/` and [[PROG-00 Homoiconic Syntax Tracker]]: the six-level grammar ladder from DeepSeek0, with the evidence-based status of each level, next milestones and a dated discovery log
+- Added the `progress` kind to the schema and `tools/validate.mjs`
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`

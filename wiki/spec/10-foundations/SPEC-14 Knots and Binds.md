@@ -63,6 +63,8 @@ The knot is a `Record<string, string>` — a bidirectional map between hex-encod
 
 The protocol is homoiconic: code is data. The knot is both a program and a value. The same structure that describes a computation is the computation.
 
+How far the code has got toward this is tracked in [[PROG-00 Homoiconic Syntax Tracker]].
+
 ```
 nature: Homoiconic Symmetrical Binds (Code-as-Data)
 ```

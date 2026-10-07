@@ -61,6 +61,7 @@ related:
   - "[[OPEN-02 Broken Code Inventory]]"
   - "[[OPEN-03 Glossary]]"
   - "[[OPEN-04 Discarded Claims]]"
+  - "[[PROG-00 Homoiconic Syntax Tracker]]"
   - "[[MAP-00 Protocol Canvas.canvas]]"
   - "[[MAP-01 Source Graph.canvas]]"
   - "[[MAP-02 Dimension Stack.canvas]]"
@@ -84,6 +85,7 @@ A second-brain wiki for the OMI-IMO protocol. Designed for literate programming:
 8. **Understand the runtime:** [[SPEC-50 Stream Transport]], [[SPEC-52 The REPL and the Digest]]
 9. **Verify:** [[SPEC-60 Test Vectors]], [[SPEC-61 Implementation Status]]
 10. **Extend:** [[EXT-00 How to Extend the Protocol]]
+11. **Track progress:** [[PROG-00 Homoiconic Syntax Tracker]]
 
 ## The Protocol in One Sentence
 
@@ -110,6 +112,7 @@ wiki/
 │   └── 60-verification/          — test vectors, implementation status
 ├── extend/                       — extension guides
 ├── open/                         — contradictions, questions, glossary, discarded
+├── progress/                     — trackers of progress toward a goal
 ├── maps/                         — canvases
 ├── bases/                        — Obsidian Bases
 └── tools/                        — validation scripts
@@ -157,6 +160,10 @@ wiki/
 - [[OPEN-02 Broken Code Inventory]]
 - [[OPEN-03 Glossary]]
 - [[OPEN-04 Discarded Claims]]
+
+## The Progress Trackers
+
+- [[PROG-00 Homoiconic Syntax Tracker]] — how close the code is to one grammar that reads data and programs alike
 
 ## The Maps
 
