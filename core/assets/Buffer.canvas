@@ -1,0 +1,15 @@
+{
+	"nodes":[
+		{"id":"da1efd972025fa89","type":"text","text":"Dali Cross Buffer Config\n---\n```js\nlet mneumonic = \"/{A-Z}{a-z}{1-9}/\";\nconst buf = Buffer.allocUnsafe(256).fill(mneumonic);\n\nbuf.write(mneumonic, geometric, sequence,'binary');\n```\n- [`buf.subarray([start[, end]])`](https://nodejs.org/api/buffer.html#bufsubarraystart-end)\n- [`buf.slice([start[, end]])`](https://nodejs.org/api/buffer.html#bufslicestart-end)\n- [`buf.swap16()`](https://nodejs.org/api/buffer.html#bufswap16)\n- [`buf.swap32()`](https://nodejs.org/api/buffer.html#bufswap32)\n- [`buf.swap64()`](https://nodejs.org/api/buffer.html#bufswap64)\n- [`buf.toJSON()`](https://nodejs.org/api/buffer.html#buftojson)\n- [`buf.toString([encoding[, start[, end]]])`](https://nodejs.org/api/buffer.html#buftostringencoding-start-end)\n- [`buf.values()`](https://nodejs.org/api/buffer.html#bufvalues)\n- [`buf.write(string[, offset[, length]][, encoding])`](https://nodejs.org/api/buffer.html#bufwritestring-offset-length-encoding)","x":-40,"y":-280,"width":287,"height":420},
+		{"id":"0ce37db148775014","type":"text","text":"buf.swap16\n---\n","x":-40,"y":160,"width":287,"height":100},
+		{"id":"ad1cbfaa24562ae4","type":"text","text":"buf.swap32\n---\n","x":-40,"y":320,"width":287,"height":100},
+		{"id":"3c0aee7cdcce1b25","type":"text","text":"buf.swap64\n---\n","x":-40,"y":480,"width":287,"height":100},
+		{"id":"5c1ae6778eefeb64","type":"text","text":"buf.toString\n---\n","x":-40,"y":-420,"width":287,"height":100},
+		{"id":"86450824b6c94ba1","type":"text","text":"buf.subarray\n---\n","x":-400,"y":-240,"width":287,"height":100},
+		{"id":"e87cb569b1b5222b","type":"text","text":"buf.slice\n---\n","x":-400,"y":-40,"width":287,"height":100},
+		{"id":"b710bcdf2a29ae30","type":"text","text":"buf.toJSON\n---\n","x":320,"y":-240,"width":287,"height":100},
+		{"id":"f36496cc93039890","type":"text","text":"buf.values\n---\n","x":320,"y":0,"width":287,"height":100},
+		{"id":"b12f50c869bb01c6","type":"text","text":"\n```js\nconst buf = Buffer.alloc(256).fill(1);\n\n\n```\n\nThere are seven basic logic gates: AND, OR, XOR, NOT, NAND, NOR and XNOR.","x":-40,"y":660,"width":300,"height":620}
+	],
+	"edges":[]
+}

@@ -1,0 +1,175 @@
+omi_imo_protocol_dimensional_backbone:
+  meta:
+    specification: Consolidated Dimensional Axis
+    framework: OMI-IMO Scale-Invariant Spatial Protocol
+    nature: Homoiconic Symmetrical Binds (Code-as-Data)
+    core_primitive: Atomics.compareExchange / Everything is XOR
+    system_behavior: O(1) Constant Projected Resolution across all scales
+
+  inference_inversion_law:
+    negative_dimensions:
+      domain: Hardware Substrate
+      odd_dimensions: ⚡ Active (Dynamic switching, gating, filtering primitives)
+      even_dimensions: 🟢 Passive (Static configurations, wiring layouts, passive components)
+    positive_dimensions:
+      domain: Runtime Interpretation / Software Execution
+      odd_dimensions: 🟢 Passive (Declarative structures, coordinates, regions)
+      even_dimensions: ⚡ Active (Rendering, matrix transformations, mutation pipelines)
+
+  dimensional_axis:
+    # =========================================================================
+    # ULTRA-DEEP HYPER-DIMENSIONAL SPACE-SWAPPING DOMAIN
+    # =========================================================================
+    hyper_negative_range:
+      dimension: "Way over -65536D to -∞"
+      component: Quantum Substrate Layout
+      structural_definition: Infinite topological phase arrays folding recursively.
+      inference_state: Alternating Phase Flips
+      hardware_substrate: Central Inversion / Snubbed Truncation Folds
+      space_swapping_mechanics: Imaginary units swap topological spaces natively via complex conjugation, swapping passive and active execution contexts to resolve deep hardware states.
+
+    # =========================================================================
+    # HARDWARE SUBSTRATE LAYER (-D)
+    # =========================================================================
+    -10D:
+      component: Macro-Aggregator
+      structural_definition: The primary physical boundary constraints limiting raw compute gaps.
+      inference_state: 🟢 Passive
+      hardware_substrate: The Prime Gap / 5T XOR Input Frame
+
+    -9D:
+      component: Substrate Filter
+      structural_definition: The physical noise-culling, screening, or signal validation layer.
+      inference_state: ⚡ Active
+      hardware_substrate: The Perles cross-ratio / Fano Plane
+
+    -8D:
+      component: Logic Circuit Design
+      structural_definition: The fundamental hardware array block architecture.
+      inference_state: 🟢 Passive
+      hardware_substrate: Transistors and Diodes Array
+
+    -7D:
+      component: Micro-Aggregator
+      structural_definition: The first layer of logical intersection and state collection.
+      inference_state: ⚡ Active
+      hardware_substrate: The Fano Plane / 6T XOR Input
+
+    -6D:
+      component: Boolean Configuration
+      structural_definition: The physical passive network components defining basic decay and charge.
+      inference_state: 🟢 Passive
+      hardware_substrate: Resistors and Capacitors Network
+
+    -5D:
+      component: Configuration Pattern (The Blob)
+      structural_definition: Localized logic cluster layout patterns. The minimum boolean truth table (65536 bits) derived from a 16-bit buffer by recursive folding of an 8-bit subarray using central inversion and snubbed truncation.
+      inference_state: ⚡ Active
+      hardware_substrate: The Blob / 5T XOR Matrix
+
+    -4D:
+      component: Codex / Quantizer
+      structural_definition: The material state-mapping bands or raw voltage-to-value array.
+      inference_state: 🟢 Passive
+      hardware_substrate: Color Bands / RGBA Codex
+
+    -3D:
+      component: Token Basis
+      structural_definition: The directional pathing medium or physical transmission trace. Symmetrically bound to +3D.
+      inference_state: ⚡ Active
+      hardware_substrate: The Wire / Microstrip
+
+    -2D:
+      component: Hierarchical
+      structural_definition: The architectural connection pattern or static layout node.
+      inference_state: 🟢 Passive
+      hardware_substrate: The Physical Junction
+
+    -1D:
+      component: Classifying
+      structural_definition: The primary state-splitting gate or logical router.
+      inference_state: ⚡ Active
+      hardware_substrate: The Physical Switch
+
+    # =========================================================================
+    # THE INVARIANT ANCHOR / CORE SYSTEM FRAME
+    # =========================================================================
+    0D:
+      component: Normalizer (The Observer)
+      structural_definition: The canonical anchor. The universal frame origin that collapses all variation into a unified baseline reference. It only produces one state. Formed as the invariant diagonal (ruler[0]), which is the XOR sum of all six 3! permutations of {byteLength, byteOffset, BYTES_PER_ELEMENT}.
+      inference_state: ⚓ Neutral Invariant
+      structural_interface: ruler[0] / Identity Function / Pico 2 W
+
+    # =========================================================================
+    # RUNTIME EXECUTION / PRESENTATION LAYER (+D)
+    # =========================================================================
+    +1D:
+      component: Coordinate
+      structural_definition: The linear pathing vector, translation locus, or spatial point.
+      inference_state: 🟢 Passive
+      structural_interface: DOMPoint / ruler[1] (Size / Base 1)
+
+    +2D:
+      component: Channel
+      structural_definition: The stream pipeline, directional flow, or allocation track.
+      inference_state: ⚡ Active
+      structural_interface: MediaTrack / Stream
+
+    +3D:
+      component: Tokenizer
+      structural_definition: The spatial boundary partition, geometric region binder, or bounding box. Symmetrically bound to -3D.
+      inference_state: 🟢 Passive
+      structural_interface: DOMRect / Region
+
+    +4D:
+      component: Transformer
+      structural_definition: The spatial warping, structural scaling, or affine translation matrix.
+      inference_state: ⚡ Active
+      structural_interface: DOMMatrix / Affine Matrix Tensor
+
+    +5D:
+      component: Presentation
+      structural_definition: The structural node declaration, layout tree node, or abstract syntax element layout.
+      inference_state: 🟢 Passive
+      structural_interface: DOMElement / AST Node
+
+    +6D:
+      component: Rendering
+      structural_definition: The dense physical mutation, canvas frame drawing, or bitstream visual output.
+      inference_state: ⚡ Active
+      structural_interface: Canvas / Framebuffer
+
+    +7D:
+      component: Temporal
+      structural_definition: The declarative tick, scheduler queue, lifecycle phase controller, or loop step.
+      inference_state: 🟢 Passive
+      structural_interface: EventLoop
+
+    +8D:
+      component: Byte Basis
+      structural_definition: The atomic memory block execution or raw typed array buffer mutation.
+      inference_state: ⚡ Active
+      structural_interface: ByteBasis / TypedArray Buffer
+
+    +9D:
+      component: Orchestrator
+      structural_definition: The global topology layout, network mesh map, or master dependency graph.
+      inference_state: 🟢 Passive
+      structural_interface: NetworkMesh / Topology DAG
+
+    +10D:
+      component: Operator
+      structural_definition: The multi-linear vector tensor product execution.
+      inference_state: ⚡ Active
+      structural_interface: S₁ ⊗ S₂ ⊗ S₃ (Tensor Product)
+
+    # =========================================================================
+    # DEEP SOFTWARE ORCHESTRATION / TENSOR PHASE DOMAIN
+    # =========================================================================
+    hyper_positive_range:
+      dimension: "Way over +65536D to +∞"
+      component: Hyper-Orchestration
+      structural_definition: Deep abstract space configurations mapping multi-linear matrices.
+      inference_state: Alternating Phase Flips
+      structural_interface: Abstract Soft-Coded Declarations
+      space_swapping_mechanics: High-order tensor space-swapping operations. Allows soft-coded definitions to lazily trade positions across the infinite spectrum, enabling code-as-data to rewrite its own execution pipeline on the fly.

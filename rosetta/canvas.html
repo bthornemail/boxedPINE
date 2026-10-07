@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OMI Media</title>
+</head>
+<body>
+    <dl id="omi-list">
+        <dt id="cell-0" data-omi-mnemonic="A1F9" data-omi-band="1">
+            Mnemonic core
+        </dt>
+        <dd data-omi-bpe-constraint="2" data-omi-offset="32">
+            Refraction vector
+        </dd>
+    </dl>
+    
+    <video id="omi-video" controls>
+        <track kind="metadata" src="/omi-list.vtt" default>
+    </video>
+    
+    <map name="omi-hitzones">
+        <area id="hit-cell-0" shape="poly" coords="0,0,0,0" href="#cell-0">
+    </map>
+    
+    <canvas id="omi-canvas"></canvas>
+    
+    <script>
+        // All native. No polyfills.
+        const video = document.getElementById('omi-video');
+        const track = video.textTracks[0];
+        
+        track.addEventListener('cuechange', () => {
+            const cue = track.activeCues[0];
+            const payload = JSON.parse(cue.text);
+            
+            // Read the attributes
+            const dtNode = document.getElementById(payload.targetCellId);
+            const ddNode = dtNode?.nextElementSibling;
+            
+            // The browser lazily evaluates the rest
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,511 @@
+<!doctype html >
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type ="image/svg+xml" href ="/favicon.svg" />
+    <meta name="viewport" content ="width=device-width, initial-scale=1.0" />
+    <title>pineboxed </title>
+    <link rel="stylesheet" href="default.css" />
+    <link
+  rel="alternate"
+  href="/fr/html/print"
+  hreflang="fr"
+  type="text/html"
+  media="print"
+      title="French HTML (for printing)" />
+    <link rel="manifest" href="manifest.json" />
+    <style>
+      body { margin: 0; }
+      canvas:focus {
+      outline: none;
+      }
+      canvas:focus {
+      outline: none;
+      }
+      #progressbar {
+      width: 0;
+      transition: width ease - out .5s;
+      height: 1em;
+      background - color: #888;
+      background - image: linear - gradient(
+      -45deg,
+      rgba(255, 255, 255, .5) 25 %,
+      transparent 25 %,
+      transparent 50 %,
+      rgba(255, 255, 255, .5) 50 %,
+      rgba(255, 255, 255, .5) 75 %,
+      transparent 75 %,
+      transparent
+      );
+      background - size: 50px 50px;
+      animation: progressanim 2s linear infinite;
+      }
+
+      @keyframes progressanim {
+      0 % {
+      background- position: 50px 50px;
+      }
+      100 % {
+      background- position: 0 0;
+      }
+      }
+      del {
+  text-decoration: line-through;
+  background-color: #ffbbbb;
+  color: #555555;
+}
+
+ins {
+  text-decoration: none;
+  background-color: #d4fcbc;
+}
+
+blockquote {
+  padding-left: 15px;
+  border-left: 3px solid #d7d7db;
+  font-size: 1rem;
+}
+del::before,
+ins::before {
+  position: absolute;
+  left: 0.5rem;
+  font-family: monospace;
+}
+
+del::before {
+  content: "−";
+}
+
+ins::before {
+  content: "+";
+}
+
+p {
+  margin: 0 1.8rem;
+  font-family: "Georgia", serif;
+  font-size: 1rem;
+      }
+
+      table {
+  border-collapse: collapse;
+  border: 2px solid rgb(140 140 140);
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+caption {
+  caption-side: bottom;
+  padding: 10px;
+  font-weight: bold;
+}
+
+thead,
+tfoot {
+  background-color: rgb(228 240 245);
+}
+
+th,
+td {
+  border: 1px solid rgb(160 160 160);
+  padding: 8px 10px;
+}
+
+td:last-of-type {
+  text-align: center;
+}
+
+tbody > tr:nth-of-type(even) {
+  background-color: rgb(237 238 242);
+}
+
+tfoot th {
+  text-align: right;
+}
+
+tfoot td {
+  font-weight: bold;
+      }
+      details {
+  font:
+    16px "Open Sans",
+    "Calibri",
+    sans-serif;
+  width: 620px;
+}
+
+details > summary {
+  padding: 2px 6px;
+  width: 15em;
+  background-color: #dddddd;
+  border: none;
+  box-shadow: 3px 3px 4px black;
+  cursor: pointer;
+}
+
+details > p {
+  border-radius: 0 0 10px 10px;
+  background-color: #dddddd;
+  padding: 2px 6px;
+  margin: 0;
+  box-shadow: 3px 3px 4px black;
+}
+
+details:open > summary {
+  background-color: #ccccff;
+      }
+      ::backdrop {
+  background-image: linear-gradient(
+    45deg,
+    magenta,
+    rebeccapurple,
+    dodgerblue,
+    green
+  );
+  opacity: 0.75;
+      }
+      dialog {
+  animation: fade-out 0.7s ease-out;
+}
+
+dialog:open {
+  animation: fade-in 0.7s ease-out;
+}
+
+dialog:open::backdrop {
+  background-color: black;
+  animation: backdrop-fade-in 0.7s ease-out forwards;
+}
+
+/* Animation keyframes */
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+    display: none;
+  }
+
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+    display: block;
+  }
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+    transform: scaleY(1);
+    display: block;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scaleY(0);
+    display: none;
+  }
+}
+
+@keyframes backdrop-fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0.25;
+  }
+}
+
+body,
+button {
+  font-family: system-ui;
+}
+    </style>
+  </head>
+  <body>
+    <div id="app"> </div>
+    <label for="colors">Pick a color (preferably a red tone):</label>
+<input type="color" list="redColors" id="colors" />
+<datalist id="redColors">
+  <option value="#800000"></option>
+  <option value="#8B0000"></option>
+  <option value="#A52A2A"></option>
+  <option value="#DC143C"></option>
+</datalist>
+    <p>
+      <samp>Keyboard not found <br /> Press F1 to continue</samp>
+    </p>
+    <video controls poster="/images/sample.gif">
+      <source src="sample.mp4" type="video/mp4" />
+      <source src="sample.ogv" type="video/ogv" />
+      <track kind="captions" src="sampleCaptions.vtt" srclang="en" />
+      <track kind="chapters" src="sampleChapters.vtt" srclang="en" />
+      <track kind="subtitles" src="sampleSubtitles_de.vtt" srclang="de" />
+      <track kind="subtitles" src="sampleSubtitles_en.vtt" srclang="en" />
+      <track kind="subtitles" src="sampleSubtitles_ja.vtt" srclang="ja" />
+      <track kind="subtitles" src="sampleSubtitles_oz.vtt" srclang="oz" />
+      <track kind="metadata" src="keyStage1.vtt" srclang="en" label="Key Stage 1" />
+      <track kind="metadata" src="keyStage2.vtt" srclang="en" label="Key Stage 2" />
+      <track kind="metadata" src="keyStage3.vtt" srclang="en" label="Key Stage 3" />
+      <!--Fallback -->
+      …
+    </video>
+    <figure>
+      <blockquote>
+	<p>
+	  It was a bright cold day in April, and the clocks were striking thirteen.
+	</p>
+      </blockquote>
+      <figcaption>
+	First sentence in
+	<cite
+	  ><a href="http://www.george-orwell.org/1984/0.html"
+	      > Nineteen Eighty - Four </a
+					 > </cite
+					     >
+	by George Orwell(Part 1, Chapter 1).
+      </figcaption>
+
+      <address>
+	<a href="mailto:jim@example.com"> jim@example.com</a><br />
+	<a href="tel:+14155550132"> +1(415) 555‑0132 </a>
+      </address>
+      <address>
+	You can contact author at
+	<a href="http://www.example.com/contact"> www.example.com </a>.<br />
+	If you see any bugs, please
+	<a href="mailto:webmaster@example.com"> contact webmaster </a>.<br />
+	You may also want to visit us: <br />
+	Mozilla Foundation <br />
+	331 E Evelyn Ave <br />
+	Mountain View, CA 94041 <br />
+	USA
+      </address>
+    </figure>
+    <article class="film_review">
+      <h2>Jurassic Park </h2>
+      <section class="main_review">
+	<h3>Review </h3>
+	<p> Dinos were great! </p>
+      </section>
+      <section class="user_reviews">
+	<h3>User reviews </h3>
+	<article class="user_review">
+	  <h4>Too scary! </h4>
+	  <p> Way too scary for me.</p>
+	  <footer>
+	    <p>
+	      Posted on
+	      <time datetime="2015-05-16 19:00"> May 16 </time>
+	      by Lisa.
+	    </p>
+	  </footer>
+	</article>
+	<article class="user_review">
+	  <h4>Love the dinos! </h4>
+	  <p> I agree, dinos are my favorite.</p>
+	  <footer>
+	    <p>
+	      Posted on
+	      <time datetime="2015-05-17 19:00"> May 17 </time>
+	      by Tom.
+	    </p>
+	  </footer>
+	</article>
+      </section>
+      <footer>
+	<p>
+	  Posted on
+	  <time datetime="2015-05-15 19:00"> May 15 </time>
+	  by Staff.
+	</p>
+      </footer>
+    </article>
+    <aside>
+      <p>The Rough - skinned Newt defends itself with a deadly neurotoxin.</p>
+      <p>
+	Several species of <mark> salamander </mark> inhabit the temperate rainforest of
+	the Pacific Northwest.
+      </p>
+
+    </aside>
+    <p>
+      It is a dark time for the Rebellion.Although the Death Star has been
+      destroyed, <mark class="match"> Imperial </mark> troops have driven the Rebel
+      forces from their hidden base and pursued them across the galaxy.
+    </p>
+
+    <p>
+      Evading the dreaded <mark class="match"> Imperial </mark> Starfleet, a group of
+      freedom fighters led by Luke Skywalker has established a new secret base on
+      the remote ice world of Hoth.
+    </p>
+<blockquote>
+  There is <del>nothing</del> <ins>no code</ins> either good or bad, but
+  <del>thinking</del> <ins>running it</ins> makes it so.
+</blockquote>
+<table>
+  <caption>
+    Front-end web developer course 2021
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col">Person</th>
+      <th scope="col">Most interest in</th>
+      <th scope="col">Age</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Chris</th>
+      <td>HTML tables</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <th scope="row">Dennis</th>
+      <td>Web accessibility</td>
+      <td>45</td>
+    </tr>
+    <tr>
+      <th scope="row">Sarah</th>
+      <td>JavaScript frameworks</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th scope="row">Karen</th>
+      <td>Web performance</td>
+      <td>36</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th scope="row" colspan="2">Average age</th>
+      <td>33</td>
+    </tr>
+  </tfoot>
+</table>
+<!-- Form which will send a GET request to the current URL -->
+<form method="get">
+  <label>
+    Name:
+    <input name="submitted-name" autocomplete="name" />
+  </label>
+  <button>Save</button>
+</form>
+
+<!-- Form which will send a POST request to the current URL -->
+<form method="post">
+  <label>
+    Name:
+    <input name="submitted-name" autocomplete="name" />
+  </label>
+  <button>Save</button>
+</form>
+
+<!-- Form with fieldset, legend, and label -->
+<form method="post">
+  <fieldset>
+    <legend>Do you agree to the terms?</legend>
+    <label><input type="radio" name="radio" value="yes" /> Yes</label>
+    <label><input type="radio" name="radio" value="no" /> No</label>
+  </fieldset>
+</form>
+<details name="requirements">
+  <summary>Graduation Requirements</summary>
+  <p>
+    Requires 40 credits, including a passing grade in health, geography,
+    history, economics, and wood shop.
+  </p>
+</details>
+<details name="requirements">
+  <summary>System Requirements</summary>
+  <p>
+    Requires a computer running an operating system. The computer must have some
+    memory and ideally some kind of long-term storage. An input device as well
+    as some form of output device is recommended.
+  </p>
+</details>
+<details name="requirements">
+  <summary>Job Requirements</summary>
+  <p>
+    Requires knowledge of HTML, CSS, JavaScript, accessibility, web performance,
+    privacy, security, and internationalization, as well as a dislike of
+    broccoli.
+  </p>
+</details>
+<button command="show-modal" commandfor="my-dialog">Open dialog</button>
+
+<dialog id="my-dialog">
+  <p>This dialog was opened using an invoker command.</p>
+  <geolocation>
+  <button id="fallback">Use location</button>
+</geolocation>
+<p id="output"></p>
+  <button commandfor="my-dialog" command="close">Close</button>
+</dialog>
+<p>
+  <dfn><abbr>HTML</abbr> (hypertext markup language)</dfn>
+  is a description language used to structure documents on the web.
+  <dl>
+  <dt>jambalaya</dt>
+  <dd>
+    rice-based entree typically containing chicken, sausage, seafood, and spices
+  </dd>
+
+  <dt>sukiyaki</dt>
+  <dd>
+    Japanese specialty consisting of thinly sliced meat, vegetables, and
+    noodles, cooked in sake and soy sauce
+  </dd>
+
+  <dt>chianti</dt>
+  <dd>dry Italian red wine originating in Tuscany</dd>
+  </dl>
+  
+</p>
+    <script type="module" src="/src/main.ts"> </script>
+    <script type="module">
+
+let textTrackElem = document.getElementById("text-track");
+let details = document.querySelector("details");
+
+textTrackElem.addEventListener("cuechange", (event) => {
+  let cues = event.target.track.activeCues;
+});
+details.addEventListener("toggle", (event) => {
+  if (details.open) {
+    /* the element was toggled open */
+  } else {
+    /* the element was toggled closed */
+  }
+});
+
+const outputElem = document.querySelector("#output");
+
+if (typeof HTMLGeolocationElement === "function") {
+  const geo = document.querySelector("geolocation");
+  geo.addEventListener("location", () => {
+    if (geo.position) {
+      outputElem.textContent += `(${geo.position.coords.latitude},${geo.position.coords.longitude}), `;
+    } else if (geo.error) {
+      outputElem.textContent += `${geo.error.message}, `;
+    }
+  });
+} else {
+  const fallback = document.querySelector("#fallback");
+  fallback.addEventListener("click", () => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        outputElem.textContent += `(${position.coords.latitude}, ${position.coords.longitude}), `;
+      },
+      (error) => {
+        outputElem.textContent += `${error.message}, `;
+      },
+    );
+  });
+}
+const time = `2013-12-25T11:12-08:00`
+    </script>
+  </body>
+</html>

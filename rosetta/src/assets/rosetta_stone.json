@@ -1,0 +1,42 @@
+
+{
+  "nodes": [
+    {"id": "Q1", "type": "text", "x": 0, "y": 0, "width": 8, "height": 3, "color": "1", "text": "Q1 (NPN)"},
+    {"id": "Q2", "type": "text", "x": 0, "y": 8, "width": 8, "height": 3, "color": "1", "text": "Q2 (NPN)"},
+    {"id": "Q3", "type": "text", "x": 0, "y": 16, "width": 8, "height": 3, "color": "1", "text": "Q3 (NPN)"},
+    {"id": "Q4", "type": "text", "x": 0, "y": 24, "width": 8, "height": 3, "color": "1", "text": "Q4 (NPN)"},
+    {"id": "Q5", "type": "text", "x": 0, "y": 32, "width": 8, "height": 3, "color": "1", "text": "Q5 (NPN)"},
+    {"id": "Q6", "type": "text", "x": 0, "y": 40, "width": 8, "height": 3, "color": "1", "text": "Q6 (NPN)"},
+    {"id": "R1", "type": "text", "x": 12, "y": 0, "width": 6, "height": 3, "color": "2", "text": "R1 (2K)"},
+    {"id": "R2", "type": "text", "x": 12, "y": 8, "width": 6, "height": 3, "color": "2", "text": "R2 (2K)"},
+    {"id": "R3", "type": "text", "x": 12, "y": 16, "width": 6, "height": 3, "color": "2", "text": "R3 (2K)"},
+    {"id": "R4", "type": "text", "x": 12, "y": 24, "width": 6, "height": 3, "color": "2", "text": "R4 (2K)"},
+    {"id": "R5", "type": "text", "x": 12, "y": 32, "width": 6, "height": 3, "color": "2", "text": "R5 (2K)"},
+    {"id": "R6", "type": "text", "x": 12, "y": 40, "width": 6, "height": 3, "color": "2", "text": "R6 (2K)"},
+    {"id": "RLED", "type": "text", "x": 12, "y": 48, "width": 6, "height": 3, "color": "2", "text": "RLED (330)"},
+    {"id": "LED", "type": "text", "x": 24, "y": 48, "width": 8, "height": 3, "color": "5", "text": "YELLOW LED"},
+    {"id": "BUS", "type": "text", "x": 24, "y": 0, "width": 10, "height": 3, "color": "4", "text": "DATA BUS"},
+    {"id": "GND", "type": "text", "x": 24, "y": 24, "width": 8, "height": 3, "color": "0", "text": "GND"},
+    {"id": "VCC", "type": "text", "x": 24, "y": 32, "width": 8, "height": 3, "color": "7", "text": "VCC (+5V)"}
+  ],
+  "edges": [
+    {"id": "A-to-Q1-B", "fromNode": "BUS", "fromSide": "left", "toNode": "Q1", "toSide": "top", "toEnd": "arrow", "label": "A"},
+    {"id": "B-to-Q2-B", "fromNode": "BUS", "fromSide": "left", "toNode": "Q2", "toSide": "top", "toEnd": "arrow", "label": "B"},
+    {"id": "Q1-C-to-Q2-E", "fromNode": "Q1", "fromSide": "bottom", "toNode": "Q2", "toSide": "top", "toEnd": "arrow", "label": "NAND"},
+    {"id": "Q2-C-to-Q3-B", "fromNode": "Q2", "fromSide": "bottom", "toNode": "Q3", "toSide": "top", "toEnd": "arrow", "label": "switch"},
+    {"id": "Q3-C-to-Q4-B", "fromNode": "Q3", "fromSide": "bottom", "toNode": "Q4", "toSide": "top", "toEnd": "arrow", "label": "OR-like"},
+    {"id": "Q3-C-to-Q5-B", "fromNode": "Q3", "fromSide": "bottom", "toNode": "Q5", "toSide": "top", "toEnd": "arrow", "label": "OR-like"},
+    {"id": "Q4-C-to-LED", "fromNode": "Q4", "fromSide": "bottom", "toNode": "LED", "toSide": "left", "toEnd": "arrow", "label": "OUT"},
+    {"id": "Q1-C-to-VCC", "fromNode": "Q1", "fromSide": "right", "toNode": "VCC", "toSide": "left", "toEnd": "arrow", "label": "pull-up"},
+    {"id": "Q2-C-to-VCC", "fromNode": "Q2", "fromSide": "right", "toNode": "VCC", "toSide": "left", "toEnd": "arrow", "label": "pull-up"},
+    {"id": "Q3-C-to-VCC", "fromNode": "Q3", "fromSide": "right", "toNode": "VCC", "toSide": "left", "toEnd": "arrow", "label": "pull-up"},
+    {"id": "Q4-C-to-VCC", "fromNode": "Q4", "fromSide": "right", "toNode": "VCC", "toSide": "left", "toEnd": "arrow", "label": "pull-up"},
+    {"id": "Q5-C-to-VCC", "fromNode": "Q5", "fromSide": "right", "toNode": "VCC", "toSide": "left", "toEnd": "arrow", "label": "pull-up"},
+    {"id": "Q1-E-to-GND", "fromNode": "Q1", "fromSide": "bottom", "toNode": "GND", "toSide": "top", "toEnd": "arrow", "label": "emitter"},
+    {"id": "Q3-E-to-GND", "fromNode": "Q3", "fromSide": "bottom", "toNode": "GND", "toSide": "top", "toEnd": "arrow", "label": "emitter"},
+    {"id": "Q4-E-to-Q5-C", "fromNode": "Q4", "fromSide": "bottom", "toNode": "Q5", "toSide": "top", "toEnd": "arrow", "label": "OR-like"},
+    {"id": "Q5-E-to-GND", "fromNode": "Q5", "fromSide": "bottom", "toNode": "GND", "toSide": "top", "toEnd": "arrow", "label": "emitter"},
+    {"id": "LED-to-RLED", "fromNode": "LED", "fromSide": "right", "toNode": "RLED", "toSide": "left", "toEnd": "arrow", "label": "current limit"},
+    {"id": "RLED-to-GND", "fromNode": "RLED", "fromSide": "bottom", "toNode": "GND", "toSide": "right", "toEnd": "arrow", "label": "return"}
+  ]
+}

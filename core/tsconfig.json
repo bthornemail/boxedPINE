@@ -1,0 +1,61 @@
+{
+    "extends": "@tsconfig/node-ts/tsconfig.json",
+    // Visit https://aka.ms/tsconfig to read more about this file
+    "compilerOptions": {
+	// File Layout
+	"rootDir": "./src",
+	"outDir": "./dist",
+	//      "lib": [
+	//	  "DOM",         // 👈 This defines HTMLElement, attachShadow, window, etc.
+	//	  "DOM.Iterable" // 👈 This enables looping over DOM elements (like querySelectorAll)
+	//      ],
+	// Environment Settings
+	// See also https://aka.ms/tsconfig/module
+//	"module": "nodenext",
+	"target": "esnext",
+	// For nodejs:
+	"lib": ["esnext","node"],
+	"types": ["node"],
+	//      "types": ["DOM","node"],
+	// and npm install -D @types/node
+//"target": "es2023",
+	"module": "esnext",
+	"moduleResolution":"nodenext",
+//    "lib": ["ES2023", "node"],
+	// Other Outputs
+	"sourceMap": true,
+	"declaration": true,
+	"declarationMap": true,
+
+	// Stricter Typechecking Options
+	"noUncheckedIndexedAccess": true,
+	"exactOptionalPropertyTypes": true,
+
+	// Recommended Options
+	"strict": true,
+	"jsx": "react-jsx",
+	"verbatimModuleSyntax": true,
+	"isolatedModules": true,
+	"noUncheckedSideEffectImports": true,
+	"moduleDetection": "force",
+	"skipLibCheck": true,
+"allowImportingTsExtensions": true,
+ 
+    "noEmit": true,
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+"noImplicitReturns": true,
+	 "noImplicitOverride": true,
+"noPropertyAccessFromIndexSignature": true
+    },
+include: ["assets/**/*"],
+    "exclude":[
+	"_archive/**/*",
+	"app/**/*",
+	"src/ruler/**/*"
+    ]
+}

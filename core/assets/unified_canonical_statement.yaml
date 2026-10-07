@@ -1,0 +1,7 @@
+  unified_canonical_statement:
+    protocol: "The data doesn't change. The observer's interpretation changes based on the point of view they infer from."
+    stream: "The stream is the transport. Each vertex and each edge is one line of the JSONL/NDJSON stream."
+    canvas: "The canvas is the interoperability. The .canvas file is the JSON Canvas 1.0 format."
+    sourcemap: "The sourcemap is the physical trace. Every canvas node traces back to its physical realization."
+    notation: "OMI-Lisp is the executable notation. ASCII is the terminal projection."
+    authority: "Projection"

@@ -1,0 +1,206 @@
+body { margin: 0; }
+canvas:focus {
+    outline: none;
+}
+canvas:focus {
+    outline: none;
+}
+#progressbar {
+    width: 0;
+    transition: width ease - out .5s;
+    height: 1em;
+    background - color: #888;
+    background - image: linear - gradient(
+	-45deg,
+	rgba(255, 255, 255, .5) 25 %,
+	transparent 25 %,
+	transparent 50 %,
+	rgba(255, 255, 255, .5) 50 %,
+	rgba(255, 255, 255, .5) 75 %,
+	transparent 75 %,
+	transparent
+    );
+    background - size: 50px 50px;
+    animation: progressanim 2s linear infinite;
+}
+
+@keyframes progressanim {
+    0 % {
+	background- position: 50px 50px;
+    }
+    100 % {
+	background- position: 0 0;
+    }
+}
+del {
+    text-decoration: line-through;
+    background-color: #ffbbbb;
+    color: #555555;
+}
+
+ins {
+    text-decoration: none;
+    background-color: #d4fcbc;
+}
+
+blockquote {
+    padding-left: 15px;
+    border-left: 3px solid #d7d7db;
+    font-size: 1rem;
+}
+del::before,
+ins::before {
+    position: absolute;
+    left: 0.5rem;
+    font-family: monospace;
+}
+
+del::before {
+    content: "−";
+}
+
+ins::before {
+    content: "+";
+}
+
+p {
+    margin: 0 1.8rem;
+    font-family: "Georgia", serif;
+    font-size: 1rem;
+}
+
+table {
+    border-collapse: collapse;
+    border: 2px solid rgb(140 140 140);
+    font-family: sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+caption {
+    caption-side: bottom;
+    padding: 10px;
+    font-weight: bold;
+}
+
+thead,
+tfoot {
+    background-color: rgb(228 240 245);
+}
+
+th,
+td {
+    border: 1px solid rgb(160 160 160);
+    padding: 8px 10px;
+}
+
+td:last-of-type {
+    text-align: center;
+}
+
+tbody > tr:nth-of-type(even) {
+    background-color: rgb(237 238 242);
+}
+
+tfoot th {
+    text-align: right;
+}
+
+tfoot td {
+    font-weight: bold;
+}
+details {
+    font:
+	16px "Open Sans",
+	"Calibri",
+	sans-serif;
+    width: 620px;
+}
+
+details > summary {
+    padding: 2px 6px;
+    width: 15em;
+    background-color: #dddddd;
+    border: none;
+    box-shadow: 3px 3px 4px black;
+    cursor: pointer;
+}
+
+details > p {
+    border-radius: 0 0 10px 10px;
+    background-color: #dddddd;
+    padding: 2px 6px;
+    margin: 0;
+    box-shadow: 3px 3px 4px black;
+}
+
+details:open > summary {
+    background-color: #ccccff;
+}
+::backdrop {
+    background-image: linear-gradient(
+	45deg,
+	magenta,
+	rebeccapurple,
+	dodgerblue,
+	green
+    );
+    opacity: 0.75;
+}
+dialog {
+    animation: fade-out 0.7s ease-out;
+}
+
+dialog:open {
+    animation: fade-in 0.7s ease-out;
+}
+
+dialog:open::backdrop {
+    background-color: black;
+    animation: backdrop-fade-in 0.7s ease-out forwards;
+}
+
+/* Animation keyframes */
+
+@keyframes fade-in {
+    0% {
+	opacity: 0;
+	transform: scaleY(0);
+	display: none;
+    }
+
+    100% {
+	opacity: 1;
+	transform: scaleY(1);
+	display: block;
+    }
+}
+
+@keyframes fade-out {
+    0% {
+	opacity: 1;
+	transform: scaleY(1);
+	display: block;
+    }
+
+    100% {
+	opacity: 0;
+	transform: scaleY(0);
+	display: none;
+    }
+}
+
+@keyframes backdrop-fade-in {
+    0% {
+	opacity: 0;
+    }
+
+    100% {
+	opacity: 0.25;
+    }
+}
+
+body,
+button {
+    font-family: system-ui;
+}
