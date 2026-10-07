@@ -206,6 +206,8 @@ tags: [omi-imo, meta, changelog, history]
 
 - Rewrote [[SPEC-36 The Literal Separation]] around the author's stated concept (literals like BigInt `0n`; `e`/`E`; datum radices; `[d\.]`) and the author's own draft regex; offered a revision that admits `0P`/`0I`/`0N`
 
+- SPEC-36: the `0n` reduction from the Uniform Bitboard (place-value nibbles, handles), base36 from the block bits, the gauge diagonals, and the animation-frame forms; 33 tests passing
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`

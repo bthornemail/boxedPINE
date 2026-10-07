@@ -75,6 +75,41 @@ An earlier pasted chat wrote a model of this; the author says that model is inco
 - ⟦Should `0P`, `0I`, `0N` themselves be admitted?⟧
 - ⟦What width does a decimal literal have?⟧
 
+## Reducing a Literal to `0n` (from the Uniform Bitboard)
+
+The author points to *The Uniform Bitboard, Pre-Language, OMI-Lisp, and Pseudo-Persistent Open World Substrate* (`omi-files/omi-tetragrammatron/dev-docs/archive/`, lines 181–1368) as the supreme example of the `/boxedPINE/` analog of a BigInt `0n` contraction: an addressable coordinate of a data structure. It supplies the two missing pieces.
+
+1. **Concatenation is place-value nibbles in one long word.** "An OMI address is a cascade of 32 hexadecimal place-value nibbles grouped into eight 16-bit ruler segments." That is 128 bits, and "0xA at n02 is not the same citation contribution as 0xA at n27." So a literal reduces to `0n` by concatenating its nibbles at their places, and the width is fixed (128), which makes XNOR a Hamming count (see above). Each 16-bit segment indexes exactly 65,536 places, so all eight segments are indices into the same 65,536-index Blob (verified).
+2. **An addressable coordinate is a handle.** "OMI references are deterministic handles": `0x0100002A` = CONS handle, index `0x2A`. The top bits give the type, the low bits the index. A `/boxedPINE/` literal is the same shape: the `[PIN]` axis is the type and the radix-read digits are the index.
+
+⟦Candidate rule, for the author: literal → handle = (axis tag in the top bits) ‖ (value nibbles in place order). Which bits carry the axis, and where do `e` / `E` / `.` go?⟧
+
+## Why Base36 (verified)
+
+The bits that partition the blocks also separate the characters:
+
+| Bit | Toggle | Separates |
+|-----|--------|-----------|
+| 128 | `60 ⊕ 128` | 7-bit ASCII from everything beyond it |
+| 64 | `60 ⊕ 64` | among alphanumerics: clear = exactly the 10 digits, set = exactly the 52 letters |
+| 32 | `e ⊕ E` | case; folding it leaves 26 letters |
+
+10 + 26 = **36**. The base36 alphabet is cut out by these three bits. 60 itself sits in row 3, the digits row; `60 ⊕ 64` moves it into the letters (row 7), and `60 ⊕ 128` takes it out of ASCII. Tested in `src/testbed/core.test.ts`.
+
+The Polybius gauge in the same document also checks out: D+ `{0,5,A,F}` and D− `{3,6,9,C}` each XOR to 0 and sum to `0x1E`, and all sixteen nibbles sum to `0x78` (tested).
+
+## The Animation Frame Forms as Proxy / Reflect / Catch
+
+The author reads `animation.frame.ts`'s three forms ([[SPEC-33 The Quadratic Forms]]) like proxy, reflect and catch:
+
+| Form | Expression | Verified |
+|------|------------|----------|
+| `q` | 15x² + 4xy + y² | — |
+| `e` | 16x² + 16xy + 4y² | `= (4x + 2y)²`, a perfect square (Δ = 0) |
+| `E` | 60x² + 16xy + 4y² | `= 4q` exactly; `E − e = 44x²` |
+
+⟦Which form is which role? `E` (the exception) suggests catch, but the assignment is the author's.⟧
+
 ## The Earlier Draft Form
 
 ```
