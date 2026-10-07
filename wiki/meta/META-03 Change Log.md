@@ -178,6 +178,12 @@ tags: [omi-imo, meta, changelog, history]
 - Moved `omi`'s superseded Haskell to `_archive/omi-haskell/`, the breadboard to `space/breadboard/`, and dropped its spec copy (identical to `_archive/`)
 - Updated paths in SPEC-44, SPEC-61, OPEN-02, PROG-00, USE-00, META-04 and the `space` README
 
+### Fork: `omi-types`
+
+- Forked `omi-canvas` as `omi-files/omi-types` (history kept; `upstream` = the `omi-canvas` remote) and added the types of *The OMI Protocol in Pure Haskell - Corrected*: `Ruler`, `Block`, `QuadraticForm`, the full `Position`, `Deviation`, `Operation`, the BIOS types, the torus types, `Protocol`, and the umbrella `OMI.Types` (commit `13d90bb`; tests pass)
+- Found that the document's BIOS paths always close, because they start from the zero relation and `delta(0, 0) = 0`
+- Added [[USE-00 Use Case Scenarios]] scenario 4a
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`

@@ -35,7 +35,7 @@ The repository is a demonstration project. The author describes the intent; buil
 | `src/` | The test bed: the Vite app entry and the checks | `src/testbed/` (`npm test`) |
 | `wiki/` | The natural-language presentation and knowledge bank | This vault |
 | `_archive/` | Retired code and earlier specifications | Old code moves here; nothing is deleted |
-| `omi-files/` | Earlier renditions of the same protocol, used as **use case scenarios** | Projects catalogued in [[USE-00 Use Case Scenarios]] (`omi` was merged into `omi-canvas` and `space/breadboard`) |
+| `omi-files/` | Earlier renditions of the same protocol, used as **use case scenarios** | Projects catalogued in [[USE-00 Use Case Scenarios]] (`omi` was merged into `omi-canvas` and `space/breadboard`; `omi-canvas` was forked as `omi-types`) |
 
 ## How Work Flows
 

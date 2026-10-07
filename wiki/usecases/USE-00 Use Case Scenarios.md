@@ -37,7 +37,8 @@ For a builder, each scenario says what the demonstration must make possible and 
 | Prove a law | `omi-axioms` | 0–1 | `core/` | checked (period-8 proof compiles) |
 | Run the reference in Haskell | `omi-canvas` (merged from `omi`) | 0–3 | `core/`, `rosetta/` | checked (`cabal test all` passes) |
 | Hear and see the gates | `space/breadboard` (moved from `omi`) | 0, 5 | `space/` | checked (`npm test`) |
-| Reduce a declaration to a canvas | `omi-canvas` | 2–4 | `rosetta/`, `space/` | not run |
+| Reduce a declaration to a canvas | `omi-canvas` | 2–4 | `rosetta/`, `space/` | checked (`cabal test all`) |
+| Name every type once | `omi-types` (fork of `omi-canvas`) | 0–5 | `core/`, `rosetta/` | checked (`cabal test all`) |
 | Declare in OMI-Lisp | `omi-lisp` | 2–5 | `rosetta/` | not run |
 | Segment before parsing | `omnicron` | 1–3 | `rosetta/` | not run |
 | Execute on a fixed-width ISA | `omi-isa` | 0, 4 | `core/` | not run |
@@ -82,6 +83,35 @@ For a builder, each scenario says what the demonstration must make possible and 
 **Provides:** a Haskell type engine for the ten-stage pipeline: Declaration → Citation → Gauge → WittgensteinOperator → TruthGate → DecisionTable → KarnaughMap → Combinator → Delta → Blackboard → ProjectionFace → Attestation. Same as rev1 Part VIII. Its README: "Canvas is a projection layer", never the authority.
 **Feeds:** the bridge between `rosetta/` (the declaration) and `space/` (the projection).
 ⟦Is this pipeline the intended reading order for Level 4, a wordform read as a program?⟧
+
+### 4a. Name every type once — `omi-types`
+
+**Scenario:** a builder wants one import that names every protocol type: kernel words, ruler, orbit blocks, positions, BIOS paths, torus cells, the protocol itself.
+**Provides:** a fork of `omi-canvas` (2026-10-07, commit `13d90bb`) that keeps the whole canvas engine and adds the types of *The OMI Protocol in Pure Haskell - Corrected*. They are rewritten to canvas's rules and the index rule: no `Int`, `String` or `Maybe`. A block is read from bit patterns, a torus distance is one of three steps, and a quadratic form is three declared coefficients.
+
+| Module | Types |
+|--------|-------|
+| `OMI.Ruler` | `Ruler` |
+| `OMI.Orbit` | `Block`, `BlockReading` |
+| `OMI.BQF` | `QuadraticForm` |
+| `OMI.Handler` | ten `Position` forms, `Radix`, `Kind`, `Separator`, `Deviation`, `Operation` |
+| `OMI.BIOS` | `Endpoint`, `Interior`, `GatePath`, `BIOS`, `BootKernel` |
+| `OMI.Torus` | `Scope`, `Shape`, `Cell`, `Distance`, `Weight` |
+| `OMI.Protocol` | `Protocol` |
+| `OMI.Types` | one import for all of them |
+
+**Checked:** `cabal build all`, `cabal test all` and `ghc -fno-code` pass. The tests confirm:
+- the orbit of 60 and its four blocks;
+- the constants 12, {3, 7, 11, 15} and 19;
+- the discriminants −704 and 0;
+- the torus metric: symmetric, a maximum of 4, and four diagonal cells;
+- the ruler fold returns after 24 steps;
+- BIOS paths from zero close.
+
+**Found while porting:** the document's `executePath` starts from the zero relation, and `delta(0, 0) = 0`, so every BIOS path closes no matter which gates it has. The BIOS as written cannot fail.
+⟦Should a path start from the relation it is given instead of zero?⟧
+⟦The nibble layout for `PLiteral` and `PStruct` positions is a proposal; confirm it.⟧
+**Remote:** none yet. `upstream` points at the `omi-canvas` GitHub repo.
 
 ### 5. Declare in OMI-Lisp — `omi-lisp`
 
