@@ -195,6 +195,8 @@ Newest first. **Evidence** says how each item is known:
 
 | Date | Discovery | Level | Evidence | Where |
 |------|-----------|-------|----------|-------|
+| 2026-10-07 | The two remaining Fano points are Reflect (try ⊕ finally) and Proxy (catch ⊕ finally), where iExtant meets the user's declarations; Proxy ⊕ Reflect = throw | 4 | author + verified | [[OPEN-01 Open Questions]] #19 |
+| 2026-10-07 | The REPL commands exist as WebVTT cues (`rosetta/src/assets/commands.vtt`), kept in step with `src/define.commands.ts` by a test: one command list, readable as data or as program | 4, 5 | verified (test) | [[META-04 Repository Frame]] |
 | 2026-10-07 | `{c − r, c + r}` are two poles: 60 ⊕ 64 (lower 8 indices, row 7) and 60 ⊕ 128 (higher 8, row 11), both at column 12; the rows of 60's four readings are the four-block family, and the poles' rows XOR to the diagonal 12 | 1 | author + verified (test) | [[OPEN-01 Open Questions]] #18 |
 | 2026-10-07 | try / catch / finally is a coproduct: a tried value or a caught deviation carrying the structured coordinate, whose difference is the repair for another try; chains stop at the first catch | 0, 4 | author + verified (test) | [[USE-00 Use Case Scenarios]] 4a |
 | 2026-10-07 | `PLiteral` / `PStruct` fields are coordinate nibbles (indices 0..15); sixteen make the first 8 byte indices of the buffer | 1, 2 | author + verified (test) | [[USE-00 Use Case Scenarios]] 4a |

@@ -193,6 +193,12 @@ tags: [omi-imo, meta, changelog, history]
 
 - Resolved [[OPEN-01 Open Questions]] #18 with the author's correction: 60 ⊕ 64 for the lower 8 indices and 60 ⊕ 128 for the higher 8. The 16 × 16 byte-table reading ties together the four-block family (#10), the diagonal and offset 12 (#13) and the root relation `{c − r, c + r}`. Added to `core/src/verified/wordform.ts` with tests (26 passing)
 
+### Proxy, Reflect and the Headless Presenter
+
+- Named the Fano points: Reflect = try ⊕ finally, Proxy = catch ⊕ finally ([[OPEN-01 Open Questions]] #19)
+- Recorded the author's roles for `core/src` (headless proxy presenter) and the `space/` target (three.js breadboard in a 360 × 65536 tetrahedron)
+- Moved `define.commands.ts` to `src/`; added `rosetta/src/assets/commands.vtt` with a sync test (27 tests passing)
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`

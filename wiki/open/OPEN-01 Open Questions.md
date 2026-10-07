@@ -62,7 +62,7 @@ This register tracks the places where the sources are unclear or incomplete. On 
 | 16 | 6T sourcemap gap | Needs the Rosetta YAML |
 | 17 | iExtant letter assignments | Resolved |
 | 18 | The −60 to 64 quasi-generator | Resolved: two poles, 60 ⊕ 64 and 60 ⊕ 128 |
-| 19 | try/catch/finally: triangle or seven points | Resolved: the triangle spans the seven |
+| 19 | try/catch/finally: triangle or seven points | Resolved: the triangle spans the seven; Reflect and Proxy named |
 
 ## Questions
 
@@ -241,9 +241,13 @@ Code and tests: `core/src/verified/wordform.ts` (`coordinate`, `POLES`, `quadran
 | catch | 010 | the trap |
 | finally | 100 | the witness |
 | try ⊕ catch | 011 | the throw ("fires in the try, is caught by the catch") |
-| try ⊕ finally | 101 | ⟦author to name⟧ |
-| catch ⊕ finally | 110 | ⟦author to name⟧ |
+| try ⊕ finally | 101 | **Reflect**: the operation, witnessed |
+| catch ⊕ finally | 110 | **Proxy**: the trap, witnessed |
 | try ⊕ catch ⊕ finally | 111 | the full path |
 
 The transcript's own candidate ("try, catch, finally / three exits / the full path") is this structure.
-**Status:** Resolved; two names open.
+
+**The two names (author, 2026-10-07):** they are the Proxy and the Reflect of `core/src/broadcast.ts`, where iExtant meets the user. There RegExp declarations and string definitions are crosslinked with the iExtant's Exponent and Exception. In `core/src/model.ts` terms this is the `Node`, inside a `Domain`. `launchBroadcast(declared: RegExp, defined: string)` returns `proxy()` and `reflect()`, one step forward and one step back. They are the two poles `{c + r, c − r}` with r = 1, each a compare-exchange on the iExtant.
+
+Which is which follows the protocol's roles (Regex constrains, Proxy traps, Reflect performs): try ⊕ finally is the operation witnessed, so Reflect; catch ⊕ finally is the trap witnessed, so Proxy. On the Fano lines this gives **Proxy ⊕ Reflect = throw**: a step forward and a step back differ by exactly the throw (checked). Swap the two if the author intends the reverse.
+**Status:** Resolved.
