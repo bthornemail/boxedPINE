@@ -2,6 +2,7 @@
 // Run: npm test
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { RULES, makeGrammar, classifyAll } from '../../rosetta/src/grammar/grammar.ts';
 import { makeKernel, regenerate, admissible, digest, readAsProgram } from '../../rosetta/src/grammar/kernel.ts';
 
@@ -85,4 +86,42 @@ test('regenerate rebuilds the learned grammar from the description', () => {
 
 test('Level 4 is not built yet, and says so', () => {
   assert.throws(() => readAsProgram('0p3x40n'), /Level 4 not built/);
+});
+
+test('commands.vtt has one cue per REPL command in src/define.commands.ts, in order', () => {
+  const vtt = readFileSync(new URL('../../rosetta/src/assets/commands.vtt', import.meta.url), 'utf8');
+  const repl = readFileSync(new URL('../define.commands.ts', import.meta.url), 'utf8');
+  assert.ok(vtt.startsWith('WEBVTT'));
+  const cueIds = [...vtt.matchAll(/^(\w+)\n\d\d:\d\d\.\d{3} --> /gm)].map((m) => m[1]);
+  const commands = [...repl.matchAll(/defineCommand\('(\w+)'/g)].map((m) => m[1]);
+  assert.deepEqual(cueIds, commands);
+  for (const m of vtt.matchAll(/--> [^\n]+\n(\{[^\n]+\})/g)) JSON.parse(m[1]); // every payload is JSON
+});
+
+// The author's current draft literal /0?[boxd]?\d+[eE.]?\d[PIN]/ (wiki: SPEC-36 The Literal Separation).
+const SPLIT = /^(0)?([boxd])?(\d+)([eE.])?(\d)([PIN])$/;
+
+test('PINEBOXED reads frame, radix, value, e/E/. marker, one-digit scale and index axis', () => {
+  const g = makeGrammar();
+  for (const w of ['0x5e3P', '0d12E3I', '0b101.1N', '1e5N']) assert.ok(g.get('PINEBOXED')!.test(w), w);
+  assert.deepEqual(SPLIT.exec('0b101.1N')!.slice(1), ['0', 'b', '101', '.', '1', 'N']);
+});
+
+test('PINEBOXED as drafted: 0P and 0x5P are not admitted, the scale is one digit, unmarked digits split', () => {
+  const g = makeGrammar();
+  for (const w of ['0P', '0x5P', '0x5e30P']) assert.ok(!g.get('PINEBOXED')!.test(w), w);
+  assert.deepEqual(SPLIT.exec('0x55P')!.slice(1), ['0', 'x', '5', undefined, '5', 'P']);
+});
+
+test('At a fixed width, XNOR counts agreement: popcount(a XNOR b) = width - Hamming distance', () => {
+  const pop = (n: bigint) => { let c = 0; while (n) { c += Number(n & 1n); n >>= 1n; } return c; };
+  const width = 16n, mask = (1n << width) - 1n;
+  for (const [a, b] of [[0x3cn, 0x7cn], [0x1234n, 0xabcdn], [0n, mask], [5n, 5n]] as const) {
+    assert.equal(pop(~(a ^ b) & mask), Number(width) - pop(a ^ b));
+  }
+  assert.ok(~(5n ^ 3n) < 0n); // with no width, a BigInt XNOR is negative, not a count
+});
+
+test('The exponent and the exception differ by the case bit: e XOR E = 0x20', () => {
+  assert.equal('e'.charCodeAt(0) ^ 'E'.charCodeAt(0), 0x20);
 });

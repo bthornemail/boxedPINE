@@ -5,7 +5,7 @@
 // Exact period 8, proved in Coq:
 //   omi-files/omi-axioms/coq/04-execution/Delta16HasExactPeriodEight.v
 // Superseded by the swap delta (swap.ts), kept because the proof and the
-// Haskell reference (omi-files/omi/OMI/Delta.hs) use it.
+// Haskell reference (omi-files/omi-canvas/src/OMI/Delta.hs) use it.
 
 const rotl16 = (x: number, n: number) => ((x << n) | (x >>> (16 - n))) & 0xffff;
 const rotr16 = (x: number, n: number) => rotl16(x, 16 - n);

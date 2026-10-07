@@ -1,0 +1,33 @@
+WEBVTT
+
+NOTE
+The REPL commands of src/define.commands.ts, as cues of a TextTrack.
+Each cue identifier is a command; its payload is the command's help text
+(copied verbatim) and what it reads. The cues and the commands are kept in
+step by src/testbed/rosetta.test.ts.
+⟦PLACEHOLDER⟧ What a cue's time means (a ruler index? a 240-clock tick?)
+is the author's to define. Here each command takes one second, in order.
+
+open
+00:00.000 --> 00:01.000
+{"command":".open","help":"Say hello","reads":["omi_rosetta_stone.yaml","rosetta_stone.json"]}
+
+bind
+00:01.000 --> 00:02.000
+{"command":".bind","help":"Say hello"}
+
+apply
+00:02.000 --> 00:03.000
+{"command":".apply","help":"Say hello"}
+
+eval
+00:03.000 --> 00:04.000
+{"command":".eval","help":"Evalutes for presence","reads":["Declarations"]}
+
+digest
+00:04.000 --> 00:05.000
+{"command":".digest","help":"Say hello"}
+
+close
+00:05.000 --> 00:06.000
+{"command":".close","help":"Say goodbye"}

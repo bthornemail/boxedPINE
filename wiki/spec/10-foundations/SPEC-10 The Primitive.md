@@ -125,7 +125,7 @@ const coherence = Atomics.compareExchange(metric, 0, 2, 1) ^
     Atomics.compareExchange(metric, 2, 1, 0);
 
 if (coherence === undefined || coherence === 0) {
-    return new Float64Array(2); // Safe zero-polynomial invariant exit
+    return new ArrayBuffer(2); // Safe zero-polynomial invariant exit
 }
 ```
 
@@ -164,7 +164,7 @@ const projectiveForm = 4 * ((11 * x * x) + (4 * x * x) + (4 * x * y) + (y * y));
 const deltaAnchor = Atomics.compareExchange(delta, 17, 17, projectiveForm);
 const omiAnchor = Atomics.compareExchange(omi, 17, 19, projectiveForm);
 
-return new Float64Array(
+return new ArrayBuffer(
     metric.buffer,
     delta.byteOffset + (17 * 8),
     2

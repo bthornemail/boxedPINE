@@ -36,3 +36,35 @@ export function orbit60(): number[] {
 export function complement(index: number, width: number): number {
   return index ^ ((1 << width) - 1);
 }
+
+// THE TWO POLES — 60 ⊕ 64 AND 60 ⊕ 128
+//
+// A byte is a coordinate in a 16 × 16 table: row = high nibble, column =
+// low nibble. Rows 0–7 are the lower 8 indices (local), rows 8–15 the
+// higher 8 (shared) (wiki: SRC-01a, "16 indices (0–7 local … 8–15 shared)").
+// The author: 60 ⊕ 64 is the reading for the lower 8 indices and 60 ⊕ 128
+// for the higher; these are the root relation's two poles {c − r, c + r}
+// (_archive/_deprecated/clock.md).
+//
+//   60       = 0x3C   row 3,  column 12
+//   60 ⊕ 64  = 0x7C   row 7,  column 12   (lower 8)
+//   60 ⊕ 128 = 0xBC   row 11, column 12   (higher 8)
+//   60 ⊕ 192 = 0xFC   row 15, column 12
+//
+// The column never moves; it is the diagonal 12. The four rows are the
+// four-block family 3 ⊕ {0, 4, 8, 12}, the two poles' rows XOR to the
+// diagonal (7 ⊕ 11 = 12), and all four readings XOR to 0.
+// Verified 2026-10-07 (wiki: OPEN-01 Open Questions #18).
+
+/** Row (high nibble) and column (low nibble) of a byte in the 16 × 16 table. */
+export function coordinate(byte: number): { row: number; column: number } {
+  return { row: (byte >> 4) & 0xf, column: byte & 0xf };
+}
+
+/** The two poles of 60: the lower-8 reading (⊕ 64) and the higher-8 reading (⊕ 128). */
+export const POLES = { lower: 60 ^ 64, higher: 60 ^ 128 } as const;
+
+/** 60 read in each of the four row quadrants: ⊕ 0, 64, 128, 192. */
+export function quadrantReadings(index = 60): number[] {
+  return [0, 64, 128, 192].map((t) => index ^ t);
+}

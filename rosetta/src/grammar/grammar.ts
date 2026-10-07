@@ -35,6 +35,8 @@ export const RULES: Rule[] = [
   { name: 'DECIMAL',  group: 'wordform', pattern: /^(\d+)\.(\d+)$/ },
   { name: 'LITERAL',  group: 'wordform', pattern: /^(\d+)([boxd])(\d+)([pin])$/ },
   { name: 'STRUCT',   group: 'wordform', pattern: /^(\d+)([e.])(\d+)([boxd])(\d+)([pin])$/ },
+  { name: 'PINEBOXED', group: 'wordform', pattern: /^0?[boxd]?\d+[eE.]?\d[PIN]$/,
+    note: 'The author\'s current draft (wiki SPEC-36): uppercase PIN index axis, lowercase boxd value radix, e exponent / E exception / . decimal dot, reducible to 0n concatenation so that XOR of two literals is the XNOR of a 0n Hamming distance. ⟦PLACEHOLDER⟧ 0P / 0x5P not admitted; the scale is one digit; see SPEC-36.' },
   { name: 'EXCHANGE', group: 'wordform', pattern: /^0([pn])(\d)([boxd])(\d)0([np])$/,
     note: 'compareExchange as message syntax, e.g. 0p3x40n. Level 4: nothing executes it yet.' },
 

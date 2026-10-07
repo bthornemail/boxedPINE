@@ -4,8 +4,8 @@ import vm from 'node:vm';
 import { Buffer } from 'node:buffer';
 import { readFileSync } from 'node:fs';
 
-import { Node, Domain } from './model';
-import { Declarations, Expressions } from './constants';
+import { Node, Domain } from '../core/src/model';
+import { Declarations, Expressions } from '../core/src/index';
 
 export function myEval(cmd: string, context: REPLServer["context"], filename: string, callback: any): void {
     let result;

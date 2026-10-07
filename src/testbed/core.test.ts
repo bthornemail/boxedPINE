@@ -6,7 +6,7 @@ import {
   makeSlots, exchange, digest,
   swap16, swap32, swap64, swapDelta, xorBytes,
   delta16Steps,
-  lastBlockOffset, orbit60, BUFFERS_PER_BLOB,
+  lastBlockOffset, orbit60, BUFFERS_PER_BLOB, coordinate, POLES, quadrantReadings,
   xorTriples,
 } from '../../core/src/verified/index.ts';
 
@@ -86,4 +86,22 @@ test('The orbit of 60 starts with the four blocks < = > ? 8 9 : ; 4 5 6 7 0 1 2 
 
 test('Distinguished triples: 7, 35, 155, 651', () => {
   assert.deepEqual([3, 4, 5, 6].map((w) => xorTriples(w).length), [7, 35, 155, 651]);
+});
+
+test('60 ⊕ 64 is the lower-8 reading and 60 ⊕ 128 the higher-8 reading: rows 7 and 11, column 12', () => {
+  assert.deepEqual(coordinate(POLES.lower), { row: 7, column: 12 });
+  assert.deepEqual(coordinate(POLES.higher), { row: 11, column: 12 });
+  assert.ok(coordinate(POLES.lower).row < 8 && coordinate(POLES.higher).row >= 8);
+});
+
+test("The four readings of 60 keep column 12; their rows are the four-block family", () => {
+  const readings = quadrantReadings();
+  assert.deepEqual(readings, [60, 124, 188, 252]);
+  assert.ok(readings.every((b) => coordinate(b).column === 12));
+  assert.deepEqual(readings.map((b) => coordinate(b).row), [0, 4, 8, 12].map((k) => 3 ^ k));
+});
+
+test('The two poles differ by the diagonal: row 7 ⊕ row 11 = 12, and all four readings close', () => {
+  assert.equal(coordinate(POLES.lower).row ^ coordinate(POLES.higher).row, 12);
+  assert.equal(quadrantReadings().reduce((a, b) => a ^ b, 0), 0);
 });
