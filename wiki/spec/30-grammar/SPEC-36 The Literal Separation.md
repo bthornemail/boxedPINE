@@ -28,82 +28,77 @@ tags: [omi-imo, grammar, literal, index, value, iExtant, omicron]
 
 # The Literal Separation
 
-**Read this first.** The author says the model from the later chat (2026-10-07) is admittedly incorrect. What matters is the **concept** it is trying to encode. This note states the concept first. Everything after it, the case table, the regex and the Omicron reading, is a *draft encoding* that is still being worked out. The tests check the draft, not a fixed specification.
+## The Concept (author, 2026-10-07)
 
-## The Concept
+> We are creating literals analogous to the BigInt literal `0n`, as `0P`, `0I`, `0N`, and using the scientific notation `e`/`E` as the exponent and the exception buffer of 16 booleans. Then we balance those with datum expressed in `0b`, `0d`, `0x`, `0o`, with `0e` being the `e`/`E` of the `0E` and `0e`. The `.` is decimal notation; decimal and decimal-dot notation I try to express in `/[d\.]/`.
 
-1. **Indices and values are different kinds of literal, and the notation must show which is which.** An index is a position (calculated). A value is a quantity (interpreted). The draft uses letter case for this: uppercase for indices, lowercase for values.
-2. **Between them is one interface, the iExtant, holding two mutually exclusive states:**
-   - the *exponent offset*: where in the buffer, counted from 0 in `BYTES_PER_ELEMENT`;
-   - the *exception buffer*: what remains when the frame does not close.
+| Side | Literals | Case | What it is |
+|------|----------|------|------------|
+| Index | `0P`, `0I`, `0N` | upper | Point, Index, Number, made like JavaScript's BigInt `0n` |
+| iExtant | `0e`, `0E` | lower / upper | `e` the **exponent**, `E` the **exception buffer of 16 booleans**, as in scientific notation |
+| Datum | `0b`, `0o`, `0x`, and `0d` or `0.` | lower | the value side, in a radix; decimal is written `d` or `.` (`[d\.]`) |
 
-   Only one is active at a time.
-3. **A literal is admitted by a comparison, not an interpretation.** A value's offset is compared with an environmental (global) delta. Physically this is two signals meeting at a switch, and the breadboard shows where: the 5T node.
-4. **The shortest full form doubles as a name.** `/PINEboxed/` is a tagname for the whole form, not a structural element.
+The two sides are balanced against each other, and `e`/`E` is the hinge between them. `/PINEboxed/` is a tagname for the whole form, not part of its structure.
 
-Statements below marked **author** are the author's, taken from the draft; **verified** means it was run.
+An earlier pasted chat wrote a model of this; the author says that model is incorrect. This note follows the concept above and the author's own draft regex.
 
-## Three Kinds of Literal
-
-| Literal | Case | What it is | Interface | Family |
-|---------|------|------------|-----------|--------|
-| `/PINE/` | UPPER | **index** literals: Point, Index, Number, Exception. Positions; root 0 | Simplex | lambda |
-| `/boxed/` | lower | **value** literals: binary, octal, hex, exponent, decimal. The BigInt-like value form | Point | shape |
-| `/eE/` | mixed | the **iExtant** interface between them | iExtant | shared (Circle and Simplex implement it) |
-
-**Author:** uppercase is the source (index), lowercase the projection (value), and mixed case the boundary. `E` and `e` are **different letters**, not one letter read twice:
-- `E` is the **exception buffer** (`Exception: Blob`, 16 bytes);
-- `e` is the **exponent offset** from 0, in `BYTES_PER_ELEMENT` (`Exponent: number`).
-
-Only one is active at a time (the chirality).
-
-**Author:** `/eE/` sits between sign-value and place-value notation. That is why it shares its form with scientific notation (`1e5`, `1E5`) and decimal dot-notation (`1.5`): all are `\d [marker] \d`.
-
-**Author:** `/PINEboxed/` is a **tagname**, a display convention for the most reduced full form. It is not the regex.
-
-**Verified:** `PIN` + `E` + `boxed` contains exactly the letters of `PINEboxed`, and E and e are both present as separate letters.
-
-## The Base Form
-
-**Author:**
+## The Author's Draft Form
 
 ```
-/0[boxd]?\d+[eE]?\d+[PIN]/
+/0[box]?[d\.]?\d+[eE]?\d+[PIN]/
 
-0        the frame (the origin)
-[boxd]?  the value radix, lowercase
+0        the frame, as in 0n
+[box]?   datum radix: binary, octal, hex
+[d\.]?   decimal: d or the dot
 \d+      the value
-[eE]?    e = exponent offset, E = exception buffer
+[eE]?    e = exponent, E = exception buffer
 \d+      the scale
-[PIN]    the index axis, uppercase
+[PIN]    the index axis
 ```
 
-**Purpose (author):** to constrain the radix, by comparing the BigInt offset (`0n`) with an environmental/global delta: the Omicron form. Big O is the environmental delta (with E), little o the local delta (with e). The comparison is **analogue interaction through switches**: the XNOR of two signals through transistors.
-
-It is in the grammar as `PINEBOXED` (`rosetta/src/grammar/grammar.ts`).
+It is in the grammar as `PINEBOXED` (`rosetta/src/grammar/grammar.ts`), with tests in `src/testbed/rosetta.test.ts`.
 
 ## What Running It Shows (verified)
 
-| Input | Read as | Note |
-|-------|---------|------|
-| `0x0005e10N` | radix x, value `0005`, marker e, scale `10`, axis N | ✅ works as described |
-| `0x0005E10N` | radix x, value `0005`, marker E, scale `10`, axis N | ✅ |
-| `0x05e10n` | no match | the axis must be uppercase |
-| `0x0005N` | value `000`, scale `5` | ⚠️ with no marker, the value and scale run together and the split is arbitrary |
-| `0x5N` | no match | ⚠️ a plain value needs at least two digits |
-| `0xFFN` | no match | ⚠️ `\d` admits no hex digits |
+| Input | Read as | |
+|-------|---------|---|
+| `0x5e3P` | hex, value 5, exponent 3, Point | ✅ |
+| `0d12E3I` | decimal, value 12, exception 3, Index | ✅ |
+| `0.5e1N` | decimal-dot, value 5, exponent 1, Number | ✅ `[d\.]` works |
+| `0b101E1N` | binary, value 101, exception 1, Number | ✅ |
+| `0P`, `0I`, `0N` | no match | ⚠️ the core literals of the concept are not admitted: the form requires two digit runs |
+| `0xd5e3P` | hex **and** decimal | ⚠️ `[box]?` and `[d.]?` can both appear |
+| `0x0005N` | value `000`, scale `5` | ⚠️ with no marker, the value and scale split arbitrarily |
 
-The tests are in `src/testbed/rosetta.test.ts`.
+## Facts That Support the Concept (verified)
 
-## Corrections and Answers
+- **`e ⊕ E = 0x20`.** The exponent and the exception differ by exactly the case bit. That is the same bit that separates every uppercase letter from its lowercase one, and SRC-01a calls `0x20` (space) the pinch point. So the index/datum case separation is one bit.
+- **16 booleans is one `Word16`.** In `omi-files/omi-types` a `Word16` is exactly 16 `Bit`s, the natural type for the exception buffer. The older `interface iExtant` sketch used `Buffer.allocUnsafe(16)`, which is 16 *bytes* (128 booleans). ⟦Which is meant?⟧
+- **No letter-code balance.** XORing the ASCII codes of `PIN`/`PINE` against `box`/`boxd`/`boxed` gives no equal pairs. The balance has to come from the values the literals carry, not their letters.
+- **Where the comparison happens.** The XNOR of two signals is read at the 5T node (BOOT0) of the breadboard ([[OPEN-00 Contradiction Register]] #1, [[SPEC-44 The Virtual Breadboard]]). XNOR is 1 when the signals are equal.
 
-- **XNOR direction.** XNOR is **1** when the two signals are equal (truth table `1001`, verified). The chat's "XNOR = 0 when the same" describes XOR, the compare-exchange *difference*. "Admissible iff the difference is 0" and "admissible iff XNOR is all ones" are the same condition.
-- **Which transistors are the switches** (the chat's last question). The breadboard already answers it. The XNOR physically exists at the 5T's collector node: BOOT0, the terminal read, where the two inputs meet. The 6T's Q6 inverts it to XOR to drive onward ([[OPEN-00 Contradiction Register]] #1, [[SPEC-44 The Virtual Breadboard]]). Every transistor is a switch; the XNOR is *read* at the 5T endpoint.
-- **Hex and the marker.** Admitting hex digits would collide with the marker: `e`/`E` (and `b`, `d`) are hex digits, so `0x1E5N` could be the value `1E5` or the value `1`, exception, scale `5`. Keeping value digits decimal (`\d`), as the form does, avoids this.
+## A Possible Revision (for the author)
 
-## Decisions for the Author (on the draft encoding)
+This keeps the draft's parts but admits the bare literals, and keeps radix and decimal exclusive:
 
-1. ⟦**Optional or required marker?** If `[eE]` is optional, the form needs the marker and the scale to go together, e.g. `/^0[boxd]?\d+(?:[eE]\d+)?[PIN]$/`. Then `0x5N` matches and `0x0005N` reads value `0005` with no scale. If the marker is always present, write `[eE]` without `?`.⟧
-2. ⟦**Is `.` a third marker** (pure place-value), so the form is `[eE.]`?⟧
-3. ⟦**Hex values:** keep decimal digits only, or allow hex digits and give up the marker inside hex values?⟧
-4. ⟦**β in the Omicron comparison:** with XNOR read as equality of `0n` and the environmental delta, what is the environmental delta concretely: the exception buffer E?⟧
+```
+/^0(?:[box]|[d.])?(?:\d+)?(?:[eE]\d+)?[PIN]$/
+```
+
+| Input | Draft | Revision |
+|-------|-------|----------|
+| `0P` | no | yes |
+| `0x5P` | no | yes |
+| `0x5e3P` | yes | yes |
+| `0xd5e3P` | yes | no |
+| `0x0005N` | value `000`, scale `5` | value `0005`, no scale |
+
+And the iExtant literals on their own, `0e` and `0E`, would be `/^0[eE]$/`.
+
+## Decisions for the Author
+
+1. ⟦Adopt the revision, or keep the draft as written?⟧
+2. ⟦Are `0e` and `0E` standalone literals as well as markers inside a form?⟧
+3. ⟦The exception buffer: 16 booleans (one `Word16`) or 16 bytes?⟧
+4. ⟦Hex values: decimal digits only? `e`, `E`, `b` and `d` are hex digits, so admitting hex digits collides with the markers.⟧
+5. ⟦What concretely is balanced between the index side and the datum side?⟧

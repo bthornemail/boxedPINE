@@ -204,6 +204,8 @@ tags: [omi-imo, meta, changelog, history]
 - Wrote [[SPEC-36 The Literal Separation]] from the author's later chat: `/PINE/`, `/boxed/`, `/eE/`, the base form and the Omicron constraint; added `PINEBOXED` to the grammar with tests (29 passing)
 - Noted that the chat inverts XNOR (it is 1 when equal), and answered its last question from the breadboard: the XNOR is read at the 5T node (BOOT0)
 
+- Rewrote [[SPEC-36 The Literal Separation]] around the author's stated concept (literals like BigInt `0n`; `e`/`E`; datum radices; `[d\.]`) and the author's own draft regex; offered a revision that admits `0P`/`0I`/`0N`
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`

@@ -195,7 +195,7 @@ Newest first. **Evidence** says how each item is known:
 
 | Date | Discovery | Level | Evidence | Where |
 |------|-----------|-------|----------|-------|
-| 2026-10-07 | The literal separation (concept; the encoding is a draft): `/PINE/` index (upper), `/boxed/` value (lower), `/eE/` iExtant; base form `/0[boxd]?\d+[eE]?\d+[PIN]/` in the grammar as `PINEBOXED`. Works with a marker; without one the value/scale split is arbitrary | 1, 2 | author + verified (test) | [[SPEC-36 The Literal Separation]] |
+| 2026-10-07 | The literal separation: index literals `0P`/`0I`/`0N` like BigInt `0n`, `e` exponent / `E` exception buffer (16 booleans), datum `0b`/`0o`/`0x`/`0d`/`0.`; draft regex in the grammar as `PINEBOXED`. It does not yet admit the bare `0P`/`0I`/`0N`; `e ⊕ E = 0x20` | 1, 2 | author + verified (test) | [[SPEC-36 The Literal Separation]] |
 | 2026-10-07 | The two remaining Fano points are Reflect (try ⊕ finally) and Proxy (catch ⊕ finally), where iExtant meets the user's declarations; Proxy ⊕ Reflect = throw | 4 | author + verified | [[OPEN-01 Open Questions]] #19 |
 | 2026-10-07 | The REPL commands exist as WebVTT cues (`rosetta/src/assets/commands.vtt`), kept in step with `src/define.commands.ts` by a test: one command list, readable as data or as program | 4, 5 | verified (test) | [[META-04 Repository Frame]] |
 | 2026-10-07 | `{c − r, c + r}` are two poles: 60 ⊕ 64 (lower 8 indices, row 7) and 60 ⊕ 128 (higher 8, row 11), both at column 12; the rows of 60's four readings are the four-block family, and the poles' rows XOR to the diagonal 12 | 1 | author + verified (test) | [[OPEN-01 Open Questions]] #18 |
