@@ -84,6 +84,23 @@ The author points to *The Uniform Bitboard, Pre-Language, OMI-Lisp, and Pseudo-P
 
 ⟦Candidate rule, for the author: literal → handle = (axis tag in the top bits) ‖ (value nibbles in place order). Which bits carry the axis, and where do `e` / `E` / `.` go?⟧
 
+## One Literal, Several Readings (verified)
+
+The faces and reflections of G (`core/src/index.ts`) and `/PIN/` are not true of one string at once. They are three questions asked at different widths.
+
+**Faces ask which side of a dot holds a number.** Two yes/no answers give four cells:
+
+| | right numeric | right not numeric |
+|---|---|---|
+| **left numeric** | `3.5` CENTER | `3.a` LEFT |
+| **left not numeric** | `a.3` RIGHT | `a.b`: unnamed in G; plain dot notation, like `car.cdr` |
+
+**Reflections ask whether a string mirrors around `:`.** DEFLECT mirrors content and forbids dots (`ab:ab`). REFLECT mirrors frame characters, dots and quotes only (`.:.`). INFLECT nests two (`.:":":.`). The faces use the dot as a hinge between content; the reflections use it as the frame. No string matches both families: checked over 2,396,744 strings of up to 7 characters, none did.
+
+**`/PIN/` asks which axis the whole literal stands on.** `0b101.1N` is, as a whole, a `PINEBOXED` literal on axis N; the 3-character window around its dot, `1.1`, is a CENTER face (the decimal dot of `[d\.]`). The same characters are read at two widths, the way a byte is a row and a column at once.
+
+⟦If the four face cells are meant to line up with P, I, N and the plain dot, which is which?⟧
+
 ## Why Base36 (verified)
 
 The bits that partition the blocks also separate the characters:
