@@ -38,133 +38,144 @@ tags: [omi-imo, open-questions, unresolved, research]
 
 # Open Questions
 
-## Restated by the Fano Fold conversation
-
-Source: [[SRC-09 Try XOR Catch XNOR Finally]]. These are restatements, not proofs.
-
-| Item | Status after that file |
-|------|------------------------|
-| Middle of bind is `{3, 7, 11, 15}` on a blackboard | stated |
-| `delta16` is the 16/8 Hamming fold | stated |
-| `get`/`set`/`catch` vs `bind`/`apply`/`eval`/`digest` | stated |
-| `try`/`catch`/`finally` is the triangle of the fold | stated; 3-vs-7 reading left open |
-| `{17, 19}` anchors | explicitly **not** resolved |
-| Period 8 vs period 240 | not addressed |
-
 ## Overview
 
-This register tracks all open questions in the protocol. Each question is a place where the sources are unclear or incomplete.
+This register tracks the places where the sources are unclear or incomplete. On 2026-10-07 each question was answered from the `_archive/` specifications, transcripts and code, or marked as needing evidence the archive does not have. Contradictions live in [[OPEN-00 Contradiction Register]]; code defects live in [[OPEN-02 Broken Code Inventory]].
+
+| # | Question | Status |
+|---|----------|--------|
+| 1 | Period 8 vs 240 | Resolved |
+| 2 | `3!⊕3!⊕3!⊕1!` | Resolved |
+| 3 | `β + β` | Resolved |
+| 4 | Verilog swaps | Resolved (bug) |
+| 5 | Missing bibliography | Unrecoverable |
+| 6 | `apply` | Answered; not implemented |
+| 7 | `pin` | Answered; not implemented |
+| 8 | `learn` | Resolved; working code exists |
+| 9 | `regenerate` | Resolved; working code exists |
+| 10 | Four-block family and the diagonal | Resolved |
+| 11 | 5T/10T frame and the n-sphere | Resolved |
+| 12 | Swap ↔ reading pairing | Decided by convention |
+| 13 | `16xy = 12` | Resolved |
+| 14 | The pin at 18 | Resolved |
+| 15 | The blackboard | Resolved |
+| 16 | 6T sourcemap gap | Needs the Rosetta YAML |
 
 ## Questions
 
 ### 1. The Period-8 vs Period-240 Relationship
 
-**Question:** How are the delta's period-8 and the protocol's period-240 related?
-**Context:** The delta function has exact period 8. The protocol's behavior is time crystals (period 240).
-**Hypothesis:** The 8-period is the unit cell; the 240-period is the supercell. 240 = 8 × 30.
-**Status:** Open.
+**Answer:** 8 is the unit cell, 240 the time crystal, and 5040 the supercell. Each divides the next (240 = 8 × 30, 5040 = 240 × 21), so the delta returns to its start 30 times per clock orbit. The hypothesis was right, and rev1 §14.2 states it as a table. Details: [[OPEN-00 Contradiction Register]] #2.
+**Status:** Resolved.
 
 ### 2. The `3! XOR 3! XOR 3! XOR 1!` Expression
 
-**Question:** What is the correct value of `3! XOR 3! XOR 3! XOR 1!`?
-**Context:** The expression is assigned 19 (addition), 216 (multiplication), and 7 (true XOR).
-**Hypothesis:** The true XOR value is 7. The addition and multiplication values are different operations.
-**Status:** Open.
+**Answer:** 7 under XOR. 19 is the sum and 216 the product. Checked in Coq. See [[OPEN-00 Contradiction Register]] #5.
+**Status:** Resolved.
 
 ### 3. The `beta + beta` Question
 
-**Question:** Is `beta + beta = 0` or `beta + beta = 2`?
-**Context:** The Coq proof says `beta + beta = 0` (Admitted). The transcript says `beta + beta = 2` (proved).
-**Hypothesis:** The Coq proof is incomplete (Admitted). The transcript's proof may be correct.
-**Status:** Open.
+**Answer:** `β ⊕ β = 0`. The Coq `+` versions were about natural-number addition. See [[OPEN-00 Contradiction Register]] #7.
+**Status:** Resolved.
 
 ### 4. The Verilog `swap16` and `swap64` Branches
 
-**Question:** Are the Verilog `swap16` and `swap64` branches byte-identical?
-**Context:** The extraction says they are byte-identical (suspect).
-**Hypothesis:** They should be different. The byte-identical branches are a copy-paste error.
-**Status:** Open.
+**Answer:** Yes, they are byte-identical, and that is a copy-paste error. `swap32` is also mis-sized. The corrected module is in [[OPEN-02 Broken Code Inventory]] #18.
+**Status:** Resolved (as a bug).
 
 ### 5. The Missing Bibliography
 
-**Question:** What is the bibliography for the inline markers `[1]`–`[14]`?
-**Context:** The markers appear on every load-bearing claim but no bibliography is in the PDF.
-**Hypothesis:** The bibliography was in a separate document that was not included.
-**Status:** Open.
+**Answer:** The `[1]`–`[14]` markers belong to [[SRC-06 Phases vs Attributes vs Constraints vs Configurations]], a Google *AI Overview*, not to the Synthesis. They are the overview's clickable source chips. Printing to PDF kept the numbers and dropped the links, so there was never a bibliography document. Where the chips can be matched to results on the page, they do not support the claims ([[OPEN-04 Discarded Claims]] #25). Treat every claim that leans on `[n]` as uncited.
+**Status:** Unrecoverable; closed.
 
 ### 6. The `apply` Method
 
-**Question:** What is the correct implementation of the `apply` method?
-**Context:** The `apply` method in `Node` is a stub — declared but not implemented.
-**Hypothesis:** The `apply` method should execute a knot as a function descriptor, producing a result.
-**Status:** Open.
+**Answer:** No source in the archive implements `apply`. The archived `model.ts` returns nothing, and the corrected Haskell gives `apply` the same body as `bind`. But the sources agree on what it should do:
+
+- rev1 §5.5: `apply` is slot 13, "invoke the relation".
+- Haskell (corrected): "Same shape as bind, but the correction is set."
+- Hardware: `apply` is the 6T, the stage that makes the relation drive onward (see [[OPEN-00 Contradiction Register]] #1).
+
+So `apply(p1, p2)` = `bind(p1, p2)` with the correction half of the ruler filled in, followed by one `delta16` step. The correction is bytes 8–15 (rev1 §5.3).
+**Status:** Answered (design); implementation pending ([[OPEN-02 Broken Code Inventory]] #10).
 
 ### 7. The `pin` Method
 
-**Question:** What is the correct implementation of the `pin` method?
-**Context:** The `pin` method always throws — the try/catch/finally structure is broken.
-**Hypothesis:** The `pin` method should pin a function by name, creating a Blob and registering it.
-**Status:** Open.
+**Answer:** No source specifies `pin` beyond `_archive/model.ts`. Read from that code, its intent is to wrap a function's source in a `Blob`, make an object URL for it, and register it under a name pattern (`new RegExp(name)`). That would make the function loadable by name. The code builds the URL twice but never returns or yields it. A working `pin` must return that URL. [[OPEN-00 Contradiction Register]] #13 records what the current code really does.
+**Status:** Answered (intent from code); implementation pending.
 
 ### 8. The `learn` Method
 
-**Question:** What is the correct implementation of the `learn` method?
-**Context:** The self-modifying kernel's `learn` method is not yet implemented.
-**Hypothesis:** The `learn` method should add a new pattern to the grammar and increment the generation counter.
-**Status:** Open.
+**Answer:** A working `learn` exists in the Fano Fold conversation ([[SRC-09 Try XOR Catch XNOR Finally]], "The complete file"). The handler exposes `learn(name, source)`, which adds `new RegExp(source)` to a mutable `Map` grammar. The kernel then increments its `generation` and records the change in `history`. Extracted and run on 2026-10-07, its self-test passed 19 of 20 checks. The one failure is a grammar bug, not a `learn` bug: `HEX: /^0x(\d+)$/` rejects `0xFF` ([[OPEN-02 Broken Code Inventory]] #21).
+
+Two cautions. First, `makeKernel()` with no argument shares the module-level `GRAMMAR`, so learning in one kernel changes every kernel. Second, rev1 §9.5's version (`kernel.state.learn`) only works with that handler: a plain Proxy rejects `learn` as an inadmissible position.
+
+The same idea also runs at small scale in [[SPEC-44 The Virtual Breadboard]], where `learn` turns a truth table into a gate.
+**Status:** Resolved; the code needs to move into the repo.
 
 ### 9. The `regenerate` Function
 
-**Question:** What is the correct implementation of the `regenerate` function?
-**Context:** The kernel regeneration from description is not yet implemented.
-**Hypothesis:** The `regenerate` function should rebuild the kernel from its description, replaying the history.
-**Status:** Open.
+**Answer:** Same source as #8. `regenerate(description)` builds a fresh kernel and replays every `learned` entry from `description.history`. In the run it reproduced the generation count and the learned grammar. It does **not** replay `step` entries, so positions written before regeneration are lost (checked: a regenerated kernel read `5p` as `undefined`). An earlier draft in the same conversation did replay steps. Decide whether a description means grammar only, or grammar plus state.
+**Status:** Resolved for grammar; restoring state is a design choice still open.
 
 ### 10. The Four-Block Family and the Diagonal
 
-**Question:** What is the exact relationship between the four-block family {3, 7, 11, 15} and the diagonal 12 = 01100?
-**Context:** Bases 3 and 11 are orthogonal to the diagonal (bit 2 clear). Bases 7 and 15 interfere (bit 2 set).
-**Hypothesis:** The four-block family is the set of bases with bits 0 and 1 set. The diagonal is the half-unit coupling. The orthogonal bases preserve the cross term; the interfering bases do not.
-**Status:** Open.
+**Answer:** The four-block family is 3 XORed with every combination of the diagonal's bits:
+
+```
+{3, 7, 11, 15} = 3 ⊕ {0, 4, 8, 12}        (12 = 0b1100, the diagonal)
+b & 12 = 0, 4, 8, 12                       (the block index k, times 4)
+```
+
+The block orders in [[OMI-IMO]] follow from the decomposition `c ⊕ n = 4·((c≫2) ⊕ (n≫2)) + ((c&3) ⊕ (n&3))`, which `_archive/check.py` checks exhaustively. The high two bits (the diagonal) choose which block comes when. The low two bits, always `11`, make every block run descending.
+
+So "orthogonal vs interfering" is a statement about one bit at a time. Only 3 shares no bit with 12. 7 shares bit 2, 11 shares bit 3, and 15 contains the whole diagonal.
+**Status:** Resolved.
 
 ### 11. The 5T/10T Frame and the n-Sphere
 
-**Question:** Is the 5T/10T frame really the n-sphere of the 4-bit space?
-**Context:** The orbit of 0x0005 under XOR with n = 0..15 walks through all sixteen values. Because XOR is an involution, the orbit is symmetric.
-**Hypothesis:** The orbit is the discrete n-sphere of the 4-bit space at radius from 0x0005.
-**Status:** Open.
+**Answer:** Yes, in the Hamming (bit-difference) metric, with one correction. The orbit of 5 is not *one* sphere but all of them. `5 ⊕ n` is at distance `popcount(n)` from 5, so the 16 values split into spheres of radius 0–4 with sizes 1, 4, 6, 4, 1. The radius-4 sphere is the single point `10 = 0b1010`, the exact opposite of `5 = 0b0101`. So the 5T and 10T are antipodes on the 4-cube, which is why rev1 §7.7 calls them the two *endpoints*.
+**Status:** Resolved.
 
 ### 12. The Swap16/Swap32/Swap64 Pairing
 
-**Question:** How do the three swaps pair with the three readings (bind, apply, eval)?
-**Context:** The three swaps are the three readings of the same buffer at different granularities.
-**Hypothesis:** swap16 ↔ bind, swap32 ↔ apply, swap64 ↔ eval. But the pairing may be different.
-**Status:** Open.
+**Answer:** The source offers two pairings and does not choose. Neither follows from the math; any one-to-one assignment works. This vault adopts the first as a **convention**:
 
-### 13. The 16xy = 12 Bridge
+| Swap | Reading | Why this order |
+|------|---------|----------------|
+| `swap16` | bind | smallest slice ↔ first reading ↔ 5T ↔ slot 12 |
+| `swap32` | apply | middle slice ↔ 6T ↔ slot 13 |
+| `swap64` | eval | largest slice ↔ 8T ↔ slot 14 |
 
-**Question:** What is the exact reading of `16xy = 12` at the half-unit diagonal?
-**Context:** The cross term 16xy equals 12 at x = 3/2, y = 1/2.
-**Hypothesis:** The half-unit diagonal is the point where the coupling is exactly 12. The diagonal 12 = 01100 has bits 2 and 3.
-**Status:** Open.
+It is the order the Fano Fold conversation states first, and it keeps every other ordering in the protocol monotone. Change it here if you intend the reverse.
+**Status:** Decided by convention.
+
+### 13. The `16xy = 12` Bridge
+
+**Answer:** `16xy = 12` means `xy = 3/4`. That is a whole curve (a hyperbola), not one point. `(3/2, 1/2)` is the point rev1 §4.5 picks, the "half-unit diagonal". The link to the diagonal is a numeric coincidence of labels: the value 12 is `0b01100`, bits 2 and 3. Nothing in the quadratic forms derives that bit pattern.
+**Status:** Resolved.
 
 ### 14. The Orbital Cycle and the Pin
 
-**Question:** How does the pin at 18 relate to the orbital cycle of base 19?
-**Context:** The pin is at 18, which is between 17 and 19 — the two evaluation anchors.
-**Hypothesis:** The pin is in orbit 0, the first orbit, and it's the second point in that orbit.
-**Status:** Open.
+**Answer:** The hypothesis is right. The orbit of 19 is `19 ⊕ n`. Its first block is `{19, 18, 17, 16}` (n = 0..3). 18 = 19 ⊕ 1 is the second point, 17 = 19 ⊕ 2 is the third, and `17 ⊕ 18 = 3`. The pin sits one XOR step from 19 and two from 17.
+
+Still undefined: what makes `{17, 19}` the *evaluation anchors* of the generator. [[SRC-09 Try XOR Catch XNOR Finally]] explicitly leaves this open, and no other archive file defines it.
+**Status:** Resolved for the pin; the role of `{17, 19}` is still open.
 
 ### 15. The Blackboard Extraction
 
-**Question:** What is the correct architecture for extracting the middle to a blackboard?
-**Context:** The middle of bind should be the four-block family {3, 7, 11, 15}, extracted to a blackboard or automaton state.
-**Hypothesis:** The blackboard holds the four-block state. The bind becomes a transition function reading and writing the blackboard.
-**Status:** Open.
+**Answer:** rev1 Part XIII gives the architecture. The 16-byte ruler is three cubes:
+
+- Cube 0 is the bottom 8 bytes.
+- Cube 1 is the top 8 bytes.
+- Cube 2 sits between them. It is the blackboard and holds `{3, 7, 11, 15}`.
+
+Each cycle, Cubes 0 and 1 trade roles (Exponent ↔ Exception, the `delta16` half-swap). Cube 2 does not change. The hypothesis is right: `bind` becomes a transition function that reads the blackboard, and the blackboard is the state that survives the fold.
+**Status:** Resolved (architecture); not yet in code.
 
 ### 16. The 6T Sourcemap Gap
 
 **Question:** Why does the 6T sourcemap skip breadboard column 16?
-**Context:** [[SPEC-40 The 6T XOR Circuit]] places Q1–Q6 at columns 1, 6, 11, 21, 26, 31. The 8T uses every fifth column with no gap. The generator in [[SPEC-44 The Virtual Breadboard]] gives the 6T 1, 6, 11, 16, 21, 26.
-**Hypothesis:** The gap separates the switch (Q3) from the OR-like pair (Q4, Q5) on the physical board, or it is a typo in the YAML.
-**Status:** Open.
+**Context:** [[SPEC-40 The 6T XOR Circuit]] places Q1–Q6 at columns 1, 6, 11, 21, 26, 31; the generator in [[SPEC-44 The Virtual Breadboard]] gives 1, 6, 11, 16, 21, 26.
+**What the archive adds:** rev1 numbers transistors across the whole pipeline: 5T Q1–Q5, 6T adds Q6, 8T Q7–Q14, 10T Q15–Q24. That means the 6T is the 5T plus one transistor on the same board. The coupling resistor (BOOT0 → 2 kΩ → Q6) has to sit somewhere, which may be what the gap is for. The Rosetta YAML that holds the coordinates is not in this repo.
+**Status:** Open; needs `rosetta/src/omi_rosetta_stone.yaml`.
