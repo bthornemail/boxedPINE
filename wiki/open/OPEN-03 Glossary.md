@@ -156,6 +156,8 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 
 **observer** — Any circulator capable of reflecting swap rotations. A perceptron. In the virtual breadboard, an `AnalyserNode` reading a net.
 
+**Omicron form** — Big O (the environmental delta, with E) and little o (the local delta, with e). It constrains the radix by comparing the BigInt offset with the environmental delta ([[SPEC-36 The Literal Separation]]).
+
 **orbit** — The sequence `c ^ n` for `n = 0..15`. A cycle of length 16.
 
 ## P
@@ -163,6 +165,8 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 **period hierarchy** — 8 (delta unit cell) | 240 (time crystal) | 5040 (supercell, 7!). Each divides the next.
 
 **Proxy / Reflect** — The two Fano points where iExtant meets the user: Reflect = try ⊕ finally (the operation, witnessed), Proxy = catch ⊕ finally (the trap, witnessed), and Proxy ⊕ Reflect = throw. In `core/src/broadcast.ts`, `proxy()` steps forward and `reflect()` steps back.
+
+**/PINE/, /boxed/, /eE/** — The three kinds of literal ([[SPEC-36 The Literal Separation]]): `/PINE/` the uppercase index literals (Simplex), `/boxed/` the lowercase value literals (Point), `/eE/` the iExtant interface between them, where `E` is the exception buffer and `e` the exponent offset in `BYTES_PER_ELEMENT`. `/PINEboxed/` is the tagname for the base form `/0[boxd]?\d+[eE]?\d+[PIN]/`.
 
 **pinch** — The 0-sphere: two points.
 

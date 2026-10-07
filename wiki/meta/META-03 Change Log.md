@@ -199,6 +199,11 @@ tags: [omi-imo, meta, changelog, history]
 - Recorded the author's roles for `core/src` (headless proxy presenter) and the `space/` target (three.js breadboard in a 360 × 65536 tetrahedron)
 - Moved the development REPL (`server.ts`, `define.commands.ts`) to `src/`; added `rosetta/src/assets/commands.vtt` with a sync test (27 tests passing)
 
+### The Literal Separation
+
+- Wrote [[SPEC-36 The Literal Separation]] from the author's later chat: `/PINE/`, `/boxed/`, `/eE/`, the base form and the Omicron constraint; added `PINEBOXED` to the grammar with tests (29 passing)
+- Noted that the chat inverts XNOR (it is 1 when equal), and answered its last question from the breadboard: the XNOR is read at the 5T node (BOOT0)
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`

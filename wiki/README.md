@@ -38,6 +38,7 @@ related:
   - "[[SPEC-33 The Quadratic Forms]]"
   - "[[SPEC-34 Phases Attributes Constraints Configurations]]"
   - "[[SPEC-35 Reflections and Orbits]]"
+  - "[[SPEC-36 The Literal Separation]]"
   - "[[SPEC-40 The 6T XOR Circuit]]"
   - "[[SPEC-41 The 8T XOR Circuit]]"
   - "[[SPEC-42 Circuit Sourcemap]]"
@@ -142,7 +143,7 @@ wiki/
 | Canonical | [[SPEC-00 Canonical Statement]], [[SPEC-01 The Three Laws]], [[SPEC-02 Conformance Criteria]], [[SPEC-03 Notation OMI-Lisp]] |
 | Foundations | [[SPEC-10 The Primitive]], [[SPEC-11 The Three Primitives]], [[SPEC-12 The Ruler]], [[SPEC-13 XOR Algebra]], [[SPEC-14 Knots and Binds]], [[SPEC-15 The Delta Transform]], [[SPEC-16 The Fano Invariant]] |
 | Architecture | [[SPEC-20 The Dimensional Axis]], [[SPEC-21 The Inversion Law]], [[SPEC-22 The Blob]], [[SPEC-23 The Rosetta Stone]], [[SPEC-24 Observers]], [[SPEC-25 The Iff]] |
-| Grammar | [[SPEC-30 The Symbol Table G]], [[SPEC-31 Declaration Syntax]], [[SPEC-32 Mnemonics and Axes]], [[SPEC-33 The Quadratic Forms]], [[SPEC-34 Phases Attributes Constraints Configurations]], [[SPEC-35 Reflections and Orbits]] |
+| Grammar | [[SPEC-30 The Symbol Table G]], [[SPEC-31 Declaration Syntax]], [[SPEC-32 Mnemonics and Axes]], [[SPEC-33 The Quadratic Forms]], [[SPEC-34 Phases Attributes Constraints Configurations]], [[SPEC-35 Reflections and Orbits]], [[SPEC-36 The Literal Separation]] |
 | Hardware | [[SPEC-40 The 6T XOR Circuit]], [[SPEC-41 The 8T XOR Circuit]], [[SPEC-42 Circuit Sourcemap]], [[SPEC-43 Prime Gaps and Sextuplets]], [[SPEC-44 The Virtual Breadboard]] |
 | Runtime | [[SPEC-50 Stream Transport]], [[SPEC-51 JSON Canvas Interchange]], [[SPEC-52 The REPL and the Digest]], [[SPEC-53 Clocks and Periods]], [[SPEC-54 The Web Platform Layers]], [[SPEC-55 ASCII Folds]] |
 | Verification | [[SPEC-60 Test Vectors]], [[SPEC-61 Implementation Status]] |

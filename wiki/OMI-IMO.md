@@ -30,6 +30,7 @@ down:
   - "[[SPEC-33 The Quadratic Forms]]"
   - "[[SPEC-34 Phases Attributes Constraints Configurations]]"
   - "[[SPEC-35 Reflections and Orbits]]"
+  - "[[SPEC-36 The Literal Separation]]"
   - "[[SPEC-40 The 6T XOR Circuit]]"
   - "[[SPEC-41 The 8T XOR Circuit]]"
   - "[[SPEC-42 Circuit Sourcemap]]"

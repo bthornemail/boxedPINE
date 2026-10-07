@@ -184,4 +184,6 @@ const GRAMMAR = new Map([
 ]);
 ```
 
+The literal model (`/PINE/` index, `/boxed/` value, `/eE/` iExtant) and its base form are in [[SPEC-36 The Literal Separation]].
+
 The grammar is mutable. The kernel can extend it with `learn`. The handler reads the grammar from the closure scope chain on every access.
