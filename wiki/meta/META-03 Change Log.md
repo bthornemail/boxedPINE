@@ -142,6 +142,18 @@ tags: [omi-imo, meta, changelog, history]
 - Added [[OPEN-01 Open Questions]] #16 (the 6T sourcemap gap)
 - Linked SPEC-44 from the root MOC, README, SPEC-40, SPEC-41, SPEC-61 and EXT-03
 
+### Open-Question Pass
+
+- Checked every entry in OPEN-00 to OPEN-04 against `_archive/` (rev1 spec, Fano Fold conversation, Gemini notebook, code) and the raw transcripts
+- Ran the archived code, recomputed the arithmetic, simulated the corrected Verilog swap engine in Icarus Verilog, and checked the β and collapse laws in Coq
+- Resolved the 6T contradiction (BOOT0 is XNOR, BOOT1 is XOR; `Atom.apply` inverts only bit 0)
+- Reinstated `168 & 3125 = 32` and `168 | 3125 = 3261` (both true); fixed the Klein configuration to 60 points and 60 planes
+- Found new defects: the `Node` constructor throws at `swap32`, the kernel `HEX` regex, and rev1's "all gates reduce to XOR and β"
+- Reclassified the byte-rotating `delta` (period 4) as the intended block reading, per the author; it is distinct from the bit-level `delta16` (period 8)
+- Fixed `rotr2` in `omi-files/omi/OMI/Delta.hs` (it was `rotl 6`); verified against the spec delta on all 65,536 words
+- Recorded the author's supersession of the rotation delta by the swap permutations (XOR/XNOR on the index, period 4)
+- Left open: the 6T sourcemap gap (needs the Rosetta YAML), the role of `{17, 19}`, and whether `regenerate` restores state
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`

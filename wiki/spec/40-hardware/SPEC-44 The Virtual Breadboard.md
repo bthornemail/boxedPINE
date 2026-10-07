@@ -117,7 +117,7 @@ For the 6T it does not: [[SPEC-40 The 6T XOR Circuit]] puts Q4 at column 21 and 
 
 The breadboard reproduces this exactly. Tick *Read 6T before its output stage* and the 6T LED is wired to `node` as a sourcing LED. The self-test then reads `1 0 0 1`, which is XNOR, and the 6T row fails.
 
-Proposed reading (**derived, not confirmed**): the 5T's `node` is active-low. It is XNOR, and the sinking LED shows XOR by inverting it physically. The sixth transistor inverts `node` in logic, so its output is XOR with a sourcing LED. An implementation that reads the 6T at `node` with source polarity reads XNOR. Under this reading `Atom.apply()` probes one transistor too early, or applies sink polarity where it should apply source polarity. This needs to be checked against `Atom.apply()` itself before OPEN-00 #1 can be closed.
+Confirmed reading (2026-10-07; evidence in [[OPEN-00 Contradiction Register]] #1): the 5T's `node` is active-low. It is XNOR, and the sinking LED shows XOR by inverting it physically. The sixth transistor inverts `node` in logic, so its output is XOR with a sourcing LED. An implementation that reads the 6T at `node` with source polarity reads XNOR. `Atom.apply()` does exactly this in code: `~xor(a, b) & 0xFF` is the XNOR node, and `^ 0x01` is the Q6 inverter applied to bit 0 only. So bit 0 is XOR and the value is 254 + XOR. rev1 §7.3 and the Gemini notebook give the same wiring: BOOT0 → 2 kΩ → B(Q6), yellow LED from C(Q6).
 
 ## Self-Generation
 

@@ -56,19 +56,27 @@ tags: [omi-imo, glossary, terminology, definitions]
 
 # Glossary
 
+Updated 2026-10-07 with the terms the open-question pass settled. Where a definition was corrected, the reason is linked.
+
 ## A
 
-**apply** — The second primitive. Executes a knot as a function descriptor, producing a result. Categorically a Functor.
+**apply** — The second primitive (slot 13, the 6T). It invokes a relation: `bind` with the correction half of the ruler set, then one delta step, so the relation drives onward. Categorically a Functor. Not yet implemented; see [[OPEN-01 Open Questions]] #6.
 
-**Atomics.compareExchange** — The physical primitive. In one uninterrupted step, it binds the relation between expected and replacement, applys the comparison and conditional swap, and evals the old value.
+**Atomics.compareExchange** — The physical primitive. In one uninterrupted step it compares a slot with an expected value, swaps in the replacement if they match, and returns the old value. Those three parts are bind, apply and eval in one step.
 
 ## B
 
-**bind** — The first primitive. Creates a knot — a bidirectional pair between two items. Categorically a Monad.
+**β (beta)** — The observer unit: the constant 1 in XOR arithmetic. `NOT a = a ⊕ β`, and `β ⊕ β = 0`, so pairs of observer flips cancel. In the ±1 audio encoding β is multiplication by −1. Not `β + β`; see [[OPEN-00 Contradiction Register]] #7.
 
-**Blob** — The 65536-bit truth table. The minimum boolean truth table for 16 binary choices. The -5D substrate.
+**bind** — The first primitive (slot 12, the 5T). Creates a knot, a bidirectional pair between two items. Categorically a Monad.
 
-**BOUNDRY** — The type of the constraint result. Either `[SPECTRAL, SPATIAL]` (the nested reading) or `COORDINATE` (the cube reading).
+**blackboard** — Cube 2 of the 16-byte ruler. It holds the four-block family `{3, 7, 11, 15}` and stays fixed while Cubes 0 and 1 swap each cycle (rev1 Part XIII).
+
+**Blob** — The 65,536-bit truth table, the minimum Boolean truth table for 16 binary choices. The −5D substrate. It is 8,192 bytes, exactly 128 buffers of 64 bytes. Every index in the protocol is an address in it, which is what makes it transportable.
+
+**BOOT0 / BOOT1 / SECURE / USER** — The four pipeline outputs: the 5T collector node, the 6T collector, the 8T output and the 10T output. BOOT0 is XNOR as a voltage, shown as XOR by a sinking LED. BOOT1 is its inverse, which is XOR.
+
+**BOUNDRY** — The type of the constraint result: either `[SPECTRAL, SPATIAL]` (the nested reading) or `COORDINATE` (the cube reading).
 
 ## C
 
@@ -80,29 +88,43 @@ tags: [omi-imo, glossary, terminology, definitions]
 
 ## D
 
-**delta** — The transform `delta16(x, c) = rotl16(x, 1) ^ rotl16(x, 3) ^ rotr16(x, 2) ^ c`. Has exact period 8.
+**delta** — The step law. Current form: `swap16(x) ⊕ swap32(x) ⊕ swap64(x) ⊕ c`, a permutation law with period 4. Earlier form: `delta16(x, c) = rotl16(x, 1) ^ rotl16(x, 3) ^ rotr16(x, 2) ^ c` on 16-bit words. Its period is exactly 8: proved in Coq in `omi-axioms`, and every orbit length divides 8. Rotating the 8 *bytes* instead is the block reading, with period 4. That is intended: one step per 64-value quarter of the byte ([[OPEN-00 Contradiction Register]] #46).
 
-**digest** — The fourth primitive. Computes the generalized F-mean of the ruler. The read-eval-print loop.
+**diagonal** — Ruler slot 0, the XOR of the six spatial slots. As an index, `12 = 0b1100`: 60's wordform at 4 bits, the start of the last 4-slot block of 16.
+
+**digest** — The fourth primitive (slot 15, the 10T). Folds the relations; computes the generalized F-mean of the ruler. The read-eval-print loop.
 
 ## E
 
-**eval** — The third primitive. Reads a knot as a value descriptor, extracting its materialized meaning. Categorically a Comonad.
+**eval** — The third primitive (slot 14, the 8T). Reads a knot as a value descriptor, extracting its materialized meaning. Categorically a Comonad.
 
 ## F
 
+**Exponent / Exception** — The two halves of a buffer that trade roles each cycle (Cube 0 and Cube 1). The targets of the exchange in `compareExchange(buffer64, 60, 60, Exponent | Exception)`.
+
 **F-mean** — The generalized mean `M_p(x_1, ..., x_n) = ( (1/n) Σ x_i^p )^(1/p)`. The mean order p is determined by the observer's position.
 
-**Fano plane** — The 7-point projective plane over GF(2). The minimal structure in which every pair of points is on a line.
+**Fano plane** — The 7-point projective plane over GF(2). The minimal structure in which every pair of points lies on exactly one line.
+
+**four-block family** — The bases `{3, 7, 11, 15} = 3 ⊕ {0, 4, 8, 12}`: 3 XORed with each subset of the diagonal's bits. See [[OPEN-01 Open Questions]] #10.
 
 ## G
 
-**G** — The regex-constrained vocabulary. The symbol table that defines the admissible tokens.
+**G** — The regex-constrained vocabulary: the symbol table that defines the admissible tokens. Frozen in `_archive/index.ts`; mutable (a `Map`) in the self-generating kernel.
+
+**generation** — The self-generating kernel's counter of how many rules it has learned.
 
 ## H
+
+**Hamming sphere** — The set of values at a fixed number of differing bits from a centre. The XOR orbit of any 4-bit value splits into spheres of sizes 1, 4, 6, 4, 1; 5 and 10 are antipodes.
 
 **Homoiconic** — Code is data. The knot is both a program and a value.
 
 ## I
+
+**index (vs value)** — The protocol's supreme notion (`_archive/The Supreme Notion Indices, Not Value.md`): every quantity is a position, never a magnitude. Indices combine by XOR, walk and compare. They are never added or multiplied. "Negative" means the complement `i ^ (2ⁿ − 1)`.
+
+**iExtant** — The extant-state record. It carries the Exponent and Exception that an exchange swaps in. As a torus it has coordinates (scope, shape) (rev1 Part X).
 
 **iff** — The base equivalence. `position(n) ⟺ period(n−1, n, n+1)`. The position holds iff the period holds.
 
@@ -112,23 +134,29 @@ tags: [omi-imo, glossary, terminology, definitions]
 
 ## L
 
-**logical loop** — The orbit of a base under XOR with n = 0..15. A cycle of length 16 that exists as a mathematical fact of XOR being an involution.
+**learn** — The kernel operation that adds a new pattern to the grammar and increments the generation. Working code: [[OPEN-01 Open Questions]] #8.
+
+**logical loop** — The orbit of a base under XOR with n = 0..15: a cycle of length 16 that exists because XOR is an involution.
 
 ## M
 
-**mnemonic** — The word frame. The human-readable label for a position.
+**mnemonic** — The word frame: the human-readable label for a position.
 
 ## O
 
-**observer** — Any circulator capable of reflecting swap rotations. A perceptron.
+**observer** — Any circulator capable of reflecting swap rotations. A perceptron. In the virtual breadboard, an `AnalyserNode` reading a net.
 
 **orbit** — The sequence `c ^ n` for `n = 0..15`. A cycle of length 16.
 
 ## P
 
-**pinch** — The 0-sphere. Two points.
+**period hierarchy** — 8 (delta unit cell) | 240 (time crystal) | 5040 (supercell, 7!). Each divides the next.
+
+**pinch** — The 0-sphere: two points.
 
 ## R
+
+**regenerate** — Rebuilds a kernel from its description by replaying the learned rules. Positions are not replayed.
 
 **RULER** — The function `(boundry: BOUNDRY, constraint: CONSTRAINT) => [COORDINATE, COORDINATE]`.
 
@@ -140,6 +168,8 @@ tags: [omi-imo, glossary, terminology, definitions]
 
 **SHAPE** — The eight-slot cube reading `[POINT, INDEX, FRONT, BACK, UP, DOWN, LEFT, RIGHT]`.
 
+**sink / source** — LED polarity. A sinking LED lights when its node is low; a sourcing LED lights when its node is high.
+
 **SPACE** — The position array `[b: number, o: number, x: number]`.
 
 **SPECTRAL** — The reading `[p: number, i: number]`.
@@ -148,6 +178,10 @@ tags: [omi-imo, glossary, terminology, definitions]
 
 **STRUCT** — The full wordform `${number}${'e' | '.'}${number}${'b' | 'o' | 'x' | 'd'}${number}${'p' | 'i' | 'n'}`.
 
+**swap16 / swap32 / swap64** — Byte reversal inside each 2-, 4- or 8-byte group. On 8 bytes they move index `j` to `j ⊕ 1`, `j ⊕ 3` and `j ⊕ 7`: XOR, XOR, and XNOR (complement) on the position. They replace the delta's rotations and must be applied to a copy (permutation, not mutation); Node's `Buffer.swapN` mutates in place. By convention they pair with bind, apply and eval ([[OPEN-01 Open Questions]] #12). See [[OPEN-00 Contradiction Register]] #48.
+
 ## T
 
 **TIME** — The position array `[e: number, d: number]`.
+
+**tri-state buffer** — A bus driver whose output is high, low or disconnected. The source's "tri-site" was a typo for this.

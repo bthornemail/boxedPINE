@@ -139,6 +139,4 @@ The 6T circuit is the **apply** — the full fan-out. It is the second XOR gate 
 
 ## The Contradiction
 
-From the extraction of SRC-02: the 6T is XNOR, not XOR. `Atom.apply()` returns 254/255. This is a genuine contradiction — the circuit as described does not compute XOR. See [[OPEN-00 Contradiction Register]].
-
-[[SPEC-44 The Virtual Breadboard]] reproduces the XNOR by reading the 6T before its output transistor, and proposes that as the reading (unconfirmed).
+Resolved 2026-10-07. The 6T computes XOR. The XNOR is the 5T's collector node (BOOT0), which the 5T's sinking LED shows as XOR. Q6 inverts BOOT0 into BOOT1, which is XOR. `Atom.apply()` returns 254/255 because it inverts only bit 0 of an 8-bit XNOR, and bit 0 is the correct XOR. See [[OPEN-00 Contradiction Register]] #1 and [[SPEC-44 The Virtual Breadboard]].

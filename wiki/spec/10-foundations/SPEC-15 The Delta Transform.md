@@ -69,7 +69,9 @@ delta16(x, c) = rotl16(x, 1) ^ rotl16(x, 3) ^ rotr16(x, 2) ^ c
 
 ## The Period
 
-The delta function has exact period 8. This is proven in the Coq development referenced in the transcripts.
+The delta function has exact period 8. This is proven in the Coq development referenced in the transcripts (`omi-files/omi-axioms/coq/04-execution/Delta16HasExactPeriodEight.v`).
+
+**Superseded (author, 2026-10-07):** the rotations were replaced by XOR and XNOR through `swap16`, `swap32` and `swap64` used as permutations, not mutations. On 8 bytes the swaps are the index maps `j ⊕ 1`, `j ⊕ 3` and `j ⊕ 7`, and the swap law has period 4. See [[OPEN-00 Contradiction Register]] #48.
 
 The 8-period matches the XOR orbit's 8-period. The XOR orbit's 8-period and the delta function's 8-period are the same 8.
 

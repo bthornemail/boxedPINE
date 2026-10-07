@@ -81,17 +81,22 @@ Code now lives in `core/`, `rosetta/`, `space/`, and `src/`. Old paths `rosetta/
 
 ## Known Bugs
 
-| Bug | File | Description |
-|-----|------|-------------|
-| `delta16` not exported | `rosetta/src/constants.ts` | Used internally by `model.ts` but cannot be imported |
-| `switch` fall-through | `rosetta/src/model.ts` | The `switch` statement has fall-through cases without `break` |
-| Division by zero | `rosetta/src/model.ts` | `linear % count === 0` throws when `count === 0` |
-| `pin` always throws | `rosetta/src/model.ts` | The try/catch/finally structure always throws |
-| `PALINDROME` missing | `rosetta/src/constants.ts` | Referenced in type but not in implementation |
-| `Node`/`Buffer` truthiness | `rosetta/src/model.ts` | `if (front || back || right || left || up || down)` is always truthy |
-| `animation.frame.ts` invalid TS | `rosetta/src/animation.frame.ts` | Missing `this.Q` reference |
-| `isRight` arity mismatch | `rosetta/src/constants.ts` | `isRight` takes 1 arg but `RIGHT` regex has 2 capture groups |
-| `xor` length mismatch | `rosetta/src/constants.ts` | `xor(a, b)` assumes `a` and `b` have the same length |
+Verified 2026-10-07; full list with fixes in [[OPEN-02 Broken Code Inventory]]. The old `rosetta/src` paths are now `_archive/index.ts` (constants) and `_archive/model.ts`.
+
+| Bug | File | Verdict |
+|-----|------|---------|
+| `delta16` not exported | `_archive/index.ts` | Confirmed |
+| `delta` rotates bytes (period 4) | `_archive/index.ts` | Intended block reading; only the `delta16` name clashes |
+| `index.ts` does not compile | `_archive/index.ts` | Confirmed |
+| `PALINDROME` missing from `G` | `_archive/index.ts` | Confirmed |
+| `xor` length mismatch | `_archive/index.ts` | Confirmed (minor) |
+| `isRight` arity mismatch | `_archive/index.ts` | Not a bug |
+| `Node` constructor throws at `swap32` | `_archive/model.ts` | Confirmed |
+| `switch` fall-through | `_archive/model.ts` | Confirmed (intent unknown) |
+| `Node`/`Buffer` truthiness | `_archive/model.ts` | Confirmed (always throws) |
+| Division by zero | `_archive/model.ts` | Not a bug (`NaN`) |
+| `pin` | `_archive/model.ts` | Never returns its Blob URL |
+| `animation.frame.ts` | `_archive/animation.frame.ts` | Not a TS file past line 79 |
 
 ## The Protocol Handler
 
@@ -99,23 +104,19 @@ The closure-based protocol handler (Regex + Proxy + Reflect) is specified but no
 
 ## The Self-Generating Kernel
 
-The self-generating kernel with the closure scope chain is specified but not yet implemented as a working file. The specification is in [[SPEC-30 The Symbol Table G]].
+A working self-generating kernel (mutable `Map` grammar, `learn`, `describe`, `regenerate`, `selfTest`) is in the Fano Fold conversation, [[SRC-09 Try XOR Catch XNOR Finally]]. Extracted and run on 2026-10-07, it passed 19 of 20 self-test checks; the failure is the `HEX` regex. It is not yet a file in the repo. See [[OPEN-01 Open Questions]] #8–9.
 
 A scoped version exists for circuits: [[SPEC-44 The Virtual Breadboard]] has a working `learn` (truth table → gate rule) and regenerates its whole graph from a description. It does not cover the regex grammar G.
 
 ## Verification
 
-The conformance test vectors are in [[SPEC-60 Test Vectors]]. The self-test is not yet run.
+The conformance test vectors are in [[SPEC-60 Test Vectors]]. The Fano Fold kernel self-test was run (19/20). The virtual breadboard self-test passes (`npm test` in `omi-files/omi/audio`). The delta's exact period 8 is proved in `omi-files/omi-axioms/coq/04-execution/Delta16HasExactPeriodEight.v` (compiles, no `Admitted`).
 
 ## Next Steps
 
-1. Export `delta16` from `constants.ts`
-2. Fix the `switch` fall-through in `model.ts`
-3. Fix the division by zero in `model.ts`
-4. Rewrite `animation.frame.ts` (invalid TS + missing `this.Q`)
-5. Implement the `apply` method
-6. Fix the `pin` method
-7. Add `PALINDROME` to the `G` object
-8. Implement the `learn` method
-9. Implement the `regenerate` function
-10. Run the self-test
+1. Move the Fano Fold kernel into the repo as a module, with the `HEX`/`BINARY`/`OCTAL` regex fixes
+2. Export `delta16`, and give the block-level fold (period 4; the fold itself has period 12) a name distinct from the bit-level `delta16` (period 8)
+3. Add `PALINDROME` to `G`
+4. Fix the `Node` constructor (16-byte centroid, copy before each swap, `.length` checks)
+5. Implement `apply` (bind + correction + one delta step) and make `pin` return its URL
+6. Decide whether `regenerate` restores positions as well as grammar

@@ -23,7 +23,7 @@ delta buf c = xorWord16 (xorWord16 (xorWord16 (rotl buf) (rotl3 buf)) (rotr2 buf
       W16 (B a4 a5 a6 a7 a8 b1 b2 b3) (B b4 b5 b6 b7 b8 a1 a2 a3)
 
     rotr2 (W16 (B a1 a2 a3 a4 a5 a6 a7 a8) (B b1 b2 b3 b4 b5 b6 b7 b8)) =
-      W16 (B a7 a8 b1 b2 b3 b4 b5 b6) (B b7 b8 a1 a2 a3 a4 a5 a6)
+      W16 (B b7 b8 a1 a2 a3 a4 a5 a6) (B a7 a8 b1 b2 b3 b4 b5 b6)
 
 deltaK :: Int -> Word16 -> Word16 -> Word16
 deltaK 0 buf _ = buf

@@ -152,8 +152,23 @@ It is the order the Fano Fold conversation states first, and it keeps every othe
 
 ### 13. The `16xy = 12` Bridge
 
-**Answer:** `16xy = 12` means `xy = 3/4`. That is a whole curve (a hyperbola), not one point. `(3/2, 1/2)` is the point rev1 §4.5 picks, the "half-unit diagonal". The link to the diagonal is a numeric coincidence of labels: the value 12 is `0b01100`, bits 2 and 3. Nothing in the quadratic forms derives that bit pattern.
-**Status:** Resolved.
+**Answer (author, 2026-10-07):** 12 is an **offset**, not a quantity. Start at `60 ^ 64` and you get an offset. The instruction reads: *read index 60; if 60 is the expected value, exchange it with the iExtant Exponent number or the Exception buffer of the 64-byte buffer*. Every one of these numbers describes the same wordform of the 65,536-bit Blob, which is what makes the Blob transportable.
+
+As code, that instruction is `compareExchange(buffer64, 60, 60, Exponent | Exception)`. Exponent and Exception are the two halves that trade roles each cycle (rev1 §13.3; "The Full 60 and the Blocking").
+
+**Verified wordform:** 12, 60, 124 and 252 all have every bit set except the lowest two. They are the same index read at different widths:
+
+| Width | Index | Bits | Position |
+|-------|-------|------|----------|
+| 4 bits (16 slots) | 12 = `0x0C` | `1100` | start of the last 4-slot block of 16: the tick offset in the 16-byte receipt (rev1 §14.3) |
+| 6 bits (64 slots) | 60 = `0x3C` | `111100` | start of the last 4-slot block of 64: the "60 of 64" |
+| 7 bits (128 slots) | 124 = `60 ^ 64` | `1111100` | the same block, offset into the upper half (rev1 §3.4) |
+| 8 bits (256 slots) | 252 = `60 ^ 192` | `11111100` | the same block in the top quarter |
+
+So the 12 of the receipt offset and the diagonal `0b01100` is the 4-bit instance of 60. The Blob is 65,536 bits = 8,192 bytes = exactly 128 buffers of 64 bytes, so each instance is an address inside the same Blob.
+
+**About `16xy = 12`:** with x and y as indices (whole positions), no pair gives `xy = 3/4`. The `(3/2, 1/2)` point in rev1 §4.5 is a value read. The cross term is not where 12 comes from; the wordform above is.
+**Status:** Resolved (author's reading, wordform verified).
 
 ### 14. The Orbital Cycle and the Pin
 

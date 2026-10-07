@@ -40,7 +40,13 @@ tags: [omi-imo, contradictions, register, errors, bugs]
 
 ## Overview
 
-This register tracks every place where the sources disagree with each other or with themselves. On 2026-10-07 every entry was checked against the `_archive/` specifications, chat transcripts and code. Arithmetic was recomputed, code was run, and the β and collapse laws were checked in Coq.
+This register tracks every place where the sources disagree with each other or with themselves. On 2026-10-07 every entry was checked against the `_archive/` specifications, chat transcripts and code. The author names three files as the latest summaries, and they take precedence:
+
+- `OMI_Protocol_Complete_Specification_rev1.md` ("rev1")
+- `The OMI Protocol in Pure Haskell - Corrected.md`
+- `The Supreme Notion Indices, Not Value.md` (the index rule)
+
+The checks: Arithmetic was recomputed, code was run, and the β and collapse laws were checked in Coq.
 
 The code these entries point at moved. The old `rosetta/src/constants.ts` lives on as `_archive/index.ts`. The old `rosetta/src/model.ts` and `rosetta/src/animation.frame.ts` live on as `_archive/model.ts` and `_archive/animation.frame.ts`.
 
@@ -85,8 +91,9 @@ The code these entries point at moved. The old `rosetta/src/constants.ts` lives 
 | 40–43 | SRC-08 typos | Resolved |
 | 44 | ALU XOR total | Unrecoverable (most likely 12) |
 | 45 | Spec says AND reduces to XOR and β | Discarded (new) |
-| 46 | The `delta` code has period 4, not 8 | Confirmed bug (new) |
+| 46 | The `delta` code has period 4, not 8 | Not a bug: intended block reading (new) |
 | 47 | The `Node` constructor fails before its loops | Confirmed bug (new) |
+| 48 | Rotation delta vs swap delta | Resolved: the swaps supersede the rotations (new) |
 
 ## Contradictions
 
@@ -117,6 +124,8 @@ The code these entries point at moved. The old `rosetta/src/constants.ts` lives 
 | Supercell | 5040 | 7 Fano × 3 roles × 240 = 7! |
 
 Precision on "period 8": over all 65,536 16-bit states every orbit length divides 8. With carry `c = 0` there are orbits of 1, 2 and 4, so 8 is the period of the map, not of every state. This was recomputed for this register and agrees with rev1 §5.2.
+
+Formal proof: `omi-files/omi-axioms/coq/04-execution/Delta16HasExactPeriodEight.v` proves `delta⁸ = id` *and* that no shorter period holds, for carries `0x001D` and `0x1337`. It has no `Admitted` and compiled cleanly on 2026-10-07.
 **Evidence:** rev1 §14.2 (Period Hierarchy); rev1 §5.2; "The 60-in-64 Clock" (`7-part × 720 + 3-part × 240 + position`).
 **Status:** Resolved.
 
@@ -150,17 +159,17 @@ It XORs to `0x00`, the property the masks are defined by. It appears unchanged i
 | sum `+` | 19 |
 | product `×` | 216 |
 
-Written with `⊕`, the expression is 7 (`6⊕6 = 0`, then `6⊕1 = 7`), checked in Coq (`collapse`). The "19" in the transcript is the sum written with the wrong symbol. The companion claim `3!⊕3!⊕3!⊕3! = 1296` is the product 6⁴. With XOR it is 0.
+Written with `⊕`, the expression is 7 (`6⊕6 = 0`, then `6⊕1 = 7`), checked in Coq (`collapse`). The "19" in the transcript is the sum written with the wrong symbol. Under the protocol's index rule (`_archive/The Supreme Notion Indices, Not Value.md`, Part IV), indices combine by XOR only. Sums and products are value readings, so 7 is the only protocol answer. The companion claim `3!⊕3!⊕3!⊕3! = 1296` is the product 6⁴. With XOR it is 0.
 **Status:** Resolved.
 
 ### 6. `12 = 1!` vs `1! = 1`
 
-**Answer:** Discarded. The transcript calls 12 "the 1! from the 3! ⊕ 3! ⊕ 3! ⊕ 1!", but the 1! in that expression is 1. 12 has its own exact meanings elsewhere, and neither is 1!: `16xy = 12` at xy = 3/4, and `12 = 0b01100` is the diagonal (rev1 §4.5).
+**Answer:** Discarded. The transcript calls 12 "the 1! from the 3! ⊕ 3! ⊕ 3! ⊕ 1!", but the 1! in that expression is 1. 12 has its own meaning: it is 60's wordform at 4 bits (`1100` vs `111100`). It is the offset of the last 4-slot block in 16 slots, the way 60 is in 64. See [[OPEN-01 Open Questions]] #13.
 **Status:** Discarded.
 
 ### 7. `beta + beta = 0` vs `beta + beta = 2`
 
-**Answer:** The protocol's law is `β ⊕ β = 0`, XOR not addition. The transcript's Coq wrote `beta + beta = 0` over natural numbers, which is false (1 + 1 = 2), so it could only be `Admitted`. The later `beta + beta = 2. Proof. reflexivity. Qed.` is the true statement about `+`, but not the intended law. Checked in Coq on 2026-10-07: `N.lxor beta beta = 0` and the four-flip cancellation of rev1 §6.2 both prove by `reflexivity`.
+**Answer:** The protocol's law is `β ⊕ β = 0`, XOR not addition. The transcript's Coq wrote `beta + beta = 0` over natural numbers, which is false (1 + 1 = 2), so it could only be `Admitted`. The later `beta + beta = 2. Proof. reflexivity. Qed.` is the true statement about `+`, but not the intended law. β is an index, and indices are never added (`_archive/The Supreme Notion Indices, Not Value.md`, Part IV). Checked in Coq on 2026-10-07: `N.lxor beta beta = 0` and the four-flip cancellation of rev1 §6.2 both prove by `reflexivity`.
 **Status:** Resolved.
 
 ### 8. Verilog `swap16` and `swap64` Branches
@@ -337,11 +346,54 @@ Written with `⊕`, the expression is 7 (`6⊕6 = 0`, then `6⊕1 = 7`), checked
 ### 46. The `delta` Code Has Period 4 (new)
 
 **Source:** `_archive/index.ts` vs rev1 §5.2.
-**Answer:** `delta` rotates the 8 *bytes* of the state, not the 16 bits of each word. On 8 positions the map returns after 4 steps, not 8. rev1 §5.2 already warns that the state "has to be processed as 16-bit words". The code does not do that.
-**Status:** Confirmed bug ([[OPEN-02 Broken Code Inventory]] #19).
+**Finding:** `delta` rotates the 8 *bytes* of the state, not the 16 bits of each word. With a fixed correction it returns to its start after exactly 4 steps (2,000 random trials, all 4).
+**Answer (author, 2026-10-07):** This is intended. It is the **block reading**, not a broken copy of the bit-level delta. The byte holds four 64-value quarters, and XOR with 64, 128 and 192 moves between them without touching the low six bits:
+
+```
+60 ^ 0   =  60   00111100
+60 ^ 64  = 124   01111100      (rev1 §3.4, the high-bit toggle)
+60 ^ 128 = 188   10111100
+60 ^ 192 = 252   11111100
+-60 ^ 64 = -124                (the same toggle on the negative side)
+```
+
+In index terms there are no negative numbers: "negative" means the complement `i ^ (2ⁿ − 1)` (`_archive/The Supreme Notion Indices, Not Value.md`, Part IV.6; rev1 §3.5 uses `60 ^ 127 = 67`). The toggle reads the same either way, because complement and XOR commute: `~60 ^ 64 = ~(60 ^ 64)`. JavaScript's `-60` is the two's-complement `~59`, one step from the complement `~60`.
+
+60 appears once in each of the four quarters. Four blocks match period 4, just as the 60-of-64 orbit is four blocks of four (rev1 §3.2).
+
+So there are two deltas:
+
+| Reading | Rotates | Period | Role |
+|---------|---------|--------|------|
+| bit (`delta16` in rev1 §5.2) | the 16 bits of each word | 8 (Coq-proved) | the unit cell |
+| block (`delta` in `index.ts`) | the 8 byte positions | 4 | the block size |
+
+rev1 §5.2's table already shows the block case: at 8 positions the map "already returns after 4".
+
+**Also measured:** the full `delta16` ruler fold in `index.ts`, where state and correction swap halves each step, returns after **12** steps (2,000 random trials, all 12). The same fold at bit level, as in Haskell's `advanceRuler`, returns after **24** steps on one word (299 of 300 trials; one returned at 12). Bit level is twice the block level. This is recorded, not interpreted.
+**Status:** Not a bug. The one real problem is the name: `index.ts` calls its block-level fold `delta16`, the same name rev1 uses for the bit-level law.
 
 ### 47. The `Node` Constructor Never Reaches Its Loops (new)
 
 **Source:** `_archive/model.ts`.
 **Answer:** With default arguments, `Buffer.concat([2 bytes, 8 bytes])` is 10 bytes, and `centroid.swap32()` throws `ERR_INVALID_BUFFER_SIZE`. Even with a valid size, `swap16/32/64` reverse the buffer in place and return the *same* buffer, so `front`, `back`, `up`, `down`, `left` and `right` are one aliased object, not six faces.
 **Status:** Confirmed bug ([[OPEN-02 Broken Code Inventory]] #20).
+
+### 48. Rotation Delta vs Swap Delta (new)
+
+**Sources:** rev1 §5 and the corrected Haskell (rotations) vs [[SRC-04 Assembly Register Programming]] claim 16 and the swap law in [[SRC-01 XOR Tetrahedron Transform]], [[SRC-02 XOR Gate Transistor Circuits]] and [[SRC-03 Protocol Sequence Analysis]].
+**Answer (author, 2026-10-07):** The rotations were replaced by XOR and XNOR, through `swap16`, `swap32` and `swap64` used as permutations, not mutations. The rotation law `rotl1 ^ rotl3 ^ rotr2 ^ C` (period 8, proved in Coq) is the earlier, stateful form. The swaps are the stateless form of the same action, as the assistant concluded in SRC-04.
+
+**The swaps are XOR on the index (verified 2026-10-07).** On an 8-byte buffer, Node's swaps move byte `j` to:
+
+| Swap | Moves byte j to | Reading |
+|------|-----------------|---------|
+| `swap16` | `j ⊕ 1` | XOR |
+| `swap32` | `j ⊕ 3` | XOR |
+| `swap64` | `j ⊕ 7` | XNOR: the complement of the index, all bits flipped |
+
+So the permutations *are* XOR and XNOR on positions, which matches the index rule. Because XOR does not care about order, all six orderings of the three swaps (the 3! `rotateLatinSquare` cases) give the same permutation, `j ⊕ 5`. The swap law `delta(x, c) = swap16(x) ⊕ swap32(x) ⊕ swap64(x) ⊕ c` has period **4**, the block period of #46 (2,000 random trials, all 4).
+
+**Permutation, not mutation.** Node's `Buffer.swapN()` reorders the buffer *in place* and returns the same object. Calling `swap16()` twice undoes itself, and six "faces" taken this way are one buffer ([[OPEN-02 Broken Code Inventory]] #20). The protocol's swaps must permute a copy: `Buffer.from(x).swap16()`.
+
+**Status:** Resolved. The latest summaries (rev1 §5, Haskell `OMI.Delta`) still use the rotation law, so they describe the earlier form.
