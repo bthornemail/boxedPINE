@@ -6,7 +6,7 @@ import {
   makeSlots, exchange, digest,
   swap16, swap32, swap64, swapDelta, xorBytes,
   delta16Steps,
-  lastBlockOffset, orbit60, BUFFERS_PER_BLOB, coordinate, POLES, quadrantReadings,
+  lastBlockOffset, orbit60, BUFFERS_PER_BLOB, coordinate, POLES, quadrantReadings, separation, GAUGE,
   xorTriples,
 } from '../../core/src/verified/index.ts';
 
@@ -104,4 +104,22 @@ test("The four readings of 60 keep column 12; their rows are the four-block fami
 test('The two poles differ by the diagonal: row 7 ⊕ row 11 = 12, and all four readings close', () => {
   assert.equal(coordinate(POLES.lower).row ^ coordinate(POLES.higher).row, 12);
   assert.equal(quadrantReadings().reduce((a, b) => a ^ b, 0), 0);
+});
+
+test('Bit 64 splits the alphanumerics into the 10 digits and the 52 letters; folding case gives base36', () => {
+  const alnum = [...Array(128).keys()].filter((c) => /[0-9A-Za-z]/.test(String.fromCharCode(c)));
+  const numeric = alnum.filter((c) => !separation(c).alphaSide);
+  const alpha = alnum.filter((c) => separation(c).alphaSide);
+  assert.equal(String.fromCharCode(...numeric), '0123456789');
+  assert.ok(alpha.every((c) => /[A-Za-z]/.test(String.fromCharCode(c))) && alpha.length === 52);
+  assert.equal(numeric.length + new Set(alpha.map((c) => c & ~32)).size, 36);
+  assert.ok(separation(60 ^ 128).beyondAscii && !separation(60 ^ 64).beyondAscii);
+});
+
+test('The Polybius gauge diagonals each XOR to 0 and sum to 0x1E; all sixteen nibbles sum to 0x78', () => {
+  for (const d of [GAUGE.dPlus, GAUGE.dMinus]) {
+    assert.equal(d.reduce((a, b) => a ^ b, 0), 0);
+    assert.equal(d.reduce((a, b) => a + b, 0), 0x1e);
+  }
+  assert.equal([...Array(16).keys()].reduce((a, b) => a + b, 0), 0x78);
 });

@@ -1,105 +1,168 @@
-/*
-### 1. Closures in TypeScript
-
-A **closure** is simply a function that remembers the variables from the scope in which it was created, even after that outer function has finished executing.
-
-In TypeScript, writing a closure mostly involves ensuring that the arguments and return types of both the outer and inner functions are properly typed.
-
-**Example: A State-Keeping Counter**
-This function creates a private `count` variable. The inner function forms a closure around `count`, allowing it to modify and return it safely.
-
-```typescript
-*/
-// The outer function takes a number and returns a function that returns a number
-function createCounter(initialValue: number): () => number {
-    // 'count' is enclosed by the returned inner function
-    let count: number = initialValue; 
-
-    return function increment(): number {
-        count += 1;
-        return count;
-    };
+import { Buffer } from 'node:buffer';
+declare enum CanvasColor {
+    RED = 1,
+    ORANGE = 2,
+    YELLOW = 3,
+    GREEN = 4,
+    CYAN = 5,
+    PURPLE = 6
 }
 
-const myCounter = createCounter(10);
+type EdgeSide = "top" | "right" | "bottom" | "left";
+type EdgeEnd = "none" | "arrow";
+interface Edge {
+    id: string;
+    fromNode: string;
+    fromSide?: EdgeSide;
+    fromEnd?: EdgeEnd;
+    toNode: string;
+    toSide?: EdgeSide;
+    toEnd?: EdgeEnd;
+    color?: CanvasColor;
+    label?: string;
+}
 
-console.log(myCounter()); // Output: 11
-console.log(myCounter()); // Output: 12
+interface GenericNode {
+    id: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    color?: CanvasColor;
+}
+interface TextNode extends GenericNode {
+    type: "text";
+    text: string;
+}
+interface LinkNode extends GenericNode {
+    type: "link";
+    url: string;
+}
+type GroupNodeBackgroundStyle = "cover" | "ratio" | "repeat";
+interface GroupNode {
+    type: "group";
+    label?: string;
+    background?: string;
+    backgroundStyle?: GroupNodeBackgroundStyle;
+}
 
-/*
-```
+declare class JSONCanvas {
+    private nodes;
+    private edges;
+    constructor(nodes?: GenericNode[], edges?: Edge[]);
+    addNode(node: GenericNode): void;
+    addEdge(edge: Edge): void;
+    getNode(id: string): GenericNode | undefined;
+    getEdge(id: string): Edge | undefined;
+    getNodes(): GenericNode[];
+    getEdges(): Edge[];
+    removeNode(id: string): void;
+    removeEdge(id: string): void;
+    toString(): string;
+    static fromString(json: string): JSONCanvas;
+}
 
-**Key Takeaway for Closures:** You are usually encapsulating state. Type the inputs, type the local variables, and explicitly type the function signature being returned so TypeScript knows exactly what to expect.
+export { CanvasColor, type Edge, type EdgeEnd, type EdgeSide, type GenericNode, type GroupNode, JSONCanvas, type LinkNode, type TextNode, JSONCanvas as default };
 
-### 2. Combinators in TypeScript
+const domain = Buffer.alloc(5040);
+const state = Buffer.alloc(4096);
+const context = Buffer.alloc(4032);
+const blackboard = Buffer.alloc(1048);
+const canvas = Buffer.alloc(512);
+const view = Buffer.alloc(256);
+const frame = Buffer.alloc(60);
+const content = Buffer.alloc(16);
+const controller = Buffer.alloc(4);
 
-A **combinator** is a concept from lambda calculus and functional programming. Strictly speaking, it is a higher-order function that has no free variables—meaning it doesn't rely on any external state or variables outside of its own arguments. It only uses its arguments and other combinators to produce a result.
+const node = Buffer.from('hello world', 'utf16le');
+function compose(buffers: Buffer[]){
+    const totalLength = buffers.reduce((accum,buf)=>buf.length + accum,1);
+    const bufA = Buffer.concat(buffers, totalLength);
+    console.log(totalLength,bufA.toString('base64'));
+    return bufA;
+}
 
-In modern functional TypeScript, "combinator" usually refers to utility functions that take functions as arguments and combine them to return a new function (like `compose` or `pipe`).
+const buffer = compose([
+    //domain,state,context,
+    //blackboard,canvas,view,
+    frame,content,controller
+]);
 
-Because combinators pass different types of data from one function to the next, **Generics** are absolutely essential here.
+function createCounter(initialValue: number): (startingPosition: number ) => Generator<number, never, unknown> {
+    // 'count' is enclosed by the returned inner function
+    let currentPosition: number = initialValue;
 
-**Example 1: The Identity Combinator (I-Combinator)**
-The simplest combinator. It takes an argument and returns it unchanged. Generics (`<T>`) ensure that whatever type goes in is the exact type that comes out.
+    function increment(): number {
+        currentPosition += 1;
+        return currentPosition;
+    };
+    function* accumulator(startingValue = 0): Generator<number, any, number> {
+        let value = startingValue;
+        while (true) {
+            const input = yield value;
+            value += input;
+        }
+    }
+    const compose = <A, B, C>(
+        f: (val: B) => C,
+        g: (val: A) => B
+    ) => (x: A): C => f(g(x));
 
-```typescript
-*/
-const identity = <T>(value: T): T => value;
+    const alt = <T, R>(
+        f1: (val: T) => R | null,
+        f2: (val: T) => R
+    ) => (x: T): R => {
+        const result = f1(x);
+        return result !== null ? result : f2(x);
+    };
 
-const a = identity(5);       // 'a' is inferred as number
-const b = identity("hello"); // 'b' is inferred as string
+    const rot7 = (x: number, n: number) => (x << n) | (x >>> (7 - n));
+    const rot15 = (x: number, n: number) => (x << n) | (x >>> (15 - n));
+    const rot60 = (x: number, n: number) => (x << n) | (x >>> (60 - n));
+    const rot240 = (x: number, n: number) => (x << n) | (x >>> (240 - n));
+    const rot360 = (x: number, n: number) => (x << n) | (x >>> (360 - n));
 
-/*
-```
+    function* g1() {
+        yield increment;
+        yield rot7;
+        yield rot15;
+    }
+    
+    function* g2() {
+        yield rot60;
+        yield rot240;
+        yield rot360;
+    }
+    function* g3() {
+        yield compose;
+        yield alt;
+        yield accumulator;
+    }
 
-**Example 2: The Compose Combinator (B-Combinator)**
-The `compose` combinator takes two functions and combines them. It reads right-to-left: the output of the second function (`g`) becomes the input of the first function (`f`).
-
-```typescript
-*/
-
-// <A, B, C> represent the flow of types through the functions.
-const compose = <A, B, C>(
-    f: (val: B) => C, 
-    g: (val: A) => B
-) => (x: A): C => f(g(x));
-
-// Let's create two simple functions
-const multiplyByTwo = (n: number): number => n * 2;
-const numberToString = (n: number): string => `The result is ${n}`;
-
-// Combine them: number goes in, string comes out
-const doubleThenStringify = compose(numberToString, multiplyByTwo);
-
-console.log(doubleThenStringify(10)); 
-// Output: "The result is 20"
-
-
-/*
-```
-
-**Example 3: A Branching Combinator (Alt / Or)**
-Sometimes you want a combinator that tries one function, and if it yields a "falsy" value (or null/undefined), it falls back to another.
-
-```typescript
-*/
-const alt = <T, R>(
-    f1: (val: T) => R | null, 
-    f2: (val: T) => R
-) => (x: T): R => {
-    const result = f1(x);
-    return result !== null ? result : f2(x);
-};
-
-const getDisplayName = (name: string | null): string | null => name;
-const getDefaultName = (): string => "Anonymous";
-
-const ensureName = alt(getDisplayName, getDefaultName);
-
-console.log(ensureName("Alice")); // Output: "Alice"
-console.log(ensureName(null));    // Output: "Anonymous"
-/*
-```
-
-**Key Takeaway for Combinators:** They are pure functions that glue other functions together. Rely heavily on TypeScript **Generics** (`<T, U, V>`) when writing them. Without generics, you will be forced to use `any` or `unknown`, which defeats the purpose of combining functions securely in TypeScript.
-*/
+    const iterator: any = function* () {
+        yield* g2();
+        yield* g2();
+        yield* g3();
+    }
+    return function* fibonacciGenerator(startingPosition = 1) {
+        const f0 = 0;
+        if (startingPosition === 1) {
+            yield f0;
+        }
+        const f1 = 1;
+        if (startingPosition <= 2) {
+            yield f1;
+        }
+        let previousValue = f0, currentValue = f1, nextValue;
+        while (true) {
+            nextValue = previousValue + currentValue;
+            previousValue = currentValue;
+            currentValue = nextValue;
+            if (currentPosition >= startingPosition) {
+                yield nextValue;
+            } else {
+                currentPosition += 1;
+            }
+        }
+    }
+}

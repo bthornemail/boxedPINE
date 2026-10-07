@@ -68,3 +68,20 @@ export const POLES = { lower: 60 ^ 64, higher: 60 ^ 128 } as const;
 export function quadrantReadings(index = 60): number[] {
   return [0, 64, 128, 192].map((t) => index ^ t);
 }
+
+// BASE36 FROM THE BLOCK BITS
+//
+// The bits that move 60 between blocks also separate the characters:
+//   bit 128 (60 ⊕ 128)  outside 7-bit ASCII vs inside
+//   bit 64  (60 ⊕ 64)   among alphanumerics: clear = the 10 digits, set = the 52 letters
+//   bit 32  (e ⊕ E)     case; folding it leaves 26 letters
+// 10 + 26 = 36: the base36 alphabet is cut out by these three bits.
+// Verified 2026-10-07 (wiki: SPEC-36 The Literal Separation).
+
+/** Which side of each separating bit a byte falls on. */
+export function separation(byte: number) {
+  return { beyondAscii: (byte & 128) !== 0, alphaSide: (byte & 64) !== 0, lowerCase: (byte & 32) !== 0 };
+}
+
+/** The Polybius gauge diagonals: each XORs to 0 (and sums to 0x1E). */
+export const GAUGE = { dPlus: [0x0, 0x5, 0xa, 0xf], dMinus: [0x3, 0x6, 0x9, 0xc] } as const;

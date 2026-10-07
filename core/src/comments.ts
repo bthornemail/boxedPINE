@@ -1,0 +1,49 @@
+export const comments = [
+    "// block 0    60-63      < = > ?        four comparison operators",
+    "// block 1    56-59      8 9 : ;        four characters",
+    "// block 4    44-47      , - . /        four punctuations",
+    "// block 11   124+                        the high boundary",
+    `Block	Decimal Range	Characters	Regex Range(Hex)
+Block 0	60–63 < = > ? [\x3C -\x3F]
+Block 1	56–59	8 9 : ;[\x38 -\x3B]
+Block 2	52–55	4 5 6 7[\x34 -\x37]
+Block 3	48–51	0 1 2 3[\x30 -\x33]
+Block 4	44–47, - . / [\x2C -\x2F]
+`
+   ,
+
+    "// const index = '0p';       // a point at 0",
+    "// const index = '1i';       // an index at 1",
+    "// const index = '2n';       // a number at 2",
+    "// const index = '0x';       // hex at 0",
+    "// const index = '3.5';      // a decimal at 3.5",
+
+    "// 0     diagonal        the frame condition",
+    "// 1     size            the precision",
+    "// 2     top             spatial",
+    "// 3     bottom          spatial",
+    "// 4     right           spatial",
+    "// 5     left            spatial",
+    "// 6     forward         spatial",
+    "// 7     backward        spatial",
+    "// 9     get            read the current position",
+    "// 10    set            write the current position",
+    "// 11    catch          handle the failure",
+    "// 12    bind           build the relation",
+    "// 13    apply          invoke the relation",
+    "// 14    eval           extract from the relation",
+    "// 15    digest         fold the relations",
+
+    "// block 0    60-63      < = > ?        four comparison operators",
+    "// block 1    56-59      8 9 : ;        four characters",
+    "// block 2    52-55      4 5 6 7        four characters",
+    "// block 3    48-51      0 1 2 3        four characters",
+    "// block 4    44-47      , - . /        four punctuations",
+    "// block 5    40-43      ( ) * +        four punctuations (only 40 shown)",
+    "// block 6    36-39      $ % & '        four punctuations (only 36 shown)",
+    "// block 7    28-31                      four values (28 shown)",
+    "// block 8    24-27                      four values (24 shown)",
+    "// block 9    12-15                      four values (12, 14, 15 shown)",
+    "// block 10   0-7                        eight values (0-3, 7 shown)",
+    "// block 11   124+                        the high boundary"
+];

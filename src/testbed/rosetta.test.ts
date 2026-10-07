@@ -5,10 +5,11 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { RULES, makeGrammar, classifyAll } from '../../rosetta/src/grammar/grammar.ts';
 import { makeKernel, regenerate, admissible, digest, readAsProgram } from '../../rosetta/src/grammar/kernel.ts';
+import { catalog, readCatalog, CATALOG } from '../../rosetta/src/grammar/catalog.ts';
 
-test('The grammar holds all 29 Level 3 symbols from DeepSeek0', () => {
+test('The grammar holds the 29 Level 3 symbols from DeepSeek0, plus the EXCEPTION face', () => {
   const level3 = RULES.filter((r) => ['set', 'bracket', 'face', 'palindrome', 'higher'].includes(r.group));
-  assert.equal(level3.length, 29);
+  assert.equal(level3.length, 30);
   assert.ok(level3.some((r) => r.name === 'PALINDROME'));
 });
 
@@ -124,4 +125,33 @@ test('At a fixed width, XNOR counts agreement: popcount(a XNOR b) = width - Hamm
 
 test('The exponent and the exception differ by the case bit: e XOR E = 0x20', () => {
   assert.equal('e'.charCodeAt(0) ^ 'E'.charCodeAt(0), 0x20);
+});
+
+test('The catalog coordinate <base32?base36=base64> round-trips name and meter', () => {
+  for (const [name, meter] of [['RFC-OMI-II', 0], ['PINEboxed', 60], ['omi', 65535], ['0x5e3P', 124]] as const) {
+    const c = catalog(name, meter);
+    assert.ok(CATALOG.test(c), c);
+    assert.deepEqual(readCatalog(c), { name, meter, consistent: true });
+  }
+  assert.equal(catalog('RFC-OMI-II', 0), '<KJDEGLKPJVES2SKJ?0=UkZDLU9NSS1JSQ==>');
+});
+
+test('The catalog delimiters < = > ? are block 0 of the orbit of 60, and a mismatched coordinate is caught', () => {
+  assert.deepEqual(['<', '=', '>', '?'].map((c) => c.charCodeAt(0)), [60, 61, 62, 63]);
+  const forged = '<KJDEGLKPJVES2SKJ?0=b21p>'; // base32 says RFC-OMI-II, base64 says omi
+  assert.equal(readCatalog(forged)!.consistent, false);
+});
+
+test('The four face cells: CENTER, LEFT, RIGHT and the EXCEPTION plain dot never overlap; signed cases fall in none', () => {
+  const g = makeGrammar();
+  const faces = ['CENTER', 'LEFT', 'RIGHT', 'EXCEPTION'];
+  const cell = (t: string) => faces.filter((f) => g.get(f)!.test(t));
+  assert.deepEqual(['3.5', '3.a', 'a.3', 'a.b'].map(cell), [['CENTER'], ['LEFT'], ['RIGHT'], ['EXCEPTION']]);
+  let none = 0, multi = 0;
+  for (let a = 32; a < 127; a++) for (let b = 32; b < 127; b++) {
+    const n = cell(String.fromCharCode(a) + '.' + String.fromCharCode(b)).length;
+    if (n === 0) none++; if (n > 1) multi++;
+  }
+  assert.equal(multi, 0);
+  assert.equal(none, 44); // +.5, 5.+, +.+ ... : CENTER takes digits only
 });

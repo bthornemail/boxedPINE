@@ -34,57 +34,6 @@ const blockZeroToFourRegex = /[\x2C-\x3F]/g;
 // The regex pattern breaking down each section of the block comment
 const blockRegex = /block\s+(\d+)\s+(\d+-\d+|\d+\+)\s+([^f\d\s][^f\d]*?|(?=\s{4,}))\s*(.*)/;
 
-const comments = [
-    "// block 0    60-63      < = > ?        four comparison operators",
-    "// block 1    56-59      8 9 : ;        four characters",
-    "// block 4    44-47      , - . /        four punctuations",
-    "// block 11   124+                        the high boundary",
-    `typescript
-Block	Decimal Range	Characters	Regex Range(Hex)
-Block 0	60–63 < = > ? [\x3C -\x3F]
-Block 1	56–59	8 9 : ;[\x38 -\x3B]
-Block 2	52–55	4 5 6 7[\x34 -\x37]
-Block 3	48–51	0 1 2 3[\x30 -\x33]
-Block 4	44–47, - . / [\x2C -\x2F]
-If you wanted a single regex that matches any character belonging to Blocks 0 through 4(from ASCII 44 up to 63), you can combine them sequentially`,
-`
-// const index = '0p';       // a point at 0
-// const index = '1i';       // an index at 1
-// const index = '2n';       // a number at 2
-// const index = '0x';       // hex at 0
-// const index = '3.5';      // a decimal at 3.5
-
-// 0     diagonal        the frame condition
-// 1     size            the precision
-// 2     top             spatial
-// 3     bottom          spatial
-// 4     right           spatial
-// 5     left            spatial
-// 6     forward         spatial
-// 7     backward        spatial
-// 9     get            read the current position
-// 10    set            write the current position
-// 11    catch          handle the failure
-// 12    bind           build the relation
-// 13    apply          invoke the relation
-// 14    eval           extract from the relation
-// 15    digest         fold the relations
-
-// block 0    60-63      < = > ?        four comparison operators
-// block 1    56-59      8 9 : ;        four characters
-// block 2    52-55      4 5 6 7        four characters
-// block 3    48-51      0 1 2 3        four characters
-// block 4    44-47      , - . /        four punctuations
-// block 5    40-43      ( ) * +        four punctuations (only 40 shown)
-// block 6    36-39      $ % & '        four punctuations (only 36 shown)
-// block 7    28-31                      four values (28 shown)
-// block 8    24-27                      four values (24 shown)
-// block 9    12-15                      four values (12, 14, 15 shown)
-// block 10   0-7                        eight values (0-3, 7 shown)
-// block 11   124+                        the high boundary`
-            `
-];
-
 export default async function launchBroadcast(declared: RegExp = /\d[pinEboxed]+[<=>?]/, defined: "0p0i0n0E0b0x0e0d") {
     // global scope
     const extant: number;
@@ -122,10 +71,10 @@ const US: Buffer = Buffer.allocUnsafe(16);
     console.log(getBlockNumber("}")); // Output: 11 (ASCII 125)
 
     const transformWsUrl = (url, options, client) => {
-        client.options.username = `token=${this.get_current_auth_token()}`;
-        client.options.clientId = `${this.get_updated_clientId()}`;
+        client.options.username = `token = ${ this.get_current_auth_token() }`;
+        client.options.clientId = `${ this.get_updated_clientId() }`;
 
-        return `${this.get_signed_cloud_url(url)}`;
+        return `${ this.get_signed_cloud_url(url) }`;
     }
 
     const client = await connectAsync("mqtt://test.mosquitto.org", {
@@ -150,7 +99,7 @@ const US: Buffer = Buffer.allocUnsafe(16);
     client.on("message", (topic, message) => {
         // message is Buffer
         const token = classifyToken(topic);
-        console.log(`<${token ? token : '?'} = ${token ? message.toString() : '?'} >`);
+        console.log(`< ${ token? token: '?' } = ${ token? message.toString() : '?'} > `);
     });
     return {
         proxy() {
@@ -231,7 +180,7 @@ const US: Buffer = Buffer.allocUnsafe(16);
                         const matches = [...text.matchAll(pattern)];
 
                         matches.forEach(match => {
-                            console.log(`Found: ${match[0]} at index ${match.index}`);
+                            console.log(`Found: ${ match[0]} at index ${ match.index }`);
                         });
                         /* 
                         Output:

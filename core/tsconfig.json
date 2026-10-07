@@ -11,15 +11,15 @@
 	//      ],
 	// Environment Settings
 	// See also https://aka.ms/tsconfig/module
-//	"module": "nodenext",
 	"target": "esnext",
 	// For nodejs:
-	"lib": ["esnext","node"],
-	"types": ["node"],
-	//      "types": ["DOM","node"],
+	"lib": ["esnext","DOM","WebWorker"],
+	// "types": ["node"],
+	     "types": ["DOM","node"],
 	// and npm install -D @types/node
 //"target": "es2023",
-	"module": "esnext",
+	// "module": "esnext",
+	"module": "nodenext",
 	"moduleResolution":"nodenext",
 //    "lib": ["ES2023", "node"],
 	// Other Outputs
