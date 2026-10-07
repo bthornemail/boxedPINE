@@ -189,6 +189,10 @@ tags: [omi-imo, meta, changelog, history]
 - BIOS paths start from the given relation; a badly framed relation is caught with the structure computed from 0 and can be repaired and tried again (`omi-types` `OMI.Try`, commit `64745a8`)
 - `PLiteral` / `PStruct` are coordinate nibbles; sixteen make the first 8 byte indices
 
+### The Two Poles
+
+- Resolved [[OPEN-01 Open Questions]] #18 with the author's correction: 60 ⊕ 64 for the lower 8 indices and 60 ⊕ 128 for the higher 8. The 16 × 16 byte-table reading ties together the four-block family (#10), the diagonal and offset 12 (#13) and the root relation `{c − r, c + r}`. Added to `core/src/verified/wordform.ts` with tests (26 passing)
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`

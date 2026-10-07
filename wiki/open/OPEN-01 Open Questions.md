@@ -61,7 +61,7 @@ This register tracks the places where the sources are unclear or incomplete. On 
 | 15 | The blackboard | Resolved |
 | 16 | 6T sourcemap gap | Needs the Rosetta YAML |
 | 17 | iExtant letter assignments | Resolved |
-| 18 | The −60 to 64 quasi-generator | Proposed: 124, half-open |
+| 18 | The −60 to 64 quasi-generator | Resolved: two poles, 60 ⊕ 64 and 60 ⊕ 128 |
 | 19 | try/catch/finally: triangle or seven points | Resolved: the triangle spans the seven |
 
 ## Questions
@@ -132,6 +132,8 @@ b & 12 = 0, 4, 8, 12                       (the block index k, times 4)
 
 The block orders in [[OMI-IMO]] follow from the decomposition `c ⊕ n = 4·((c≫2) ⊕ (n≫2)) + ((c&3) ⊕ (n&3))`, which `_archive/check.py` checks exhaustively. The high two bits (the diagonal) choose which block comes when. The low two bits, always `11`, make every block run descending.
 
+The same family is the row coordinate of 60's four readings, `60 ⊕ {0, 64, 128, 192}` (#18).
+
 So "orthogonal vs interfering" is a statement about one bit at a time. Only 3 shares no bit with 12. 7 shares bit 2, 11 shares bit 3, and 15 contains the whole diagonal.
 **Status:** Resolved.
 
@@ -168,7 +170,7 @@ As code, that instruction is `compareExchange(buffer64, 60, 60, Exponent | Excep
 | 7 bits (128 slots) | 124 = `60 ^ 64` | `1111100` | the same block, offset into the upper half (rev1 §3.4) |
 | 8 bits (256 slots) | 252 = `60 ^ 192` | `11111100` | the same block in the top quarter |
 
-So the 12 of the receipt offset and the diagonal `0b01100` is the 4-bit instance of 60. The Blob is 65,536 bits = 8,192 bytes = exactly 128 buffers of 64 bytes, so each instance is an address inside the same Blob.
+So the 12 of the receipt offset and the diagonal `0b01100` is the 4-bit instance of 60. It is also 60's column in the 16 × 16 byte table, and the XOR of the rows of the two poles, `row(60 ⊕ 64) ⊕ row(60 ⊕ 128) = 7 ⊕ 11 = 12` (#18). The Blob is 65,536 bits = 8,192 bytes = exactly 128 buffers of 64 bytes, so each instance is an address inside the same Blob.
 
 **About `16xy = 12`:** with x and y as indices (whole positions), no pair gives `xy = 3/4`. The `(3/2, 1/2)` point in rev1 §4.5 is a value read. The cross term is not where 12 comes from; the wordform above is.
 **Status:** Resolved (author's reading, wordform verified).
@@ -207,20 +209,26 @@ Each cycle, Cubes 0 and 1 trade roles (Exponent ↔ Exception, the `delta16` hal
 
 ### 18. The −60 to 64 Quasi-Generator
 
-**Question:** iExtant is "the c−r, c+r quasi-generator from −60 to 64". Is the range 124 values or 125, and is it signed or unsigned with an offset?
-**Computed:**
+**Question:** iExtant is "the c−r, c+r quasi-generator from −60 to 64". What is it?
+**Answer (author, 2026-10-07):** the −60 was anecdotal, illustrating the motion. The actual readings are **60 ⊕ 64 for the lower 8 indices** and **60 ⊕ 128 for the higher 8 indices**. `{c − r, c + r}` is not a range. It is the root relation: two poles, the first 0-sphere (`_archive/_deprecated/clock.md`: "c − r = one pole, c + r = the other pole … binary 0 / 1, Lisp (car . cdr), OMI declaration / definition").
 
-| Reading | Values |
-|---------|--------|
-| `c − r = −60`, `c + r = 64` | c = 2, r = 62 |
-| half-open `[−60, 64)` = `[c−r, c+r)` | 124 = 60 negatives + 64 non-negatives |
-| closed `[−60, 64]` | 125 |
-| 60 ⊕ 64 | 124, and 60 & 64 = 0, so here 60 + 64 = 60 ⊕ 64 |
-| `[−60, 64)` on the byte ring | 196 … 255, 0 … 63: one arc |
+**Verified reading:** a byte is a coordinate in a 16 × 16 table: row = high nibble, column = low nibble. The 16 rows are the "16 indices (0–7 local … 8–15 shared)" of [[SRC-01 XOR Tetrahedron Transform]].
 
-**Proposed:** 124, half-open. It equals the fold `60 ⊕ 64`, it splits into the "60" and the "64", and on a byte ring the signed and unsigned readings are the same arc.
-**Open point:** the index rule defines "negative" as the complement. That makes −60 into 195 on a byte (or 67 on 7 bits, rev1 §3.5), while two's-complement −60 is 196. The two differ by exactly 1, the same as 124 vs 125. The author's definition of "−60" settles it.
-**Status:** Proposed; awaiting the author.
+| Reading | Byte | Row | Column |
+|---------|------|-----|--------|
+| 60 | `0x3C` | 3 | 12 |
+| 60 ⊕ 64: the lower-8 pole | `0x7C` | 7 (last of the lower 8) | 12 |
+| 60 ⊕ 128: the higher-8 pole | `0xBC` | 11 (in the higher 8) | 12 |
+| 60 ⊕ 192 | `0xFC` | 15 | 12 |
+
+- The motion is purely in the row. The column never moves, and it is the diagonal 12.
+- The four rows 3, 7, 11, 15 are exactly the four-block family `3 ⊕ {0, 4, 8, 12}` (#10).
+- The two poles' rows XOR to the diagonal: `7 ⊕ 11 = 12`. This is the offset of #13.
+- All four readings XOR to 0: they close.
+- As plain numbers the poles are `124 = 156 − 32` and `188 = 156 + 32`. In index terms they are 60 with one high bit toggled each, and they differ by `64 ⊕ 128 = 192`.
+
+Code and tests: `core/src/verified/wordform.ts` (`coordinate`, `POLES`, `quadrantReadings`), `src/testbed/core.test.ts`.
+**Status:** Resolved.
 
 ### 19. try / catch / finally: Triangle or Seven Points?
 

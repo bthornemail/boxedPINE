@@ -195,6 +195,7 @@ Newest first. **Evidence** says how each item is known:
 
 | Date | Discovery | Level | Evidence | Where |
 |------|-----------|-------|----------|-------|
+| 2026-10-07 | `{c − r, c + r}` are two poles: 60 ⊕ 64 (lower 8 indices, row 7) and 60 ⊕ 128 (higher 8, row 11), both at column 12; the rows of 60's four readings are the four-block family, and the poles' rows XOR to the diagonal 12 | 1 | author + verified (test) | [[OPEN-01 Open Questions]] #18 |
 | 2026-10-07 | try / catch / finally is a coproduct: a tried value or a caught deviation carrying the structured coordinate, whose difference is the repair for another try; chains stop at the first catch | 0, 4 | author + verified (test) | [[USE-00 Use Case Scenarios]] 4a |
 | 2026-10-07 | `PLiteral` / `PStruct` fields are coordinate nibbles (indices 0..15); sixteen make the first 8 byte indices of the buffer | 1, 2 | author + verified (test) | [[USE-00 Use Case Scenarios]] 4a |
 | 2026-10-07 | Principle: as Haskell collapses chains of types, indices collapse non-orthogonal logic | all | author | [[OPEN-03 Glossary]] |
