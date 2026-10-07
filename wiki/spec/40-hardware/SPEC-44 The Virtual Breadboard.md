@@ -23,10 +23,10 @@ sources:
   - "[[SRC-08 XOR Gate Built with Transistors]]"
   - "[[SRC-02 XOR Gate Transistor Circuits]]"
 code:
-  - "omi-files/omi/audio/breadboard/kernel.mjs"
-  - "omi-files/omi/audio/breadboard/index.html"
-  - "omi-files/omi/audio/breadboard/test.mjs"
-  - "omi-files/omi/audio/xor.mjs"
+  - "space/breadboard/kernel.mjs"
+  - "space/breadboard/index.html"
+  - "space/breadboard/test.mjs"
+  - "space/breadboard/xor.mjs"
 dimensions: []
 symbols: []
 tags: [omi-imo, hardware, XOR, breadboard, canvas, web-audio, self-generating, example]
@@ -50,7 +50,7 @@ The circuits are not hand-wired. One **description** (rules plus netlists) gener
 
 ## The Encoding
 
-The same encoding as `omi-files/omi/audio/xor.mjs`:
+The same encoding as `space/breadboard/xor.mjs`:
 
 ```
 bit 0  ->  +1
@@ -159,7 +159,7 @@ When A ≠ B all four agree and an A-major chord sounds. With the 6T probe on, t
 The self-test renders each build through the four XOR input vectors (00, 01, 10, 11) in one `OfflineAudioContext` pass per build (one 128-sample block per vector, every net on its own channel). It checks the LED against `a ^ b` and every internal net against a pure-JS reference evaluation.
 
 ```bash
-cd omi-files/omi/audio && npm install && npm test
+cd space/breadboard && npm install && npm test
 ```
 
 Result on 2026-10-07: all four builds pass, transistor totals 5/6/8/10, the 6T `node` reads XNOR (`1001`), and a rule added with `learn()` compiles and passes.
@@ -171,7 +171,7 @@ The same test runs in the page on every regenerate.
 The page loads `kernel.mjs` as an ES module, so it must be served over HTTP (browsers block module imports from `file://`):
 
 ```bash
-python3 -m http.server 8417 --directory omi-files/omi/audio/breadboard
+python3 -m http.server 8417 --directory space/breadboard
 ```
 
 Then open `http://localhost:8417`, press *Power on (+5V)* (this starts the `AudioContext`, which browsers only allow after a click), and toggle A and B with the buttons or the `a` and `b` keys.

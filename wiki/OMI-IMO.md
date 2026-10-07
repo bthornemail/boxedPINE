@@ -50,11 +50,13 @@ down:
   - "[[OPEN-03 Glossary]]"
   - "[[OPEN-04 Discarded Claims]]"
   - "[[PROG-00 Homoiconic Syntax Tracker]]"
+  - "[[USE-00 Use Case Scenarios]]"
   - "[[SRC-99 Source Index]]"
   - "[[META-00 Vault Schema]]"
   - "[[META-01 Extractive Method]]"
   - "[[META-02 Evidence and Confidence]]"
   - "[[META-03 Change Log]]"
+  - "[[META-04 Repository Frame]]"
 related:
   - "[[MAP-00 Protocol Canvas]]"
   - "[[MAP-01 Source Graph]]"

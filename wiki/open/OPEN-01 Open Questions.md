@@ -193,4 +193,5 @@ Each cycle, Cubes 0 and 1 trade roles (Exponent ↔ Exception, the `delta16` hal
 **Question:** Why does the 6T sourcemap skip breadboard column 16?
 **Context:** [[SPEC-40 The 6T XOR Circuit]] places Q1–Q6 at columns 1, 6, 11, 21, 26, 31; the generator in [[SPEC-44 The Virtual Breadboard]] gives 1, 6, 11, 16, 21, 26.
 **What the archive adds:** rev1 numbers transistors across the whole pipeline: 5T Q1–Q5, 6T adds Q6, 8T Q7–Q14, 10T Q15–Q24. That means the 6T is the 5T plus one transistor on the same board. The coupling resistor (BOOT0 → 2 kΩ → Q6) has to sit somewhere, which may be what the gap is for. The Rosetta YAML that holds the coordinates is not in this repo.
-**Status:** Open; needs `rosetta/src/omi_rosetta_stone.yaml`.
+**Update (2026-10-07):** the YAML is now in the repo at `rosetta/src/assets/omi_rosetta_stone.yaml`. It confirms the columns 1, 6, 11, 21, 26, 31 but gives no reason. Its canvas positions for Q1–Q6 have no gap, so the gap is on the physical board only.
+**Status:** Open; only the author knows why the board skips column 16.

@@ -160,6 +160,24 @@ tags: [omi-imo, meta, changelog, history]
 - Added `progress/` and [[PROG-00 Homoiconic Syntax Tracker]]: the six-level grammar ladder from DeepSeek0, with the evidence-based status of each level, next milestones and a dated discovery log
 - Added the `progress` kind to the schema and `tools/validate.mjs`
 
+### Repository Frame
+
+- Filled the existing folders: verified findings in `core/src/verified/`, grammar and kernel in `rosetta/src/grammar/`, eight views inscribed in `space/README.md`, tests in `src/testbed/` (`npm test`, 23 passing); a README in each folder
+- Added [[META-04 Repository Frame]]
+- Found that position rules and Level 3 symbols must stay separate (`INCLUDE` admits every word)
+- Found `rosetta/src/assets/omi_rosetta_stone.yaml`; it confirms the 6T column gap without a reason
+
+### Use Case Scenarios
+
+- Added `usecases/` and [[USE-00 Use Case Scenarios]]: the twelve `omi-files` projects as scenarios, each mapped to ladder levels and frame folders, with checked vs not-run state
+- Added the `usecase` kind to the schema and `tools/validate.mjs`
+
+### Merge of `omi` into `omi-canvas`
+
+- Ported `omi`'s delta, handler and XOR helpers onto the canvas nibble-pair types as `OMI.Bits`, `OMI.Delta` and `OMI.Handler` (`omi-canvas` commit `1559dc1`); tests pass and match values recorded from `omi`
+- Moved `omi`'s superseded Haskell to `_archive/omi-haskell/`, the breadboard to `space/breadboard/`, and dropped its spec copy (identical to `_archive/`)
+- Updated paths in SPEC-44, SPEC-61, OPEN-02, PROG-00, USE-00, META-04 and the `space` README
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`

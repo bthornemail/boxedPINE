@@ -26,9 +26,14 @@ sources:
 code:
   - "_archive/index.ts"
   - "_archive/model.ts"
-  - "omi-files/omi/OMI/Handler.hs"
-  - "omi-files/omi/OMI/Delta.hs"
-  - "omi-files/omi/audio/breadboard/kernel.mjs"
+  - "omi-files/omi-canvas/src/OMI/Handler.hs"
+  - "omi-files/omi-canvas/src/OMI/Delta.hs"
+  - "space/breadboard/kernel.mjs"
+  - "core/src/verified/index.ts"
+  - "rosetta/src/grammar/grammar.ts"
+  - "rosetta/src/grammar/kernel.ts"
+  - "src/testbed/core.test.ts"
+  - "src/testbed/rosetta.test.ts"
 dimensions: []
 symbols: [EXCHANGE, LITERAL, STRUCT, PALINDROME, AXIS, MNEMONIC]
 goal: "Homoiconic syntax: one regex grammar that reads a wordform as data or as program, with no conversion"
@@ -50,6 +55,8 @@ homoiconic(P) :- position(P),
 ```
 
 "There is no parser, no interpreter, no compiler. There is only reading." ([[SRC-00 Protocol Review and Bug Fixes]] claim 78.)
+
+The code is organised as described in [[META-04 Repository Frame]]: verified findings in `core/`, the grammar in `rosetta/`, views in `space/`, tests in `src/testbed/` (`npm test`, 23 checks passing).
 
 This note tracks how close the code is to that, level by level, and logs each discovery along the way. Every status below has evidence you can re-check.
 
@@ -75,6 +82,8 @@ The six levels come from DeepSeek0 (raw lines 14680–14725), "the complete gram
 - The Fano Fold kernel ([[SRC-09 Try XOR Catch XNOR Finally]]) was run on 2026-10-07. Its checks "a matched exchange writes", "a missed exchange returns the actual" and "the difference is the XOR" all pass.
 - `atomicDelta` (DeepSeek3, lines 42400–44719): `bind ⊕ apply ⊕ eval` is 0 when the exchange happens and `expected ⊕ replacement` when it misses. Verified with a real `SharedArrayBuffer`.
 - The virtual breadboard computes all four XOR builds inside an audio graph ([[SPEC-44 The Virtual Breadboard]]; `npm test` passes).
+
+**Code:** `core/src/verified/exchange.ts`, tested in `src/testbed/core.test.ts`.
 
 **Gaps:** none at this level.
 
@@ -137,9 +146,13 @@ The running grammars use `LITERAL`, `STRUCT` and `EXCHANGE`.
 **Verified:**
 - In the DeepSeek0 listing, `LEFT` and `RIGHT` are byte-identical, and so are `DEFLECT` and `REFLECT`. `index.ts` already fixes both pairs (`LEFT`/`RIGHT` are mirror images; `REFLECT` uses `[".]`).
 
+**Code (2026-10-07):** all 29 symbols are now in `rosetta/src/grammar/grammar.ts`, in a mutable grammar that can learn. `CLOSURE` uses the likely intended pattern, marked as a placeholder.
+
+**Discovered:** the symbols must not be used to check positions. `INCLUDE` (`/^[A-Za-z0-9_]+$/`) admits every alphanumeric word, so a position check that includes it refuses almost nothing. The kernel therefore checks positions against Levels 1–2 only (`POSITION_RULES`), and the symbols classify characters and tokens.
+
 **Gaps:**
-- 15 of the 29 symbols are not in G yet, counting each open/close bracket separately.
-- G is `Object.freeze`d in `index.ts`, so it cannot learn. The Fano kernel's mutable `Map` grammar can ([[OPEN-01 Open Questions]] #8).
+- The author to confirm the position-rules / symbols split and the `CLOSURE` pattern.
+- `core/src/index.ts` still has the old frozen G; it is an `_archive` copy.
 
 ### Level 4 — The Datum and the Program 🟡 Partial
 
@@ -165,10 +178,10 @@ The running grammars use `LITERAL`, `STRUCT` and `EXCHANGE`.
 
 | # | Milestone | Unlocks | Status |
 |---|-----------|---------|--------|
-| 1 | Move the Fano kernel into the repo as a module, with the radix fixes | Levels 0–3 runnable from one file | ⬜ |
+| 1 | Move the Fano kernel into the repo as a module, with the radix fixes | Levels 0–3 runnable from one file | ✅ `rosetta/src/grammar/kernel.ts` |
 | 2 | One grammar file (JSON of pattern sources) read by JavaScript and Haskell; settle `EXPONENT` | Level 2 | ⬜ |
-| 3 | Add the 15 missing symbols to G, including `PALINDROME` | Level 3 | ⬜ |
-| 4 | An `EXCHANGE` wordform that the reader executes as `compareExchange` | Level 4 | ⬜ |
+| 3 | Add the 15 missing symbols to G, including `PALINDROME` | Level 3 | ✅ `rosetta/src/grammar/grammar.ts` (`CLOSURE` to confirm) |
+| 4 | An `EXCHANGE` wordform that the reader executes as `compareExchange` (prior work to mine: [[USE-00 Use Case Scenarios]], Level 4 row) | Level 4 | ⬜ |
 | 5 | Encode the "read 60, exchange with Exponent/Exception" instruction as one wordform | Level 4 | ⬜ |
 | 6 | Store the grammar as wordforms inside the Blob, and `learn` by writing to it | Level 5 | ⬜ |
 
@@ -182,6 +195,8 @@ Newest first. **Evidence** says how each item is known:
 
 | Date | Discovery | Level | Evidence | Where |
 |------|-----------|-------|----------|-------|
+| 2026-10-07 | Position rules (Levels 1–2) and symbols (Level 3) must be separate: `INCLUDE` admits every alphanumeric word | 3 | verified (test) | `rosetta/README.md` |
+| 2026-10-07 | Verified findings moved into `core/src/verified/`, grammar and kernel into `rosetta/src/grammar/`; 23 tests pass | 0–5 | verified | [[META-04 Repository Frame]] |
 | 2026-10-07 | The 7 / 35 / 155 / 651 "distinguished triples" are the XOR triples `{a, b, a⊕b}` of non-zero 3- to 6-bit indices; all 155 in `animation.frame.ts` pass | 1 | verified | [[OPEN-03 Glossary]] |
 | 2026-10-07 | Swap delta `L = swap16⊕swap32⊕swap64` is its own inverse; the 240-step `fullCycle` reaches `0x0000` at step 3 | 0 | verified | [[OPEN-00 Contradiction Register]] #48 |
 | 2026-10-07 | `atomicDelta` digest is 0 iff the exchange happens | 0 | verified | this note, Level 0 |

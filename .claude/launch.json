@@ -4,7 +4,7 @@
     {
       "name": "xor-breadboard",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8417", "--directory", "omi-files/omi/audio/breadboard"],
+      "runtimeArgs": ["-m", "http.server", "8417", "--directory", "space/breadboard"],
       "port": 8417
     }
   ]

@@ -10,6 +10,7 @@ down:
   - "[[META-01 Extractive Method]]"
   - "[[META-02 Evidence and Confidence]]"
   - "[[META-03 Change Log]]"
+  - "[[META-04 Repository Frame]]"
 related:
   - "[[OMI-IMO]]"
   - "[[EXT-04 Literate Workflow]]"
@@ -37,8 +38,8 @@ Every note in the vault has YAML frontmatter. The frontmatter is the crosslink l
 |-------|------|-------------|
 | `id` | string | A stable unique identifier (e.g., `SPEC-12`, `SRC-03a`, `EXT-01`) |
 | `title` | string | A human-readable title |
-| `kind` | string | One of: `root-index`, `source`, `source-part`, `spec`, `extension`, `open`, `progress`, `map`, `meta` |
-| `layer` | string | One of: `root`, `sources`, `meta`, `foundations`, `architecture`, `grammar`, `hardware`, `runtime`, `verification`, `extension`, `open`, `progress`, `map` |
+| `kind` | string | One of: `root-index`, `source`, `source-part`, `spec`, `extension`, `open`, `progress`, `usecase`, `map`, `meta` |
+| `layer` | string | One of: `root`, `sources`, `meta`, `foundations`, `architecture`, `grammar`, `hardware`, `runtime`, `verification`, `extension`, `open`, `progress`, `usecase`, `map` |
 | `status` | string | One of: `draft`, `review`, `canonical`, `contested`, `deprecated` |
 | `spec` | string | The protocol version (e.g., `OMI-IMO-2026`) |
 | `up` | list | Parent notes in the hierarchy |
@@ -86,6 +87,7 @@ wiki/
 ├── extend/                       — extension guides
 ├── open/                         — contradictions, questions, glossary, discarded
 ├── progress/                     — trackers of progress toward a goal
+├── usecases/                     — use case scenarios (the omi-files renditions)
 ├── maps/                         — canvases
 ├── bases/                        — Obsidian Bases
 └── tools/                        — validation scripts
@@ -120,6 +122,10 @@ An open question, contradiction, or glossary in `open/`.
 ### Progress
 
 A tracker in `progress/`. Measures the state of the code against a goal, level by level, with a dated discovery log.
+
+### Use Case
+
+A scenario in `usecases/`. Describes a situation the protocol must handle, and the earlier rendition in `omi-files/` that explores it.
 
 ### Map
 

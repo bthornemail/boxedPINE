@@ -13,6 +13,7 @@ related:
   - "[[META-01 Extractive Method]]"
   - "[[META-02 Evidence and Confidence]]"
   - "[[META-03 Change Log]]"
+  - "[[META-04 Repository Frame]]"
   - "[[SRC-99 Source Index]]"
   - "[[SPEC-00 Canonical Statement]]"
   - "[[SPEC-01 The Three Laws]]"
@@ -62,6 +63,7 @@ related:
   - "[[OPEN-03 Glossary]]"
   - "[[OPEN-04 Discarded Claims]]"
   - "[[PROG-00 Homoiconic Syntax Tracker]]"
+  - "[[USE-00 Use Case Scenarios]]"
   - "[[MAP-00 Protocol Canvas.canvas]]"
   - "[[MAP-01 Source Graph.canvas]]"
   - "[[MAP-02 Dimension Stack.canvas]]"
@@ -113,6 +115,7 @@ wiki/
 ├── extend/                       — extension guides
 ├── open/                         — contradictions, questions, glossary, discarded
 ├── progress/                     — trackers of progress toward a goal
+├── usecases/                     — use case scenarios (the omi-files renditions)
 ├── maps/                         — canvases
 ├── bases/                        — Obsidian Bases
 └── tools/                        — validation scripts
@@ -165,6 +168,10 @@ wiki/
 
 - [[PROG-00 Homoiconic Syntax Tracker]] — how close the code is to one grammar that reads data and programs alike
 
+## The Use Case Scenarios
+
+- [[USE-00 Use Case Scenarios]] — the twelve `omi-files` projects as concrete situations the protocol must handle
+
 ## The Maps
 
 - [[MAP-00 Protocol Canvas]]
@@ -186,3 +193,4 @@ wiki/
 - [[META-01 Extractive Method]]
 - [[META-02 Evidence and Confidence]]
 - [[META-03 Change Log]]
+- [[META-04 Repository Frame]] — what each repository folder is for

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node breadboard/test.mjs"
+    "test": "node test.mjs"
   },
   "keywords": [],
   "author": "",

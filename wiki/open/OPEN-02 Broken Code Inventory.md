@@ -38,7 +38,7 @@ This inventory tracks known defects in the OMI-IMO code. On 2026-10-07 every ent
 
 - the period-8 Coq proof in `omi-files/omi-axioms`
 - the self-generating kernel in the Fano Fold conversation (#11)
-- the virtual breadboard (`omi-files/omi/audio/breadboard/`)
+- the virtual breadboard (`space/breadboard/`)
 
 | # | Bug | Verdict |
 |---|-----|---------|
@@ -65,7 +65,7 @@ This inventory tracks known defects in the OMI-IMO code. On 2026-10-07 every ent
 | 21 | Kernel `HEX` regex | Confirmed (new) |
 | 22 | `index.ts` does not compile | Confirmed (new) |
 | 23 | `Atom.apply` keeps 7 extra bits | Confirmed (new) |
-| 24 | Haskell `rotr2` is `rotl 6` | Fixed in `omi-files/omi/OMI/Delta.hs` |
+| 24 | Haskell `rotr2` is `rotl 6` | Fixed in `omi-files/omi-canvas/src/OMI/Delta.hs` |
 
 ## Bugs
 
@@ -119,7 +119,7 @@ This inventory tracks known defects in the OMI-IMO code. On 2026-10-07 every ent
 ### 9. `PALINDROME` Missing from `G`
 
 **File:** `_archive/index.ts`
-**Fix:** Add `PALINDROME: /^(\d\d)[A-Za-z_\-](\d\d):\2[0-9_\-]\1$/` to `G`, as in the Synthesis. It is not the same as `AXIS`.
+**Fix:** Add `PALINDROME: /^(\d\d)[A-Za-z_\-](\d\d):\2[0-9_\-]\1$/` to `G`, as in the Synthesis. It is not the same as `AXIS`. **Done** in `rosetta/src/grammar/grammar.ts`; the old `core/src/index.ts` copy is unchanged.
 
 ### 10. `apply` Stub
 
@@ -130,7 +130,7 @@ This inventory tracks known defects in the OMI-IMO code. On 2026-10-07 every ent
 ### 11. `learn` — exists, not yet in the repo
 
 **Finding:** A working `learn` is in the Fano Fold conversation ("The complete file", `_archive/The try xor catch xnor finally as the Fano Plane of the Fold.md`, lines ~1404–1625). `index.ts` cannot use it as is, because its `G` is wrapped in `Object.freeze`. `learn` needs the mutable `Map` grammar.
-**Fix:** Copy that file into the repo as a module, with the #21 fix.
+**Done (2026-10-07):** now `rosetta/src/grammar/kernel.ts`, with the #21 fix, tested in `src/testbed/rosetta.test.ts`.
 
 ### 12. `regenerate` — exists, grammar only
 
@@ -138,7 +138,7 @@ This inventory tracks known defects in the OMI-IMO code. On 2026-10-07 every ent
 
 ### 13. Self-Test — run
 
-**Finding:** The Fano Fold kernel's `selfTest()` was run on 2026-10-07 and passed 19 of 20 checks. The only failure was `HEX matches 0xFF` (#21). Separately, the virtual breadboard self-test passes all checks (`npm test` in `omi-files/omi/audio`).
+**Finding:** The Fano Fold kernel's `selfTest()` was run on 2026-10-07 and passed 19 of 20 checks. The only failure was `HEX matches 0xFF` (#21). Separately, the virtual breadboard self-test passes all checks (`npm test` in `space/breadboard`).
 
 ### 14. `G.PALINDROME` Undefined
 
@@ -211,9 +211,9 @@ Output byte `j` takes input byte `j ⊕ 1`, `j ⊕ 3` or `j ⊕ 7` respectively.
 
 ### 24. Haskell `rotr2` Is `rotl 6` (new)
 
-**Files:** `_archive/The OMI Protocol in Pure Haskell - Corrected.md` (Part III) and `omi-files/omi/OMI/Delta.hs`.
+**Files:** `_archive/The OMI Protocol in Pure Haskell - Corrected.md` (Part III) and `omi-files/omi-canvas/src/OMI/Delta.hs`.
 **Bug:** The `rotr2` pattern `W16 (B a7 a8 b1 … b6) (B b7 b8 a1 … a6)` rotates **left by 6**, not right by 2. GHC checked this against `Data.Bits` on all 65,536 words on 2026-10-07. The period is still 8 by coincidence, but the Haskell delta gives different values from rev1, the Coq proof and the JavaScript for the same input. Two peers using different implementations would disagree.
-**Fixed 2026-10-07 in `omi-files/omi/OMI/Delta.hs`.** After the fix, the module's `delta` equals `rotl1 ^ rotl3 ^ rotr2 ^ c` on all 65,536 words for carries `0x0000`, `0x001D`, `0x1D1D`, `0x1337` and `0xFFFF`. Before the fix it did not. The `_archive` copy is left as written. The corrected line:
+**Fixed 2026-10-07 in `omi-files/omi-canvas/src/OMI/Delta.hs`.** After the fix, the module's `delta` equals `rotl1 ^ rotl3 ^ rotr2 ^ c` on all 65,536 words for carries `0x0000`, `0x001D`, `0x1D1D`, `0x1337` and `0xFFFF`. Before the fix it did not. The `_archive` copy is left as written. The corrected line:
 
 ```haskell
 rotr2 (W16 (B a1 a2 a3 a4 a5 a6 a7 a8) (B b1 b2 b3 b4 b5 b6 b7 b8)) =
