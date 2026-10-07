@@ -109,8 +109,12 @@ For a builder, each scenario says what the demonstration must make possible and 
 - BIOS paths from zero close.
 
 **Found while porting:** the document's `executePath` starts from the zero relation, and `delta(0, 0) = 0`, so every BIOS path closes no matter which gates it has. The BIOS as written cannot fail.
-⟦Should a path start from the relation it is given instead of zero?⟧
-⟦The nibble layout for `PLiteral` and `PStruct` positions is a proposal; confirm it.⟧
+
+**Author's decisions (2026-10-07; commit `64745a8`):**
+- *A path starts from the relation it is given.* If the relation is not structured right, the path is caught with the proper structure computed from 0, and it is open for another try. `OMI.Try` models try / catch / finally as total values. An `Attempt` is a coproduct: a tried value, or a caught `Deviation` carrying the structured coordinate (position, expected, actual, difference). A chain of attempts stops at the first catch. The structure checked is the frame: index 0 must equal indices 2..7 folded by XOR from 0. The difference is the repair: `repairFrame`, then try again. The tests show a broken frame is caught, repaired and then tried.
+- *`PLiteral` and `PStruct` are coordinate nibbles*, indices 0..15 into the first 16 indices of the buffer. Sixteen of them make the first 8 byte indices (relation words a..d). `PStruct` keeps all six of its nibbles.
+
+⟦Which positions are laid into one 16-nibble frame, and in what order?⟧
 **Remote:** none yet. `upstream` points at the `omi-canvas` GitHub repo.
 
 ### 5. Declare in OMI-Lisp — `omi-lisp`

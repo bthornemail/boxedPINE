@@ -195,6 +195,9 @@ Newest first. **Evidence** says how each item is known:
 
 | Date | Discovery | Level | Evidence | Where |
 |------|-----------|-------|----------|-------|
+| 2026-10-07 | try / catch / finally is a coproduct: a tried value or a caught deviation carrying the structured coordinate, whose difference is the repair for another try; chains stop at the first catch | 0, 4 | author + verified (test) | [[USE-00 Use Case Scenarios]] 4a |
+| 2026-10-07 | `PLiteral` / `PStruct` fields are coordinate nibbles (indices 0..15); sixteen make the first 8 byte indices of the buffer | 1, 2 | author + verified (test) | [[USE-00 Use Case Scenarios]] 4a |
+| 2026-10-07 | Principle: as Haskell collapses chains of types, indices collapse non-orthogonal logic | all | author | [[OPEN-03 Glossary]] |
 | 2026-10-07 | Position rules (Levels 1–2) and symbols (Level 3) must be separate: `INCLUDE` admits every alphanumeric word | 3 | verified (test) | `rosetta/README.md` |
 | 2026-10-07 | Verified findings moved into `core/src/verified/`, grammar and kernel into `rosetta/src/grammar/`; 23 tests pass | 0–5 | verified | [[META-04 Repository Frame]] |
 | 2026-10-07 | The 7 / 35 / 155 / 651 "distinguished triples" are the XOR triples `{a, b, a⊕b}` of non-zero 3- to 6-bit indices; all 155 in `animation.frame.ts` pass | 1 | verified | [[OPEN-03 Glossary]] |

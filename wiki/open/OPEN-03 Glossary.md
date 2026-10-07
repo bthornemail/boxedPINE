@@ -60,6 +60,8 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 
 ## A
 
+**Attempt** — The result of a try: either the tried value, or the caught deviation with its structured coordinate (position, expected, actual, difference). The difference is the repair, so a caught attempt is open for another try. A chain of attempts (a cochain of compare-exchanges) stops at the first catch. In `omi-files/omi-types`, module `OMI.Try`.
+
 **apply** — The second primitive (slot 13, the 6T). It invokes a relation: `bind` with the correction half of the ruler set, then one delta step, so the relation drives onward. Categorically a Functor. Not yet implemented; see [[OPEN-01 Open Questions]] #6.
 
 **Atomics.compareExchange** — The physical primitive. In one uninterrupted step it compares a slot with an expected value, swaps in the replacement if they match, and returns the old value. Those three parts are bind, apply and eval in one step.
@@ -79,6 +81,10 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 **BOUNDRY** — The type of the constraint result: either `[SPECTRAL, SPATIAL]` (the nested reading) or `COORDINATE` (the cube reading).
 
 ## C
+
+**collapse** — The author's principle: just as Haskell collapses chains of types, treating everything as an index collapses logic that is not orthogonal into one structure.
+
+**coordinate nibble** — A 4-bit index (0..15) into the first 16 indices of a buffer. `PLiteral` and `PStruct` positions are made of them, and sixteen fill the first 8 byte indices.
 
 **COORDINATE** — The eight-slot cube reading. `[SPECTRAL, SPATIAL, SHAPE, SCALAR?]`.
 

@@ -184,6 +184,11 @@ tags: [omi-imo, meta, changelog, history]
 - Found that the document's BIOS paths always close, because they start from the zero relation and `delta(0, 0) = 0`
 - Added [[USE-00 Use Case Scenarios]] scenario 4a
 
+### Author's Decisions: BIOS and Positions
+
+- BIOS paths start from the given relation; a badly framed relation is caught with the structure computed from 0 and can be repaired and tried again (`omi-types` `OMI.Try`, commit `64745a8`)
+- `PLiteral` / `PStruct` are coordinate nibbles; sixteen make the first 8 byte indices
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`
