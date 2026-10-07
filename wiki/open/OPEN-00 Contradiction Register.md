@@ -49,7 +49,7 @@ This register tracks all contradictions found in the protocol's sources. Each co
 **Source:** [[SRC-02 XOR Gate Transistor Circuits]]
 **Claim:** The 6T XOR circuit computes XOR.
 **Contradiction:** The 6T is XNOR. `Atom.apply()` returns 254/255.
-**Status:** Unresolved.
+**Status:** Unresolved. Proposed reading in [[SPEC-44 The Virtual Breadboard]]: the 5T's internal node is active-low (XNOR, shown as XOR by a sinking LED); the 6T's sixth transistor inverts it. Reading the 6T at that node with source polarity gives XNOR, reproduced in the virtual breadboard's self-test. Not yet checked against `Atom.apply()`.
 
 ### 2. The Period-8 vs Period-240 Conflict
 

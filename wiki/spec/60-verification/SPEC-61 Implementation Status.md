@@ -59,6 +59,8 @@ The OMI-IMO protocol is specified but not fully implemented. The specification i
 | SSE server | `rosetta/src/main.ts` | Complete |
 | Animation frame | `rosetta/src/animation.frame.ts` | Partial |
 | Rosetta Stone YAML | `rosetta/src/omi_rosetta_stone.yaml` | Complete |
+| Virtual breadboard kernel | `omi-files/omi/audio/breadboard/kernel.mjs` | Complete; self-test passes |
+| Virtual breadboard page | `omi-files/omi/audio/breadboard/index.html` | Complete |
 | Unified canonical statement | `rosetta/src/unified_canonical_statement.yaml` | Complete |
 
 ## What Is Missing
@@ -98,6 +100,8 @@ The closure-based protocol handler (Regex + Proxy + Reflect) is specified but no
 ## The Self-Generating Kernel
 
 The self-generating kernel with the closure scope chain is specified but not yet implemented as a working file. The specification is in [[SPEC-30 The Symbol Table G]].
+
+A scoped version exists for circuits: [[SPEC-44 The Virtual Breadboard]] has a working `learn` (truth table → gate rule) and regenerates its whole graph from a description. It does not cover the regex grammar G.
 
 ## Verification
 

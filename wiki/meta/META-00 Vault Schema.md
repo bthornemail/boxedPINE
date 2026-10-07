@@ -77,7 +77,7 @@ wiki/
 │   ├── 10-foundations/           — primitive, ruler, XOR, knots, delta, Fano
 │   ├── 20-architecture/          — dimensions, inversion, Blob, Rosetta, observers, iff
 │   ├── 30-grammar/               — symbols, declarations, mnemonics, forms, phases, orbits
-│   ├── 40-hardware/              — 6T, 8T, sourcemap, primes
+│   ├── 40-hardware/              — 6T, 8T, sourcemap, primes, virtual breadboard
 │   ├── 50-runtime/               — stream, canvas, REPL, clocks, web, ASCII
 │   └── 60-verification/          — test vectors, implementation status
 ├── extend/                       — extension guides

@@ -161,3 +161,10 @@ This register tracks all open questions in the protocol. Each question is a plac
 **Context:** The middle of bind should be the four-block family {3, 7, 11, 15}, extracted to a blackboard or automaton state.
 **Hypothesis:** The blackboard holds the four-block state. The bind becomes a transition function reading and writing the blackboard.
 **Status:** Open.
+
+### 16. The 6T Sourcemap Gap
+
+**Question:** Why does the 6T sourcemap skip breadboard column 16?
+**Context:** [[SPEC-40 The 6T XOR Circuit]] places Q1–Q6 at columns 1, 6, 11, 21, 26, 31. The 8T uses every fifth column with no gap. The generator in [[SPEC-44 The Virtual Breadboard]] gives the 6T 1, 6, 11, 16, 21, 26.
+**Hypothesis:** The gap separates the switch (Q3) from the OR-like pair (Q4, Q5) on the physical board, or it is a typo in the YAML.
+**Status:** Open.

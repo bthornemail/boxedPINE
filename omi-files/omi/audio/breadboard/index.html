@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XOR Breadboard</title>
+<style>
+  :root {
+    --bg: #f4f1ea; --surface: #fffdf8; --ink: #1f2328; --muted: #646a73; --line: #d8d2c4;
+    --board: #efe9dc; --hole: #cfc6b3; --gate: #fffdf8; --gate-line: #8b8577;
+    --wire-hi: #d9480f; --wire-lo: #3b6ea8; --wire-off: #b9b2a3;
+    --ok: #2b8a3e; --bad: #c92a2a; --accent: #1f2328; --accent-ink: #fffdf8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15171a; --surface: #1d2024; --ink: #e8e6e1; --muted: #9aa0a8; --line: #33373d;
+      --board: #202429; --hole: #353a41; --gate: #262a30; --gate-line: #6d7480;
+      --wire-hi: #ff8a4c; --wire-lo: #6ea8ea; --wire-off: #4a5059;
+      --ok: #69db7c; --bad: #ff8787; --accent: #e8e6e1; --accent-ink: #15171a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15171a; --surface: #1d2024; --ink: #e8e6e1; --muted: #9aa0a8; --line: #33373d;
+    --board: #202429; --hole: #353a41; --gate: #262a30; --gate-line: #6d7480;
+    --wire-hi: #ff8a4c; --wire-lo: #6ea8ea; --wire-off: #4a5059;
+    --ok: #69db7c; --bad: #ff8787; --accent: #e8e6e1; --accent-ink: #15171a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; }
+  h2 { font-size: 1rem; margin: 0 0 8px; }
+  p { margin: 0 0 12px; color: var(--muted); max-width: 70ch; }
+  code, pre, textarea, td.mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin: 16px 0 12px; }
+  button { font: inherit; border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+    padding: 6px 14px; border-radius: 6px; cursor: pointer; }
+  button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  label { display: inline-flex; gap: 6px; align-items: center; color: var(--muted); }
+  #status { color: var(--muted); font-size: 13px; }
+  .board-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  canvas { display: block; width: 100%; }
+  .panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 16px; }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px; min-width: 0; }
+  .scroll { overflow-x: auto; max-height: 320px; overflow-y: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th { color: var(--muted); font-weight: 500; position: sticky; top: 0; background: var(--surface); }
+  .ok { color: var(--ok); } .bad { color: var(--bad); font-weight: 600; }
+  textarea { width: 100%; min-height: 280px; background: var(--bg); color: var(--ink); border: 1px solid var(--line);
+    border-radius: 6px; padding: 10px; resize: vertical; }
+  #error { color: var(--bad); white-space: pre-wrap; margin: 8px 0 0; min-height: 1em; }
+  .row { display: flex; gap: 8px; margin-top: 8px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Four-XOR virtual breadboard</h1>
+  <p>The 5T, 6T, 8T and 10T discrete-transistor XOR builds, generated from one description.
+     The Web Audio graph does the computing: bits are ±1 signals, each gate is a sum of the VCC rail, its inputs and their product.
+     The canvas draws what the analysers read. Keys: <code>a</code>, <code>b</code>.</p>
+
+  <div class="controls">
+    <button id="power" aria-pressed="false">Power on (+5V)</button>
+    <button id="inA" aria-pressed="false">A = 0</button>
+    <button id="inB" aria-pressed="false">B = 0</button>
+    <label><input type="checkbox" id="sound"> Sound</label>
+    <label><input type="checkbox" id="probe"> Read 6T before its output stage</label>
+    <span id="status">Unpowered</span>
+  </div>
+
+  <div class="board-wrap"><canvas id="board" aria-label="Breadboard with four XOR circuits"></canvas></div>
+
+  <div class="panels">
+    <section class="panel">
+      <h2>Self-test (OfflineAudioContext)</h2>
+      <div class="scroll"><table id="tests"></table></div>
+    </section>
+    <section class="panel">
+      <h2>Generated sourcemap</h2>
+      <div class="scroll"><table id="sourcemap"></table></div>
+    </section>
+  </div>
+
+  <section class="panel" style="margin-top:16px">
+    <h2>Description</h2>
+    <p>Rules are truth tables indexed by a·2+b. Add a rule, rewire a circuit, then regenerate: the grammar, audio graph, canvas, sourcemap and self-test are all rebuilt from this text.</p>
+    <textarea id="desc" spellcheck="false"></textarea>
+    <div class="row"><button id="regen">Regenerate</button><button id="reset">Reset</button></div>
+    <pre id="error"></pre>
+  </section>
+</main>
+
+<script type="module">
+import { createKernel, DESCRIPTION, enc, dec, realize, realizeLed, selfTest } from './kernel.mjs';
+
+const $ = (id) => document.getElementById(id);
+const canvas = $('board');
+const g2d = canvas.getContext('2d');
+const LED_COLORS = { YELLOW: '#f5c518', GREEN: '#37d67a', RED: '#ff4d4d' };
+
+const state = { a: 0, b: 0, probe: false, sound: false };
+let kernel = createKernel(DESCRIPTION);
+let ctx = null;   // the AudioContext; null while unpowered
+let live = null;  // the realized graph
+let layout = null;
+
+// The probe reproduces OPEN-00 #1: an observer that reads the 6T at its internal node.
+const view = (c) => (state.probe && c.id === '6T' ? { ...c, led: { ...c.led, net: 'node', drive: 'source' } } : c);
+
+function formatDescription(d) {
+  return JSON.stringify(d, null, 2).replace(/\[\s+([^\[\]{}]*?)\s+\]/g, (_, inner) => `[${inner.replace(/\s+/g, ' ')}]`);
+}
+
+// ---------- audio ----------
+function teardown() {
+  if (!live) return;
+  for (const n of live.sources) n.stop();
+  live.master.disconnect();
+  live.silent.disconnect();
+  live = null;
+}
+
+function buildGraph() {
+  teardown();
+  if (!ctx) return;
+  const sources = [];
+  const constant = (v) => { const n = ctx.createConstantSource(); n.offset.value = v; n.start(); sources.push(n); return n; };
+  const one = constant(1);            // the VCC rail
+  const A = constant(enc(state.a));
+  const B = constant(enc(state.b));
+  const master = ctx.createGain();
+  master.gain.value = state.sound ? 0.1 : 0;
+  master.connect(ctx.destination);
+  const silent = ctx.createGain();    // keeps the analysers pulled without being heard
+  silent.gain.value = 0;
+  silent.connect(ctx.destination);
+  const probe = (node) => { const an = ctx.createAnalyser(); an.fftSize = 32; node.connect(an).connect(silent); return an; };
+
+  const circuits = kernel.circuits.map((c) => {
+    const vc = view(c);
+    const nets = realize(ctx, vc, { one, A, B });
+    const level = realizeLed(ctx, vc, nets, one);
+    const analysers = new Map([...nets].map(([k, n]) => [k, probe(n)]));
+    analysers.set('#led', probe(level));
+    if (vc.tone) {
+      const osc = ctx.createOscillator();
+      osc.type = 'triangle';
+      osc.frequency.value = vc.tone;
+      const smooth = ctx.createBiquadFilter(); // de-click the LED level before it opens the tone
+      smooth.frequency.value = 40;
+      const vca = ctx.createGain();
+      vca.gain.value = 0;
+      level.connect(smooth).connect(vca.gain);
+      osc.connect(vca).connect(master);
+      osc.start();
+      sources.push(osc);
+    }
+    return { id: c.id, analysers };
+  });
+  live = { A, B, sources, master, silent, circuits };
+}
+
+const sample = new Float32Array(32);
+function read(an) { an.getFloatTimeDomainData(sample); return sample[sample.length - 1]; }
+
+function readAll() {
+  if (!live || ctx.state !== 'running') return null;
+  return new Map(live.circuits.map(({ id, analysers }) =>
+    [id, new Map([...analysers].map(([k, an]) => [k, read(an)]))]));
+}
+
+// ---------- layout (generated from the compiled netlist) ----------
+const LANE_PAD = 26, ROW_H = 52, GATE_H = 36;
+let LEFT = 92, RIGHT = 70, GATE_W = 64;
+
+function computeLayout(width) {
+  const maxDepth = Math.max(1, ...kernel.circuits.map((c) => c.depth));
+  const cols = maxDepth + 1;
+  const narrow = width < 560;
+  LEFT = narrow ? 60 : 92;
+  RIGHT = narrow ? 46 : 70;
+  GATE_W = Math.min(64, ((width - LEFT - RIGHT) / cols) * 0.85);
+  const colX = (d) => LEFT + ((width - LEFT - RIGHT) * d) / cols;
+  let top = 0;
+  const lanes = kernel.circuits.map((c) => {
+    const byDepth = new Map();
+    for (const g of c.gates) byDepth.set(g.depth, [...(byDepth.get(g.depth) || []), g]);
+    const rows = Math.max(2, ...[...byDepth.values()].map((v) => v.length));
+    const h = LANE_PAD * 2 + rows * ROW_H;
+    const cy = (i, n) => top + LANE_PAD + ((rows * ROW_H) * (i + 0.5)) / n;
+    const pos = new Map([
+      ['A', { x: LEFT - 16, y: cy(0, 2), input: true }],
+      ['B', { x: LEFT - 16, y: cy(1, 2), input: true }],
+    ]);
+    for (const [d, gs] of byDepth) gs.forEach((g, i) => pos.set(g.net, { x: colX(d - 0.5), y: cy(i, gs.length), gate: g }));
+    const lane = { circuit: c, top, h, pos, led: { x: width - RIGHT / 2 - 4, y: top + h / 2 } };
+    top += h;
+    return lane;
+  });
+  return { width, height: top, lanes };
+}
+
+function resize() {
+  const width = canvas.parentElement.clientWidth;
+  layout = computeLayout(width);
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.round(width * dpr);
+  canvas.height = Math.round(layout.height * dpr);
+  canvas.style.height = `${layout.height}px`;
+  g2d.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+// ---------- drawing ----------
+let colors = {};
+function readColors() {
+  const cs = getComputedStyle(document.documentElement);
+  for (const k of ['board', 'hole', 'ink', 'muted', 'line', 'gate', 'gate-line', 'wire-hi', 'wire-lo', 'wire-off']) {
+    colors[k] = cs.getPropertyValue(`--${k}`).trim();
+  }
+}
+
+const wireColor = (v) => (v === undefined ? colors['wire-off'] : dec(v) ? colors['wire-hi'] : colors['wire-lo']);
+
+function outPoint(p) { return p.input ? { x: p.x + 8, y: p.y } : { x: p.x + GATE_W / 2, y: p.y }; }
+
+function wire(from, to, v) {
+  g2d.strokeStyle = wireColor(v);
+  g2d.lineWidth = v === undefined ? 1.5 : 2.5;
+  g2d.beginPath();
+  g2d.moveTo(from.x, from.y);
+  const mx = (from.x + to.x) / 2;
+  g2d.bezierCurveTo(mx, from.y, mx, to.y, to.x, to.y);
+  g2d.stroke();
+}
+
+function draw() {
+  const values = readAll();
+  const { width, height, lanes } = layout;
+  g2d.clearRect(0, 0, width, height);
+  g2d.font = '12px ui-monospace, Menlo, Consolas, monospace';
+  g2d.textBaseline = 'middle';
+
+  for (const lane of lanes) {
+    const c = view(lane.circuit);
+    const v = values && values.get(c.id);
+    const val = (net) => (v ? v.get(net) : undefined);
+
+    // board and holes
+    g2d.fillStyle = colors.board;
+    g2d.fillRect(0, lane.top, width, lane.h);
+    g2d.fillStyle = colors.hole;
+    for (let y = lane.top + 9; y < lane.top + lane.h - 4; y += 13) {
+      for (let x = 9; x < width; x += 13) g2d.fillRect(x, y, 2, 2);
+    }
+    g2d.strokeStyle = colors.line;
+    g2d.beginPath(); g2d.moveTo(0, lane.top + lane.h - 0.5); g2d.lineTo(width, lane.top + lane.h - 0.5); g2d.stroke();
+
+    // lane label
+    g2d.fillStyle = colors.ink;
+    g2d.font = '600 14px system-ui, sans-serif';
+    g2d.textAlign = 'left';
+    g2d.fillText(c.id, 10, lane.top + 13);
+    g2d.font = '12px ui-monospace, Menlo, Consolas, monospace';
+    g2d.fillStyle = colors.muted;
+    g2d.fillText(c.role, 10, lane.top + 27);
+    g2d.fillText(`${c.transistorCount} Q`, 10, lane.top + 39);
+
+    // wires into gates
+    for (const g of c.gates) {
+      const p = lane.pos.get(g.net);
+      const unary = g.inputs[0] === g.inputs[1];
+      g.inputs.forEach((src, i) => {
+        if (unary && i === 1) return;
+        const to = { x: p.x - GATE_W / 2, y: unary ? p.y : p.y + (i ? 9 : -9) };
+        wire(outPoint(lane.pos.get(src)), to, val(src));
+      });
+    }
+    // wire to the LED
+    const ledNet = c.led.net;
+    wire(outPoint(lane.pos.get(ledNet)), { x: lane.led.x - 12, y: lane.led.y }, val(ledNet));
+
+    // inputs
+    for (const name of ['A', 'B']) {
+      const p = lane.pos.get(name);
+      g2d.fillStyle = wireColor(val(name));
+      g2d.beginPath(); g2d.arc(p.x, p.y, 7, 0, Math.PI * 2); g2d.fill();
+      g2d.fillStyle = colors.muted; g2d.textAlign = 'right';
+      g2d.fillText(name, p.x - 12, p.y);
+    }
+
+    // gates with their transistors
+    for (const g of c.gates) {
+      const p = lane.pos.get(g.net);
+      const x = p.x - GATE_W / 2, y = p.y - GATE_H / 2;
+      g2d.fillStyle = colors.gate; g2d.strokeStyle = colors['gate-line']; g2d.lineWidth = 1;
+      g2d.beginPath(); g2d.roundRect(x, y, GATE_W, GATE_H, 5); g2d.fill(); g2d.stroke();
+      g2d.fillStyle = colors.ink; g2d.textAlign = 'center';
+      g2d.font = '600 11px system-ui, sans-serif';
+      g2d.fillText(g.rule.name, p.x, y + 11);
+      g2d.font = '10px ui-monospace, Menlo, Consolas, monospace';
+      g2d.fillStyle = colors.muted;
+      g2d.fillText(g.transistors.map((t) => t.id).join(' '), p.x, y + 26);
+      g2d.fillStyle = colors.muted; g2d.textAlign = 'left';
+      g2d.fillText(g.net, x + GATE_W + 4, p.y - 10);
+    }
+
+    // LED
+    const lit = v ? v.get('#led') > 0.5 : false;
+    const color = LED_COLORS[c.led.color] || LED_COLORS.YELLOW;
+    if (lit) {
+      const glow = g2d.createRadialGradient(lane.led.x, lane.led.y, 4, lane.led.x, lane.led.y, 30);
+      glow.addColorStop(0, color); glow.addColorStop(1, 'transparent');
+      g2d.fillStyle = glow;
+      g2d.beginPath(); g2d.arc(lane.led.x, lane.led.y, 30, 0, Math.PI * 2); g2d.fill();
+    }
+    g2d.fillStyle = lit ? color : colors.hole;
+    g2d.strokeStyle = colors['gate-line'];
+    g2d.beginPath(); g2d.arc(lane.led.x, lane.led.y, 11, 0, Math.PI * 2); g2d.fill(); g2d.stroke();
+    g2d.fillStyle = colors.muted; g2d.textAlign = 'center';
+    g2d.fillText(c.led.drive, lane.led.x, lane.led.y + 24);
+  }
+
+  if (!values) {
+    g2d.fillStyle = colors.muted; g2d.textAlign = 'right';
+    g2d.font = '12px system-ui, sans-serif';
+    g2d.fillText('unpowered: press Power on', width - 12, 12);
+  }
+  requestAnimationFrame(draw);
+}
+
+// ---------- panels ----------
+async function runTests() {
+  const table = $('tests');
+  table.innerHTML = '<tr><td>rendering…</td></tr>';
+  try {
+    const results = await selfTest({ circuits: kernel.circuits.map(view) }, window.OfflineAudioContext);
+    table.innerHTML = '<tr><th>build</th><th>reads</th><th>00</th><th>01</th><th>10</th><th>11</th><th>XOR?</th></tr>' +
+      results.map(({ circuit, rows, ok }) =>
+        `<tr><td>${circuit.id} ${circuit.role}</td><td class="mono">${circuit.led.net}/${circuit.led.drive}</td>` +
+        rows.map((r) => `<td class="${r.ok ? 'ok' : 'bad'}">${r.led}</td>`).join('') +
+        `<td class="${ok ? 'ok' : 'bad'}">${ok ? 'pass' : 'fail'}</td></tr>`).join('');
+  } catch (e) {
+    table.innerHTML = `<tr><td class="bad">${e.message}</td></tr>`;
+  }
+}
+
+function renderSourcemap() {
+  $('sourcemap').innerHTML = '<tr><th>build</th><th>Q</th><th>net</th><th>rule</th><th>row</th><th>col</th></tr>' +
+    kernel.circuits.flatMap((c) => c.sourcemap.map((t) =>
+      `<tr><td>${c.id}</td><td class="mono">${t.id}</td><td class="mono">${t.gate}</td><td>${t.rule}</td><td>${t.row}</td><td>${t.col}</td></tr>`)).join('');
+}
+
+function regenerate(description) {
+  try {
+    kernel = createKernel(description);
+    $('error').textContent = '';
+  } catch (e) {
+    $('error').textContent = e.message;
+    return;
+  }
+  resize();
+  buildGraph();
+  renderSourcemap();
+  runTests();
+}
+
+// ---------- controls ----------
+function setInput(which, bit) {
+  state[which] = bit;
+  const btn = $(which === 'a' ? 'inA' : 'inB');
+  btn.textContent = `${which.toUpperCase()} = ${bit}`;
+  btn.setAttribute('aria-pressed', String(!!bit));
+  if (live) live[which.toUpperCase()].offset.setValueAtTime(enc(bit), ctx.currentTime);
+}
+
+$('inA').onclick = () => setInput('a', 1 - state.a);
+$('inB').onclick = () => setInput('b', 1 - state.b);
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'a') setInput('a', 1 - state.a);
+  if (e.key === 'b') setInput('b', 1 - state.b);
+});
+
+$('power').onclick = async () => {
+  if (ctx) {
+    teardown();
+    await ctx.close();
+    ctx = null;
+  } else {
+    ctx = new AudioContext();
+    buildGraph();
+    await ctx.resume();
+  }
+  $('power').setAttribute('aria-pressed', String(!!ctx));
+  $('power').textContent = ctx ? 'Power off' : 'Power on (+5V)';
+  $('status').textContent = ctx ? `AudioContext ${ctx.state}, ${ctx.sampleRate} Hz` : 'Unpowered';
+};
+
+$('sound').onchange = (e) => {
+  state.sound = e.target.checked;
+  if (live) live.master.gain.setTargetAtTime(state.sound ? 0.1 : 0, ctx.currentTime, 0.03);
+};
+
+$('probe').onchange = (e) => {
+  state.probe = e.target.checked;
+  buildGraph();
+  runTests();
+};
+
+$('regen').onclick = () => {
+  let description;
+  try { description = JSON.parse($('desc').value); } catch (e) { $('error').textContent = `JSON: ${e.message}`; return; }
+  regenerate(description);
+};
+$('reset').onclick = () => { $('desc').value = formatDescription(DESCRIPTION); regenerate(DESCRIPTION); };
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', readColors);
+new ResizeObserver(resize).observe(canvas.parentElement);
+
+readColors();
+$('desc').value = formatDescription(DESCRIPTION);
+regenerate(DESCRIPTION);
+requestAnimationFrame(draw);
+window.breadboard = { get kernel() { return kernel; }, regenerate };
+</script>
+</body>
+</html>

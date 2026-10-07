@@ -34,6 +34,7 @@ down:
   - "[[SPEC-41 The 8T XOR Circuit]]"
   - "[[SPEC-42 Circuit Sourcemap]]"
   - "[[SPEC-43 Prime Gaps and Sextuplets]]"
+  - "[[SPEC-44 The Virtual Breadboard]]"
   - "[[SPEC-50 Stream Transport]]"
   - "[[SPEC-51 JSON Canvas Interchange]]"
   - "[[SPEC-52 The REPL and the Digest]]"
@@ -186,6 +187,8 @@ Built from three JavaScript primitives:
 | Reflect | the operation — how the read or write is performed |
 
 The kernel is self-generating: the grammar is mutable, the handler reads it from the closure scope chain, and `learn` extends it.
+
+A working small-scale example: [[SPEC-44 The Virtual Breadboard]] generates the four XOR builds, their audio graph, canvas and sourcemap from one description, and `learn` adds gate rules to it.
 
 ## The Web Environment
 

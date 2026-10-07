@@ -106,6 +106,10 @@ The 8T circuit is the **eval** — the SECURE. It is the third XOR gate in the p
 
 From the extraction of SRC-02: the 8T and 10T netlists are algebraically correct XOR (verified by hand). The 8T is built from 4 NAND gates, which is the standard XOR-from-NAND construction.
 
+## The Virtual Build
+
+The 8T runs as four NAND rules in a Web Audio graph in [[SPEC-44 The Virtual Breadboard]]. Its generated sourcemap matches the table above.
+
 ## The Naming Collision
 
 **Important:** The 8T in the protocol's YAML spec is a BJT breadboard circuit with 8 transistors organized into 4 NAND gates. The reference source (SRC-08) describes 5T, 6T, 8T, and 10T BJT circuits. There is a naming collision: the "8T" in the YAML is a BJT circuit, while "8T" in CMOS literature typically means 8 transistors in a CMOS XOR gate. These are different circuits.

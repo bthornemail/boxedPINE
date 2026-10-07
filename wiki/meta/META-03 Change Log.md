@@ -132,6 +132,16 @@ tags: [omi-imo, meta, changelog, history]
 
 - tools/validate.mjs
 
+## 2026-10-07
+
+### Virtual Breadboard
+
+- Wrote [[SPEC-44 The Virtual Breadboard]]: the 5T/6T/8T/10T XOR builds in Web Audio (signals) and canvas (geometry), generated from one description
+- Added `omi-files/omi/audio/breadboard/` (`kernel.mjs`, `index.html`, `test.mjs`); `npm test` in `omi-files/omi/audio` runs the offline self-test
+- Added a proposed reading to [[OPEN-00 Contradiction Register]] #1 (the 6T read before its output stage is XNOR)
+- Added [[OPEN-01 Open Questions]] #16 (the 6T sourcemap gap)
+- Linked SPEC-44 from the root MOC, README, SPEC-40, SPEC-41, SPEC-61 and EXT-03
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`

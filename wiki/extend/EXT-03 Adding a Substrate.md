@@ -118,6 +118,10 @@ Add the new substrate to [[OMI-IMO]].
 | 8T | 8 | 4× NAND | the eval |
 | 10T | 10 | 5× NOR | the digest |
 
+## Testing a Substrate Virtually
+
+Before building on a real breadboard, add the circuit to the description in [[SPEC-44 The Virtual Breadboard]]. Each gate is a truth table and a transistor cost. The self-test renders it in Web Audio, checks it against XOR, and generates a sourcemap in the row-5, every-fifth-column convention.
+
 ## The Naming Collision
 
 **Important:** The 6T and 8T in the protocol's YAML spec are BJT breadboard circuits, not CMOS. The reference source (SRC-08) describes 5T, 6T, 8T, and 10T BJT circuits. There is a naming collision: the "6T" in the YAML is a BJT circuit with 6 transistors, while "6T" in CMOS literature typically means 6 transistors in a CMOS XOR gate. These are different circuits.

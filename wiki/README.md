@@ -41,6 +41,7 @@ related:
   - "[[SPEC-41 The 8T XOR Circuit]]"
   - "[[SPEC-42 Circuit Sourcemap]]"
   - "[[SPEC-43 Prime Gaps and Sextuplets]]"
+  - "[[SPEC-44 The Virtual Breadboard]]"
   - "[[SPEC-50 Stream Transport]]"
   - "[[SPEC-51 JSON Canvas Interchange]]"
   - "[[SPEC-52 The REPL and the Digest]]"
@@ -79,7 +80,7 @@ A second-brain wiki for the OMI-IMO protocol. Designed for literate programming:
 4. **Explore the foundations:** [[SPEC-10 The Primitive]], [[SPEC-12 The Ruler]], [[SPEC-13 XOR Algebra]]
 5. **See the architecture:** [[SPEC-20 The Dimensional Axis]], [[SPEC-23 The Rosetta Stone]]
 6. **Learn the grammar:** [[SPEC-30 The Symbol Table G]], [[SPEC-31 Declaration Syntax]]
-7. **Check the hardware:** [[SPEC-40 The 6T XOR Circuit]], [[SPEC-41 The 8T XOR Circuit]]
+7. **Check the hardware:** [[SPEC-40 The 6T XOR Circuit]], [[SPEC-41 The 8T XOR Circuit]], then run them in [[SPEC-44 The Virtual Breadboard]]
 8. **Understand the runtime:** [[SPEC-50 Stream Transport]], [[SPEC-52 The REPL and the Digest]]
 9. **Verify:** [[SPEC-60 Test Vectors]], [[SPEC-61 Implementation Status]]
 10. **Extend:** [[EXT-00 How to Extend the Protocol]]
@@ -104,7 +105,7 @@ wiki/
 │   ├── 10-foundations/           — primitive, ruler, XOR, knots, delta, Fano
 │   ├── 20-architecture/          — dimensions, inversion, Blob, Rosetta, observers, iff
 │   ├── 30-grammar/               — symbols, declarations, mnemonics, forms, phases, orbits
-│   ├── 40-hardware/              — 6T, 8T, sourcemap, primes
+│   ├── 40-hardware/              — 6T, 8T, sourcemap, primes, virtual breadboard
 │   ├── 50-runtime/               — stream, canvas, REPL, clocks, web, ASCII
 │   └── 60-verification/          — test vectors, implementation status
 ├── extend/                       — extension guides
@@ -136,7 +137,7 @@ wiki/
 | Foundations | [[SPEC-10 The Primitive]], [[SPEC-11 The Three Primitives]], [[SPEC-12 The Ruler]], [[SPEC-13 XOR Algebra]], [[SPEC-14 Knots and Binds]], [[SPEC-15 The Delta Transform]], [[SPEC-16 The Fano Invariant]] |
 | Architecture | [[SPEC-20 The Dimensional Axis]], [[SPEC-21 The Inversion Law]], [[SPEC-22 The Blob]], [[SPEC-23 The Rosetta Stone]], [[SPEC-24 Observers]], [[SPEC-25 The Iff]] |
 | Grammar | [[SPEC-30 The Symbol Table G]], [[SPEC-31 Declaration Syntax]], [[SPEC-32 Mnemonics and Axes]], [[SPEC-33 The Quadratic Forms]], [[SPEC-34 Phases Attributes Constraints Configurations]], [[SPEC-35 Reflections and Orbits]] |
-| Hardware | [[SPEC-40 The 6T XOR Circuit]], [[SPEC-41 The 8T XOR Circuit]], [[SPEC-42 Circuit Sourcemap]], [[SPEC-43 Prime Gaps and Sextuplets]] |
+| Hardware | [[SPEC-40 The 6T XOR Circuit]], [[SPEC-41 The 8T XOR Circuit]], [[SPEC-42 Circuit Sourcemap]], [[SPEC-43 Prime Gaps and Sextuplets]], [[SPEC-44 The Virtual Breadboard]] |
 | Runtime | [[SPEC-50 Stream Transport]], [[SPEC-51 JSON Canvas Interchange]], [[SPEC-52 The REPL and the Digest]], [[SPEC-53 Clocks and Periods]], [[SPEC-54 The Web Platform Layers]], [[SPEC-55 ASCII Folds]] |
 | Verification | [[SPEC-60 Test Vectors]], [[SPEC-61 Implementation Status]] |
 

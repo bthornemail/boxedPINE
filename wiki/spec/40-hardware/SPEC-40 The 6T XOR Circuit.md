@@ -10,6 +10,7 @@ down:
   - "[[SPEC-41 The 8T XOR Circuit]]"
   - "[[SPEC-42 Circuit Sourcemap]]"
   - "[[SPEC-43 Prime Gaps and Sextuplets]]"
+  - "[[SPEC-44 The Virtual Breadboard]]"
 related:
   - "[[SPEC-23 The Rosetta Stone]]"
   - "[[SPEC-30 The Symbol Table G]]"
@@ -139,3 +140,5 @@ The 6T circuit is the **apply** — the full fan-out. It is the second XOR gate 
 ## The Contradiction
 
 From the extraction of SRC-02: the 6T is XNOR, not XOR. `Atom.apply()` returns 254/255. This is a genuine contradiction — the circuit as described does not compute XOR. See [[OPEN-00 Contradiction Register]].
+
+[[SPEC-44 The Virtual Breadboard]] reproduces the XNOR by reading the 6T before its output transistor, and proposes that as the reading (unconfirmed).
