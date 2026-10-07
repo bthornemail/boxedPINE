@@ -60,6 +60,9 @@ This register tracks the places where the sources are unclear or incomplete. On 
 | 14 | The pin at 18 | Resolved |
 | 15 | The blackboard | Resolved |
 | 16 | 6T sourcemap gap | Needs the Rosetta YAML |
+| 17 | iExtant letter assignments | Resolved |
+| 18 | The −60 to 64 quasi-generator | Proposed: 124, half-open |
+| 19 | try/catch/finally: triangle or seven points | Resolved: the triangle spans the seven |
 
 ## Questions
 
@@ -195,3 +198,44 @@ Each cycle, Cubes 0 and 1 trade roles (Exponent ↔ Exception, the `delta16` hal
 **What the archive adds:** rev1 numbers transistors across the whole pipeline: 5T Q1–Q5, 6T adds Q6, 8T Q7–Q14, 10T Q15–Q24. That means the 6T is the 5T plus one transistor on the same board. The coupling resistor (BOOT0 → 2 kΩ → Q6) has to sit somewhere, which may be what the gap is for. The Rosetta YAML that holds the coordinates is not in this repo.
 **Update (2026-10-07):** the YAML is now in the repo at `rosetta/src/assets/omi_rosetta_stone.yaml`. It confirms the columns 1, 6, 11, 21, 26, 31 but gives no reason. Its canvas positions for Q1–Q6 have no gap, so the gap is on the physical board only.
 **Status:** Open; only the author knows why the board skips column 16.
+
+### 17. The iExtant Letter Assignments
+
+**Source:** [[SRC-09 Try XOR Catch XNOR Finally]] (archive lines ~5586–5620): Point `/pinEboxed/`, Circle `/boxd/`, Simplex `/pin/`, iExtant `/eE/`. Circle and Simplex both extend Point and implement iExtant.
+**Answer:** the three smaller sets split the large one exactly: `pin` + `boxd` + `eE` is precisely the letters of `pinEboxed`, with none shared and none missing (checked). `_archive/model.ts` already lists these nine letters as `Domain.Values` (p, i, n, E, b, o, x, e, d). So Point = Simplex (the literals) ∪ Circle (the radices) ∪ iExtant (the markers).
+**Status:** Resolved.
+
+### 18. The −60 to 64 Quasi-Generator
+
+**Question:** iExtant is "the c−r, c+r quasi-generator from −60 to 64". Is the range 124 values or 125, and is it signed or unsigned with an offset?
+**Computed:**
+
+| Reading | Values |
+|---------|--------|
+| `c − r = −60`, `c + r = 64` | c = 2, r = 62 |
+| half-open `[−60, 64)` = `[c−r, c+r)` | 124 = 60 negatives + 64 non-negatives |
+| closed `[−60, 64]` | 125 |
+| 60 ⊕ 64 | 124, and 60 & 64 = 0, so here 60 + 64 = 60 ⊕ 64 |
+| `[−60, 64)` on the byte ring | 196 … 255, 0 … 63: one arc |
+
+**Proposed:** 124, half-open. It equals the fold `60 ⊕ 64`, it splits into the "60" and the "64", and on a byte ring the signed and unsigned readings are the same arc.
+**Open point:** the index rule defines "negative" as the complement. That makes −60 into 195 on a byte (or 67 on 7 bits, rev1 §3.5), while two's-complement −60 is 196. The two differ by exactly 1, the same as 124 vs 125. The author's definition of "−60" settles it.
+**Status:** Proposed; awaiting the author.
+
+### 19. try / catch / finally: Triangle or Seven Points?
+
+**Source:** [[SRC-09 Try XOR Catch XNOR Finally]] (archive lines ~5714–5850).
+**Answer:** both. The triangle generates the plane. Take try, catch and finally as three independent indices (001, 010, 100). Their XOR combinations are exactly 7 points, and the lines `{a, b, a ⊕ b}` are exactly the 7 Fano lines (checked):
+
+| Point | Index | Reading |
+|-------|-------|---------|
+| try | 001 | the attempt |
+| catch | 010 | the trap |
+| finally | 100 | the witness |
+| try ⊕ catch | 011 | the throw ("fires in the try, is caught by the catch") |
+| try ⊕ finally | 101 | ⟦author to name⟧ |
+| catch ⊕ finally | 110 | ⟦author to name⟧ |
+| try ⊕ catch ⊕ finally | 111 | the full path |
+
+The transcript's own candidate ("try, catch, finally / three exits / the full path") is this structure.
+**Status:** Resolved; two names open.
