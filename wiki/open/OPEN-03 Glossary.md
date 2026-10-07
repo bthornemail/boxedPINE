@@ -126,7 +126,7 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 
 **Hamming sphere** — The set of values at a fixed number of differing bits from a centre. The XOR orbit of any 4-bit value splits into spheres of sizes 1, 4, 6, 4, 1; 5 and 10 are antipodes.
 
-**headless proxy presenter** — The author's core examples (`core/src/broadcast.ts`, `server.ts`, `model.ts`, `animation.frame.ts`): Proxy and Reflect presented over a headless REPL served by HTTP, with no view of their own. `space/` supplies the views.
+**headless proxy presenter** — The author's core examples (`core/src/broadcast.ts`, `model.ts`, `animation.frame.ts`): Proxy and Reflect presented over a headless REPL served by HTTP (`src/server.ts`, the development REPL), with no view of their own. `space/` supplies the views.
 
 **Homoiconic** — Code is data. The knot is both a program and a value.
 

@@ -197,7 +197,7 @@ tags: [omi-imo, meta, changelog, history]
 
 - Named the Fano points: Reflect = try ⊕ finally, Proxy = catch ⊕ finally ([[OPEN-01 Open Questions]] #19)
 - Recorded the author's roles for `core/src` (headless proxy presenter) and the `space/` target (three.js breadboard in a 360 × 65536 tetrahedron)
-- Moved `define.commands.ts` to `src/`; added `rosetta/src/assets/commands.vtt` with a sync test (27 tests passing)
+- Moved the development REPL (`server.ts`, `define.commands.ts`) to `src/`; added `rosetta/src/assets/commands.vtt` with a sync test (27 tests passing)
 
 ## Pending
 

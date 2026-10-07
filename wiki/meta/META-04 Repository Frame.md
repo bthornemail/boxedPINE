@@ -29,10 +29,10 @@ The repository is a demonstration project. The author describes the intent; buil
 
 | Folder | Job | Holds now |
 |--------|-----|-----------|
-| `core/` | Core findings, and the author's headless proxy presenter | `core/src/verified/` (exchange, swaps, delta, wordform, triples); `broadcast.ts`, `server.ts`, `model.ts`, `animation.frame.ts` |
+| `core/` | Core findings, and the author's headless proxy presenter | `core/src/verified/` (exchange, swaps, delta, wordform, triples); `broadcast.ts`, `model.ts`, `animation.frame.ts` |
 | `rosetta/` | The regexes and declarations: the grammar | `rosetta/src/grammar/` (the full grammar and the self-generating kernel); `rosetta/src/assets/commands.vtt` (the REPL commands as cues) |
 | `space/` | Spatial rendering: a three.js virtual breadboard in a 360 × 65536 tetrahedron | Eight views inscribed in `space/README.md`; the 2D breadboard (`space/breadboard/`) is built |
-| `src/` | The test bed: the Vite app entry, the REPL commands, the checks | `src/define.commands.ts`, `src/testbed/` (`npm test`) |
+| `src/` | The test bed: the Vite app entry, the REPL commands, the checks | `src/server.ts` and `src/define.commands.ts` (the development REPL), `src/testbed/` (`npm test`) |
 | `wiki/` | The natural-language presentation and knowledge bank | This vault |
 | `_archive/` | Retired code and earlier specifications | Old code moves here; nothing is deleted |
 | `omi-files/` | Earlier renditions of the same protocol, used as **use case scenarios** | Projects catalogued in [[USE-00 Use Case Scenarios]] (`omi` was merged into `omi-canvas` and `space/breadboard`; `omi-canvas` was forked as `omi-types`) |
