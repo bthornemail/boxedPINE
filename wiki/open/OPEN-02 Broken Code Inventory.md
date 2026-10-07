@@ -65,6 +65,7 @@ This inventory tracks known defects in the OMI-IMO code. On 2026-10-07 every ent
 | 21 | Kernel `HEX` regex | Confirmed (new) |
 | 22 | `index.ts` does not compile | Confirmed (new) |
 | 23 | `Atom.apply` keeps 7 extra bits | Confirmed (new) |
+| 25 | `rfc.ts` `base36Decode` encodes instead of decoding | Confirmed (new) |
 | 24 | Haskell `rotr2` is `rotl 6` | Fixed in `omi-files/omi-canvas/src/OMI/Delta.hs` |
 
 ## Bugs
@@ -219,3 +220,9 @@ Output byte `j` takes input byte `j ⊕ 1`, `j ⊕ 3` or `j ⊕ 7` respectively.
 rotr2 (W16 (B a1 a2 a3 a4 a5 a6 a7 a8) (B b1 b2 b3 b4 b5 b6 b7 b8)) =
   W16 (B b7 b8 a1 a2 a3 a4 a5 a6) (B a7 a8 b1 b2 b3 b4 b5 b6)
 ```
+
+### 25. `rfc.ts` `base36Decode` Encodes Instead of Decoding (new)
+
+**File:** `rosetta/src/rfc.ts`
+**Bug:** `base36Decode()` returns `(this.meter).toString(36)`, identical to `base36Encode()`.
+**Fix:** decode text with `parseInt(text, 36)`; for example, `"1o"` gives back 60. `rosetta/src/grammar/catalog.ts` does this; see [[SPEC-37 The Catalog Coordinate]].

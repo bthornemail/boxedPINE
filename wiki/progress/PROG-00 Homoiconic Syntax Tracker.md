@@ -195,6 +195,7 @@ Newest first. **Evidence** says how each item is known:
 
 | Date | Discovery | Level | Evidence | Where |
 |------|-----------|-------|----------|-------|
+| 2026-10-07 | The catalog coordinate `<base32?base36=base64>` is regex-compatible and self-checking, and its delimiters `< = > ?` are block 0 of the orbit of 60 | 2, 3 | author + verified (test) | [[SPEC-37 The Catalog Coordinate]] |
 | 2026-10-07 | A literal reduces to `0n` as place-value nibbles in one fixed-width long word (the 128-bit OMI address), and an addressable coordinate is a typed handle; base36 is cut out by bits 128 / 64 / 32 (the `60 ⊕ 128`, `60 ⊕ 64` and case toggles) | 1, 2, 4 | author + verified (test) | [[SPEC-36 The Literal Separation]] |
 | 2026-10-07 | The literal separation: index literals `0P`/`0I`/`0N` like BigInt `0n`, `e` exponent / `E` exception buffer (16 booleans), datum `0b`/`0o`/`0x`/`0d`/`0.`; draft regex in the grammar as `PINEBOXED`. It does not yet admit the bare `0P`/`0I`/`0N`; `e ⊕ E = 0x20` | 1, 2 | author + verified (test) | [[SPEC-36 The Literal Separation]] |
 | 2026-10-07 | The two remaining Fano points are Reflect (try ⊕ finally) and Proxy (catch ⊕ finally), where iExtant meets the user's declarations; Proxy ⊕ Reflect = throw | 4 | author + verified | [[OPEN-01 Open Questions]] #19 |

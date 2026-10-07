@@ -208,6 +208,8 @@ tags: [omi-imo, meta, changelog, history]
 
 - SPEC-36: the `0n` reduction from the Uniform Bitboard (place-value nibbles, handles), base36 from the block bits, the gauge diagonals, and the animation-frame forms; 33 tests passing
 
+- Added [[SPEC-37 The Catalog Coordinate]] (`<base32?base36=base64>`), `rosetta/src/grammar/catalog.ts` and the `CATALOG` rule; logged the `rfc.ts` base36 decode bug; 35 tests passing
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`
