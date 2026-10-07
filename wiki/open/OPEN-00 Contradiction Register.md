@@ -396,4 +396,15 @@ So the permutations *are* XOR and XNOR on positions, which matches the index rul
 
 **Permutation, not mutation.** Node's `Buffer.swapN()` reorders the buffer *in place* and returns the same object. Calling `swap16()` twice undoes itself, and six "faces" taken this way are one buffer ([[OPEN-02 Broken Code Inventory]] #20). The protocol's swaps must permute a copy: `Buffer.from(x).swap16()`.
 
+**Primary source:** the author's own message in DeepSeek3 (`wiki/sources/raw/DeepSeek3_Protocol_sequence_analysis.txt`, lines 42400–44719): *"we actually changed the delta law to swaps instead of shifts. It became swap16, swap32, swap64."* The reply's `swapDelta` copies before each swap (`Buffer.from(ruler).swap16()`).
+
+**Claims in that section, checked 2026-10-07:**
+
+| Claim | Result |
+|-------|--------|
+| The swap delta is reversible | True, and stronger: `L = swap16 ⊕ swap32 ⊕ swap64` is its own inverse (`L(L(r)) = r`, 1,000 random 16-byte rulers) |
+| "The three swaps generate the permutation group of order 6 (the 3!)" | False. They commute, so they generate a group of order 8. The "3! → 1!" is exact in another sense: all 6 orderings compose to one permutation |
+| The 240-step `fullCycle` returns to the `0x0000` centroid | True. For every input it is zero at step 3 and stays there, because `(L ⊕ I)² = 0` |
+| `atomicDelta` digest `bind ⊕ apply ⊕ eval` | 0 when the exchange happens; `expected ⊕ replacement` when it misses |
+
 **Status:** Resolved. The latest summaries (rev1 §5, Haskell `OMI.Delta`) still use the rotation law, so they describe the earlier form.

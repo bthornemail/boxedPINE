@@ -152,6 +152,7 @@ tags: [omi-imo, meta, changelog, history]
 - Reclassified the byte-rotating `delta` (period 4) as the intended block reading, per the author; it is distinct from the bit-level `delta16` (period 8)
 - Fixed `rotr2` in `omi-files/omi/OMI/Delta.hs` (it was `rotl 6`); verified against the spec delta on all 65,536 words
 - Recorded the author's supersession of the rotation delta by the swap permutations (XOR/XNOR on the index, period 4)
+- Checked DeepSeek3 lines 42400–44719, the author's switch from rotations to swaps: swap delta is self-inverse, `fullCycle` hits zero at step 3, the 155 triples are XOR lines of 5-bit indices
 - Left open: the 6T sourcemap gap (needs the Rosetta YAML), the role of `{17, 19}`, and whether `regenerate` restores state
 
 ## Pending

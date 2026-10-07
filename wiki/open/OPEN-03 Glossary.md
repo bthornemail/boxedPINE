@@ -90,6 +90,8 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 
 **delta** — The step law. Current form: `swap16(x) ⊕ swap32(x) ⊕ swap64(x) ⊕ c`, a permutation law with period 4. Earlier form: `delta16(x, c) = rotl16(x, 1) ^ rotl16(x, 3) ^ rotr16(x, 2) ^ c` on 16-bit words. Its period is exactly 8: proved in Coq in `omi-axioms`, and every orbit length divides 8. Rotating the 8 *bytes* instead is the block reading, with period 4. That is intended: one step per 64-value quarter of the byte ([[OPEN-00 Contradiction Register]] #46).
 
+**distinguished triples** — The 7, 35, 155 and 651 triples of the octonions, sedenions, trigintaduonions and 64-ions. They are exactly the XOR-closed triples `{a, b, a ⊕ b}` of non-zero 3-, 4-, 5- and 6-bit indices (the lines of binary projective space; the 7 are the Fano plane). All 155 listed in `_archive/animation.frame.ts` satisfy `a ⊕ b = c`.
+
 **diagonal** — Ruler slot 0, the XOR of the six spatial slots. As an index, `12 = 0b1100`: 60's wordform at 4 bits, the start of the last 4-slot block of 16.
 
 **digest** — The fourth primitive (slot 15, the 10T). Folds the relations; computes the generalized F-mean of the ruler. The read-eval-print loop.

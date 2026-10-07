@@ -84,3 +84,6 @@ These were filed as discarded but are just misprints with a clear intended readi
 | 30 | SRC-03 | `3! ⊕ 3! ⊕ 3! ⊕ 1! = 19`, `3!⊕3!⊕3!⊕3! = 1296` | Under XOR: 7 and 0. 19 is the sum; 1296 = 6⁴ |
 | 31 | SRC-03 | Coq `beta + beta = 0` (`Admitted`) | False over `nat`. The law is `N.lxor beta beta = 0`, proved by `reflexivity` |
 | 32 | SRC-02 | The 6T computes XNOR | It computes XOR; BOOT0 (the 5T node) is the XNOR ([[OPEN-00 Contradiction Register]] #1) |
+| 33 | SRC-03 (lines 42400–44719) | The three swaps generate the permutation group of order 6 | They commute; the group has order 8. All 6 orderings give the same permutation |
+| 34 | SRC-03 (same) | The 20 `{β,β,β}` triples are "the free hexomino count minus the Fano lines" | 35 − 7 = 28 |
+| 35 | SRC-03 (same) | The 35 sedenion triples *are* the 35 free hexominoes; the 60 `{α,β,γ}` triples *are* the Klein configuration | Equal counts only. The triples are XOR lines of indices (see [[OPEN-03 Glossary]], *distinguished triples*) |
