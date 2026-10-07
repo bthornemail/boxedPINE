@@ -54,6 +54,11 @@ test('A digest of zeros closes', () => {
   assert.deepEqual(digest(k.state, ['0p', '1p', '2p']), { fold: 0, closed: true });
 });
 
+test('Mixing Level 3 into position checks admits every word (why POSITION_RULES exists)', () => {
+  assert.ok(admissible('42z', makeGrammar()));           // INCLUDE swallows it
+  assert.ok(!admissible('42z', makeKernel().state.grammar!)); // positions only
+});
+
 test('learn adds a pattern, and the next access obeys it', () => {
   const k = makeKernel();
   assert.ok(!admissible('42z', k.state.grammar!));

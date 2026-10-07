@@ -9,10 +9,12 @@
 //
 // Changes from the transcript, each recorded in the wiki:
 //   - the grammar comes from grammar.ts (HEX now accepts 0xFF; OPEN-02 #21)
+//   - positions are checked against Levels 1–2 only (POSITION_RULES); the
+//     Level 3 symbols classify characters (see grammar.ts)
 //   - each kernel gets its own copy of the grammar unless one is passed in.
 //     Pass a shared Map to get the transcript's "global scope" behaviour.
 
-import { makeGrammar } from './grammar.ts';
+import { makeGrammar, POSITION_RULES } from './grammar.ts';
 
 export type Grammar = Map<string, RegExp>;
 
@@ -69,7 +71,7 @@ type HistoryEntry =
   | { generation: number; position: string; result: ReturnType<typeof compareExchange> }
   | { generation: number; learned: string; source: string };
 
-export function makeKernel(grammar: Grammar = makeGrammar(), initial: Record<string, number> = {}) {
+export function makeKernel(grammar: Grammar = makeGrammar(POSITION_RULES), initial: Record<string, number> = {}) {
   const state = makeHandler(initial, grammar);
   const history: HistoryEntry[] = [];
   let generation = 0;

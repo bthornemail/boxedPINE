@@ -71,6 +71,14 @@ export const RULES: Rule[] = [
   { name: 'PALINDROME', group: 'higher', pattern: /^(\d\d)[A-Za-z_-](\d\d):\2[0-9_-]\1$/ },
 ];
 
+/**
+ * The rules that decide which POSITIONS are valid: Levels 1 and 2.
+ * The Level 3 symbols classify characters and tokens instead. Mixing the two
+ * breaks admissibility, because INCLUDE (/^[A-Za-z0-9_]+$/) admits every
+ * alphanumeric word. ⟦PLACEHOLDER⟧ Author to confirm this split (PROG-00, Level 3).
+ */
+export const POSITION_RULES: Rule[] = RULES.filter((r) => r.group === 'reference' || r.group === 'wordform');
+
 /** A fresh, mutable grammar: name → pattern. Each call returns a new Map. */
 export function makeGrammar(rules: Rule[] = RULES): Map<string, RegExp> {
   return new Map(rules.map((r) => [r.name, r.pattern]));
