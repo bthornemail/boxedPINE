@@ -45,6 +45,7 @@ down:
   - "[[SPEC-55 ASCII Folds]]"
   - "[[SPEC-60 Test Vectors]]"
   - "[[SPEC-61 Implementation Status]]"
+  - "[[SPEC-67 The Block and Its Closure]]"
   - "[[EXT-00 How to Extend the Protocol]]"
   - "[[OPEN-00 Contradiction Register]]"
   - "[[OPEN-01 Open Questions]]"

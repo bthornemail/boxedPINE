@@ -22,7 +22,7 @@ export type SwapName = keyof typeof SWAP_MASK;
 export function permute(bytes: Uint8Array, mask: number): Uint8Array {
   if (bytes.length % 8 !== 0) throw new RangeError('length must be a multiple of 8');
   const out = new Uint8Array(bytes.length);
-  for (let j = 0; j < bytes.length; j++) out[j] = bytes[j ^ mask];
+  for (let j = 0; j < bytes.length; j++) out[j] = bytes[j ^ mask]!;
   return out;
 }
 
@@ -33,7 +33,7 @@ export const swap64 = (bytes: Uint8Array) => permute(bytes, SWAP_MASK.swap64);
 /** Byte-by-byte XOR of two equal-length arrays. */
 export function xorBytes(a: Uint8Array, b: Uint8Array): Uint8Array {
   if (a.length !== b.length) throw new RangeError('lengths differ');
-  return a.map((v, i) => v ^ b[i]);
+  return a.map((v, i) => v ^ b[i]!);
 }
 
 /**

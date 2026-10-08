@@ -210,6 +210,14 @@ tags: [omi-imo, meta, changelog, history]
 
 - Added [[SPEC-37 The Catalog Coordinate]] (`<base32?base36=base64>`), `rosetta/src/grammar/catalog.ts` and the `CATALOG` rule; logged the `rfc.ts` base36 decode bug; 35 tests passing
 
+## 2026-10-08
+
+- Made `core/src/index.ts` compile (0 errors under `core/tsconfig.json`, which was itself repaired: a missing `extends` was removed, and `include` now points at `src/`). Each change is marked in the file as a DECISION or FIX; the cascade rewrite is proven identical to the old `switch`
+- Added the closure law with real tests: [[SPEC-67 The Block and Its Closure]], `core/src/verified/block.ts`
+- Decided: CENTER accepts signs; RIGHT = I, CENTER = N, LEFT = P ([[SPEC-36 The Literal Separation]])
+- Followed the author's reorganisation: the REPL is in `repl/`, `model.ts` and `animation.frame.ts` are in `_archive/`; the sync test reads `repl/src/define.commands.ts`
+- Logged [[OPEN-02 Broken Code Inventory]] #26: `new Node()` does not finish (16⁶ iterations)
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`

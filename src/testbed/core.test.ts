@@ -8,6 +8,7 @@ import {
   delta16Steps,
   lastBlockOffset, orbit60, BUFFERS_PER_BLOB, coordinate, POLES, quadrantReadings, separation, GAUGE,
   xorTriples,
+  FACES, vertexReading, faceReading, vertexClosed, faceClosed,
 } from '../../core/src/verified/index.ts';
 
 test('Level 0: a matched exchange writes and reports no difference', () => {
@@ -122,4 +123,28 @@ test('The Polybius gauge diagonals each XOR to 0 and sum to 0x1E; all sixteen ni
     assert.equal(d.reduce((a, b) => a + b, 0), 0x1e);
   }
   assert.equal([...Array(16).keys()].reduce((a, b) => a + b, 0), 0x78);
+});
+
+// The closure law ∂(b) = 0000, tested with non-zero input (wiki: SPEC-67).
+const bits = (s: string) => parseInt(s, 2);
+
+test('Closure fails when it should: one edge is open at both its ends', () => {
+  assert.deepEqual(vertexReading(bits('100000')), [1, 1, 0, 0]); // e01 alone: vertices 0 and 1 open
+  assert.equal(vertexClosed(bits('100000')), false);
+  assert.deepEqual(vertexReading(bits('100001')), [1, 1, 1, 1]); // two opposite edges: open everywhere
+});
+
+test('Closure succeeds when it should: every face, and every four-cycle, is vertex-closed', () => {
+  for (const f of FACES) assert.ok(vertexClosed(f), f.toString(2));
+  for (const c of ['011110', '101101', '110011']) assert.ok(vertexClosed(bits(c)), c);
+});
+
+test('Of the 64 states: 8 vertex-closed, 8 face-closed, and 4 closed both ways', () => {
+  const all = [...Array(64).keys()];
+  const v = all.filter(vertexClosed), f = all.filter(faceClosed);
+  assert.equal(v.length, 8);
+  assert.equal(f.length, 8);
+  assert.deepEqual(all.filter((b) => vertexClosed(b) && faceClosed(b)).map((b) => b.toString(2).padStart(6, '0')),
+    ['000000', '011110', '101101', '110011']);
+  assert.deepEqual(faceReading(bits('111000')), [0, 0, 0, 0]); // the star at vertex 0 is face-closed
 });

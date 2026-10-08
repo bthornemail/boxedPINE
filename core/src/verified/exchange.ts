@@ -33,7 +33,7 @@ export function exchange(slots: Int32Array, index: number, expected: number, rep
 export function digest(slots: Int32Array, index: number, expected: number, replacement: number): number {
   const bind = expected ^ replacement;
   const apply = Atomics.compareExchange(slots, index, expected, replacement);
-  const evaluated = slots[index];
+  const evaluated = slots[index]!;
   return bind ^ apply ^ evaluated;
 }
 

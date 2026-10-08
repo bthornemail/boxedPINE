@@ -53,6 +53,7 @@ related:
   - "[[SPEC-55 ASCII Folds]]"
   - "[[SPEC-60 Test Vectors]]"
   - "[[SPEC-61 Implementation Status]]"
+  - "[[SPEC-67 The Block and Its Closure]]"
   - "[[EXT-00 How to Extend the Protocol]]"
   - "[[EXT-01 Adding a Dimension]]"
   - "[[EXT-02 Adding a Symbol]]"
@@ -147,7 +148,7 @@ wiki/
 | Grammar | [[SPEC-30 The Symbol Table G]], [[SPEC-31 Declaration Syntax]], [[SPEC-32 Mnemonics and Axes]], [[SPEC-33 The Quadratic Forms]], [[SPEC-34 Phases Attributes Constraints Configurations]], [[SPEC-35 Reflections and Orbits]], [[SPEC-36 The Literal Separation]], [[SPEC-37 The Catalog Coordinate]] |
 | Hardware | [[SPEC-40 The 6T XOR Circuit]], [[SPEC-41 The 8T XOR Circuit]], [[SPEC-42 Circuit Sourcemap]], [[SPEC-43 Prime Gaps and Sextuplets]], [[SPEC-44 The Virtual Breadboard]] |
 | Runtime | [[SPEC-50 Stream Transport]], [[SPEC-51 JSON Canvas Interchange]], [[SPEC-52 The REPL and the Digest]], [[SPEC-53 Clocks and Periods]], [[SPEC-54 The Web Platform Layers]], [[SPEC-55 ASCII Folds]] |
-| Verification | [[SPEC-60 Test Vectors]], [[SPEC-61 Implementation Status]] |
+| Verification | [[SPEC-60 Test Vectors]], [[SPEC-61 Implementation Status]], [[SPEC-67 The Block and Its Closure]] |
 
 ## The Extension Guides
 

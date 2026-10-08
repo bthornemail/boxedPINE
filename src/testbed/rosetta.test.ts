@@ -91,7 +91,7 @@ test('Level 4 is not built yet, and says so', () => {
 
 test('commands.vtt has one cue per REPL command in src/define.commands.ts, in order', () => {
   const vtt = readFileSync(new URL('../../rosetta/src/assets/commands.vtt', import.meta.url), 'utf8');
-  const repl = readFileSync(new URL('../define.commands.ts', import.meta.url), 'utf8');
+  const repl = readFileSync(new URL('../../repl/src/define.commands.ts', import.meta.url), 'utf8');
   assert.ok(vtt.startsWith('WEBVTT'));
   const cueIds = [...vtt.matchAll(/^(\w+)\n\d\d:\d\d\.\d{3} --> /gm)].map((m) => m[1]);
   const commands = [...repl.matchAll(/defineCommand\('(\w+)'/g)].map((m) => m[1]);
@@ -142,7 +142,7 @@ test('The catalog delimiters < = > ? are block 0 of the orbit of 60, and a misma
   assert.equal(readCatalog(forged)!.consistent, false);
 });
 
-test('The four face cells: CENTER, LEFT, RIGHT and the EXCEPTION plain dot never overlap; signed cases fall in none', () => {
+test('The four face cells CENTER, LEFT, RIGHT, EXCEPTION partition every printable x.y exactly', () => {
   const g = makeGrammar();
   const faces = ['CENTER', 'LEFT', 'RIGHT', 'EXCEPTION'];
   const cell = (t: string) => faces.filter((f) => g.get(f)!.test(t));
@@ -153,5 +153,6 @@ test('The four face cells: CENTER, LEFT, RIGHT and the EXCEPTION plain dot never
     if (n === 0) none++; if (n > 1) multi++;
   }
   assert.equal(multi, 0);
-  assert.equal(none, 44); // +.5, 5.+, +.+ ... : CENTER takes digits only
+  assert.equal(none, 0);
+  assert.deepEqual(['+.5', '5.-', '-.+'].map(cell), [['CENTER'], ['CENTER'], ['CENTER']]);
 });

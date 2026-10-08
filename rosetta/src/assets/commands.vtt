@@ -1,7 +1,7 @@
 WEBVTT
 
 NOTE
-The REPL commands of src/define.commands.ts, as cues of a TextTrack.
+The REPL commands of repl/src/define.commands.ts, as cues of a TextTrack.
 Each cue identifier is a command; its payload is the command's help text
 (copied verbatim) and what it reads. The cues and the commands are kept in
 step by src/testbed/rosetta.test.ts.

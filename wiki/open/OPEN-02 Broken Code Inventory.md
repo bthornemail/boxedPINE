@@ -34,6 +34,8 @@ tags: [omi-imo, bugs, broken, code, inventory]
 
 This inventory tracks known defects in the OMI-IMO code. On 2026-10-07 every entry was checked by reading the code and, where possible, running it. The code moved: entries that said `rosetta/src/constants.ts` now point at `_archive/index.ts`, which holds the same symbols. `rosetta/src/model.ts` is now `_archive/model.ts`, and `animation.frame.ts` is now `_archive/animation.frame.ts`.
 
+**Update 2026-10-08:** `core/src/index.ts` (which now also holds `Node` and `Domain`; `model.ts` was retired to `_archive/`) compiles with no errors under `core/tsconfig.json`'s full strict rules, and runs. Fixed: #1 (`delta16` exported, and it calls `delta64`), #5, #9 (`PALINDROME` added to `G`), #20, #22, #2 (the cascade is kept and written out explicitly; it is identical to the old `switch` on 200,000 random inputs). New: #26.
+
 **Plain-language summary:** the archived TypeScript is a sketchbook, not a program. `index.ts` and `animation.frame.ts` do not compile at all, and `model.ts` fails on its first line of real work. The working pieces of this protocol are:
 
 - the period-8 Coq proof in `omi-files/omi-axioms`
@@ -226,3 +228,9 @@ rotr2 (W16 (B a1 a2 a3 a4 a5 a6 a7 a8) (B b1 b2 b3 b4 b5 b6 b7 b8)) =
 **File:** `rosetta/src/rfc.ts`
 **Bug:** `base36Decode()` returns `(this.meter).toString(36)`, identical to `base36Encode()`.
 **Fix:** decode text with `parseInt(text, 36)`; for example, `"1o"` gives back 60. `rosetta/src/grammar/catalog.ts` does this; see [[SPEC-37 The Catalog Coordinate]].
+
+### 26. `new Node()` Does Not Finish (new)
+
+**File:** `core/src/index.ts`
+**Finding:** once #5 and #20 are fixed, the constructor's six nested loops really run. Each walks the 16 bytes of the ruler, so 16⁶ ≈ 16.7 million iterations, each allocating a buffer. It did not finish within 120 seconds. Before the fixes it crashed on its first `swap32`, so this never showed.
+**Status:** recorded, not changed. The enumeration is the author's design; whether it should walk elements wider than one byte (`BYTES_PER_ELEMENT` > 1), or fewer axes, is open.

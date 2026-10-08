@@ -61,19 +61,19 @@ export type CONFIGURATION = [
 // L (Left): the side directly to the left of the front
 // R (Right): the side directly to the right of the front
 
-const inside = /[A-Za-z0-9]/;
-const outside = /[^A-Za-z0-9]/;
+export const inside = /[A-Za-z0-9]/;
+export const outside = /[^A-Za-z0-9]/;
 
-const front = /[A-Za-z0-9_-]/;
-const back = /[-_A-Za-z0-9]/;
-const up = /[A-Z]/;
-const down = /[a-z]/;
-const left = /[0-9_-]\.[^0-9_-]/;
-const right = /[^0-9_-]\.[-_0-9]/;
+export const front = /[A-Za-z0-9_-]/;
+export const back = /[-_A-Za-z0-9]/;
+export const up = /[A-Z]/;
+export const down = /[a-z]/;
+export const left = /[0-9_-]\.[^0-9_-]/;
+export const right = /[^0-9_-]\.[-_0-9]/;
 
-const center = /[0-9]\.[0-9]/;
-const constraint = /[^"]+/; //to match all the content between certain delimiters (in this case double quotes), or with atomic groups.
-const boundry = /"([^"]+)"/;
+export const center = /[0-9]\.[0-9]/;
+export const constraint = /[^"]+/; //to match all the content between certain delimiters (in this case double quotes), or with atomic groups.
+export const boundry = /"([^"]+)"/;
 `
 [abc] is functionally equivalent to (?:a|b|c).
 `
@@ -90,29 +90,29 @@ const LEFT = /^[0-9+-]\.[^0-9+-]$/;
 const RIGHT = /^[^0-9+-]\.[0-9+-]$/;
 const CENTER = /^[0-9]\.[0-9]$/;
 
-function matches(rule: RegExp, value: string) {
+export function matches(rule: RegExp, value: string) {
     return rule.test(value);
 }
 
-const isFront = (value: string) => FRONT.test(value);
-const isBack = (value: string) => BACK.test(value);
-const isInside = (value: string) => INSIDE.test(value);
-const isOutside = (value: string) => OUTSIDE.test(value);
+export const isFront = (value: string) => FRONT.test(value);
+export const isBack = (value: string) => BACK.test(value);
+export const isInside = (value: string) => INSIDE.test(value);
+export const isOutside = (value: string) => OUTSIDE.test(value);
 
-const isUp = (value: string) => UP.test(value);
-const isDown = (value: string) => DOWN.test(value);
+export const isUp = (value: string) => UP.test(value);
+export const isDown = (value: string) => DOWN.test(value);
 
-const isLeft = (value: string) => LEFT.test(value);
-const isRight = (value: string) => RIGHT.test(value);
-const isCenter = (value: string) => CENTER.test(value);
+export const isLeft = (value: string) => LEFT.test(value);
+export const isRight = (value: string) => RIGHT.test(value);
+export const isCenter = (value: string) => CENTER.test(value);
 
-const willDeflect = (value: string) => DEFLECT.test(value);
-const willReflect = (value: string) => REFLECT.test(value);
-const willInflect = (value: string) => INFLECT.test(value);
+export const willDeflect = (value: string) => DEFLECT.test(value);
+export const willReflect = (value: string) => REFLECT.test(value);
+export const willInflect = (value: string) => INFLECT.test(value);
 
 const DEFLECT = /^([^".]+):\1$/;
 
-function deflect(value: string) {
+export function deflect(value: string) {
     const match = DEFLECT.exec(value);
 
     if (!match) return null;
@@ -122,7 +122,7 @@ function deflect(value: string) {
     };
 }
 const REFLECT = /^([".]+):\1$/;
-function reflect(value: string) {
+export function reflect(value: string) {
     const match = REFLECT.exec(value);
 
     if (!match) return null;
@@ -133,7 +133,7 @@ function reflect(value: string) {
 }
 const INFLECT = /^([".]+):([".]+):\2:\1$/;
 
-function inflect(value: string) {
+export function inflect(value: string) {
     const match = INFLECT.exec(value);
 
     if (!match) return null;
@@ -146,9 +146,9 @@ function inflect(value: string) {
 const CONSTRAINT = /^[^"]+$/;
 const BOUNDARY = /^"([^"]+)"$/;
 
-const isConstraint = (value: string) => CONSTRAINT.test(value);
-const isBoundary = (value: string) => BOUNDARY.test(value);
-function boundary(value: string) {
+export const isConstraint = (value: string) => CONSTRAINT.test(value);
+export const isBoundary = (value: string) => BOUNDARY.test(value);
+export function boundary(value: string) {
     const match = BOUNDARY.exec(value);
     if (!match) return null;
 
@@ -156,8 +156,8 @@ function boundary(value: string) {
         value: match[1]
     };
 }
-const AXIS = /^(\d\d)[A-Za-z_](\d\d):\2[0-9+-]\1$/;
-const MNEMONIC = /^(\d\d)([A-Z_]?[a-z_]+)(\d\d):\3\2\1$/;
+export const AXIS = /^(\d\d)[A-Za-z_](\d\d):\2[0-9+-]\1$/;
+export const MNEMONIC = /^(\d\d)([A-Z_]?[a-z_]+)(\d\d):\3\2\1$/;
 
 export const Declarations: RegExp[] = [
     /0[b,o,x,d,n,p]+\d/,
@@ -212,7 +212,7 @@ export const Configurations: CONFIGURATION[] = [
         Declarations,
         [[8, `{\${p}p, \${n}n}  \U+00d7  {0b\${b}, 0o\${o}, 0x\${x}, 0d\${d}}`]],
         Expressions,
-        [(p, i, n, E, b, o, x, e, d) => '']
+        [(_p, _i, _n, _E, _b, _o, _x, _e, _d) => '']
     ]
 ]
 
@@ -233,6 +233,7 @@ type SYMBOL = Partial<{
     INFLECT: RegExp;
     AXIS: RegExp;
     MNEMONIC: RegExp;
+    PALINDROME: RegExp;
 }>
 const G: SYMBOL = Object.freeze({
     FRONT: /^[A-Za-z0-9:+]$/,
@@ -256,9 +257,10 @@ const G: SYMBOL = Object.freeze({
     INFLECT: /^([".]+):([".]+):\2:\1$/,
 
     AXIS: /^(\d\d)[A-Za-z_](\d\d):\2[0-9+-]\1$/,
-    MNEMONIC: /^(\d\d)([A-Z_]?[a-z_]+)(\d\d):\3\2\1$/
+    MNEMONIC: /^(\d\d)([A-Z_]?[a-z_]+)(\d\d):\3\2\1$/,
+    PALINDROME: /^(\d\d)[A-Za-z_\-](\d\d):\2[0-9_\-]\1$/
 });
-function test(symbol: any, value: string) {
+export function test(symbol: keyof SYMBOL, value: string) {
     const rule = G[symbol];
 
     if (!(rule instanceof RegExp)) {
@@ -267,7 +269,7 @@ function test(symbol: any, value: string) {
 
     return rule.test(value);
 }
-function match(symbol: any, value: string) {
+export function match(symbol: keyof SYMBOL, value: string) {
     const rule = G[symbol];
     if (!(rule instanceof RegExp)) return null;
 
@@ -290,7 +292,7 @@ export function delta64(buf: Buffer, C: Buffer) {
     return xor(xor(xor(rotl(buf, 1), rotl(buf, 3)), rotr(buf, 2)), C);
 };
 
-export function arcRight(t: number, b: number, r: number, l: number, f: number, br: number) {
+export function arcRight(t: number, b: number, r: number, _l: number, f: number, br: number) {
     return (t ** 2) + (b ** 2) === r ** 2 &&
         (t ** 2) + (f ** 2) === r ** 2 &&
         (t ** 2) + (br ** 2) === r ** 2 &&
@@ -299,7 +301,7 @@ export function arcRight(t: number, b: number, r: number, l: number, f: number, 
         (f ** 2) + (br ** 2) === r ** 2;
 }
 
-export function arcLeft(t: number, b: number, r: number, l: number, f: number, br: number) {
+export function arcLeft(t: number, b: number, _r: number, l: number, f: number, br: number) {
     return (t ** 2) + (b ** 2) === l ** 2 &&
         (t ** 2) + (f ** 2) === l ** 2 &&
         (t ** 2) + (br ** 2) === l ** 2 &&
@@ -308,10 +310,10 @@ export function arcLeft(t: number, b: number, r: number, l: number, f: number, b
         (f ** 2) + (br ** 2) === l ** 2;
 }
 
-function delta16(ruler: Buffer) {
+export function delta16(ruler: Buffer) {
     const state = Buffer.from(ruler.subarray(0, 8));
     const C = Buffer.from(ruler.subarray(8, 16));
-    const next = delta(state, C);
+    const next = delta64(state, C);
     ruler.set(next, 0);
     ruler.set(state, 8);
     return ruler;
@@ -319,51 +321,79 @@ function delta16(ruler: Buffer) {
 type REFERENCE = (declaration: RegExp, definition: string) => Point
 
 
-interface iExtant {
-    Exponent: number = 0; // Entropy
-    Exception: string = 0; // Extant
-    get: REFERENCE = function get (state: any, index: any) {
-    if (!admissible(index)) {
-    throw new Deviation(index, 'admissible', 'inadmissible');
+// DECISION (2026-10-08): iExtant is the interface the author describes
+// (wiki SPEC-36): e, the exponent offset from 0 in BYTES_PER_ELEMENT, and
+// E, the exception buffer of 16 booleans. The 16 booleans are one 16-bit
+// word in a Uint16Array over a SharedArrayBuffer, so Atomics can act on it.
+// The handler bodies that sat in the interface are the functions below.
+export interface iExtant {
+    Exponent: number; // e: Entropy, the exponent offset
+    Exception: Uint16Array; // E: Extant, the exception buffer (16 booleans)
+    bind: REFERENCE;
+    apply: REFERENCE;
+    evaluate: REFERENCE;
+    digest: REFERENCE;
+}
+
+/** The structured coordinate a catch carries. */
+export class Deviation extends Error {
+    position: unknown;
+    expected: unknown;
+    actual: unknown;
+    difference: unknown;
+    constructor(position: unknown, expected: unknown, actual: unknown) {
+        super(`deviation at ${String(position)}: expected ${String(expected)}, got ${String(actual)}`);
+        this.position = position;
+        this.expected = expected;
+        this.actual = actual;
+        this.difference = typeof expected === 'number' && typeof actual === 'number' ? (expected ^ actual) >>> 0 : undefined;
     }
-    return Reflect.get (state, index);
-    },
-    set: REFERENCE = function set (state: any, index: any, value: any) {
+}
+
+// DECISION: an index is admissible when any G symbol or any Declaration matches it.
+export function admissible(index: PropertyKey): boolean {
+    const text = String(index);
+    return Object.values(G).some((rule) => rule!.test(text)) || Declarations.some((rule) => rule.test(text));
+}
+
+export function get(state: object, index: PropertyKey) {
     if (!admissible(index)) {
-    throw new Deviation(index, 'admissible', 'inadmissible');
+        throw new Deviation(index, 'admissible', 'inadmissible');
     }
-    return Reflect.set (state, index, value);
-    },
-    has: REFERENCE = function has(target: object, index: PropertyKey) {
+    return Reflect.get(state, index);
+}
+export function set(state: object, index: PropertyKey, value: unknown) {
+    if (!admissible(index)) {
+        throw new Deviation(index, 'admissible', 'inadmissible');
+    }
+    return Reflect.set(state, index, value);
+}
+export function has(target: object, index: PropertyKey) {
     return Reflect.has(target, index);
-    },
-    catcher: REFERENCE = function catcher(error: any, handler: { (position: any, expected: any, actual: any, difference: any): { failed: boolean; position: any; expected: any; actual: any; difference: any; }; (arg0: any, arg1: any, arg2: any, arg3: any): any; }) {
+}
+type Caught = { failed: boolean; position: unknown; expected: unknown; actual: unknown; difference: unknown };
+export function catcher(error: unknown, handler: (position: unknown, expected: unknown, actual: unknown, difference: unknown) => Caught) {
     if (error instanceof Deviation) {
-    return handler(error.position, error.expected, error.actual, error.difference);
+        return handler(error.position, error.expected, error.actual, error.difference);
     }
     throw error;
-    },
-    access: REFERENCE = function access(state: any, index: any, value: any) {
+}
+export function access(state: object, index: PropertyKey, value?: unknown) {
     try {
-    if (arguments.length === 2) {
-    return get (state, index);
-    }
-    return set (state, index, value);
+        if (arguments.length === 2) {
+            return get(state, index);
+        }
+        return set(state, index, value);
     } catch (error) {
-    return catcher(error, (position: any, expected: any, actual: any, difference: any) => ({
-    failed: true,
-    position,
-    expected,
-    actual,
-    difference,
-    }));
+        return catcher(error, (position, expected, actual, difference) => ({
+            failed: true,
+            position,
+            expected,
+            actual,
+            difference,
+        }));
     }
-    },
-    bind: REFERENCE = function Bind() { },
-    apply: REFERENCE = function Apply() { },
-    evaluate: REFERENCE = function Evaluate() { },
-    digest: REFERENCE = function Digest() { },
-};
+}
 class Point {
     Point: number = 0;
     Index: number = 0;
@@ -373,35 +403,55 @@ class Point {
 class Circle extends Point implements iExtant {
     Centroid: number = 0;
     Radius: number = 0;
+    Exponent: number = 0;
+    Exception: Uint16Array = new Uint16Array(new SharedArrayBuffer(2));
+    // ⟦PLACEHOLDER⟧ bind / apply / evaluate / digest return the point unchanged
+    // until their readings are defined (wiki: OPEN-01 #6).
+    bind: REFERENCE = () => this;
+    apply: REFERENCE = () => this;
+    evaluate: REFERENCE = () => this;
+    digest: REFERENCE = () => this;
 }
 class Triangle extends Circle {
+    // DECISION: omi and tensor were free names; they are the triangle's own
+    // slots (32 Int32 slots, so indices 0..31 exist) and an 8-byte tensor.
+    omi: Int32Array = new Int32Array(new SharedArrayBuffer(32 * Int32Array.BYTES_PER_ELEMENT));
+    tensor: ArrayBuffer = new ArrayBuffer(8);
     X(Equator: number, Up: number, Down: number) {
+        const omi = this.omi;
         Atomics.compareExchange(omi, 0, 2, 1)
         Atomics.compareExchange(omi, 1, 0, 2)
         Atomics.compareExchange(omi, 2, 1, 0)
-        if (Atomics.compareExchange(omi, 0, 2, 1)) { throw (new Float64Array(tensor)); }
-        `Base 0 ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]}`;
-        `Base 1 ${[1, 0, 3, 2, 5, 4, 7, 6, 9, 8, 11, 10, 13, 12, 15, 14]}`;
-        `Base 2 ${[2, 3, 0, 1, 6, 7, 4, 5, 10, 11, 8, 9, 14, 15, 12, 13]}`;
-        return Atomics.compareExchange(Equator, this.Index, this.Point, this.Number);
+        if (Atomics.compareExchange(omi, 0, 2, 1)) { throw (new Float64Array(this.tensor)); }
+        // Base 0  0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+        // Base 1  1 0 3 2 5 4 7 6 9 8 11 10 13 12 15 14
+        // Base 2  2 3 0 1 6 7 4 5 10 11 8 9 14 15 12 13
+        // DECISION: the sketch passed Equator (a number) as the array; the
+        // exchange acts on the triangle's slots, and Equator, Up and Down are kept
+        // as the coordinate the caller names.
+        void Equator; void Up; void Down;
+        return Atomics.compareExchange(omi, this.Index, this.Point, this.Number);
     };
     Y(Middle: number, Left: number, Right: number) {
+        const omi = this.omi;
+        void Middle; void Left; void Right;
+        // ends 12,8,4,0, 26/24
+        // base 3:  3 2 1 0 | 7 6 5 4 | 11 10 9 8 | 15 14 13 12      four-block family, starts at 0-7
+        // base 7:  7 6 5 4 | 3 2 1 0 | 15 14 13 12 | 11 10 9 8      fulcrum, splits 0-7 and 8-15
+        // base 11: 11 10 9 8 | 15 14 13 12 | 3 2 1 0 | 7 6 5 4      orthogonal base, mixed blocks
+        // base 15: 15 14 13 12 | 11 10 9 8 | 7 6 5 4 | 3 2 1 0      four-block family, starts at 12-15
         return Atomics.compareExchange(omi, 3, 12, 3) ^
             Atomics.compareExchange(omi, 7, 8, 7) ^
             Atomics.compareExchange(omi, 11, 4, 11) ^
-            Atomics.compareExchange(omi, 15, 0, 15)
-                // ends 12,8,4,0, 26/24
-                `base 3: 3 2 1 0 | 7 6 5 4 | 11 10 9 8 | 15 14 13 12      four - block family, starts at 0 - 7`;
-        `base 7: 7 6 5 4 | 3 2 1 0 | 15 14 13 12 | 11 10 9 8      fulcrum, splits 0 - 7 and 8 - 15`;
-        `base 11: 11 10 9 8 | 15 14 13 12 | 3 2 1 0 | 7 6 5 4      orthogonal base, mixed blocks`;
-        `base 15: 15 14 13 12 | 11 10 9 8 | 7 6 5 4 | 3 2 1 0      four - block family, starts at 12 - 15`;
-
+            Atomics.compareExchange(omi, 15, 0, 15);
     };
     Z(Standing: number, Front: number, Back: number) {
+        const omi = this.omi;
+        void Standing; void Front; void Back;
+        // base 17: 17 16 19 18 | 21 20 23 22 | 25 24 27 26 | 29 28 31 30   the 5-bit base, alternating
+        // base 19: 19 18 17 16 | 23 22 21 20 | 27 26 25 24 | 31 30 29 28   the orbital base
         return Atomics.compareExchange(omi, 17, 30, 17) ^
-            Atomics.compareExchange(omi, 19, 28, 19)
-                `base 17: 17 16 19 18 | 21 20 23 22 | 25 24 27 26 | 29 28 31 30   the 5 - bit base, alternating`;
-        `base 19: 19 18 17 16 | 23 22 21 20 | 27 26 25 24 | 31 30 29 28   the orbital base`;
+            Atomics.compareExchange(omi, 19, 28, 19);
     };
 }
 class Square extends Circle {
@@ -473,7 +523,7 @@ class Simplex {
             Declarations,
             [[8, `{\${p}p, \${n}n}  \U+00d7  {0b\${b}, 0o\${o}, 0x\${x}, 0d\${d}}`]],
             Expressions,
-            [(p, i, n, E, b, o, x, e, d) => '']
+            [(_p, _i, _n, _E, _b, _o, _x, _e, _d) => '']
         ]
     ]
 }
@@ -520,10 +570,11 @@ export class Node {
         this.knot[ruleKey] = rulerKey;
         return this.knot;
     };
-    apply(mneumonic: Buffer, metric: Buffer) {
+    // ⟦PLACEHOLDER⟧ apply is not built yet (wiki OPEN-01 #6).
+    apply(_mneumonic: Buffer, _metric: Buffer) {
         return
     }
-    eval(omi, delta, meta, tensor) {
+    eval(omi: Int32Array, delta: Int32Array, meta: number, tensor: ArrayBuffer) {
         Atomics.compareExchange(omi, 0, 2, 1)
         Atomics.compareExchange(omi, 1, 0, 2)
         Atomics.compareExchange(omi, 2, 1, 0)
@@ -549,6 +600,7 @@ export class Node {
     }
     async * pin(name: string, fn: any) {
         const regex = new RegExp(name);
+        void regex; // ⟦PLACEHOLDER⟧ pin should register under this pattern and return its URL (wiki OPEN-01 #7)
         try {
             try {
                 const blob = new Blob([`(${fn.toString()})()`], { type: "text/javascript" });
@@ -576,11 +628,15 @@ export class Node {
             console.error("outer", ex.message);
         }
     }    // Entering editor mode (Ctrl+D to finish, Ctrl+C to cancel)
-    q = (x, y) => 15 * (x ** 2) + 4 * (x * y) + (y ** 2)
-    e = (x, y) => 16 * (x ** 2) + 16 * (x * y) + 4 * (y ** 2)
-    E = (x, y) => 60 * (x ** 2) + 16 * (x * y) + 4 * (y ** 2)
-    x;
-    y;
+    q = (x: number, y: number) => 15 * (x ** 2) + 4 * (x * y) + (y ** 2)
+    e = (x: number, y: number) => 16 * (x ** 2) + 16 * (x * y) + 4 * (y ** 2)
+    E = (x: number, y: number) => 60 * (x ** 2) + 16 * (x * y) + 4 * (y ** 2)
+    // DECISION: Q, used by set(), is the projective form Q60 = E (rev1 §4.1,
+    // SPEC-33). The archived animation-frame notes also wrote Q for the affine
+    // form e = (4x + 2y)²; E = 4q exactly.
+    Q = (x: number, y: number) => this.E(x, y)
+    x: number = 0;
+    y: number = 0;
 
     eventHistory: string[] = [];
     set(eventString: string) {
@@ -589,37 +645,42 @@ export class Node {
         this.eventHistory.push(eventReflection);
         return eventReflection;
     }
-    proxy(response, eventString = 'id: 1\nevent: flightStateUpdate\ndata: {"flight": "I768", "state": "landing"}\n\n') {
+    proxy(response: { finished?: boolean; write(chunk: string): unknown }, eventString = 'id: 1\nevent: flightStateUpdate\ndata: {"flight": "I768", "state": "landing"}\n\n') {
         setInterval(() => {
             if (!response.finished) {
                 response.write(this.set(eventString));
             }
         }, 3000);
     }
-    constructor(knot: Record<string, string> = {}, block = Buffer.allocUnsafe(2).fill(0), context = Buffer.allocUnsafe(8).fill(0)) {
+    // FIXES (2026-10-08, wiki OPEN-02 #5 and #20): the swaps copy before
+    // permuting (permutation, not mutation; Buffer.swapN works in place), the
+    // default block is 8 bytes so the centroid is the 16-byte ruler (a 10-byte
+    // centroid made swap32 throw), and the guard checks for empty faces instead
+    // of a Buffer's truthiness (which is always true, so it always threw).
+    constructor(knot: Record<string, string> = {}, block = Buffer.alloc(8), context = Buffer.alloc(8)) {
         let count = 0;
         this.knot = Object.assign({}, knot);
         const x = block.length * block.BYTES_PER_ELEMENT;
         const y = context.length * context.BYTES_PER_ELEMENT;
         const xy = x * y;
         const centroid = Buffer.concat([block, context]);//x * y;
-        const front = centroid.swap16()//(xy).fill("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 'binary');
-        const back = centroid.swap16()//.fill("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 'binary').reverse();
-        const up = centroid.swap32()//.fill("abcdefghijklmnopqrstuvwxyz", 'binary');
-        const down = centroid.swap32() //.fill("abcdefghijklmnopqrstuvwxyz", 'binary').reverse();
-        const left = centroid.swap64()//.fill("0123456789", 'binary');
-        const right = centroid.swap64()//.fill("0123456789", 'binary').reverse();
+        const front = Buffer.from(centroid).swap16()//(xy).fill("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 'binary');
+        const back = Buffer.from(centroid).swap16()//.fill("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 'binary').reverse();
+        const up = Buffer.from(centroid).swap32()//.fill("abcdefghijklmnopqrstuvwxyz", 'binary');
+        const down = Buffer.from(centroid).swap32() //.fill("abcdefghijklmnopqrstuvwxyz", 'binary').reverse();
+        const left = Buffer.from(centroid).swap64()//.fill("0123456789", 'binary');
+        const right = Buffer.from(centroid).swap64()//.fill("0123456789", 'binary').reverse();
         //const bind = createKnot();
-        const rules = [];
+        const rules: string[] = [];
         for (let p = 0; p < front.length; p += front.BYTES_PER_ELEMENT) {
             for (let i = 0; i < back.length; i += back.BYTES_PER_ELEMENT) {
                 for (let b = 0; b < right.length; b += right.BYTES_PER_ELEMENT) {
                     for (let o = 0; o < left.length; o += left.BYTES_PER_ELEMENT) {
                         for (let x = 0; x < up.length; x += up.BYTES_PER_ELEMENT) {
                             for (let d = 0; d < down.length; d += down.BYTES_PER_ELEMENT) {
-                                if (front || back || right || left || up || down) throw new Error("Invalid knot values");
-                                const diagonal = front[p] ^ back[i] ^ right[b] ^ left[o] ^ up[x] ^ down[d];
-                                const linear = front[p] + back[i] + right[b] + left[o] + up[x] + down[d];
+                                if (!front.length || !back.length || !right.length || !left.length || !up.length || !down.length) throw new Error("Invalid knot values");
+                                const diagonal = front[p]! ^ back[i]! ^ right[b]! ^ left[o]! ^ up[x]! ^ down[d]!;
+                                const linear = front[p]! + back[i]! + right[b]! + left[o]! + up[x]! + down[d]!;
                                 const ruler = Buffer.allocUnsafe(16).fill(0);
                                 ruler[2] = p;
                                 ruler[3] = i;
@@ -629,39 +690,46 @@ export class Node {
                                 ruler[1] = d;
                                 ruler[0] = xy;
                                 const rule: Buffer = ruler.subarray(8);
-                                rule[0] = front[p];
-                                rule[1] = back[i];
-                                rule[2] = right[b];
-                                rule[3] = left[o];
-                                rule[4] = up[x];
-                                rule[5] = down[d];
+                                rule[0] = front[p]!;
+                                rule[1] = back[i]!;
+                                rule[2] = right[b]!;
+                                rule[3] = left[o]!;
+                                rule[4] = up[x]!;
+                                rule[5] = down[d]!;
                                 rule[6] = linear;
                                 rule[7] = diagonal;
-                                switch (true) {
-                                    case arcRight(p, i, b, o, x, d):
+                                // The cascade, kept exactly: the first test that holds is the entry
+                                // point, and every step after it also runs (as the switch(true)
+                                // fall-through did). Written out so noFallthroughCasesInSwitch holds.
+                                const entry = [
+                                    arcRight(p, i, b, o, x, d),
+                                    arcLeft(p, i, b, o, x, d),
+                                    linear % count === 0,
+                                    xy === diagonal,
+                                    (xy ^ diagonal) === 0,
+                                    diagonal % xy === 0,
+                                ].indexOf(true);
+                                if (entry !== -1) {
+                                    if (entry <= 0) {
                                         // right Rotation rule
-                                        ruler[2] = ~ruler[2];
-                                        rule[2] = ~rule[2];
-                                    case arcLeft(p, i, b, o, x, d):
+                                        ruler[2] = ~ruler[2]!;
+                                        rule[2] = ~rule[2]!;
+                                    }
+                                    if (entry <= 1) {
                                         // left Rotation rule
-                                        ruler[3] = ~ruler[3];
-                                        rule[3] = ~rule[3];
-                                    case linear % count === 0:
-                                        ruler[6] = ~ruler[6];
-                                    //                                    lines.push(rule);
-                                    case xy === diagonal:
-                                    case (xy ^ diagonal) === 0:
+                                        ruler[3] = ~ruler[3]!;
+                                        rule[3] = ~rule[3]!;
+                                    }
+                                    if (entry <= 2) {
+                                        ruler[6] = ~ruler[6]!;
+                                        // lines.push(rule);
+                                    }
+                                    if (entry <= 4) {
                                         ruler[7] = ~ruler[7]!;
-                                        rule[7] = ~rule[7];
-                                    case diagonal % xy === 0:
-                                        //                                    arcs.push(rule);
-                                        rules[count] = delta16(ruler).toString('hex');
-                                        //                                    console.log({ ruler: rules });
-                                        //                              console.log(rules[count]);
-                                        break;
-                                    //                                default:
-                                    //   process.stdout.write('.');
-
+                                        rule[7] = ~rule[7]!;
+                                    }
+                                    // arcs.push(rule);
+                                    rules[count] = delta16(ruler).toString('hex');
                                 }
                                 count++;
                             }
@@ -680,17 +748,17 @@ export class Node {
     }
 };
 export class Domain {
-    Declarations;
-    Expressions;
+    Declarations: RegExp[];
+    Expressions: EXPRESSION[];
     Values: [string, number][];
     Variables: [string, RegExp][];
     buffer: Uint16Array;
     bytes: Uint8Array;
     configurations: CONFIGURATION[] = Configurations;
-    dimension(radix: number, expected: number, replacement: number) {
+    dimension(_radix: number, expected: number, replacement: number) {
         return Atomics.compareExchange(this.buffer, 0, expected, replacement);
     }
-    templates(CONFIGURATION: CONFIGURATION, Values: [string, number][], Variables: [string, number][]) {
+    templates(_CONFIGURATION: CONFIGURATION, Values: [string, number][], Variables: [string, number][]) {
         const [p, i, n, E] = Variables;
         const [b, o, x, e, d] = Values;
         return [
@@ -703,7 +771,7 @@ export class Domain {
         ]
     }
     * cycle() {
-        function lucasRecursive(n) {
+        function lucasRecursive(n: number): number {
             if (n === 0) return 2;
             if (n === 1) return 1;
             return lucasRecursive(n - 1) + lucasRecursive(n - 2);
@@ -715,9 +783,9 @@ export class Domain {
 
         // Iterative function to find nth Lucas Number
 
-        function lucas(n) {
+        function lucas(n: number): number {
             // Base values for positions 0 and 1
-            let a = 2, b = 1, c;
+            let a = 2, b = 1, c: number;
 
             if (n === 0) {
                 return a;
@@ -737,6 +805,7 @@ export class Domain {
         let n = 9;
         console.log(lucas(n));
 
+        void fibonacci;
         function fibonacci(num: number): number {
             if (num <= 1) {
                 return 1;
@@ -761,6 +830,7 @@ export class Domain {
         const backward = Buffer.allocUnsafe(xy).fill("abcdefghijklmnopqrstuvwxyz", 'binary').reverse();
         const left = Buffer.allocUnsafe(xy).fill("0123456789", 'binary');
         const right = Buffer.allocUnsafe(xy).fill("0123456789", 'binary').reverse();
+        void [top, bottom, forward, backward, left, right]; // ⟦PLACEHOLDER⟧ the six faces are built but not yet kept
         this.Declarations = Declarations;
         this.Expressions = Expressions;
         this.Variables = [
@@ -806,7 +876,7 @@ const GS = (x: number, y: number) => [
 const RS = (x: number, y: number) => 4 * (((15 * x) ** 2) + (4 * x * y) + (y ** 2));
 // 60x² + 16xy + 4y²
 const US = (x: number, y: number) => ((60 * x) ** 2) + (16 * x * y) + ((4 * y) ** 2)
-const reflections = [0, 1, 2, 4, 5, 8, 9, 10, 13, 16, 17, 18, 20, 25, 26, 29, 32]
+export const reflections = [0, 1, 2, 4, 5, 8, 9, 10, 13, 16, 17, 18, 20, 25, 26, 29, 32]
 console.log(b0e(1, 1));
 console.log(o0e(1, 1));
 console.log(x0e(1, 1, 1));
@@ -819,29 +889,36 @@ console.log('fs', FS(1, 1));
 console.log('gs', GS(1, 1));
 console.log('rs', RS(1, 1));
 console.log('us', US(1, 1));
-const mnemonic = Buffer.from(`0 1 2 3 4 5 6 7 8 9 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z`);
+export const mnemonic = Buffer.from(`0 1 2 3 4 5 6 7 8 9 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z`);
 
 const alpha = Buffer.from('α');
 const beta = Buffer.from('β');
 const gamma = Buffer.from('γ');
-const delta = Buffer.from('δ');
-const trig = [
+export const delta = Buffer.from('δ');
+export const trig = [
     [`45 triples of type [ ${alpha}, ${alpha}, ${beta} ]`, [[3, 13, 14], [3, 21, 22], [3, 25, 26], [5, 11, 14], [5, 19, 22], [5, 25, 28], [6, 11, 13], [6, 19, 21], [6, 26, 28], [7, 9, 14], [7, 10, 13], [7, 11, 12], [7, 17, 22], [7, 18, 21], [7, 19, 20], [7, 25, 30], [7, 26, 29], [7, 27, 28], [9, 19, 26], [9, 21, 28], [10, 19, 25], [10, 22, 28], [11, 17, 26], [11, 18, 25], [11, 19, 24], [11, 21, 30], [11, 22, 29], [11, 23, 28], [12, 21, 25], [12, 22, 26], [13, 17, 28], [13, 19, 30], [13, 20, 25], [13, 21, 24], [13, 22, 27], [13, 23, 26], [14, 18, 28], [14, 19, 29], [14, 20, 26], [14, 21, 27], [14, 22, 24], [14, 23, 25], [15, 19, 28], [3, 5, 6], [3, 9, 10], [3, 17, 18], [3, 29, 30], [5, 9, 12], [5, 17, 20], [5, 27, 30], [6, 10, 12], [6, 18, 20], [6, 27, 29], [9, 17, 24], [9, 23, 30], [10, 18, 24], [10, 23, 29], [12, 20, 24], [12, 23, 27], [15, 17, 30], [15, 18, 29], [15, 20, 27], [15, 23, 24]]],
     [`15 triples of type [ ${beta}, ${beta}, ${beta} ]`, [[3, 12, 15], [3, 20, 23], [3, 24, 27], [5, 10, 15], [5, 18, 23], [5, 24, 29], [6, 9, 15], [6, 17, 23], [6, 24, 30], [9, 18, 27], [9, 20, 29], [10, 17, 27], [10, 20, 30], [12, 17, 29], [12, 18, 30]]],
     [`60 triples of type [ ${alpha}, ${beta}, ${gamma} ]`, [[1, 6, 7], [1, 10, 11], [1, 12, 13], [1, 14, 15], [1, 18, 19], [1, 20, 21], [1, 22, 23], [1, 24, 25], [1, 26, 27], [1, 28, 29], [2, 5, 7], [2, 9, 11], [2, 12, 14], [2, 13, 15], [2, 17, 19], [2, 20, 22], [2, 21, 23], [2, 24, 26], [2, 25, 27], [2, 28, 30], [3, 4, 7], [3, 8, 11], [3, 16, 19], [3, 28, 31], [4, 9, 13], [4, 10, 14], [4, 11, 15], [4, 17, 21], [4, 18, 22], [4, 19, 23], [4, 24, 28], [4, 25, 29], [4, 26, 30], [5, 8, 13], [5, 16, 21], [5, 26, 31], [6, 8, 14], [6, 16, 22], [6, 25, 31], [7, 8, 15], [7, 16, 23], [7, 24, 31], [8, 17, 25], [8, 18, 26], [8, 19, 27], [8, 20, 28], [8, 21, 29], [8, 22, 30], [9, 16, 25], [9, 22, 31], [10, 16, 26], [10, 21, 31], [11, 16, 27], [11, 20, 31], [12, 16, 28], [12, 19, 31], [13, 16, 29], [13, 18, 31], [14, 16, 30], [14, 17, 31]]],
     [`15 triples of type [ ${beta}, ${gamma}, ${gamma} ]`, [[1, 2, 3], [1, 4, 5], [1, 8, 9], [1, 16, 17], [1, 30, 31], [2, 4, 6], [2, 8, 10], [2, 16, 18], [2, 29, 31], [4, 8, 12], [4, 16, 20], [4, 27, 31], [8, 16, 24], [8, 23, 31], [15, 16, 31]]]
 ]
 
-const code = (NULL0: ArrayBuffer, NULL00: ArrayBuffer) => {
-    const x0000 = ArrayBuffer.bind([NULL0,NULL00])
+// The Null Ring (wiki: OPEN-03 Glossary; omi-canvas AGENTS.md "Null Ring"):
+//   0x00 ^ 0x20 -> 0x20
+//   0x20 ^ 0x7F -> 0x5F
+//   0x7F ^ 0xFF -> 0x80
+//   0xFF ^ 0x00 -> 0xFF
+//   0x20 ^ 0x5F ^ 0x80 ^ 0xFF -> 0x00
+// Compile fix (2026-10-08): the two null buffers are joined into one byte
+// view that Atomics can act on, and the four ring steps are read in order.
+// The original sketch is in git history.
+export const code = (NULL0: ArrayBuffer, NULL00: ArrayBuffer) => {
+    const joined = new SharedArrayBuffer(NULL0.byteLength + NULL00.byteLength);
+    const x0000 = new Uint8Array(joined);
+    x0000.set(new Uint8Array(NULL0), 0);
+    x0000.set(new Uint8Array(NULL00), NULL0.byteLength);
     return 0x0000 ^
-        Atomics.compareExchange(x0000,0x00 ,0x20,0x20);
-        Atomics.compareExchange(x0000,0x7F ,0x20,0x20);
-        Atomics.compareExchange(x0000,0x00 ,0x20,0x20);
-        Atomics.compareExchange(x0000,0x00 ,0x20,0x20);
-        Atomics.compareExchange(x0000,0x00 ,0x20,0x20);
-    0x20 ^ 0x7F -> 0x5F
-    0x7F ^ 0xFF -> 0x80
-    0xFF ^ 0x00 -> 0xFF
-    0x20 ^ 0x5F ^ 0x80 ^ 0xFF -> 0x00
+        Atomics.compareExchange(x0000, 0x00, 0x20, 0x20) ^
+        Atomics.compareExchange(x0000, 0x00, 0x7F, 0x5F) ^
+        Atomics.compareExchange(x0000, 0x00, 0xFF, 0x80) ^
+        Atomics.compareExchange(x0000, 0x00, 0x00, 0xFF);
 }

@@ -103,7 +103,18 @@ The faces and reflections of G (`core/src/index.ts`) and `/PIN/` are not true of
 
 **Verified:** the four cells never overlap. But 44 of the 9,025 printable `x.y` strings fall in no cell, all with signs (`+.5`, `5.+`, `+.+`): LEFT and RIGHT count `+`/`-` as numeric, and CENTER takes digits only. With `[0-9+-]` on both sides of CENTER the four cells are an exact partition.
 
-⟦Should CENTER accept signs?⟧ ⟦Which of P, I, N is CENTER, which LEFT, which RIGHT?⟧
+**DECISIONS (2026-10-08):**
+- **CENTER accepts signs** (`[0-9+-]` on both sides), as LEFT and RIGHT already do. The four cells now partition every printable `x.y` exactly: tested, 0 fall in no cell and 0 in two. The old `G` in `core/src/index.ts` keeps its digits-only CENTER.
+- **The P / I / N cells:**
+
+| Cell | Example | Letter | Why |
+|------|---------|--------|-----|
+| RIGHT | `a.3` | **I**, Index | "the 3rd of `a`": a position in relation |
+| CENTER | `3.5` | **N**, Number | a decimal counts intervals, including a part-interval |
+| LEFT | `3.a` | **P**, Point | position 3, named `a`: a place with no extent |
+| EXCEPTION | `a.b` | **E**, Exception | no number on either side (author) |
+
+These follow the wiki's definitions of P, I and N (P "position, no extent", I "position in relation", N "the count of intervals"). Change them here if they read differently to the author.
 
 ## Why Base36 (verified)
 

@@ -1,5 +1,4 @@
 {
-    "extends": "@tsconfig/node-ts/tsconfig.json",
     // Visit https://aka.ms/tsconfig to read more about this file
     "compilerOptions": {
 	// File Layout
@@ -15,7 +14,7 @@
 	// For nodejs:
 	"lib": ["esnext","DOM","WebWorker"],
 	// "types": ["node"],
-	     "types": ["DOM","node"],
+	     "types": ["node"],
 	// and npm install -D @types/node
 //"target": "es2023",
 	// "module": "esnext",
@@ -52,7 +51,7 @@
 	 "noImplicitOverride": true,
 "noPropertyAccessFromIndexSignature": true
     },
-include: ["assets/**/*"],
+"include": ["src/**/*"],
     "exclude":[
 	"_archive/**/*",
 	"app/**/*",

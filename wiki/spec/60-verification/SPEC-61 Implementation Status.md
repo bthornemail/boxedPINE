@@ -98,6 +98,10 @@ Verified 2026-10-07; full list with fixes in [[OPEN-02 Broken Code Inventory]]. 
 | `pin` | `_archive/model.ts` | Never returns its Blob URL |
 | `animation.frame.ts` | `_archive/animation.frame.ts` | Not a TS file past line 79 |
 
+## 2026-10-08
+
+`core/src/index.ts` compiles cleanly under `core/tsconfig.json` (strict, with every lint rule) and runs. The closure law has a real test with non-zero input ([[SPEC-67 The Block and Its Closure]]). `npm test`: 39 passing. Known open item: `new Node()` does not finish ([[OPEN-02 Broken Code Inventory]] #26).
+
 ## The Protocol Handler
 
 The closure-based protocol handler (Regex + Proxy + Reflect) is specified but not yet implemented as a working file. The specification is in [[SPEC-30 The Symbol Table G]].
