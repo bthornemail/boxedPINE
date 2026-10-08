@@ -162,35 +162,6 @@
     }
     myRect(100, 200, 300, 400, "Hello World")
   </script>
-  <script>
-    const eventSource = new EventSource('/events');
-
-    eventSource.onopen = () => {
-      console.log('Connected to SSE');
-    };
-
-    // Handle named events
-    eventSource.addEventListener('connected', (event) => {
-      const data = JSON.parse(event.data);
-      console.log('Connected with client ID:', data.clientId);
-    });
-
-    eventSource.addEventListener('update', (event) => {
-      const data = JSON.parse(event.data);
-      console.log('Received update:', data);
-    });
-
-    // Handle connection errors
-    eventSource.onerror = (error) => {
-      console.error('SSE error:', error);
-
-      if (eventSource.readyState === EventSource.CONNECTING) {
-        console.log('Connection lost, reconnecting automatically');
-      } else if (eventSource.readyState === EventSource.CLOSED) {
-        console.log('Connection closed');
-      }
-    };
-  </script>
 </body>
 
 </html>

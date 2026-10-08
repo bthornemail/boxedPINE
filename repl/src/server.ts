@@ -2,24 +2,8 @@
 import http from 'node:http';
 import repl, { REPLServer } from 'node:repl';
 import defineCommands, { myEval, myWriter, isRecoverableError } from './define.commands';
-// import node from './node';
-// const garden = node("genesis-node");
-// const adam = node("atom-node");
-// const eve = node("eve-node");
 
-// console.log(garden(2)); // 7
-// console.log(adam(2)); // 12
-// console.log(eve("beginning"));
 
-let p: number = 0,
-    i: number = 0,
-    n: number = 0,
-    E: number = 0,
-    b: number = 0,
-    o: number = 0,
-    x: number = 0,
-    e: number = 0,
-    d: number = 0;
 const colors = {
     "celeste": 0xB2FFFF,
     "celeste polvere": 0xE6FFFF,
