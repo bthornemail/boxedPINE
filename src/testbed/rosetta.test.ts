@@ -189,3 +189,39 @@ test('PROMPT_PATH declares the Prompt Tree index: its five named groups are the 
   }
   for (const word of ['0x3C00', '0x03c00', '0x003C00', '03C00']) assert.equal(rule.pattern.test(word), false);
 });
+
+// ---- The only input: a declaration and a seed (SPEC-04, SPEC-07 I-60 to I-62) ----
+import { resolve, polynomial } from '../../rosetta/src/grammar/resolve.ts';
+
+test('A bounded declaration is a polynomial: | adds, juxtaposition multiplies, {n} is a power', () => {
+  const seed = 'abcde';
+  assert.deepEqual(polynomial(/a|b/, seed, 3), [0, 2, 0, 0]);                    // 2x
+  assert.deepEqual(polynomial(/(a|b)(c|d|e)/, seed, 3), [0, 0, 6, 0]);          // (2x)(3x) = 6x²
+  assert.deepEqual(polynomial(/ab|c/, seed, 3), [0, 1, 1, 0]);                  // x + x²
+  assert.deepEqual(polynomial(/(a|b){2}/, seed, 3), [0, 0, 4, 0]);              // (2x)² = 4x²
+  assert.deepEqual(polynomial(/(a|b)(c|d|e)|ab|c/, seed, 3), [0, 1, 7, 0]);     // 6x² + x + x²
+  assert.deepEqual(polynomial(/a*/, 'a', 4), [1, 1, 1, 1, 1]);                  // * : a series, 1/(1 − x)
+});
+
+test('Binding a declaration to a seed derives the terms, their indices, both orders and the shape', () => {
+  const r = resolve(/[A-Z]/, 'PINEboxedPINE');
+  assert.deepEqual(r.enumeration.map((t) => [t.term, t.positions]), [['P', [0, 9]], ['I', [1, 10]], ['N', [2, 11]], ['E', [3, 12]]]);
+  assert.deepEqual(r.cascade.map((t) => t.term), ['E', 'I', 'N', 'P']);
+  assert.deepEqual(r.shape, [0, 4]);
+  const bytes = resolve(/</, Uint8Array.from([0x3c, 0x3d, 0x3c])); // a buffer seed
+  assert.deepEqual(bytes.enumeration[0]!.positions, [0, 2]);
+});
+
+test('The fifteen treemaps derive from a seed: the enumeration is the seed order, the cascade the byte order', () => {
+  const seed = TREEMAPS.map((t) => t.name).join('\n');
+  const r = resolve(/^.+$/m, seed);
+  assert.deepEqual(r.enumeration.map((t) => t.term), TREEMAPS.map((t) => t.name));
+  assert.deepEqual(r.cascade.map((t) => t.term), asciiCascade().map((t) => t.name));
+});
+
+test('A PROMPT_PATH binding derives labelled indices from a seed', () => {
+  const rule = RULES.find((x) => x.name === 'PROMPT_PATH')!;
+  const r = resolve(new RegExp(rule.pattern.source.slice(1, -1), 'g'), '0x03C00 0x1ABCD 0x03C00');
+  assert.deepEqual(r.enumeration.map((t) => [t.term, t.positions]), [['0x03C00', [0, 16]], ['0x1ABCD', [8]]]);
+  assert.deepEqual(r.enumeration[1]!.groups, { file: '1', exponent: 'A', exception: 'B', declaration: 'C', definition: 'D' });
+});

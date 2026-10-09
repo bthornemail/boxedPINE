@@ -18,6 +18,7 @@ sources:
 code:
   - "core/src/verified/exchange.ts"
   - "core/src/verified/swap.ts"
+  - "rosetta/src/grammar/resolve.ts"
 dimensions: []
 symbols: []
 tags: [omi-imo, canonical, first-principles, minimum, prompt, buffer, exchange]
@@ -52,6 +53,25 @@ The buffer answers, not the user:
 - **open:** it isn't, and the difference is the reading.
 
 XOR gives the difference; XNOR gives the sameness. They are related but not interchangeable: at a fixed width, XNOR = all-ones ⊕ XOR, and the Hamming distance counts the differing bits ([[SPEC-07 The Fundamental Invariants]], I-5).
+
+## The Only Input
+
+The author, 2026-10-09:
+
+> Everything is an index resolved from and derived from a regex constraint based on a seed string. We don't define anything for the user but the protocol. The user derives all definitions, words, terms, operations and everything from prompting the meta tree using a declaration regex expression and a seed string, nothing else. Everything else is derived from the bitwise and algorithmic core. We don't even need words, because everything should be regex-resolvable from a string or buffer seed.
+
+So the user brings two things, and the protocol brings the rest:
+
+| The user brings | The protocol brings |
+|-----------------|---------------------|
+| a **declaration**: a regex | the buffer, the index, the exchange, the three swaps |
+| a **seed**: a string or a buffer | the resolver, which binds one to the other and returns indices |
+
+**The binding** (`resolve(declaration, seed)` in `rosetta/src/grammar/resolve.ts`) returns every unique unit the declaration admits in the seed (its **terms**; the author: "any unique unit or attribute, simply put exceptions"), each with the positions where it occurs. It returns them in two orders, both derived and neither chosen: the **enumeration** (the seed's own order) and the **cascade** (the bytes' order, ASCII). And it returns the **shape**: how many terms have each length.
+
+**A polynomial is a regex expression** (the author). This is exact for a regex with no `*` or `+`: it admits finitely many strings, and counting them by length gives a polynomial, with `|` as addition, juxtaposition as multiplication and `{n}` as a power. Every polynomial with whole-number coefficients is such a regex. `polynomial(declaration, seed, n)` computes it over the alphabet the seed supplies. With `*` or `+` the count goes on forever: a series, not a polynomial ([[SPEC-07 The Fundamental Invariants]] I-61).
+
+**Words are seeds, not protocol.** The names in the vault (the fifteen treemaps, the labels exponent, exception, declaration, definition) are what a seed and a declaration derive. For example, the fifteen treemap names given as a seed yield their enumeration and their ASCII cascade (tested).
 
 ## What the Protocol Does and Does Not Do
 

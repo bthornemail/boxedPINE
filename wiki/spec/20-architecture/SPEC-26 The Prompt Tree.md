@@ -103,7 +103,7 @@ The classes count (THEOREM, tested) **1 : 9 : 5** by order, **1 : 1 : 10 : 3** b
 
 - **Prefix or suffix:** resolved as both: file 0 read as a prefix is file 15 read as a suffix, by the direction flip j ⊕ 15 ([[SPEC-27 The Prompt Tree Index]] §5).
 - ⟦**I-17:** "17 is the Hamming-distance index" was confirmed earlier. With the Hamming index renamed the BOM, and the BOM at file 0 (index 16), does 17 still name the Hamming distance, or does the BOM take that role? See [[OPEN-01 Open Questions]] #21.⟧
-- ⟦**The ASCII cascade rule:** which categorical rule beyond plain ASCII order assesses the fifteen? For example, the ASCII class of each name's letters, or of its index written in base36.⟧
-- ⟦**The polynomial shape:** the author orders the fifteen "based on the polynomial shape of the terms in relation to the zero index". What makes a term's shape: its order class, or a degree?⟧
+- **The polynomial shape:** answered by the author: "a polynomial is a regex expression", whose terms are "any unique unit or attribute, simply put exceptions", derived from binding a declaration to a seed ([[SPEC-04 First Principles]], "The Only Input"; I-61, I-62).
+- **The ASCII cascade:** with the fifteen names as a seed, the binding gives the enumeration (seed order) and the cascade (byte order) at once (I-62). ⟦Whether "categorical" adds more than byte order, for example ASCII's own classes by bits 32, 64, 128 (I-4), is the author's to say.⟧
 - ⟦**PATRICIA compression:** in a PATRICIA trie a node with one child is skipped. Here, is a level skipped when only one position is admitted?⟧
 - ⟦**The layouts:** the fifteen are catalogued, not computed. No layout algorithm runs yet.⟧

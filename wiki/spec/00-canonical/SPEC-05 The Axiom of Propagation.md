@@ -96,9 +96,11 @@ Raising (unwinding without a decision) is not the same as forwarding (a choice).
 
 ## The Axiom of Direction
 
-Named by the author on 2026-10-09. The Axiom of Propagation says *where* a choice is made: at a boundary. The Axiom of Direction says what the first choice is: **which way to read**.
+The Axiom of Propagation says *where* a choice is made: at a boundary. This section is about the first choice: **which way to read**.
 
-> **The Axiom of Direction** (author): it is "the linear sequencing of causality of order, from interaction with the 1/7 and 1/73 periodicity with the two-prime-gap sequencing, and interacted through the lens of 60 ⊕ 64 and 60 ⊕ 128, or 60 ⊕ any offset, to reflect upon a prompt."
+**Whose name:** "Axiom of Direction" was proposed in conversation by another assistant, not by the author. The author answered "yes" and said what it is; **the author's sentence is the content**, and may itself be the name. ⟦Author to keep the name, or let the sentence stand as the name.⟧
+
+> **The author's statement:** it is "the linear sequencing of causality of order, from interaction with the 1/7 and 1/73 periodicity with the two-prime-gap sequencing, and interacted through the lens of 60 ⊕ 64 and 60 ⊕ 128, or 60 ⊕ any offset, to reflect upon a prompt."
 
 The axiom itself is a DEFINITION. Each part it names is derived below (THEOREM, tested in `core.test.ts`; code in `core/src/verified/period.ts`):
 
