@@ -27,22 +27,26 @@ tags: [omi-imo, meta, repository, frame, folders, demonstration]
 
 The repository is a demonstration project. The author describes the intent; builders write the code. Each top-level folder has one job, and each has a README that inscribes it for a builder.
 
-| Folder | Job | Holds now |
-|--------|-----|-----------|
-| `core/` | Core findings, and the author's headless proxy presenter | `core/src/verified/` (exchange, swaps, delta, wordform, triples); `broadcast.ts`, `model.ts`, `animation.frame.ts` |
-| `rosetta/` | The regexes and declarations: the grammar | `rosetta/src/grammar/` (the full grammar and the self-generating kernel); `rosetta/src/assets/commands.vtt` (the REPL commands as cues) |
-| `space/` | Spatial rendering: a three.js virtual breadboard in a 360 × 65536 tetrahedron | Eight views inscribed in `space/README.md`; the 2D breadboard (`space/breadboard/`) is built |
-| `src/` | The test bed: the Vite app entry, the REPL commands, the checks | `src/server.ts` and `src/define.commands.ts` (the development REPL), `src/testbed/` (`npm test`) |
-| `wiki/` | The natural-language presentation and knowledge bank | This vault |
-| `_archive/` | Retired code and earlier specifications | Old code moves here; nothing is deleted |
-| `omi-files/` | Earlier renditions of the same protocol, used as **use case scenarios** | Projects catalogued in [[USE-00 Use Case Scenarios]] (`omi` was merged into `omi-canvas` and `space/breadboard`; `omi-canvas` was forked as `omi-types`) |
+The roles below are the author's own delineation (2026-10-09). Each folder is one kind of place in the structure map ([[SPEC-09 The Structure Map]]).
+
+| Folder | Job (author) | Kind of place | Holds now |
+|--------|--------------|---------------|-----------|
+| `core/` | The core store of the bitwise and logical operations that compose the protocol. Basically a library | **law**: operations | `core/src/verified/` (exchange, swap, delta, wordform, triples, block, circulator, metron); `core/src/index.ts` (the author's sketch) |
+| `rosetta/` | The canonical knowledge store for bootstrapping regex constraint declarations, string definitions, and the 15 tree algorithms test framework, toward a decentralized second brain. The testing ground for natural-language integration: lazy and greedy evaluation, combinators, closures, bind and cons as the dual interface to the Hamming point-difference selector of XNOR and XOR, over the 15 meta-tree algorithmic regex and string-literal interpolation of Blobs in 65,536-bit nodes | **law**: declarations and definitions | `rosetta/src/grammar/` (grammar, kernel, catalog); `rfc.ts`, `bin.ts`, `mcp.ts`; `assets/` (cues, the rosetta stone) |
+| `breadboard/` | A virtual breadboard demonstrating the physical XOR circuitry | **realization**: circuit | the 5T, 6T, 8T, 10T builds, computed in Web Audio (`kernel.mjs`, `xor.mjs`, `test.mjs`) |
+| `space/` | A projective space (three.js, canvas, media elements, CSSOM geometry): a beacon and intersection observer, like a document picture-in-picture overlay, for background-worker variants that translate between prompts and causes | **realization**: projection | `space/src/` (scene, controller, board, `atomics.ts`) |
+| `repl/` | The REPL the author built to learn while building: an outside observer and command trap for bootstrapping the paradigm | **realization**: observer | `repl/src/` (`server.ts`, `define.commands.ts`, `broadcast.ts`) |
+| `omi-files/` | Use-case examples demonstrating the protocol over unique, discrete substrates | **realization**: substrate | Projects catalogued in [[USE-00 Use Case Scenarios]] |
+| `src/` | The project bootstrap root, so the rest stays modular and portable, and fact stays apart from fiction and development from production | **check** | `src/main.ts`; `src/testbed/` (`npm test`) |
+| `wiki/` | A pedagogical, ontological wiki: a walkthrough of the build to production, as a second brain | **reading** | This vault |
+| `_archive/` | Retired code and earlier specifications | — | Old code moves here; nothing is deleted |
 
 ## How Work Flows
 
 1. A finding is discussed and checked here in the wiki: [[OPEN-00 Contradiction Register]], [[OPEN-01 Open Questions]].
 2. Once verified, it becomes a module in `core/` or `rosetta/` that names its evidence.
-3. A test in `src/testbed/` states the fact in its name.
-4. A view in `space/` draws it.
+3. A test in `src/testbed/` states the fact in its name. It is now canonical ([[SPEC-09 The Structure Map]]).
+4. A realization shows it on a substrate: `breadboard/` as a circuit, `space/` as a projection, `repl/` to an observer, `omi-files/` on another substrate.
 5. The step is logged in [[PROG-00 Homoiconic Syntax Tracker]].
 
 ## Placeholders

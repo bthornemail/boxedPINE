@@ -28,7 +28,7 @@ code:
   - "_archive/model.ts"
   - "omi-files/omi-canvas/src/OMI/Handler.hs"
   - "omi-files/omi-canvas/src/OMI/Delta.hs"
-  - "space/breadboard/kernel.mjs"
+  - "breadboard/kernel.mjs"
   - "core/src/verified/index.ts"
   - "rosetta/src/grammar/grammar.ts"
   - "rosetta/src/grammar/kernel.ts"

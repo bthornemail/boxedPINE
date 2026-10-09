@@ -16,6 +16,7 @@ down:
   - "[[SPEC-06 The Circulator]]"
   - "[[SPEC-07 The Fundamental Invariants]]"
   - "[[SPEC-08 The Derivation Path]]"
+  - "[[SPEC-09 The Structure Map]]"
   - "[[SPEC-10 The Primitive]]"
   - "[[SPEC-11 The Three Primitives]]"
   - "[[SPEC-12 The Ruler]]"
@@ -79,7 +80,7 @@ The OMI-IMO protocol is an **Atomic Compare-and-Exchange Lisp**. Its primitive i
 
 ## Start Here
 
-The minimum: [[SPEC-04 First Principles]]. The decision principle: [[SPEC-05 The Axiom of Propagation]] and [[SPEC-06 The Circulator]]. Every invariant, marked proven, chosen or contradicted: [[SPEC-07 The Fundamental Invariants]]. The reading order: [[SPEC-08 The Derivation Path]].
+The minimum: [[SPEC-04 First Principles]]. The decision principle: [[SPEC-05 The Axiom of Propagation]] and [[SPEC-06 The Circulator]]. Every invariant, marked proven, chosen or contradicted: [[SPEC-07 The Fundamental Invariants]]. The reading order: [[SPEC-08 The Derivation Path]]. Where each structure lives, and whether it is canonical yet: [[SPEC-09 The Structure Map]].
 
 ## The Canonical Statement
 

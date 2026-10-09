@@ -224,6 +224,9 @@ tags: [omi-imo, meta, changelog, history]
 - Implemented the Circulator (`core/src/verified/circulator.ts`) with tests for its conservation laws; 46 tests passing
 - Verified the conversation's checkable claims: two do not hold as stated (the carry-forward fold's period; the preheader's length), one is a naming rather than an identity ("XNOR space")
 - Resolved `{17, 19}` ([[OPEN-01 Open Questions]] #14)
+- Covered the conversation's last stretch: [[SPEC-07 The Fundamental Invariants]] I-28 to I-47, `core/src/verified/metron.ts`, SPEC-08 parts 16–20, [[OPEN-01 Open Questions]] #20
+- Rewrote the folder table of [[META-04 Repository Frame]] to the author's delineation; `breadboard/` is its own root folder and `repl/` is listed
+- Added [[SPEC-09 The Structure Map]]: every structure mapped to its home, its check and its realizations, with the rule for when a structure is canonical over the medium; 51 tests passing
 
 ## Pending
 

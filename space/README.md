@@ -59,7 +59,7 @@ This folder is the **visual and interactive environment**: what a visitor sees a
 
 ### 8. The Breadboard (hardware)
 
-- **Already built:** `space/breadboard/` draws the 5T/6T/8T/10T XOR circuits on a canvas, with the XOR computed in Web Audio (wiki: SPEC-44 The Virtual Breadboard). It can be linked in as is.
+- **Already built:** `breadboard/` draws the 5T/6T/8T/10T XOR circuits on a canvas, with the XOR computed in Web Audio (wiki: SPEC-44 The Virtual Breadboard). It can be linked in as is.
 
 ## Use case scenarios
 

@@ -36,7 +36,7 @@ For a builder, each scenario says what the demonstration must make possible and 
 |----------|---------|---------------|-------------------------|-------|
 | Prove a law | `omi-axioms` | 0–1 | `core/` | checked (period-8 proof compiles) |
 | Run the reference in Haskell | `omi-canvas` (merged from `omi`) | 0–3 | `core/`, `rosetta/` | checked (`cabal test all` passes) |
-| Hear and see the gates | `space/breadboard` (moved from `omi`) | 0, 5 | `space/` | checked (`npm test`) |
+| Hear and see the gates | `breadboard` (moved from `omi`) | 0, 5 | `breadboard/` | checked (`npm test`) |
 | Reduce a declaration to a canvas | `omi-canvas` | 2–4 | `rosetta/`, `space/` | checked (`cabal test all`) |
 | Name every type once | `omi-types` (fork of `omi-canvas`) | 0–5 | `core/`, `rosetta/` | checked (`cabal test all`) |
 | Declare in OMI-Lisp | `omi-lisp` | 2–5 | `rosetta/` | not run |
@@ -70,12 +70,12 @@ For a builder, each scenario says what the demonstration must make possible and 
 **Checked:** `cabal build all`, `cabal test all` and `ghc -fno-code` pass. The tests show `delta` matches the spec on all 65,536 words for five carries, and the handler reproduces the slot values recorded from `omi` before the merge. Putting back the old `rotr2` makes the suite fail. `omi-canvas` commit `1559dc1`.
 **Feeds:** `core/src/verified/delta.ts`, and `rosetta/src/grammar/grammar.ts`, where the grammars still disagree on `EXPONENT`.
 
-### 3. Hear and see the gates — `space/breadboard`
+### 3. Hear and see the gates — `breadboard`
 
 **Scenario:** a visitor flips inputs A and B and watches and hears four transistor XOR builds agree.
 **Provides:** the virtual breadboard: canvas for geometry, Web Audio for the signals, a description that regenerates everything ([[SPEC-44 The Virtual Breadboard]]).
-**Checked:** its offline self-test passes for all four builds (`cd space/breadboard && npm test`).
-**Feeds:** `space/` view 8. It is the only finished visual so far. It moved from `omi-files/omi/audio` to `space/breadboard` on 2026-10-07, since it is spatial rendering.
+**Checked:** its offline self-test passes for all four builds (`cd breadboard && npm test`).
+**Feeds:** `breadboard/`, and `space/` view 8. It is the only finished visual so far. It moved from `omi-files/omi/audio` to `space/breadboard` on 2026-10-07, and then to its own root folder, `breadboard/`.
 
 ### 4. Reduce a declaration to a canvas — `omi-canvas`
 

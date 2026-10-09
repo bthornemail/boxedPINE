@@ -24,6 +24,7 @@ related:
   - "[[SPEC-06 The Circulator]]"
   - "[[SPEC-07 The Fundamental Invariants]]"
   - "[[SPEC-08 The Derivation Path]]"
+  - "[[SPEC-09 The Structure Map]]"
   - "[[SPEC-10 The Primitive]]"
   - "[[SPEC-11 The Three Primitives]]"
   - "[[SPEC-12 The Ruler]]"
@@ -147,7 +148,7 @@ wiki/
 
 | Layer | Notes |
 |-------|-------|
-| Canonical | [[SPEC-00 Canonical Statement]], [[SPEC-01 The Three Laws]], [[SPEC-02 Conformance Criteria]], [[SPEC-03 Notation OMI-Lisp]], [[SPEC-04 First Principles]], [[SPEC-05 The Axiom of Propagation]], [[SPEC-06 The Circulator]], [[SPEC-07 The Fundamental Invariants]], [[SPEC-08 The Derivation Path]] |
+| Canonical | [[SPEC-00 Canonical Statement]], [[SPEC-01 The Three Laws]], [[SPEC-02 Conformance Criteria]], [[SPEC-03 Notation OMI-Lisp]], [[SPEC-04 First Principles]], [[SPEC-05 The Axiom of Propagation]], [[SPEC-06 The Circulator]], [[SPEC-07 The Fundamental Invariants]], [[SPEC-08 The Derivation Path]], [[SPEC-09 The Structure Map]] |
 | Foundations | [[SPEC-10 The Primitive]], [[SPEC-11 The Three Primitives]], [[SPEC-12 The Ruler]], [[SPEC-13 XOR Algebra]], [[SPEC-14 Knots and Binds]], [[SPEC-15 The Delta Transform]], [[SPEC-16 The Fano Invariant]] |
 | Architecture | [[SPEC-20 The Dimensional Axis]], [[SPEC-21 The Inversion Law]], [[SPEC-22 The Blob]], [[SPEC-23 The Rosetta Stone]], [[SPEC-24 Observers]], [[SPEC-25 The Iff]] |
 | Grammar | [[SPEC-30 The Symbol Table G]], [[SPEC-31 Declaration Syntax]], [[SPEC-32 Mnemonics and Axes]], [[SPEC-33 The Quadratic Forms]], [[SPEC-34 Phases Attributes Constraints Configurations]], [[SPEC-35 Reflections and Orbits]], [[SPEC-36 The Literal Separation]], [[SPEC-37 The Catalog Coordinate]] |

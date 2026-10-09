@@ -40,7 +40,7 @@ This inventory tracks known defects in the OMI-IMO code. On 2026-10-07 every ent
 
 - the period-8 Coq proof in `omi-files/omi-axioms`
 - the self-generating kernel in the Fano Fold conversation (#11)
-- the virtual breadboard (`space/breadboard/`)
+- the virtual breadboard (`breadboard/`)
 
 | # | Bug | Verdict |
 |---|-----|---------|
@@ -141,7 +141,7 @@ This inventory tracks known defects in the OMI-IMO code. On 2026-10-07 every ent
 
 ### 13. Self-Test — run
 
-**Finding:** The Fano Fold kernel's `selfTest()` was run on 2026-10-07 and passed 19 of 20 checks. The only failure was `HEX matches 0xFF` (#21). Separately, the virtual breadboard self-test passes all checks (`npm test` in `space/breadboard`).
+**Finding:** The Fano Fold kernel's `selfTest()` was run on 2026-10-07 and passed 19 of 20 checks. The only failure was `HEX matches 0xFF` (#21). Separately, the virtual breadboard self-test passes all checks (`npm test` in `breadboard`).
 
 ### 14. `G.PALINDROME` Undefined
 

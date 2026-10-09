@@ -267,3 +267,11 @@ test('The 210 ladder as written fails at rung 1', () => {
   // {5,…,19} has every residue mod 5, so it can happen only where 5 itself is in it.
   assert.deepEqual(new Set([5, 7, 11, 13, 17, 19].map((k) => k % 5)).size, 5);
 });
+
+test('The preheader names: PINEboxed is boxedPINE rotated by 5; boxdpin is pin + boxd', () => {
+  const name = 'boxedPINE';
+  assert.equal(name.slice(5) + name.slice(0, 5), 'PINEboxed');
+  const letters = (s: string) => [...s].sort().join('');
+  assert.equal(letters('boxdpin'), letters('pin' + 'boxd'));
+  assert.equal('<boxdpin?boxedPINE=PINEboxed>'.length, 29); // I-26
+});
