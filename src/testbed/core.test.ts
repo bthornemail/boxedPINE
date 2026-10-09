@@ -381,3 +381,33 @@ test('The ASCII order of the fifteen is not the enumeration reversed: they are t
   }
   assert.deepEqual(lengths.sort((a, b) => a - b), [5, 10]); // two cycles, not a reversal
 });
+
+// ---- The Axiom of Direction: periods, gaps and the lens (SPEC-07 I-57, I-58) ----
+import { period, GAPS, lensesKeepingPeriods } from '../../core/src/verified/index.ts';
+
+test('1/7 and 1/73 repeat over 6 and 8 digits; the two prime gaps sum to 6 and multiply to 8', () => {
+  assert.equal(period(10, 7), 6);   // 0.142857…
+  assert.equal(period(10, 73), 8);  // 0.01369863…
+  assert.equal(GAPS[0] + GAPS[1], 6);
+  assert.equal(GAPS[0] * GAPS[1], 8);
+  assert.equal(period(10, 511), 24); // 511 = 7 × 73; lcm(6, 8) = 24
+  assert.equal(7 * 73, 2 ** 9 - 1);
+  assert.equal(period(2, 7), 3);     // 1/7 = 0.(001)₂, and 0b001001001 = 73
+  assert.equal(period(2, 73), 9);    // 1/73 = 0.(000000111)₂, and 0b111 = 7
+  assert.equal(0b001001001, 73);
+});
+
+test('The lens 60 ⊕ 64 = 124 reads 1/7 and 1/73 with the decimal periods; 60 ⊕ 128 = 188 does not', () => {
+  assert.deepEqual([period(124, 7), period(124, 73)], [6, 8]);
+  assert.deepEqual([period(188, 7), period(188, 73)], [2, 72]);
+  let x = 1n;
+  for (let k = 0; k < 11; k++) x = (x * 10n) % 511n;
+  assert.equal(x, 124n); // 124 ≡ 10^11 (mod 511)
+  assert.deepEqual(lensesKeepingPeriods(), [54, 64, 180, 205, 217]);
+  assert.equal(60 ^ 54, 10); // one of the five lenses is decimal itself
+});
+
+test('The two poles are not the two directions: 124 reversed at 8 bits is 131, not 188', () => {
+  assert.equal((60 ^ 64) ^ 255, 131);
+  assert.equal((60 ^ 64) ^ (60 ^ 128), 0xc0);
+});

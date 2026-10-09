@@ -18,6 +18,7 @@ Status of the whole project, level by level: [wiki/progress/PROG-00 Homoiconic S
 | `src/verified/circulator.ts` | The circulator: five states, departure exactly once, decision ≠ delta; `xnor` at a fixed width | ✅ |
 | `src/verified/metron.ts` | The mêtron and `bind`; the prime quadruplets, sextuplets and the 210 ladder | ✅ |
 | `src/verified/tree.ts` | The tree: sixteen 65,536-bit files addressed by one 20-bit index (file · byte · bit) | ✅ |
+| `src/verified/period.ts` | The periods of 1/7 and 1/73 (6, 8), the two prime gaps (sum 6, product 8), and the lens 60 ⊕ 64 that keeps both periods | ✅ |
 | `src/broadcast.ts` | The headless proxy presenter: `launchBroadcast(declared: RegExp, defined: string)` returns `proxy()` (one step forward), `reflect()` (one step back) and `extant()`, each a compare-exchange on the iExtant | Author's core example |
 | `src/model.ts` | `Node` (bind / apply / eval / pin) and `Domain` (declarations, expressions, values, variables): the Node is where iExtant meets the user, inside a Domain | Author's core example |
 | `src/animation.frame.ts` | Frequency spectra, like an `OscillatorNode` in the DOM; the sexagesimal XOR loop | Author's core example |

@@ -16,6 +16,8 @@ sources:
   - "[[SRC-10 The Ontology Conversation]]"
 code:
   - "core/src/verified/circulator.ts"
+  - "core/src/verified/period.ts"
+  - "core/src/verified/tree.ts"
 dimensions: []
 symbols: []
 tags: [omi-imo, canonical, axiom, propagation, choice, return]
@@ -91,6 +93,30 @@ Raising (unwinding without a decision) is not the same as forwarding (a choice).
 ## The Inscription
 
 > Propagation is principal authority. Backpropagation is moral authority. Non-interference preserves authority. Modification creates responsibility for the introduced delta. Possession alone creates no sovereignty over the foundation. Logic is revealed by the return, not decreed by any judge. Existence is a phase of the propagation cycle. Time is the axis of the carrying. At every boundary, the circulator decides.
+
+## The Axiom of Direction
+
+Named by the author on 2026-10-09. The Axiom of Propagation says *where* a choice is made: at a boundary. The Axiom of Direction says what the first choice is: **which way to read**.
+
+> **The Axiom of Direction** (author): it is "the linear sequencing of causality of order, from interaction with the 1/7 and 1/73 periodicity with the two-prime-gap sequencing, and interacted through the lens of 60 ⊕ 64 and 60 ⊕ 128, or 60 ⊕ any offset, to reflect upon a prompt."
+
+The axiom itself is a DEFINITION. Each part it names is derived below (THEOREM, tested in `core.test.ts`; code in `core/src/verified/period.ts`):
+
+| Part | What is derived |
+|------|-----------------|
+| **The direction** | Reading the 16 positions the other way is `j ⊕ 15 = 15 − j`, the 4-bit XNOR with 0. The tree is the same either way; the reader chooses ([[SPEC-27 The Prompt Tree Index]] §5) |
+| **The two-prime-gap sequencing** | the sextuplets step by alternating gaps: `{5,7,11,13,17,19}` by 2, 4, 2, 4, 2 |
+| **The 1/7 and 1/73 periodicity** | 1/7 repeats over 6 decimal digits, 1/73 over 8 |
+| **Their interaction** | the gaps' **sum is 6 and product is 8**: the two periods. Together they repeat over lcm(6, 8) = **24** digits, the period of 1/511, and 511 = 7 × 73 = 2⁹ − 1. In binary they are each other's digits: 1/7 = 0.(001001001)₂, whose block is 73, and 1/73 = 0.(000000111)₂, whose block is 7 |
+| **The lens 60 ⊕ 64** | written in base 124, 1/7 and 1/73 repeat over **6 and 8**, as in decimal, because 124 ≡ 10¹¹ (mod 511). Of the 256 lenses 60 ⊕ m, only five keep both periods, and one of them (60 ⊕ 54 = 10) is decimal itself |
+| **The lens 60 ⊕ 128** | written in base 188, they repeat over **2 and 72**: this pole does not keep the periods |
+| **To reflect upon a prompt** | a prompt reads one position ([[SPEC-04 First Principles]]); the lens decides how that reading repeats |
+
+**Recurrences, noted, not explained:** 6 is the swaps' carry-forward period and 8 the bit rotation's constant-carry period ([[SPEC-07 The Fundamental Invariants]] I-10, I-11). 24 is the bit rotation's carry-forward period (I-11) and the generator's product (I-33). That these are one structure is not shown.
+
+**What it does not say: FAILS** (checked):
+- That the two poles 60 ⊕ 64 and 60 ⊕ 128 *are* the two directions. Reversing 124 at 8 bits gives 131, not 188; the poles differ by `0xC0`. The poles are two lenses, and the direction is a separate flip.
+- That the direction and the ASCII order of the fifteen treemaps are one choice (I-55).
 
 ## How It Is Checked
 
