@@ -19,6 +19,11 @@ related:
   - "[[SPEC-01 The Three Laws]]"
   - "[[SPEC-02 Conformance Criteria]]"
   - "[[SPEC-03 Notation OMI-Lisp]]"
+  - "[[SPEC-04 First Principles]]"
+  - "[[SPEC-05 The Axiom of Propagation]]"
+  - "[[SPEC-06 The Circulator]]"
+  - "[[SPEC-07 The Fundamental Invariants]]"
+  - "[[SPEC-08 The Derivation Path]]"
   - "[[SPEC-10 The Primitive]]"
   - "[[SPEC-11 The Three Primitives]]"
   - "[[SPEC-12 The Ruler]]"
@@ -80,7 +85,7 @@ A second-brain wiki for the OMI-IMO protocol. Designed for literate programming:
 
 ## Quick Start
 
-1. **Start at the root:** [[OMI-IMO]]
+1. **Start at the root:** [[OMI-IMO]], then the minimum, [[SPEC-04 First Principles]], and the invariants, [[SPEC-07 The Fundamental Invariants]]
 2. **Read the canonical statement:** [[SPEC-00 Canonical Statement]]
 3. **Understand the three laws:** [[SPEC-01 The Three Laws]]
 4. **Explore the foundations:** [[SPEC-10 The Primitive]], [[SPEC-12 The Ruler]], [[SPEC-13 XOR Algebra]]
@@ -142,7 +147,7 @@ wiki/
 
 | Layer | Notes |
 |-------|-------|
-| Canonical | [[SPEC-00 Canonical Statement]], [[SPEC-01 The Three Laws]], [[SPEC-02 Conformance Criteria]], [[SPEC-03 Notation OMI-Lisp]] |
+| Canonical | [[SPEC-00 Canonical Statement]], [[SPEC-01 The Three Laws]], [[SPEC-02 Conformance Criteria]], [[SPEC-03 Notation OMI-Lisp]], [[SPEC-04 First Principles]], [[SPEC-05 The Axiom of Propagation]], [[SPEC-06 The Circulator]], [[SPEC-07 The Fundamental Invariants]], [[SPEC-08 The Derivation Path]] |
 | Foundations | [[SPEC-10 The Primitive]], [[SPEC-11 The Three Primitives]], [[SPEC-12 The Ruler]], [[SPEC-13 XOR Algebra]], [[SPEC-14 Knots and Binds]], [[SPEC-15 The Delta Transform]], [[SPEC-16 The Fano Invariant]] |
 | Architecture | [[SPEC-20 The Dimensional Axis]], [[SPEC-21 The Inversion Law]], [[SPEC-22 The Blob]], [[SPEC-23 The Rosetta Stone]], [[SPEC-24 Observers]], [[SPEC-25 The Iff]] |
 | Grammar | [[SPEC-30 The Symbol Table G]], [[SPEC-31 Declaration Syntax]], [[SPEC-32 Mnemonics and Axes]], [[SPEC-33 The Quadratic Forms]], [[SPEC-34 Phases Attributes Constraints Configurations]], [[SPEC-35 Reflections and Orbits]], [[SPEC-36 The Literal Separation]], [[SPEC-37 The Catalog Coordinate]] |

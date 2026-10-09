@@ -86,6 +86,8 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 
 **coordinate nibble** — A 4-bit index (0..15) into the first 16 indices of a buffer. `PLiteral` and `PStruct` positions are made of them, and sixteen fill the first 8 byte indices.
 
+**circulator** — A decision-bearing boundary ([[SPEC-06 The Circulator]]). It ends in one of five states: raise, terminate, forward, modify-and-forward, exit. It is accountable for its decision and its delta only.
+
 **COORDINATE** — The eight-slot cube reading. `[SPECTRAL, SPATIAL, SHAPE, SCALAR?]`.
 
 **CONTINUUM** — The position array `[p: number, i: number, n: number]`.
@@ -93,6 +95,8 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 **CONSTRAINT** — The function `(spectrum: TIME, space: SPACE | CONTINUUM) => BOUNDRY`.
 
 ## D
+
+**decision / delta** — The decision is the path (terminate, forward, modify-and-forward); the delta is the change a modification introduces. They are separate ([[SPEC-05 The Axiom of Propagation]]).
 
 **delta** — The step law. Current form: `swap16(x) ⊕ swap32(x) ⊕ swap64(x) ⊕ c`, a permutation law with period 4. Earlier form: `delta16(x, c) = rotl16(x, 1) ^ rotl16(x, 3) ^ rotr16(x, 2) ^ c` on 16-bit words. Its period is exactly 8: proved in Coq in `omi-axioms`, and every orbit length divides 8. Rotating the 8 *bytes* instead is the block reading, with period 4. That is intended: one step per 64-value quarter of the byte ([[OPEN-00 Contradiction Register]] #46).
 
@@ -109,6 +113,8 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 ## F
 
 **Exponent / Exception** — The two halves of a buffer that trade roles each cycle (Cube 0 and Cube 1). The targets of the exchange in `compareExchange(buffer64, 60, 60, Exponent | Exception)`.
+
+**exit** — The circulator's fifth state: it steps out, neither resolving, forwarding nor raising. Invisible to the difference reading, maximal (the complement) to the sameness reading. "The ghost".
 
 **F-mean** — The generalized mean `M_p(x_1, ..., x_n) = ( (1/n) Σ x_i^p )^(1/p)`. The mean order p is determined by the observer's position.
 
@@ -168,11 +174,17 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 
 **0P, 0I, 0N / 0e, 0E / 0b, 0o, 0x, 0d** — The literal separation ([[SPEC-36 The Literal Separation]]). Index literals made like the BigInt `0n`; `e` the exponent and `E` the exception buffer of 16 booleans; datum literals in a radix, with decimal as `d` or `.`. `e ⊕ E = 0x20`, the case bit. `/PINEboxed/` is the tagname for the whole form.
 
+**propagation** — Carrying relations forward without owning them; its logic is revealed by the return ([[SPEC-05 The Axiom of Propagation]]). Backpropagation is the return.
+
+**prompt** — The user's request to the buffer: "at this index, respond". The interface, not the operation ([[SPEC-04 First Principles]]).
+
 **pinch** — The 0-sphere: two points.
 
 ## R
 
 **regenerate** — Rebuilds a kernel from its description by replaying the learned rules. Positions are not replayed.
+
+**return** — The consequence of a propagation, observed and compared with what was carried; it validates, measures the delta, and corrects.
 
 **RULER** — The function `(boundry: BOUNDRY, constraint: CONSTRAINT) => [COORDINATE, COORDINATE]`.
 

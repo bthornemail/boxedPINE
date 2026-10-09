@@ -195,6 +195,9 @@ Newest first. **Evidence** says how each item is known:
 
 | Date | Discovery | Level | Evidence | Where |
 |------|-----------|-------|----------|-------|
+| 2026-10-09 | The ontology: the five-part minimum, the Axiom of Propagation and the Circulator (five states, four conservation laws, tested); 27 fundamental invariants marked THEOREM / DEFINITION / FAILS | 0–5 | author + verified (tests) | [[SPEC-07 The Fundamental Invariants]] |
+| 2026-10-09 | The carry-forward fold has period 24 = 4! (bit delta) and 6 = 3! (swap delta), not 8 and 4 | 0 | verified (test) | [[SPEC-07 The Fundamental Invariants]] I-11 |
+| 2026-10-09 | `{17, 19}` resolved: Hamming-distance and tree-algorithm indices of the upper half | 1 | author | [[OPEN-01 Open Questions]] #14 |
 | 2026-10-08 | The closure law `∂(b) = 0000` tested with non-zero input: 8 vertex-closed states (zero, 4 faces, 3 four-cycles), 8 face-closed, 4 both; one edge is open at both ends | 0 | verified (test) | [[SPEC-67 The Block and Its Closure]] |
 | 2026-10-08 | `core/src/index.ts` compiles under the project's strict config and runs | 0–3 | verified | [[OPEN-02 Broken Code Inventory]] |
 | 2026-10-07 | Faces, reflections and `/PIN/` are readings at different widths, not one match: faces are a 2-bit grid on the dot (the 4th cell is plain dot notation), reflections use the dot as frame, and no string matches both (2.4M checked) | 3 | verified | [[SPEC-36 The Literal Separation]] |

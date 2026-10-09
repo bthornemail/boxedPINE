@@ -11,6 +11,11 @@ down:
   - "[[SPEC-01 The Three Laws]]"
   - "[[SPEC-02 Conformance Criteria]]"
   - "[[SPEC-03 Notation OMI-Lisp]]"
+  - "[[SPEC-04 First Principles]]"
+  - "[[SPEC-05 The Axiom of Propagation]]"
+  - "[[SPEC-06 The Circulator]]"
+  - "[[SPEC-07 The Fundamental Invariants]]"
+  - "[[SPEC-08 The Derivation Path]]"
   - "[[SPEC-10 The Primitive]]"
   - "[[SPEC-11 The Three Primitives]]"
   - "[[SPEC-12 The Ruler]]"
@@ -71,6 +76,10 @@ tags: [omi-imo, index, moc]
 # OMI-IMO Protocol
 
 The OMI-IMO protocol is an **Atomic Compare-and-Exchange Lisp**. Its primitive is `Atomics.compareExchange`. Its base is the iff. Its structure is the 2! and 3! orthogonal groups. Its space is the 2¹⁶ Blob. Its observers are circulators reflecting swaps. Its behavior is time crystals (period 240). Its resolution is O(1). Its closure is reachability.
+
+## Start Here
+
+The minimum: [[SPEC-04 First Principles]]. The decision principle: [[SPEC-05 The Axiom of Propagation]] and [[SPEC-06 The Circulator]]. Every invariant, marked proven, chosen or contradicted: [[SPEC-07 The Fundamental Invariants]]. The reading order: [[SPEC-08 The Derivation Path]].
 
 ## The Canonical Statement
 

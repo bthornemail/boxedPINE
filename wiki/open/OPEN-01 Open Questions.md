@@ -179,8 +179,8 @@ So the 12 of the receipt offset and the diagonal `0b01100` is the 4-bit instance
 
 **Answer:** The hypothesis is right. The orbit of 19 is `19 ⊕ n`. Its first block is `{19, 18, 17, 16}` (n = 0..3). 18 = 19 ⊕ 1 is the second point, 17 = 19 ⊕ 2 is the third, and `17 ⊕ 18 = 3`. The pin sits one XOR step from 19 and two from 17.
 
-Still undefined: what makes `{17, 19}` the *evaluation anchors* of the generator. [[SRC-09 Try XOR Catch XNOR Finally]] explicitly leaves this open, and no other archive file defines it.
-**Status:** Resolved for the pin; the role of `{17, 19}` is still open.
+**`{17, 19}` (author, 2026-10-09, [[SRC-10 The Ontology Conversation]] lines 5537–5628, "Yes exactly"):** they are the anchor pair of the upper-half (`60 ⊕ 128`) reading. **17** is the Hamming-distance index and **19** the tree-algorithm index: "17 is the distance, 19 is the walk." The lower half's matching entry points are `{0, 2, 1}`, three of them against two; with the four-block family in between, that is the generator's 3 : 4 : 2.
+**Status:** Resolved.
 
 ### 15. The Blackboard Extraction
 

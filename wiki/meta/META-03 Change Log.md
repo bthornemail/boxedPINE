@@ -218,6 +218,13 @@ tags: [omi-imo, meta, changelog, history]
 - Followed the author's reorganisation: the REPL is in `repl/`, `model.ts` and `animation.frame.ts` are in `_archive/`; the sync test reads `repl/src/define.commands.ts`
 - Logged [[OPEN-02 Broken Code Inventory]] #26: `new Node()` does not finish (16⁶ iterations)
 
+## 2026-10-09
+
+- Brought in the author's ontology conversation as [[SRC-10 The Ontology Conversation]] and five canonical notes: [[SPEC-04 First Principles]], [[SPEC-05 The Axiom of Propagation]], [[SPEC-06 The Circulator]], [[SPEC-07 The Fundamental Invariants]], [[SPEC-08 The Derivation Path]]
+- Implemented the Circulator (`core/src/verified/circulator.ts`) with tests for its conservation laws; 46 tests passing
+- Verified the conversation's checkable claims: two do not hold as stated (the carry-forward fold's period; the preheader's length), one is a naming rather than an identity ("XNOR space")
+- Resolved `{17, 19}` ([[OPEN-01 Open Questions]] #14)
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`

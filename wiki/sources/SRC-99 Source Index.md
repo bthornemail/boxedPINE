@@ -54,6 +54,7 @@ Each source has a MOC that summarizes it and links to its part notes.
 | [[SRC-07 The OMI-IMO Complete Synthesis]] | Synthesis | Read directly |
 | [[SRC-08 XOR Gate Built with Transistors]] | Reference | [[SRC-08 XOR Gate Built with Transistors]] |
 | [[SRC-09 Try XOR Catch XNOR Finally]] | Archive conversation after the reorg | single file, outside the vault |
+| [[SRC-10 The Ontology Conversation]] | The ontology conversation: first principles, the Axiom of Propagation, the Circulator, the derivation path | single file, `_archive/_chat_history/` |
 
 ## The Unprocessed Sources
 

@@ -9,7 +9,9 @@ import {
   lastBlockOffset, orbit60, BUFFERS_PER_BLOB, coordinate, POLES, quadrantReadings, separation, GAUGE,
   xorTriples,
   FACES, vertexReading, faceReading, vertexClosed, faceClosed,
+  circulate, xnor, delta16, swapDelta as swapDeltaFold,
 } from '../../core/src/verified/index.ts';
+import type { Circulator, Decision } from '../../core/src/verified/index.ts';
 
 test('Level 0: a matched exchange writes and reports no difference', () => {
   const slots = makeSlots(64);
@@ -147,4 +149,71 @@ test('Of the 64 states: 8 vertex-closed, 8 face-closed, and 4 closed both ways',
   assert.deepEqual(all.filter((b) => vertexClosed(b) && faceClosed(b)).map((b) => b.toString(2).padStart(6, '0')),
     ['000000', '011110', '101101', '110011']);
   assert.deepEqual(faceReading(bits('111000')), [0, 0, 0, 0]); // the star at vertex 0 is face-closed
+});
+
+// The Circulator and the Axiom of Propagation (wiki: SPEC-05, SPEC-06, SPEC-07).
+const boundary = (decide: Circulator['decide'], handler?: Circulator['handler']) => {
+  let departures = 0;
+  const c: Circulator = { decide, depart: () => { departures++; }, ...(handler ? { handler } : {}) };
+  return { c, departures: () => departures };
+};
+
+test('Conservation of departure: the departure runs exactly once in all five states', () => {
+  const decisions: Decision[] = [{ kind: 'terminate' }, { kind: 'forward' }, { kind: 'modify-and-forward', delta: 4 }, { kind: 'exit' }];
+  for (const d of decisions) {
+    const b = boundary(() => d);
+    circulate(b.c, 60);
+    assert.equal(b.departures(), 1, d.kind);
+  }
+  const raising = boundary(() => { throw new Error('not resolvable here'); });
+  assert.equal(circulate(raising.c, 60).state, 'raise');
+  assert.equal(raising.departures(), 1);
+});
+
+test('Decision and delta are separate: forward carries unchanged; only modify-and-forward has a delta, and it is recoverable', () => {
+  assert.deepEqual(circulate(boundary(() => ({ kind: 'forward' })).c, 60), { state: 'forward', carried: 60 });
+  const out = circulate(boundary(() => ({ kind: 'modify-and-forward', delta: 64 })).c, 60);
+  assert.deepEqual(out, { state: 'modify-and-forward', carried: 124, delta: 64 });
+  if (out.state === 'modify-and-forward') assert.equal(out.carried ^ 60, out.delta); // the delta is attributable
+  assert.deepEqual(circulate(boundary(() => ({ kind: 'terminate' })).c, 60), { state: 'terminate' });
+});
+
+test('A handler turns a raise into a decision; without one the raise continues', () => {
+  const handled = boundary(() => { throw new Error('raised'); }, () => ({ kind: 'forward' }));
+  assert.deepEqual(circulate(handled.c, 7), { state: 'forward', carried: 7 });
+  const unhandled = boundary(() => { throw new Error('raised'); });
+  assert.equal(circulate(unhandled.c, 7).state, 'raise');
+});
+
+test('Exit contributes nothing to the difference reading but the full complement to the sameness reading', () => {
+  const x = 0x3c;
+  assert.equal(x ^ 0, x);              // XOR: an absent reading changes nothing
+  assert.equal(xnor(x, 0, 8), 0xc3);   // XNOR at 8 bits: an absent reading is the complement
+  assert.equal(xnor(x, x, 8), 0xff);   // sameness of a reading with itself: all ones
+});
+
+test('The carry-forward fold (the carry is the previous state) has period 24 for the bit delta and 6 for the swap delta', () => {
+  const period16 = (a: number, b: number) => { let x = a, y = b, k = 0; do { [x, y] = [delta16(x, y), x]; k++; } while ((x !== a || y !== b) && k < 1000); return k; };
+  for (const [a, b] of [[1, 0], [60, 64], [0x1d1d, 0x1337], [0xbeef, 0x3c3c]]) assert.equal(24 % period16(a!, b!), 0);
+  assert.equal(period16(60, 64), 24);
+  const same = (u: Uint8Array, v: Uint8Array) => u.every((q, i) => q === v[i]);
+  const a = Uint8Array.from([1, 2, 3, 4, 5, 6, 7, 8]), b = Uint8Array.from([9, 10, 11, 12, 13, 14, 15, 16]);
+  let x = a, y = b, k = 0;
+  do { [x, y] = [swapDeltaFold(x, y), x]; k++; } while (!(same(x, a) && same(y, b)) && k < 100);
+  assert.equal(k, 6);
+});
+
+test('The fold points split without carries: 60 = 44 XOR 16 and 15 = 11 XOR 4; 240 counts the ordered pairs of distinct indices in 16', () => {
+  assert.equal(60 ^ 44, 16); assert.equal(44 & 16, 0);
+  assert.equal(11 ^ 4, 15); assert.equal(11 & 4, 0);
+  let pairs = 0;
+  for (let i = 0; i < 16; i++) for (let j = 0; j < 16; j++) if (i !== j) pairs++;
+  assert.equal(pairs, 240);
+});
+
+test('The upper block of the orbit is the lower block with bit 6 set, not its bitwise XNOR', () => {
+  for (let m = 0; m < 64; m++) {
+    assert.equal(60 ^ (64 + m), 64 + (60 ^ m));
+    assert.notEqual(60 ^ (64 + m), xnor(60, m, 7));
+  }
 });

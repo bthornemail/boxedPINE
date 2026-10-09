@@ -10,6 +10,11 @@ down:
   - "[[SPEC-01 The Three Laws]]"
   - "[[SPEC-02 Conformance Criteria]]"
   - "[[SPEC-03 Notation OMI-Lisp]]"
+  - "[[SPEC-04 First Principles]]"
+  - "[[SPEC-05 The Axiom of Propagation]]"
+  - "[[SPEC-06 The Circulator]]"
+  - "[[SPEC-07 The Fundamental Invariants]]"
+  - "[[SPEC-08 The Derivation Path]]"
 related:
   - "[[SPEC-10 The Primitive]]"
   - "[[SPEC-11 The Three Primitives]]"
@@ -35,6 +40,8 @@ tags: [omi-imo, canonical, statement]
 ---
 
 # Canonical Statement
+
+> **Start here:** the protocol's minimum is [[SPEC-04 First Principles]]; its decision principle is [[SPEC-05 The Axiom of Propagation]] and [[SPEC-06 The Circulator]]; every invariant, marked proven, chosen or contradicted, is in [[SPEC-07 The Fundamental Invariants]]; the reading order is [[SPEC-08 The Derivation Path]].
 
 > The data doesn't change. The observer's interpretation changes based on the point of view they infer from.
 

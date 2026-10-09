@@ -71,6 +71,8 @@ delta16(x, c) = rotl16(x, 1) ^ rotl16(x, 3) ^ rotr16(x, 2) ^ c
 
 The delta function has exact period 8. This is proven in the Coq development referenced in the transcripts (`omi-files/omi-axioms/coq/04-execution/Delta16HasExactPeriodEight.v`).
 
+**Carry-forward fold (2026-10-09):** when the carry is the previous state (`x_{n+1} = delta(x_n, x_{n−1})`), the period is 24 = 4! for the bit rotation and 6 = 3! for the swaps. With a constant carry it is 8 and 4 ([[SPEC-07 The Fundamental Invariants]] I-10 to I-12).
+
 **Superseded (author, 2026-10-07):** the rotations were replaced by XOR and XNOR through `swap16`, `swap32` and `swap64` used as permutations, not mutations. On 8 bytes the swaps are the index maps `j ⊕ 1`, `j ⊕ 3` and `j ⊕ 7`, and the swap law has period 4. See [[OPEN-00 Contradiction Register]] #48.
 
 The 8-period matches the XOR orbit's 8-period. The XOR orbit's 8-period and the delta function's 8-period are the same 8.
