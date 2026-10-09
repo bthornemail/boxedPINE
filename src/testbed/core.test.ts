@@ -331,3 +331,23 @@ test('Prompt Tree: a path is 16 bits, exactly an index into the 65,536-bit leaf'
   assert.equal(prompt(tree, 1, promptPath(0, 0, 0, 2)), 0);
   assert.throws(() => promptPath(16, 0, 0, 0), RangeError);
 });
+
+// ---- Prompt Tree conformance vectors (SPEC-27): any implementation must pass these ----
+import { readFileSync as readVectors } from 'node:fs';
+import * as treeOps from '../../core/src/verified/tree.ts';
+
+test('Prompt Tree conformance vectors', () => {
+  const v = JSON.parse(readVectors(new URL('./vectors/prompt-tree.json', import.meta.url), 'utf8'));
+  assert.deepEqual(v.constants, { FILES: 16, BITS_PER_FILE: 65536, BYTES_PER_FILE: 8192, BOM_FILE: 0 });
+  for (const r of v.levelReading) assert.deepEqual(treeOps.levelReading(r.level, r.position), { node: r.node, child: r.child });
+  for (const p of v.paths) {
+    assert.equal(treeOps.promptPath(...(p.levels as [number, number, number, number])), p.path);
+    assert.deepEqual(treeOps.promptLevels(p.path), p.levels);
+  }
+  const tree = treeOps.makeTree((f) => (f === 0 ? 0x3c : f));
+  for (const r of v.reads) {
+    assert.equal(treeOps.prompt(tree, r.file, r.path), r.value);
+    assert.deepEqual(treeOps.split(r.address), { file: r.file, byte: r.byte, bit: r.bit });
+  }
+  for (const e of v.errors) assert.throws(() => (treeOps as any)[e.op](...e.args), RangeError);
+});

@@ -157,7 +157,7 @@ The states a structure can be in:
 |-----------|---------|------|-------|--------------|-------|
 | The four XOR builds 5T, 6T, 8T, 10T | [[SPEC-44 The Virtual Breadboard]] | — | `breadboard` test.mjs (passes; not part of `npm test`) | `breadboard` | **realized**, with its own check |
 | The tree: 16 Blobs, one 20-bit index | I-48 | `core` tree.ts | core.test | `types/` (proxy) | **canonical** |
-| The Prompt Tree: four levels, the swaps, the 16-bit path | I-49 to I-51 | `core` tree.ts | core.test | — | **canonical** |
+| The Prompt Tree: four levels, the swaps, the 16-bit path | I-49 to I-51; [[SPEC-27 The Prompt Tree Algorithm]] | `core` tree.ts | core.test; conformance vectors | — | **canonical** |
 | The BOM at file 0 | I-52 | `core` tree.ts (`BOM_FILE`) | core.test | — | **canonical** as a decision; prefix or suffix still open |
 | The 65,536 Blob | [[SPEC-22 The Blob]] | `core` wordform.ts (`BUFFERS_PER_BLOB`) | core.test | `space` | **canonical** (the count) |
 | The 360 × 65536 tetrahedron view | `space/README.md` | — | — | `space` (eight views planned) | **stated** |
