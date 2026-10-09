@@ -27,6 +27,8 @@ tags: [omi-imo, canonical, axiom, propagation, choice, return]
 
 From [[SRC-10 The Ontology Conversation]] (revised text, lines 8286–8645), with the corrections the author accepted applied. First Principles ([[SPEC-04 First Principles]]) describe the medium; this axiom says what a reader does with a reading.
 
+**It is the protocol's only axiom.** The author, 2026-10-09: the axiom of propagation was needed "to explain that the new paradigm is that we facilitate propagation and only propagation, nothing else. The purpose of the protocol in propagating is to propagate, nothing else. That's a concept that has no equal in my understanding of the world."
+
 ## The Axiom
 
 > **Every collection of non-empty relations admits a circulator capable of carrying those relations forward without owning them. The logic of the carrying is not decided in advance. It is the return. And the circulator is not obliged to forward what it receives; the choice to continue, terminate, or modify-and-continue is the circulator's, and it is accountable for that choice.**
@@ -94,15 +96,13 @@ Raising (unwinding without a decision) is not the same as forwarding (a choice).
 
 > Propagation is principal authority. Backpropagation is moral authority. Non-interference preserves authority. Modification creates responsibility for the introduced delta. Possession alone creates no sovereignty over the foundation. Logic is revealed by the return, not decreed by any judge. Existence is a phase of the propagation cycle. Time is the axis of the carrying. At every boundary, the circulator decides.
 
-## The Axiom of Direction
+## The Linear Sequencing of Causality
 
-The Axiom of Propagation says *where* a choice is made: at a boundary. This section is about the first choice: **which way to read**.
+Not a second axiom. The name "Axiom of Direction", proposed in conversation by another assistant, was **declined by the author** (2026-10-09): there is one axiom, propagation. What stays is the author's description of the order in which a propagation is read:
 
-**Whose name:** "Axiom of Direction" was proposed in conversation by another assistant, not by the author. The author answered "yes" and said what it is; **the author's sentence is the content**, and may itself be the name. ⟦Author to keep the name, or let the sentence stand as the name.⟧
+> it is "the linear sequencing of causality of order, from interaction with the 1/7 and 1/73 periodicity with the two-prime-gap sequencing, and interacted through the lens of 60 ⊕ 64 and 60 ⊕ 128, or 60 ⊕ any offset, to reflect upon a prompt."
 
-> **The author's statement:** it is "the linear sequencing of causality of order, from interaction with the 1/7 and 1/73 periodicity with the two-prime-gap sequencing, and interacted through the lens of 60 ⊕ 64 and 60 ⊕ 128, or 60 ⊕ any offset, to reflect upon a prompt."
-
-The axiom itself is a DEFINITION. Each part it names is derived below (THEOREM, tested in `core.test.ts`; code in `core/src/verified/period.ts`):
+The description is the author's (DEFINITION). Each part it names is derived below (THEOREM, tested in `core.test.ts`; code in `core/src/verified/period.ts`):
 
 | Part | What is derived |
 |------|-----------------|

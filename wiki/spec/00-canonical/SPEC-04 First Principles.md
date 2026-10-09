@@ -71,6 +71,8 @@ So the user brings two things, and the protocol brings the rest:
 
 **A polynomial is a regex expression** (the author). This is exact for a regex with no `*` or `+`: it admits finitely many strings, and counting them by length gives a polynomial, with `|` as addition, juxtaposition as multiplication and `{n}` as a power. Every polynomial with whole-number coefficients is such a regex. `polynomial(declaration, seed, n)` computes it over the alphabet the seed supplies. With `*` or `+` the count goes on forever: a series, not a polynomial ([[SPEC-07 The Fundamental Invariants]] I-61).
 
+**Regex as it is** (the author, 2026-10-09): "we don't name any regex symbols or words for the protocol; it works on regex, period. Nothing needs to be removed or added or explained. People can use any regex variant that works with another person for the same results, because it is all environment-dependent in the end: the closest thing to non-deterministic determinism."
+
 **Words are seeds, not protocol.** The names in the vault (the fifteen treemaps, the labels exponent, exception, declaration, definition) are what a seed and a declaration derive. For example, the fifteen treemap names given as a seed yield their enumeration and their ASCII cascade (tested).
 
 ## What the Protocol Does and Does Not Do
@@ -94,5 +96,5 @@ Everything else (the Fano plane, the tetrahedron, the treemaps, the byte-ring, t
 
 The author pasted in a critique, and these points from it stand:
 - **The prompt is the interface; the exchange is the operation.** They are separate.
-- **try/catch is not the same in every language,** and base36 does not by itself guarantee identical interpretation everywhere. Portability comes from a precise abstract specification plus **conformance tests**. The tests in `src/testbed/` are this project's start on that.
+- **try/catch is not the same in every language,** and base36 does not by itself guarantee identical interpretation everywhere. ~~Portability comes from a precise abstract specification plus conformance tests.~~ **Superseded by the author (2026-10-09):** portability comes from agreement. Two people whose regex environments give the same results on the same seed agree, whatever variant each uses ("Regex as it is", above). The tests in `src/testbed/` record this project's own results; they are not a standard for anyone else.
 - **The swaps need a compatible length.** They are permutations only when the buffer length is a multiple of 8.

@@ -1,6 +1,6 @@
 // THE PERIODS OF 1/7 AND 1/73, AND THE LENS
 //
-// The author's Axiom of Direction (wiki: SPEC-05, "The Axiom of Direction"):
+// The author's linear sequencing of causality (wiki: SPEC-05):
 // the linear sequencing of causality of order, from the interaction of the
 // 1/7 and 1/73 periodicity with the two-prime-gap sequencing, through the
 // lens of 60 ⊕ offset, reflecting upon a prompt.

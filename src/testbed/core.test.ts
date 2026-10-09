@@ -382,7 +382,7 @@ test('The ASCII order of the fifteen is not the enumeration reversed: they are t
   assert.deepEqual(lengths.sort((a, b) => a - b), [5, 10]); // two cycles, not a reversal
 });
 
-// ---- The Axiom of Direction: periods, gaps and the lens (SPEC-07 I-57, I-58) ----
+// ---- The linear sequencing of causality: periods, gaps and the lens (SPEC-07 I-57, I-58) ----
 import { period, GAPS, lensesKeepingPeriods } from '../../core/src/verified/index.ts';
 
 test('1/7 and 1/73 repeat over 6 and 8 digits; the two prime gaps sum to 6 and multiply to 8', () => {

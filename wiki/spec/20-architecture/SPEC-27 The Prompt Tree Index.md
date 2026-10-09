@@ -118,6 +118,7 @@ PROMPT_PATH   /^0x(?<file>[0-9A-F])(?<exponent>[0-9A-F])(?<exception>[0-9A-F])(?
 
 - The radix prefix is lowercase and the index digits uppercase, as in `PINEBOXED` (lowercase value radix, uppercase index axis).
 - Each named group is a label. Anyone who reads the declaration reads the pattern, with no code.
+- `PROMPT_PATH` is only the handle the rosetta store files it under. The protocol names no regex (I-64): what propagates is the bare expression, in whatever regex variant two people share.
 - `0x03C00` reads: file 0 (the BOM), exponent 3, exception C, declaration 0, definition 0.
 
 To propagate the pattern, re-declare it: copy the regex, or write a narrower one inside it. For example, `/^0x0/` keeps only the BOM's addresses.
@@ -141,7 +142,7 @@ position ⊕ 15  =  15 − position  =  XNOR(position, 0) at 4 bits
 
 It never stays inside an octet, so the direction acts only at the root.
 
-**The BOM is registered in both directions:** file 0 in the prefix reading, file 15 in the suffix reading, the same file seen from either end (`BOM_FILE`, `BOM_SUFFIX_FILE`). The tree does not change. Which direction a reader uses is the reader's choice, made at the root. This is what [[SPEC-05 The Axiom of Propagation]] says of every choice: it is located at a boundary, not decreed by the structure. The author names this choice the **Axiom of Direction** (SPEC-05; I-56). The declaration `PROMPT_PATH` names positions in the prefix reading; a suffix reader reads `0x0…` as `0xF…`.
+**The BOM is registered in both directions:** file 0 in the prefix reading, file 15 in the suffix reading, the same file seen from either end (`BOM_FILE`, `BOM_SUFFIX_FILE`). The tree does not change. Which direction a reader uses is the reader's choice, made at the root. This is what [[SPEC-05 The Axiom of Propagation]] says of every choice: it is located at a boundary, not decreed by the structure. The declaration `PROMPT_PATH` names positions in the prefix reading; a suffix reader reads `0x0…` as `0xF…`.
 
 **What the direction does not do: FAILS.** It was proposed that "prefix or suffix" and "ASCII order or enumeration" are one choice. They are not. The ASCII order of the fifteen (13, 1, 14, 9, …) is not the enumeration reversed. Going from one to the other moves the files in two cycles, of 10 and 5, and no reversal can do that. So the direction and the cascade are **two independent choices**.
 

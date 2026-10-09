@@ -147,13 +147,13 @@ Added 2026-10-09 from the author's description of the tree classification model 
 | I-54 | **The direction:** reading the 16 positions the other way is `j ⊕ 15 = 15 − j = XNOR(j, 0)` at 4 bits. It reverses the order, undoes itself, and acts only at the root, as the fourth of the family j ⊕ 1, ⊕ 3, ⊕ 7, ⊕ 15. The BOM is file 0 read as a prefix and file 15 read as a suffix: one file, two directions | THEOREM (the flip) + DEFINITION (the reader chooses the direction, I-22) | `core.test.ts`; [[SPEC-27 The Prompt Tree Index]] §5 |
 | I-55 | "Prefix or suffix and ASCII order or enumeration are the same choice, the direction" | **FAILS** | the ASCII order is not the enumeration reversed; the permutation between them has cycles of 10 and 5. They are two independent choices |
 
-## X. The Axiom of Direction
+## X. The Linear Sequencing of Causality
 
-From the author, 2026-10-09 ([[SPEC-05 The Axiom of Propagation]], "The Axiom of Direction").
+From the author, 2026-10-09 ([[SPEC-05 The Axiom of Propagation]], "The Linear Sequencing of Causality"). Not a second axiom: the name "Axiom of Direction" was proposed in conversation and declined by the author.
 
 | # | Invariant | Mark | Evidence |
 |---|-----------|------|----------|
-| I-56 | **The Axiom of Direction** (name proposed in conversation; the author's sentence is the content): the linear sequencing of causality of order, from the interaction of the 1/7 and 1/73 periodicity with the two-prime-gap sequencing, through the lens of 60 ⊕ offset, reflecting upon a prompt | DEFINITION (author) | SPEC-05 |
+| I-56 | **The linear sequencing of causality of order, from the interaction of the 1/7 and 1/73 periodicity with the two-prime-gap sequencing, through the lens of 60 ⊕ offset, reflecting upon a prompt | DEFINITION (author) | SPEC-05 |
 | I-57 | **Gaps and periods:** 1/7 repeats over 6 decimal digits and 1/73 over 8. The prime gaps 2 and 4 have sum 6 and product 8. lcm(6, 8) = 24 is the period of 1/511, and 511 = 7 × 73 = 2⁹ − 1, so in binary 1/7 repeats the block 73 and 1/73 the block 7 | THEOREM | `period.ts`; `core.test.ts` |
 | I-58 | **The lens 60 ⊕ 64 keeps the periods:** in base 124, 1/7 and 1/73 repeat over 6 and 8, because 124 ≡ 10¹¹ (mod 511). Only five of the 256 lenses 60 ⊕ m do this (m = 54, 64, 180, 205, 217; 60 ⊕ 54 = 10). The other pole, base 188, gives 2 and 72 | THEOREM | `core.test.ts` |
 | I-59 | "The two poles 60 ⊕ 64 and 60 ⊕ 128 are the two directions" | **FAILS** | 124 reversed at 8 bits is 131; the poles differ by `0xC0`. The direction is `j ⊕ 15` (I-54) |
@@ -167,6 +167,13 @@ From the author, 2026-10-09 ([[SPEC-04 First Principles]], "The Only Input").
 | I-60 | **The user's only input is a declaration regex and a seed string or buffer.** Every definition, word, term and operation is derived from that binding by the bitwise and algorithmic core; the protocol defines nothing else, and needs no words | DEFINITION (author) | `rosetta/src/grammar/resolve.ts` (`resolve`) |
 | I-61 | **A polynomial is a regex expression.** Every polynomial with whole-number coefficients is a regex: a coefficient *aₙ* is *aₙ* admitted strings of length *n*. Conversely, a regex with no `*` or `+` admits finitely many strings, and counting them by length gives a polynomial: `\|` adds, juxtaposition multiplies, `{n}` is a power. With `*` or `+` the count is an infinite series, not a polynomial | THEOREM (where each admitted string can be built one way) | `rosetta.test.ts` (`polynomial`) |
 | I-62 | **The terms of a binding are its unique units** (the author: "simply put exceptions"), each indexed by its positions in the seed. The binding gives two orders at once: the **enumeration** (first position in the seed) and the **cascade** (byte order, ASCII). For the fifteen treemaps as a seed, these are exactly the enumeration of files 1–15 and the ASCII cascade | THEOREM (derived) + DEFINITION (terms = exceptions, author) | `rosetta.test.ts` (`resolve`) |
+
+## XII. One Purpose, Regex As It Is
+
+| # | Invariant | Mark | Evidence |
+|---|-----------|------|----------|
+| I-63 | **The protocol's only purpose is propagation,** and the Axiom of Propagation is its only axiom | DEFINITION (author) | [[SPEC-05 The Axiom of Propagation]] |
+| I-64 | **The protocol names no regex symbols and no words. It works on regex as it is.** Any regex variant two people share serves, when it gives them the same results; the result depends on the environment in the end ("the closest thing to non-deterministic determinism") | DEFINITION (author) | [[SPEC-04 First Principles]] |
 
 ## What Is Still Open
 

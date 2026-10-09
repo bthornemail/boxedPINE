@@ -138,7 +138,9 @@ The states a structure can be in:
 | Conservation of departure | I-20 | `core` circulator.ts | core.test | — | **canonical** |
 | Decision ≠ delta | I-21 | `core` circulator.ts | core.test | — | **canonical** |
 | The Axiom of Propagation | I-22 | — | — | — | **stated** (a thesis; it has no code form) |
-| The Axiom of Direction (name proposed in conversation) | I-56 | — | — | — | **stated** (the author's sentence; its parts are the next rows) |
+| The linear sequencing of causality | I-56 | — | — | — | **stated** (the author's description; its parts are the next rows) |
+| Propagation is the only purpose; one axiom | I-63 | — | — | — | **stated** |
+| Regex as it is: no named symbols or words; any shared variant | I-64 | — | — | — | **stated** |
 | Gaps and periods: 2 + 4 = 6, 2 × 4 = 8, 1/511 repeats over 24 | I-57 | `core` period.ts | core.test | — | **canonical** |
 | The lens 60 ⊕ 64 keeps the periods 6 and 8 | I-58 | `core` period.ts | core.test | — | **canonical** |
 | "The two poles are the two directions" | I-59 | — | core.test | — | **fails** |
@@ -186,7 +188,7 @@ File 0 is the **BOM**, which holds the **Prompt Tree**; files 1–15 hold the fi
 
 ## The Count
 
-Of the 60 rows (2026-10-09): **34 canonical**, **7 checked**, **12 stated**, **1 realized only** (Proxy and Reflect), **1 realized with its own check** (the breadboard), **5 fail**.
+Of the 62 rows (2026-10-09): **34 canonical**, **7 checked**, **14 stated**, **1 realized only** (Proxy and Reflect), **1 realized with its own check** (the breadboard), **5 fail**.
 
 ## What Canonicalizes Next
 
