@@ -7,3 +7,4 @@ export * from './wordform.ts';
 export * from './triples.ts';
 export * from './block.ts';
 export * from './circulator.ts';
+export * from './metron.ts';

@@ -76,6 +76,8 @@ This is the generator. And it generates the rest of the structure:
 
 But the generator is pseudo because it doesn't close. It generates more generators. The 210p + n generates new sextuplets. Those sextuplets generate new sextuplets. Infinitely.
 
+⟦Marked 2026-10-09: that there are infinitely many prime sextuplets is the prime k-tuples conjecture, which is **not proven**. The 210 ladder says where sextuplets *can* start, not that every rung holds one: rung 1 gives 307 … 319, and 319 = 11 × 29. See [[SPEC-07 The Fundamental Invariants]] I-45, I-46.⟧
+
 This is the monoidal structure: composition without closure.
 
 ## The 5 and 13

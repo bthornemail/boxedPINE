@@ -60,7 +60,13 @@ Every checkable claim across them is collected and marked THEOREM / DEFINITION /
 | 9049–10920 | The truth table of the operations; CONS to BIND and Meta-Bind; the `eEd.` hinge; BigInt concatenation; the prompt function |
 | 11400–12050 | Convergence as the meta to agreement; the four states of a reading; the carry |
 | 12060–14660 | Folds, the keypair, Karnaugh map, transistor ladder, point-line duality, Pascal structures, the fractal cube, Schläfli symbols, the `{2,n}:{n,2}` generator, the read as a proof tree, the 64-nion |
-| 15219–16487 | Poisson point processes, stochastic modelling, black-body radiation; time; the METRON; 23 and 25; triangulation |
+| 15219–15500 | Poisson point processes, stochastic modelling, black-body radiation; why they are related; time (SPEC-07 I-47) |
+| 15501–15600 | `0x17` and `0x19`; the hinge; what floating point hides (I-42) |
+| 15602–15705 | The two notations, hex and decimal; the `BigInt64Array` as unassigned carrier; the MÊTRON (I-43) |
+| 15706–15820 | The MÊTRON's last two coordinates; the prime sextuplet; the `(p + 210n)` ladder and its bug at 221 (I-45, I-46); the `bind` function |
+| 15821–16020 | "Mark hexadecimal explicitly"; the pairs 17, 19 and 23, 25; why 25 is the last; the 210 boundary |
+| 16022–16170 | 23 as a triangulation; the point-line reading of 23; the exceptional sextuplet's triangle |
+| 16170–16487 | "The other ones"; the bridge `{11, 13}`; "the 5 7 11 13"; `{17, 19}` as the complement of the first quadruplet (I-44); "everything is in docs" ([[OPEN-01 Open Questions]] #20) |
 
 ## Resolved by This Conversation
 

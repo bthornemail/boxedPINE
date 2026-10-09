@@ -36,11 +36,11 @@ It is **pedagogy**: "doors, not the room". The room is [[SPEC-04 First Principle
 | 2 | **The Axiom of Propagation** and the **Circulator** (four states + exit) | [[SPEC-05 The Axiom of Propagation]], [[SPEC-06 The Circulator]] | type tested (I-19 to I-21) |
 | 3 | **Four states of a reading:** divergent, stable, convergent, harmonic. A clock is a harmonic | — | DEFINITION (I-23) |
 | 4 | **The delta law as a carry-forward fold:** rotl 1, rotl 3 covariant; rotr 2 contravariant; the carry is the previous state | [[SPEC-15 The Delta Transform]] | periods corrected: 24 and 6, not 8 and 4 (I-11, I-12) |
-| 5 | **Point–line duality:** 16 is the point, 64 the line, 4 the connector | — | DEFINITION |
+| 5 | **Point–line duality:** 16 is the point, 64 the line, 4 the connector | — | DEFINITION (I-36) |
 | 6 | **The buffer read:** read an index, get 16, choose the low 8 or high 8, fold, land at the next index. Fold points 60 → 44 → 15 → 11 → 4 | [[SPEC-33 The Quadratic Forms]] | carry-free splits THEOREM (I-15) |
-| 7 | **Two spaces and the flip-flop:** the orbit's 64-blocks alternate XOR / XNOR readings | [[OPEN-01 Open Questions]] #18 | a naming, not a bitwise identity (I-18) |
-| 8 | **The `{2,n}:{n,2}` generator:** the controller space; `{2,4}:{4,2}`, `{3,4}:{4,3}`, `{3,5}:{5,3}`; 240 = 15 × 16 = 256 − 16 | [[SPEC-35 Reflections and Orbits]] | 240 THEOREM (I-13) |
-| 9 | **The 15 treemap algorithms** plus the Hamming/Polybius row: the upper 16 indices | [[USE-00 Use Case Scenarios]] | DEFINITION (I-16) |
+| 7 | **Two spaces and the flip-flop:** the orbit's 64-blocks alternate XOR / XNOR readings | [[OPEN-01 Open Questions]] #18 | the shift THEOREM, the names DEFINITION (I-18, I-39) |
+| 8 | **The `{2,n}:{n,2}` generator:** the controller space; `{2,4}:{4,2}`, `{3,4}:{4,3}`, `{3,5}:{5,3}`; 240 = 15 × 16 = 256 − 16 | [[SPEC-35 Reflections and Orbits]] | 240 THEOREM (I-13); controller space DEFINITION (I-37); "`{2,3}` is the tetrahedron" FAILS (I-38) |
+| 9 | **The 15 treemap algorithms** plus the Hamming/Polybius row: the upper 16 indices | [[USE-00 Use Case Scenarios]] | DEFINITION (I-16, I-40) |
 | 10 | **The high block as declaration space:** the low block calls with data, the high block responds with the declaration that reads it; the iExtant is where they meet | [[SPEC-36 The Literal Separation]] | DEFINITION |
 | 11 | **The fractal cube:** 65,536 as nested 64-meshes; the sharing form `60 ⊕ 64n` | [[SPEC-22 The Blob]] | DEFINITION |
 | 12 | **The read as a proof tree:** exponent, exception, declaration (RegExp), definition (string). Leaves: declaration (closes) or exception (opens) | [[PROG-00 Homoiconic Syntax Tracker]] Level 4 | DEFINITION |
@@ -53,6 +53,18 @@ It is **pedagogy**: "doors, not the room". The room is [[SPEC-04 First Principle
 > Any data can be prompted, then propagated through the two-prime-gap periodicity of any 16-character 32-bit shebang / preheader / escape sequence based on any RegExp, but communicative in the octonion-like subarray of a 64-nion of our canonical approach to `<boxdpin?boxedPINE=PINEboxed>` for a `60 ⊕ 64` parseable regex example of the possibilities to encode a whole GB of instructions, really hardware-constraint instructions, into a preheader frame that can describe itself, or the document, or the structure of its binary CDR.
 
 "Encode a GB in a preheader" means **describe**, not contain: a regex can describe the structure of a gigabyte without holding it.
+
+## After the Path: the Last Stretch (lines 15219–16487)
+
+The conversation went on past the derivation. These steps are not in the derivation's numbering, so they are numbered on from it.
+
+| Part | Step | In the vault | Status |
+|------|------|--------------|--------|
+| 16 | **Shadows of the structure:** Poisson point processes, stochastic modelling, black-body radiation, pulsars, the prime meridian. The frame is arbitrary, the structure is forced | — | DEFINITION, analogy (I-47) |
+| 17 | **The hidden radix:** floating point hides the radix; the protocol marks it. `0x17n` is 23, `17n` is 17 | [[SPEC-36 The Literal Separation]] | THEOREM (I-42) |
+| 18 | **The mêtron and `bind`:** a `BigInt64Array` is the unassigned carrier; `bind` places the fifteen canonical coordinates into it | `core/src/verified/metron.ts` | DEFINITION + THEOREM (I-43) |
+| 19 | **The prime clusters:** the quadruplets `{5,7,11,13}` and `{11,13,17,19}`, the bridge `{11, 13}`, the sextuplets, the 210 ladder; `{17, 19}` as the complement of the first quadruplet | [[SPEC-43 Prime Gaps and Sextuplets]] | THEOREM (I-44, I-45); the ladder as written FAILS (I-46) |
+| 20 | **The point–line triangulation of 23:** "everything is in docs". The conversation ends asking which doc | [[OPEN-01 Open Questions]] #20 | open |
 
 ## Scope of Use and Propagation
 

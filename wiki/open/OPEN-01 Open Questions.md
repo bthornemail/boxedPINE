@@ -251,3 +251,21 @@ The transcript's own candidate ("try, catch, finally / three exits / the full pa
 
 Which is which follows the protocol's roles (Regex constrains, Proxy traps, Reflect performs): try ⊕ finally is the operation witnessed, so Reflect; catch ⊕ finally is the trap witnessed, so Proxy. On the Fano lines this gives **Proxy ⊕ Reflect = throw**: a step forward and a step back differ by exactly the throw (checked). Swap the two if the author intends the reverse.
 **Status:** Resolved.
+
+### 20. Three Readings of `{17, 19}` and the Triangulation of 23
+
+The ontology conversation ([[SRC-10 The Ontology Conversation]]) reads `{17, 19}` three ways:
+
+| Reading | What it is | Mark |
+|---------|-----------|------|
+| **Index** | 17 is the Hamming-distance index and 19 the tree-algorithm index of the upper half (#14, author: "Yes exactly") | DEFINITION ([[SPEC-07 The Fundamental Invariants]] I-17) |
+| **Decimal prime** | twin primes; in the first sextuplet `{5, 7, 11, 13, 17, 19}` they are the complement of the quadruplet `{5, 7, 11, 13}`, and the two quadruplets share the bridge `{11, 13}` | THEOREM (I-44) |
+| **Hexadecimal** | `0x17`, `0x19` are 23 and 25, the mêtron's last two coordinates. 23 ends the sextuplet `{7, …, 23}`; 25 = 5² is the first gap-2 step that is not prime | THEOREM (values) + DEFINITION (in the mêtron, I-43) |
+
+**Decision:** the three readings stand side by side. The hexadecimal one does not overturn #14, because I-42 says the radix belongs to the literal: `17` and `0x17` are different literals, so they can mean different things without contradiction. Hexadecimal is always marked with `0x`.
+
+**Still open:** the author says 23 "has a point line read to triangulate", with "the 5 7 11 13", and that "everything is in docs". The conversation ends before the doc is named. The likely source is the tetrahedral-encoding paper ("On the Tetrahedral Encoding of Prime Constellations"), which is not in the vault.
+
+**Also open:** the rosetta `CATALOG` rule accepts only the first of the seven catalog heads (I-41).
+
+**Status:** Open.

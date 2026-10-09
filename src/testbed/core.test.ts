@@ -217,3 +217,53 @@ test('The upper block of the orbit is the lower block with bit 6 set, not its bi
     assert.notEqual(60 ^ (64 + m), xnor(60, m, 7));
   }
 });
+
+// ---- The last stretch of the ontology conversation (SPEC-07 I-28 to I-44) ----
+import { METRON, bind, isPrime, clusters, QUADRUPLET, SEXTUPLET, ladderAsWritten } from '../../core/src/verified/index.ts';
+
+test('Small closed facts: e ⊕ E, the ruler, the generator, the BQF', () => {
+  assert.equal('e'.charCodeAt(0) ^ 'E'.charCodeAt(0), 0x20);
+  assert.equal(2 + 6, 8); // 2! + 3!
+  const generator = [[0, 2, 1], [3, 7, 11, 15], [17, 19]];
+  assert.deepEqual(generator.map((g) => g.length), [3, 4, 2]);
+  assert.equal(3 + 4 + 2, 9);
+  assert.equal(3 * 4 * 2, 24); // 4!
+  for (let x = -5; x <= 5; x++) for (let y = -5; y <= 5; y++) {
+    const Q = 60 * x * x + 16 * x * y + 4 * y * y;
+    assert.equal(Q, 4 * (11 * x * x + (2 * x + y) ** 2));
+    assert.equal(16 * x * x + 16 * x * y + 4 * y * y, (4 * x + 2 * y) ** 2);
+    if (x !== 0 || y !== 0) assert.ok(Q > 0); // positive definite
+  }
+  assert.equal(16 * 16 - 4 * 60 * 4, -704);
+  assert.equal(16 * 16 - 4 * 16 * 4, 0);
+});
+
+test('The mêtron: fifteen coordinates; bind copies them into an unbound carrier', () => {
+  assert.equal(METRON.length, 15);
+  assert.deepEqual([...METRON].map(Number), [0, 1, 2, 3, 5, 7, 9, 10, 11, 12, 13, 14, 15, 23, 25]);
+  assert.equal(0x17n, 23n);
+  assert.equal(0x19n, 25n);
+  assert.notEqual(0x17n, 17n);
+  const unbound = new BigInt64Array(16);
+  const { carrier } = bind(unbound);
+  assert.deepEqual([...carrier.subarray(0, 15)], [...METRON]);
+  assert.equal(carrier[15], 0n);
+  assert.deepEqual([...unbound], new Array(16).fill(0n)); // not mutated
+  assert.throws(() => bind(new BigInt64Array(14)), RangeError);
+});
+
+test('Prime clusters: the two quadruplets share the bridge {11, 13}', () => {
+  assert.deepEqual(clusters(QUADRUPLET, 20), [5, 11]);
+  assert.ok([5, 7, 11, 13, 17, 19].every(isPrime));
+  assert.deepEqual(clusters(SEXTUPLET, 20000), [7, 97, 16057, 19417]);
+  for (const p of clusters(SEXTUPLET, 20000).slice(1)) assert.equal(p % 210, 97);
+});
+
+test('The 210 ladder as written fails at rung 1', () => {
+  assert.deepEqual(ladderAsWritten(0), [5, 7, 11, 13, 17, 19]);
+  assert.equal(ladderAsWritten(1)[2], 221);
+  assert.equal(221, 13 * 17);
+  assert.ok(!ladderAsWritten(1).every(isPrime));
+  // {5,…,19} has every residue mod 5, so it can happen only where 5 itself is in it.
+  assert.deepEqual(new Set([5, 7, 11, 13, 17, 19].map((k) => k % 5)).size, 5);
+});
