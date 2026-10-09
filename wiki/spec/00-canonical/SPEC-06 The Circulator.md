@@ -17,7 +17,7 @@ sources:
 code:
   - "core/src/verified/circulator.ts"
   - "src/testbed/core.test.ts"
-  - "omi-files/omi-types/src/OMI/Try.hs"
+  - "types/src/OMI/Try.hs"
 dimensions: []
 symbols: []
 tags: [omi-imo, canonical, circulator, boundary, decision, delta, exit]
@@ -75,9 +75,9 @@ The author: an exit "will continue to raise on a tree that fell in the woods wit
 
 **THEOREM** (tested): an absent reading contributes nothing to the difference reading, `x ⊕ 0 = x`. To the sameness reading at a fixed width, though, it contributes the full complement: `XNOR(x, 0) = ~x`, for example `XNOR(0x3C, 0) = 0xC3` at 8 bits. So the exit is invisible to difference and maximal to sameness: the two readings disagree most about it. The conversation's table wrote the XOR side as "0"; precisely, it is the *contribution* that is 0, and the reading itself stays `x`.
 
-## Relation to `omi-types`
+## Relation to `types`
 
-`OMI.Try` in `omi-files/omi-types` is a smaller circulator. Its `Attempt` is either `Tried` (forward) or `Caught` (a raise turned into a value, carrying its repair), and `finally` is its departure. It does not yet have terminate, modify-and-forward or exit.
+`OMI.Try` in `types` is a smaller circulator. Its `Attempt` is either `Tried` (forward) or `Caught` (a raise turned into a value, carrying its repair), and `finally` is its departure. It does not yet have terminate, modify-and-forward or exit.
 
 ## The Inscription
 

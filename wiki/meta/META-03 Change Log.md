@@ -227,6 +227,8 @@ tags: [omi-imo, meta, changelog, history]
 - Covered the conversation's last stretch: [[SPEC-07 The Fundamental Invariants]] I-28 to I-47, `core/src/verified/metron.ts`, SPEC-08 parts 16–20, [[OPEN-01 Open Questions]] #20
 - Rewrote the folder table of [[META-04 Repository Frame]] to the author's delineation; `breadboard/` is its own root folder and `repl/` is listed
 - Added [[SPEC-09 The Structure Map]]: every structure mapped to its home, its check and its realizations, with the rule for when a structure is canonical over the medium; 51 tests passing
+- Moved `omi-files/omi-axioms` to the root folder `proofs/` and `omi-files/omi-types` to `types/` (both keep their own repositories and GitHub names); `cabal test all` passes from `types/`
+- Added the tree model, sixteen Blobs addressed by one 20-bit index (`core/src/verified/tree.ts`, [[SPEC-09 The Structure Map]]); 53 tests passing
 
 ## Pending
 

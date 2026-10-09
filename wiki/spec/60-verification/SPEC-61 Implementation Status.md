@@ -114,7 +114,7 @@ A scoped version exists for circuits: [[SPEC-44 The Virtual Breadboard]] has a w
 
 ## Verification
 
-The conformance test vectors are in [[SPEC-60 Test Vectors]]. The Fano Fold kernel self-test was run (19/20). The virtual breadboard self-test passes (`npm test` in `breadboard`). The delta's exact period 8 is proved in `omi-files/omi-axioms/coq/04-execution/Delta16HasExactPeriodEight.v` (compiles, no `Admitted`).
+The conformance test vectors are in [[SPEC-60 Test Vectors]]. The Fano Fold kernel self-test was run (19/20). The virtual breadboard self-test passes (`npm test` in `breadboard`). The delta's exact period 8 is proved in `proofs/coq/04-execution/Delta16HasExactPeriodEight.v` (compiles, no `Admitted`).
 
 ## Next Steps
 

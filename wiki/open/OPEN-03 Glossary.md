@@ -60,7 +60,7 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 
 ## A
 
-**Attempt** — The result of a try: either the tried value, or the caught deviation with its structured coordinate (position, expected, actual, difference). The difference is the repair, so a caught attempt is open for another try. A chain of attempts (a cochain of compare-exchanges) stops at the first catch. In `omi-files/omi-types`, module `OMI.Try`.
+**Attempt** — The result of a try: either the tried value, or the caught deviation with its structured coordinate (position, expected, actual, difference). The difference is the repair, so a caught attempt is open for another try. A chain of attempts (a cochain of compare-exchanges) stops at the first catch. In `types`, module `OMI.Try`.
 
 **apply** — The second primitive (slot 13, the 6T). It invokes a relation: `bind` with the correction half of the ruler set, then one delta step, so the relation drives onward. Categorically a Functor. Not yet implemented; see [[OPEN-01 Open Questions]] #6.
 
@@ -98,7 +98,7 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 
 **decision / delta** — The decision is the path (terminate, forward, modify-and-forward); the delta is the change a modification introduces. They are separate ([[SPEC-05 The Axiom of Propagation]]).
 
-**delta** — The step law. Current form: `swap16(x) ⊕ swap32(x) ⊕ swap64(x) ⊕ c`, a permutation law with period 4. Earlier form: `delta16(x, c) = rotl16(x, 1) ^ rotl16(x, 3) ^ rotr16(x, 2) ^ c` on 16-bit words. Its period is exactly 8: proved in Coq in `omi-axioms`, and every orbit length divides 8. Rotating the 8 *bytes* instead is the block reading, with period 4. That is intended: one step per 64-value quarter of the byte ([[OPEN-00 Contradiction Register]] #46).
+**delta** — The step law. Current form: `swap16(x) ⊕ swap32(x) ⊕ swap64(x) ⊕ c`, a permutation law with period 4. Earlier form: `delta16(x, c) = rotl16(x, 1) ^ rotl16(x, 3) ^ rotr16(x, 2) ^ c` on 16-bit words. Its period is exactly 8: proved in Coq in `proofs/`, and every orbit length divides 8. Rotating the 8 *bytes* instead is the block reading, with period 4. That is intended: one step per 64-value quarter of the byte ([[OPEN-00 Contradiction Register]] #46).
 
 **distinguished triples** — The 7, 35, 155 and 651 triples of the octonions, sedenions, trigintaduonions and 64-ions. They are exactly the XOR-closed triples `{a, b, a ⊕ b}` of non-zero 3-, 4-, 5- and 6-bit indices (the lines of binary projective space; the 7 are the Fano plane). All 155 listed in `_archive/animation.frame.ts` satisfy `a ⊕ b = c`.
 

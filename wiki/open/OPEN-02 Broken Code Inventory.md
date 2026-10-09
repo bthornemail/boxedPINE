@@ -38,7 +38,7 @@ This inventory tracks known defects in the OMI-IMO code. On 2026-10-07 every ent
 
 **Plain-language summary:** the archived TypeScript is a sketchbook, not a program. `index.ts` and `animation.frame.ts` do not compile at all, and `model.ts` fails on its first line of real work. The working pieces of this protocol are:
 
-- the period-8 Coq proof in `omi-files/omi-axioms`
+- the period-8 Coq proof in `proofs`
 - the self-generating kernel in the Fano Fold conversation (#11)
 - the virtual breadboard (`breadboard/`)
 

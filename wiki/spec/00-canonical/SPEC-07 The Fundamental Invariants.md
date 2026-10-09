@@ -24,7 +24,7 @@ code:
   - "core/src/verified/metron.ts"
   - "src/testbed/core.test.ts"
   - "src/testbed/rosetta.test.ts"
-  - "omi-files/omi-axioms/coq/04-execution/Delta16HasExactPeriodEight.v"
+  - "proofs/coq/04-execution/Delta16HasExactPeriodEight.v"
 dimensions: []
 symbols: []
 tags: [omi-imo, canonical, invariants, ontology, theorem, definition]

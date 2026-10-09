@@ -275,3 +275,29 @@ test('The preheader names: PINEboxed is boxedPINE rotated by 5; boxdpin is pin +
   assert.equal(letters('boxdpin'), letters('pin' + 'boxd'));
   assert.equal('<boxdpin?boxedPINE=PINEboxed>'.length, 29); // I-26
 });
+
+// ---- The tree: sixteen Blobs as an index of index indices (SPEC-09) ----
+import { FILES, BYTES_PER_FILE, TREE_BITS, address, split, makeTree, readBit } from '../../core/src/verified/index.ts';
+
+test('The tree: 16 files of 65,536 bits, addressed by one 20-bit index', () => {
+  assert.equal(FILES, 16);
+  assert.equal(BYTES_PER_FILE, 8192);
+  assert.equal(TREE_BITS, 2 ** 20);
+  for (const index of [0, 1, 7, 8, 65535, 65536, 0x3c3c3, TREE_BITS - 1]) {
+    const { file, byte, bit } = split(index);
+    assert.equal(address(file, byte, bit), index);
+  }
+  assert.deepEqual(split(65536), { file: 1, byte: 0, bit: 0 });
+  assert.throws(() => split(TREE_BITS), RangeError);
+  assert.throws(() => address(16, 0, 0), RangeError);
+});
+
+test('The tree is seeded by fill and read by index', () => {
+  const tree = makeTree((file) => (file === 0 ? 0x3c : 0xff));
+  assert.equal(tree.length, 16);
+  assert.ok(tree.every((f) => f.length === 8192));
+  // 0x3C = 00111100: bits 2 to 5 set
+  assert.deepEqual([0, 1, 2, 3, 4, 5, 6, 7].map((bit) => readBit(tree, address(0, 100, bit))), [0, 0, 1, 1, 1, 1, 0, 0]);
+  assert.equal(readBit(tree, address(15, 8191, 7)), 1);
+  assert.equal(readBit(makeTree(), 12345), 0);
+});

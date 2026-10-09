@@ -3,7 +3,7 @@
 //   delta16(x, c) = rotl(x, 1) ⊕ rotl(x, 3) ⊕ rotr(x, 2) ⊕ c   on 16-bit words
 //
 // Exact period 8, proved in Coq:
-//   omi-files/omi-axioms/coq/04-execution/Delta16HasExactPeriodEight.v
+//   proofs/coq/04-execution/Delta16HasExactPeriodEight.v
 // Superseded by the swap delta (swap.ts), kept because the proof and the
 // Haskell reference (omi-files/omi-canvas/src/OMI/Delta.hs) use it.
 

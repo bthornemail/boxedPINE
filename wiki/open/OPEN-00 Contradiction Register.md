@@ -125,7 +125,7 @@ The code these entries point at moved. The old `rosetta/src/constants.ts` lives 
 
 Precision on "period 8": over all 65,536 16-bit states every orbit length divides 8. With carry `c = 0` there are orbits of 1, 2 and 4, so 8 is the period of the map, not of every state. This was recomputed for this register and agrees with rev1 §5.2.
 
-Formal proof: `omi-files/omi-axioms/coq/04-execution/Delta16HasExactPeriodEight.v` proves `delta⁸ = id` *and* that no shorter period holds, for carries `0x001D` and `0x1337`. It has no `Admitted` and compiled cleanly on 2026-10-07.
+Formal proof: `proofs/coq/04-execution/Delta16HasExactPeriodEight.v` proves `delta⁸ = id` *and* that no shorter period holds, for carries `0x001D` and `0x1337`. It has no `Admitted` and compiled cleanly on 2026-10-07.
 **Evidence:** rev1 §14.2 (Period Hierarchy); rev1 §5.2; "The 60-in-64 Clock" (`7-part × 720 + 3-part × 240 + position`).
 **Status:** Resolved.
 

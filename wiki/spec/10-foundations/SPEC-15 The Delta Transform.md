@@ -69,7 +69,7 @@ delta16(x, c) = rotl16(x, 1) ^ rotl16(x, 3) ^ rotr16(x, 2) ^ c
 
 ## The Period
 
-The delta function has exact period 8. This is proven in the Coq development referenced in the transcripts (`omi-files/omi-axioms/coq/04-execution/Delta16HasExactPeriodEight.v`).
+The delta function has exact period 8. This is proven in the Coq development referenced in the transcripts (`proofs/coq/04-execution/Delta16HasExactPeriodEight.v`).
 
 **Carry-forward fold (2026-10-09):** when the carry is the previous state (`x_{n+1} = delta(x_n, x_{n−1})`), the period is 24 = 4! for the bit rotation and 6 = 3! for the swaps. With a constant carry it is 8 and 4 ([[SPEC-07 The Fundamental Invariants]] I-10 to I-12).
 

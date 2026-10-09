@@ -14,6 +14,10 @@ Status of the whole project, level by level: [wiki/progress/PROG-00 Homoiconic S
 | `src/verified/delta.ts` | The earlier bit-level delta (period 8, proved in Coq) | ✅ |
 | `src/verified/wordform.ts` | One wordform at many widths: 12, 60, 124, 252; the orbit of 60; the Blob as 128 × 64 bytes | ✅ |
 | `src/verified/triples.ts` | The 7 / 35 / 155 / 651 distinguished triples as XOR triples | ✅ |
+| `src/verified/block.ts` | The closure law `∂(b) = 0000` on the tetrahedron: 8 vertex-closed, 8 face-closed, 4 both | ✅ |
+| `src/verified/circulator.ts` | The circulator: five states, departure exactly once, decision ≠ delta; `xnor` at a fixed width | ✅ |
+| `src/verified/metron.ts` | The mêtron and `bind`; the prime quadruplets, sextuplets and the 210 ladder | ✅ |
+| `src/verified/tree.ts` | The tree: sixteen 65,536-bit files addressed by one 20-bit index (file · byte · bit) | ✅ |
 | `src/broadcast.ts` | The headless proxy presenter: `launchBroadcast(declared: RegExp, defined: string)` returns `proxy()` (one step forward), `reflect()` (one step back) and `extant()`, each a compare-exchange on the iExtant | Author's core example |
 | `src/model.ts` | `Node` (bind / apply / eval / pin) and `Domain` (declarations, expressions, values, variables): the Node is where iExtant meets the user, inside a Domain | Author's core example |
 | `src/animation.frame.ts` | Frequency spectra, like an `OscillatorNode` in the DOM; the sexagesimal XOR loop | Author's core example |
@@ -24,7 +28,7 @@ Status of the whole project, level by level: [wiki/progress/PROG-00 Homoiconic S
 
 ## Use case scenarios
 
-Prior work that informs this folder (see [wiki/usecases/USE-00 Use Case Scenarios.md](../wiki/usecases/USE-00%20Use%20Case%20Scenarios.md)): proving laws (`omi-axioms`), the Haskell reference (`omi`), the fixed-width ISA (`omi-isa`), deterministic replay (`atomic-kernel`), bare metal (`polytron`, `omi-bios`).
+Prior work that informs this folder (see [wiki/usecases/USE-00 Use Case Scenarios.md](../wiki/usecases/USE-00%20Use%20Case%20Scenarios.md)): proving laws (now the root folder `proofs/`), the pure types (now `types/`), the Haskell reference (`omi`), the fixed-width ISA (`omi-isa`), deterministic replay (`atomic-kernel`), bare metal (`polytron`, `omi-bios`).
 
 ## Rules for this folder
 

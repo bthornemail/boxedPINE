@@ -34,11 +34,11 @@ For a builder, each scenario says what the demonstration must make possible and 
 
 | Scenario | Project | Ladder levels | Frame folder it informs | State |
 |----------|---------|---------------|-------------------------|-------|
-| Prove a law | `omi-axioms` | 0–1 | `core/` | checked (period-8 proof compiles) |
+| Prove a law | `proofs/` (repo `omi-axioms`; moved out of `omi-files/` 2026-10-09) | 0–1 | `core/` | checked (period-8 proof compiles) |
 | Run the reference in Haskell | `omi-canvas` (merged from `omi`) | 0–3 | `core/`, `rosetta/` | checked (`cabal test all` passes) |
 | Hear and see the gates | `breadboard` (moved from `omi`) | 0, 5 | `breadboard/` | checked (`npm test`) |
 | Reduce a declaration to a canvas | `omi-canvas` | 2–4 | `rosetta/`, `space/` | checked (`cabal test all`) |
-| Name every type once | `omi-types` (fork of `omi-canvas`) | 0–5 | `core/`, `rosetta/` | checked (`cabal test all`) |
+| Name every type once | `types/` (repo `omi-types`, a fork of `omi-canvas`; moved out of `omi-files/` 2026-10-09) | 0–5 | `core/`, `rosetta/` | checked (`cabal test all`) |
 | Declare in OMI-Lisp | `omi-lisp` | 2–5 | `rosetta/` | not run |
 | Segment before parsing | `omnicron` | 1–3 | `rosetta/` | not run |
 | Execute on a fixed-width ISA | `omi-isa` | 0, 4 | `core/` | not run |
@@ -50,7 +50,7 @@ For a builder, each scenario says what the demonstration must make possible and 
 
 ## The Scenarios
 
-### 1. Prove a law — `omi-axioms`
+### 1. Prove a law — `proofs/`
 
 **Scenario:** someone doubts a claim, for example "the delta returns after 8 steps". They open the proof and have a machine check it.
 **Provides:** categorized Coq proofs (`coq/00-foundations` … `coq/04-execution`) and a proof book (`coq-docs/OMI-DETERMINISTIC-COMPUTATION-PROOF-BOOK.md`). Its README draws the line: it "proves bounded invariants"; it does not render or execute.
@@ -84,7 +84,7 @@ For a builder, each scenario says what the demonstration must make possible and 
 **Feeds:** the bridge between `rosetta/` (the declaration) and `space/` (the projection).
 ⟦Is this pipeline the intended reading order for Level 4, a wordform read as a program?⟧
 
-### 4a. Name every type once — `omi-types`
+### 4a. Name every type once — `types/`
 
 **Scenario:** a builder wants one import that names every protocol type: kernel words, ruler, orbit blocks, positions, BIOS paths, torus cells, the protocol itself.
 **Provides:** a fork of `omi-canvas` (2026-10-07, commit `13d90bb`) that keeps the whole canvas engine and adds the types of *The OMI Protocol in Pure Haskell - Corrected*. They are rewritten to canvas's rules and the index rule: no `Int`, `String` or `Maybe`. A block is read from bit patterns, a torus distance is one of three steps, and a quadratic form is three declared coefficients.

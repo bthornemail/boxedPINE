@@ -17,7 +17,7 @@
 // the modification, present only on modify-and-forward.
 //
 // Every state is returned as a value (nothing escapes), like OMI.Try in
-// omi-files/omi-types. Relations here are indices, and a delta is applied
+// types. Relations here are indices, and a delta is applied
 // by XOR.
 // Verified 2026-10-09 by the tests in src/testbed/core.test.ts.
 

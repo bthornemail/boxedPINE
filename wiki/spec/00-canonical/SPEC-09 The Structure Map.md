@@ -36,8 +36,8 @@ The author's delineation of the folders ([[META-04 Repository Frame]]) gives fou
 
 | Kind | Folders | What it does for a structure |
 |------|---------|------------------------------|
-| **Law** | `core/` (operations), `rosetta/` (declarations and definitions) | gives it one home in code |
-| **Check** | `src/` (`src/testbed/`, run by `npm test`) | states it as a test that passes |
+| **Law** | `core/` (operations), `rosetta/` (declarations and definitions), `types/` (pure types, the tree proxy) | gives it one home in code |
+| **Check** | `src/` (`src/testbed/`, run by `npm test`); `proofs/` (formal: Coq, Lean) | states it as a test that passes, or a proof that compiles |
 | **Realization** | `breadboard/` (circuit), `space/` (projection), `repl/` (observer), `omi-files/` (other substrates) | shows it on a substrate |
 | **Reading** | `wiki/` | states it in words, with a mark |
 
@@ -47,8 +47,8 @@ The split between `core/` and `rosetta/` is the protocol's own split: operations
 
 **DEFINITION.** A structure is **canonical over the medium** when it has all three:
 1. a **statement** in this vault, marked THEOREM or DEFINITION in SPEC-07;
-2. **one home** in a law place, `core/` or `rosetta/`;
-3. a **check** in `src/testbed/` that passes.
+2. **one home** in a law place, `core/` or `rosetta/` (`types/` gives it a type, not a second home);
+3. a **check**: a test in `src/testbed/` that passes, or a proof in `proofs/` that compiles.
 
 A realization never defines a structure; it demonstrates one. A structure can be realized in many places, but it has exactly one home. Where a realization and the home disagree, the home is right and the realization is the bug.
 
@@ -70,16 +70,16 @@ The states a structure can be in:
 |-----------|---------|------|-------|--------------|-------|
 | Buffer and index | I-1 | `core` exchange.ts (`makeSlots`) | core.test | `space` atomics.ts (a shared buffer of 5040); `omi-files/atomic-kernel` | **canonical** |
 | The exchange | I-2 | `core` exchange.ts | core.test | `repl` broadcast.ts; `space` atomics.ts | **canonical** |
-| The three swaps | I-3 | `core` swap.ts | core.test (also against Node's `Buffer`) | `omi-types` | **canonical** |
+| The three swaps | I-3 | `core` swap.ts | core.test (also against Node's `Buffer`) | `types` | **canonical** |
 | The base36 alphabet | I-4 | `core` wordform.ts (`separation`); `rosetta` grammar.ts | core.test, rosetta.test | — | **canonical** |
-| try / catch / finally | I-27 | `core` circulator.ts | core.test | `omi-types` Try.hs | **canonical** |
+| try / catch / finally | I-27 | `core` circulator.ts | core.test | `types` Try.hs | **canonical** |
 
 ### Difference and Sameness
 
 | Structure | SPEC-07 | Home | Check | Realizations | State |
 |-----------|---------|------|-------|--------------|-------|
 | XOR and XNOR at a fixed width | I-5, I-6 | `core` circulator.ts (`xnor`) | rosetta.test | `breadboard` (all four builds compute XOR; XNOR as its complement) | **canonical** |
-| The observer cancels in pairs | I-7 | — | — (Coq) | `omi-axioms` | **checked** in Coq; no home |
+| The observer cancels in pairs | I-7 | — | — (Coq) | `proofs` | **checked** in Coq; no home |
 | Exit: invisible to difference, maximal to sameness | I-8 | `core` circulator.ts | core.test | — | **canonical** |
 
 ### Closure and Period
@@ -87,7 +87,7 @@ The states a structure can be in:
 | Structure | SPEC-07 | Home | Check | Realizations | State |
 |-----------|---------|------|-------|--------------|-------|
 | The closure law `∂(b) = 0000` | I-9 | `core` block.ts | core.test | — | **canonical** |
-| The delta, constant carry: periods 8 and 4 | I-10 | `core` delta.ts, swap.ts | core.test | `omi-axioms` (Coq period-8 proof) | **canonical** |
+| The delta, constant carry: periods 8 and 4 | I-10 | `core` delta.ts, swap.ts | core.test | `proofs` (Coq period-8 proof) | **canonical** |
 | The carry-forward fold: periods 24 and 6 | I-11 | `core` delta.ts, swap.ts | core.test | — | **canonical** |
 | The nested periods 8, 240, 5040 | I-13 | — | core.test | `space` atomics.ts (5040) | **checked** |
 
@@ -95,7 +95,7 @@ The states a structure can be in:
 
 | Structure | SPEC-07 | Home | Check | Realizations | State |
 |-----------|---------|------|-------|--------------|-------|
-| The two poles `60 ⊕ 64`, `60 ⊕ 128` | I-14 | `core` wordform.ts (`POLES`) | core.test | `omi-types` Orbit.hs | **canonical** |
+| The two poles `60 ⊕ 64`, `60 ⊕ 128` | I-14 | `core` wordform.ts (`POLES`) | core.test | `types` Orbit.hs | **canonical** |
 | The carry-free fold points | I-15 | — | core.test | — | **checked** |
 | One wordform at four widths: 12, 60, 124, 252 | I-29 | `core` wordform.ts | core.test | — | **canonical** |
 | The flip-flop: every 64-block is block 0 shifted | I-39 | `core` wordform.ts (`orbit60`) | core.test (orbit block) | — | **canonical** (the shift); the names XOR / XNOR space are **stated** |
@@ -107,10 +107,10 @@ The states a structure can be in:
 
 | Structure | SPEC-07 | Home | Check | Realizations | State |
 |-----------|---------|------|-------|--------------|-------|
-| The distinguished triples 7, 35, 155, 651 | I-28 | `core` triples.ts | core.test | `omi-axioms` (Fano incidence) | **canonical** |
-| The ruler `2! + 3! = 8` | I-32 | — | core.test | `omi-types` Ruler.hs | **checked** |
+| The distinguished triples 7, 35, 155, 651 | I-28 | `core` triples.ts | core.test | `proofs` (Fano incidence) | **canonical** |
+| The ruler `2! + 3! = 8` | I-32 | — | core.test | `types` Ruler.hs | **checked** |
 | The generator `{0,2,1}{3,7,11,15}{17,19}` | I-33 | — | core.test | — | **checked** |
-| The quadratic form, Δ = −704 and 0 | I-34 | — | core.test | `omi-types` BQF.hs | **checked** |
+| The quadratic form, Δ = −704 and 0 | I-34 | — | core.test | `types` BQF.hs | **checked** |
 | Point–line 16 / 64 / 4 | I-36 | — | — | — | **stated** |
 | The `{2,n}:{n,2}` controller space | I-37 | — | — | — | **stated** |
 | The 15 treemap algorithms and the Hamming/Polybius row | I-40 | — | — | — | **stated**: no treemap code exists anywhere in the repository yet |
@@ -132,7 +132,7 @@ The states a structure can be in:
 
 | Structure | SPEC-07 | Home | Check | Realizations | State |
 |-----------|---------|------|-------|--------------|-------|
-| The circulator's five states | I-19 | `core` circulator.ts | core.test | `omi-types` Try.hs (two of the five) | **canonical** |
+| The circulator's five states | I-19 | `core` circulator.ts | core.test | `types` Try.hs (two of the five) | **canonical** |
 | Conservation of departure | I-20 | `core` circulator.ts | core.test | — | **canonical** |
 | Decision ≠ delta | I-21 | `core` circulator.ts | core.test | — | **canonical** |
 | The Axiom of Propagation | I-22 | — | — | — | **stated** (a thesis; it has no code form) |
@@ -154,12 +154,27 @@ The states a structure can be in:
 | Structure | Reading | Home | Check | Realizations | State |
 |-----------|---------|------|-------|--------------|-------|
 | The four XOR builds 5T, 6T, 8T, 10T | [[SPEC-44 The Virtual Breadboard]] | — | `breadboard` test.mjs (passes; not part of `npm test`) | `breadboard` | **realized**, with its own check |
+| The tree: 16 Blobs, one 20-bit index | (this note) | `core` tree.ts | core.test | `types/` (proxy) | **canonical** |
 | The 65,536 Blob | [[SPEC-22 The Blob]] | `core` wordform.ts (`BUFFERS_PER_BLOB`) | core.test | `space` | **canonical** (the count) |
 | The 360 × 65536 tetrahedron view | `space/README.md` | — | — | `space` (eight views planned) | **stated** |
 
+## The Tree: Sixteen Blobs
+
+**DEFINITION** (author, 2026-10-09: "16 65536 bit files … an indexing of index indices"; the bit layout is my reading, to be confirmed). The tree classification model is **sixteen files of 65,536 bits** (8,192 bytes each), one Blob per file, 2²⁰ bits in all. An address is three indices in one:
+
+| Index | Bits | Range | Picks |
+|-------|------|-------|-------|
+| file | 4 | 0–15 | one of the sixteen trees: upper-half index 16 + file (I-16) |
+| byte | 13 | 0–8191 | a byte in the file |
+| bit | 3 | 0–7 | a bit in the byte (bit 0 is the lowest; a DECISION) |
+
+`address(file, byte, bit) = file · 2¹⁶ + byte · 8 + bit`, and `split` inverts it. The model only indexes; the author seeds the bytes (for example with `fill`). It is in `core/src/verified/tree.ts`, checked in core.test, and so is **canonical** as an index. `types/` is its type-side proxy.
+
+⟦Which tree algorithm each file holds, and whether file 15 (or another) is the Hamming/Polybius row, is still open: I-16, I-17 and I-40.⟧
+
 ## The Count
 
-Of the 48 rows (2026-10-09): **25 canonical**, **7 checked**, **11 stated**, **1 realized only** (Proxy and Reflect), **1 realized with its own check** (the breadboard), **3 fail**.
+Of the 49 rows (2026-10-09): **26 canonical**, **7 checked**, **11 stated**, **1 realized only** (Proxy and Reflect), **1 realized with its own check** (the breadboard), **3 fail**.
 
 ## What Canonicalizes Next
 
@@ -168,5 +183,5 @@ Of the 48 rows (2026-10-09): **25 canonical**, **7 checked**, **11 stated**, **1
 2. **Check Proxy and Reflect.** `Proxy ⊕ Reflect = throw` was checked by hand (OPEN-01 #19); it needs a home in `core/` and a test.
 3. **Bring the breadboard's check into `npm test`,** so one command checks everything.
 4. **The catalog heads 2–7** wait on the meaning of form 7 (I-41).
-5. **The 15 treemap algorithms** are the largest stated structure with no code. The author places them in `rosetta/` as its tree-algorithm test framework. They wait on which index holds which algorithm.
+5. **The 15 treemap algorithms** are the largest stated structure with no code. The author places them in `rosetta/` as its tree-algorithm test framework. Their container now exists (the tree's sixteen files); they wait on which file holds which algorithm.
 6. **The stated rows that are definitions by nature** (the axiom, the four states of a reading, the analogies) stay stated. They are the reading, not the law.

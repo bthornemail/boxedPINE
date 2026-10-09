@@ -173,7 +173,7 @@ It is in the grammar as `PINEBOXED` (`rosetta/src/grammar/grammar.ts`), with tes
 ## Facts That Support the Concept (verified)
 
 - **`e ⊕ E = 0x20`.** The exponent and the exception differ by exactly the case bit. That is the same bit that separates every uppercase letter from its lowercase one, and SRC-01a calls `0x20` (space) the pinch point. So the index/datum case separation is one bit.
-- **16 booleans is one `Word16`.** In `omi-files/omi-types` a `Word16` is exactly 16 `Bit`s, the natural type for the exception buffer. The older `interface iExtant` sketch used `Buffer.allocUnsafe(16)`, which is 16 *bytes* (128 booleans). ⟦Which is meant?⟧
+- **16 booleans is one `Word16`.** In `types` a `Word16` is exactly 16 `Bit`s, the natural type for the exception buffer. The older `interface iExtant` sketch used `Buffer.allocUnsafe(16)`, which is 16 *bytes* (128 booleans). ⟦Which is meant?⟧
 - **No letter-code balance.** XORing the ASCII codes of `PIN`/`PINE` against `box`/`boxd`/`boxed` gives no equal pairs. The balance has to come from the values the literals carry, not their letters.
 - **Where the comparison happens.** The XNOR of two signals is read at the 5T node (BOOT0) of the breadboard ([[OPEN-00 Contradiction Register]] #1, [[SPEC-44 The Virtual Breadboard]]). XNOR is 1 when the signals are equal.
 
