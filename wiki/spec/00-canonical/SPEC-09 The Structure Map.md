@@ -158,7 +158,8 @@ The states a structure can be in:
 | The four XOR builds 5T, 6T, 8T, 10T | [[SPEC-44 The Virtual Breadboard]] | — | `breadboard` test.mjs (passes; not part of `npm test`) | `breadboard` | **realized**, with its own check |
 | The tree: 16 Blobs, one 20-bit index | I-48 | `core` tree.ts | core.test | `types/` (proxy) | **canonical** |
 | The Prompt Tree: four levels, the swaps, the 16-bit path | I-49 to I-51; [[SPEC-27 The Prompt Tree Index]] | `core` tree.ts; `rosetta` grammar.ts (`PROMPT_PATH`) | core.test, rosetta.test; the readings file | — | **canonical** |
-| The BOM at file 0 | I-52 | `core` tree.ts (`BOM_FILE`) | core.test | — | **canonical** as a decision; prefix or suffix still open |
+| The BOM in both directions (file 0 prefix, file 15 suffix) | I-52, I-54 | `core` tree.ts (`BOM_FILE`, `BOM_SUFFIX_FILE`, `reverse`) | core.test | — | **canonical** |
+| "Prefix/suffix and ASCII/enumeration are one choice" | I-55 | — | core.test | — | **fails** |
 | The 65,536 Blob | [[SPEC-22 The Blob]] | `core` wordform.ts (`BUFFERS_PER_BLOB`) | core.test | `space` | **canonical** (the count) |
 | The 360 × 65536 tetrahedron view | `space/README.md` | — | — | `space` (eight views planned) | **stated** |
 
@@ -178,7 +179,7 @@ File 0 is the **BOM**, which holds the **Prompt Tree**; files 1–15 hold the fi
 
 ## The Count
 
-Of the 52 rows (2026-10-09): **29 canonical**, **7 checked**, **11 stated**, **1 realized only** (Proxy and Reflect), **1 realized with its own check** (the breadboard), **3 fail**.
+Of the 53 rows (2026-10-09): **29 canonical**, **7 checked**, **11 stated**, **1 realized only** (Proxy and Reflect), **1 realized with its own check** (the breadboard), **4 fail**.
 
 ## What Canonicalizes Next
 

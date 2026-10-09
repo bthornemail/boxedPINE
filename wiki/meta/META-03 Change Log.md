@@ -232,6 +232,7 @@ tags: [omi-imo, meta, changelog, history]
 - Added [[SPEC-26 The Prompt Tree]]: the BOM at file 0 holds the Prompt Tree (exponent → exception → declaration → definition → the leaf Blob); its levels are the three swaps, and its 16-bit path indexes the leaf exactly. The fifteen treemaps are catalogued in `rosetta/src/grammar/treemaps.ts`. SPEC-07 I-48 to I-53; [[OPEN-01 Open Questions]] #21; 58 tests passing
 - Added SPEC-27 as "The Prompt Tree Algorithm", a formal statement for implementers in any language, with JSON vectors (`src/testbed/vectors/prompt-tree.json`). Recorded that the level shape is the complete binary tree on 16 leaves (standard), and that "a path is four independent positions" is a decision with a stated alternative; 59 tests passing
 - Recast SPEC-27 as [[SPEC-27 The Prompt Tree Index]] on the author's correction ("we are not defining anything … we are deriving the patterns and indexing them so they can be used repeatably and propagated forward through regex declarations"): derived pattern, chosen labels, index register, and the `PROMPT_PATH` regex declaration that carries it forward; no MUST language. 60 tests passing
+- Registered the tree's two directions: the flip is `j ⊕ 15`, the 4-bit XNOR with 0, the fourth of the swap family and the only one acting at the root; the BOM is file 0 as a prefix and file 15 as a suffix ([[SPEC-27 The Prompt Tree Index]] §5, I-54, OPEN-01 #21). Checked and rejected that the direction and the ASCII cascade are one choice (I-55). 62 tests passing
 
 ## Pending
 

@@ -276,8 +276,10 @@ The author renamed the upper half's zero index (the "Hamming" or "Polybius" row)
 
 **Decision:** the BOM is **file 0** (index 16), the prefix: a byte order mark comes first, and the author calls it "the 0 index". The suffix reading would make it file 15 (index 31). `BOM_FILE` in `core/src/verified/tree.ts` is the one place to change.
 
+**Update (2026-10-09): prefix or suffix is resolved as both.** The two are one file read from either end: the direction flip is `j ⊕ 15` (I-54), so file 0 in the prefix reading is file 15 in the suffix reading. Both are registered (`BOM_FILE`, `BOM_SUFFIX_FILE`); the direction is the reader's choice. The ASCII cascade is **not** the same choice (I-55) and stays open.
+
 **Tension with #14:** #14 confirmed **17** as the Hamming-distance index. With the BOM at 16, either 17 still names the Hamming distance *inside* the BOM's reading, or the BOM takes that role and #14 is superseded. Not decided.
 
-**Also open** (listed in SPEC-26): the ASCII cascade rule, the "polynomial shape" of the terms, PATRICIA compression, and computing the fifteen layouts.
+**Still open** (listed in SPEC-26): the ASCII cascade rule, the "polynomial shape" of the terms, PATRICIA compression, and computing the fifteen layouts.
 
 **Status:** Open.

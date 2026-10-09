@@ -351,3 +351,33 @@ test('The Prompt Tree reads the same at every recorded position', () => {
   }
   for (const e of v.errors) assert.throws(() => (treeOps as any)[e.op](...e.args), RangeError);
 });
+
+// ---- The direction (SPEC-27 §5) ----
+import { reverse, BOM_SUFFIX_FILE } from '../../core/src/verified/index.ts';
+import { asciiCascade } from '../../rosetta/src/grammar/treemaps.ts';
+
+test('The direction: reversing the 16 positions is j ⊕ 15, the 4-bit XNOR with 0, acting only at the root', () => {
+  const all = [...Array(16).keys()];
+  assert.deepEqual(all.map(reverse), all.map((j) => 15 - j));
+  assert.deepEqual(all.map(reverse), all.map((j) => xnor(j, 0, 4)));
+  for (const j of all) for (const k of all) assert.equal(j < k, reverse(j) > reverse(k));
+  assert.ok(all.every((j) => reverse(reverse(j)) === j));
+  assert.ok(all.every((j) => levelReading(1, j).node !== levelReading(1, reverse(j)).node)); // leaves its octet
+  assert.equal(BOM_SUFFIX_FILE, 15);
+  // the family j ⊕ (2^m − 1): within pairs, quads, octets, then the whole 16
+  assert.deepEqual([1, 2, 3, 4].map((m) => (1 << m) - 1), [1, 3, 7, 15]);
+});
+
+test('The ASCII order of the fifteen is not the enumeration reversed: they are two choices, not one', () => {
+  const ascii = asciiCascade().map((t) => t.file);
+  assert.notDeepEqual(ascii, [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+  const rank = (f: number) => ascii.indexOf(f) + 1;
+  const seen = new Set<number>();
+  const lengths: number[] = [];
+  for (let f = 1; f <= 15; f++) {
+    let n = 0;
+    for (let x = f; !seen.has(x); x = rank(x)) { seen.add(x); n++; }
+    if (n) lengths.push(n);
+  }
+  assert.deepEqual(lengths.sort((a, b) => a - b), [5, 10]); // two cycles, not a reversal
+});

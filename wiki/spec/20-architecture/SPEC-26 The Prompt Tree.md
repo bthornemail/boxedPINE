@@ -101,7 +101,7 @@ The classes count (THEOREM, tested) **1 : 9 : 5** by order, **1 : 1 : 10 : 3** b
 
 ## What Is Open
 
-- ⟦**Prefix or suffix:** is the BOM file 0 or file 15? (The author does not yet know; file 0 is the decision for now.)⟧
+- **Prefix or suffix:** resolved as both: file 0 read as a prefix is file 15 read as a suffix, by the direction flip j ⊕ 15 ([[SPEC-27 The Prompt Tree Index]] §5).
 - ⟦**I-17:** "17 is the Hamming-distance index" was confirmed earlier. With the Hamming index renamed the BOM, and the BOM at file 0 (index 16), does 17 still name the Hamming distance, or does the BOM take that role? See [[OPEN-01 Open Questions]] #21.⟧
 - ⟦**The ASCII cascade rule:** which categorical rule beyond plain ASCII order assesses the fifteen? For example, the ASCII class of each name's letters, or of its index written in base36.⟧
 - ⟦**The polynomial shape:** the author orders the fifteen "based on the polynomial shape of the terms in relation to the zero index". What makes a term's shape: its order class, or a degree?⟧

@@ -144,6 +144,9 @@ Added 2026-10-09 from the author's description of the tree classification model 
 | I-52 | **The BOM is file 0, the prefix,** and holds the Prompt Tree; its leaf bit is a mask: 1 admits a (exponent, exception, declaration, definition) path | DECISION (prefix) + DEFINITION (mask) | ⟦the author does not yet know prefix or suffix⟧ |
 | I-53 | **The fifteen treemaps' classes:** 1 : 9 : 5 by order, 1 : 1 : 10 : 3 by aspect ratio, 4 : 9 : 2 by stability. Their ASCII order differs from their enumeration, so it is a second reading | THEOREM (from the table as pasted) | `rosetta.test.ts` |
 
+| I-54 | **The direction:** reading the 16 positions the other way is `j ⊕ 15 = 15 − j = XNOR(j, 0)` at 4 bits. It reverses the order, undoes itself, and acts only at the root, as the fourth of the family j ⊕ 1, ⊕ 3, ⊕ 7, ⊕ 15. The BOM is file 0 read as a prefix and file 15 read as a suffix: one file, two directions | THEOREM (the flip) + DEFINITION (the reader chooses the direction, I-22) | `core.test.ts`; [[SPEC-27 The Prompt Tree Index]] §5 |
+| I-55 | "Prefix or suffix and ASCII order or enumeration are the same choice, the direction" | **FAILS** | the ASCII order is not the enumeration reversed; the permutation between them has cycles of 10 and 5. They are two independent choices |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧

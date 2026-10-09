@@ -4,8 +4,8 @@
 // Sixteen files, each one Blob of 65,536 bits (8,192 bytes). An address is
 // three indices in one: file (4 bits) · byte (13 bits) · bit (3 bits) = 20 bits.
 // Structure confirmed by the author 2026-10-09 ("yes thats correct structrue").
-// File i stands for upper-half index 16 + i (SPEC-07 I-16). File 0 is the BOM,
-// which holds the Prompt Tree; files 1–15 hold the 15 treemap algorithms
+// File i stands for upper-half index 16 + i (SPEC-07 I-16). The BOM, which
+// holds the Prompt Tree, is file 0 read as a prefix and file 15 read as a suffix; files 1–15 hold the 15 treemap algorithms
 // (rosetta/src/grammar/treemaps.ts).
 //
 // The model only indexes. The author seeds the bytes, e.g. with fill().
@@ -53,8 +53,23 @@ export function readBit(tree: Uint8Array[], index: number): number {
 // index into the 65,536-bit leaf. DECISION: the exponent is the high nibble
 // and the definition the low one, so the path order is the reading order.
 
-/** DECISION: the BOM is the prefix, file 0. The suffix reading would make it file 15. */
+// THE DIRECTION (wiki: SPEC-27 §5)
+//
+// Reading the 16 positions the other way is position ⊕ 15 = 15 − position,
+// which is the 4-bit XNOR of the position with 0. It is the fourth of the
+// family j ⊕ 1, j ⊕ 3, j ⊕ 7, j ⊕ 15, and the only one that acts at the root.
+// The tree is the same in both directions; which one a reader uses is the
+// reader's choice (the Axiom of Propagation locates it, SPEC-05).
+
+/** The other direction of a position: 0 ↔ 15, 1 ↔ 14, … */
+export function reverse(position: number): number {
+  if (!(position >= 0 && position < 16)) throw new RangeError(`no position ${position}`);
+  return position ^ 15;
+}
+
+/** The BOM in the prefix reading (file 0) and the suffix reading (file 15). */
 export const BOM_FILE = 0;
+export const BOM_SUFFIX_FILE = reverse(BOM_FILE);
 
 export const LEVELS = [
   { role: 'exponent', type: 'number', nodes: 1, branching: 16 },
