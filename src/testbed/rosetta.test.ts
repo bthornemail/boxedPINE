@@ -172,3 +172,20 @@ test('The ASCII cascade reorders the treemaps: it is a second reading, not the e
   assert.deepEqual(files, [13, 1, 14, 9, 15, 12, 10, 4, 6, 5, 2, 8, 7, 11, 3]);
   assert.deepEqual([...files].sort((a, b) => a - b), TREEMAPS.map((t) => t.file));
 });
+
+// ---- The Prompt Tree index, carried by a regex declaration (SPEC-27) ----
+import { split as splitAddress, promptLevels as levelsOf } from '../../core/src/verified/tree.ts';
+
+test('PROMPT_PATH declares the Prompt Tree index: its five named groups are the file and the four labels', () => {
+  const rule = RULES.find((r) => r.name === 'PROMPT_PATH')!;
+  const m = rule.pattern.exec('0x03C00')!.groups!;
+  assert.deepEqual({ ...m }, { file: '0', exponent: '3', exception: 'C', declaration: '0', definition: '0' });
+  for (const address of [0, 1, 0x03c00, 0x1abcd, 0xfffff]) {
+    const word = '0x' + address.toString(16).toUpperCase().padStart(5, '0');
+    const g = rule.pattern.exec(word)!.groups!;
+    const { file, byte, bit } = splitAddress(address);
+    assert.equal(parseInt(g.file!, 16), file);
+    assert.deepEqual([g.exponent, g.exception, g.declaration, g.definition].map((h) => parseInt(h!, 16)), levelsOf((byte << 3) | bit));
+  }
+  for (const word of ['0x3C00', '0x03c00', '0x003C00', '03C00']) assert.equal(rule.pattern.test(word), false);
+});

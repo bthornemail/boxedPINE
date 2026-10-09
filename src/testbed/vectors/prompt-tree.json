@@ -1,7 +1,8 @@
 {
- "name": "Prompt Tree conformance vectors",
+ "name": "Prompt Tree readings",
+ "about": "Readings of the derived pattern at chosen positions: evidence that it reads the same each time, not requirements.",
  "version": "0.1.0",
- "spec": "wiki SPEC-27",
+ "spec": "wiki SPEC-27 The Prompt Tree Index",
  "constants": {
   "FILES": 16,
   "BITS_PER_FILE": 65536,

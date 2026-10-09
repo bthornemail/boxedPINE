@@ -7,7 +7,7 @@ status: review
 spec: OMI-IMO-2026
 up: "[[SPEC-09 The Structure Map]]"
 down:
-  - "[[SPEC-27 The Prompt Tree Algorithm]]"
+  - "[[SPEC-27 The Prompt Tree Index]]"
 related:
   - "[[SPEC-04 First Principles]]"
   - "[[SPEC-07 The Fundamental Invariants]]"
@@ -30,7 +30,7 @@ tags: [omi-imo, architecture, prompt-tree, patricia-trie, bom, treemap, blob]
 
 # The Prompt Tree
 
-> The formal statement for implementers, with conformance vectors, is [[SPEC-27 The Prompt Tree Algorithm]].
+> The pattern derived, its positions labelled and indexed, and the regex declaration that carries it forward: [[SPEC-27 The Prompt Tree Index]].
 
 The author, in conversation on 2026-10-09: the tree classification model is sixteen 65,536-bit files ([[SPEC-09 The Structure Map]], "The Tree"). Its zero index is the **BOM**, renamed from "the Hamming index" because it is not yet known whether it is the prefix or the suffix of the wordform. The BOM holds the protocol logic that orders the other fifteen: the **Prompt Tree**.
 
@@ -55,7 +55,7 @@ The four roles are the four parts of the read ([[SPEC-08 The Derivation Path]] P
 1. **Every level is the same 16 positions:** 1 × 16 = 2 × 8 = 4 × 4 = 8 × 2 = 16. A level reads a position (a nibble) as *node* (its high bits) and *child* (its low bits): the root reads all 4 bits as the child, the exception level 1 + 3, the declaration level 2 + 2, the definition level 3 + 1.
 2. **The nodes are 1 + 2 + 4 + 8 = 15, and with the leaf, 16.**
 3. **The levels are the three swaps.** `swap16` (j ⊕ 1) never leaves a definition pair, `swap32` (j ⊕ 3) never leaves a declaration quad, and `swap64` (j ⊕ 7) never leaves an exception octet. So the exception level's two nodes are the lower 8 and higher 8 indices: the two poles of 60 ([[SPEC-07 The Fundamental Invariants]] I-14). This matches [[SPEC-66 BOM Swap Table]]: "the swap is the byte order mark — the mark that says which reading of the 16 is active". The BOM's levels *are* the swap readings.
-4. **If a path is one position per level, it is 16 bits, exactly an index into the leaf:** 16⁴ = 65,536 paths, the leaf's width, so there is **one leaf Blob, not 1,024**. (16 × 8 × 4 × 2 = 1,024 would count a classic trie in which every child is a whole node; the node counts 1, 2, 4, 8 rule that out.) The "if" is decision D1 of [[SPEC-27 The Prompt Tree Algorithm]]: the levels are also depths 0–3 of the complete binary tree on 16 leaves, so one nibble descending through all four levels is a second reading that the author's shape also fits.
+4. **If a path is one position per level, it is 16 bits, exactly an index into the leaf:** 16⁴ = 65,536 paths, the leaf's width, so there is **one leaf Blob, not 1,024**. (16 × 8 × 4 × 2 = 1,024 would count a classic trie in which every child is a whole node; the node counts 1, 2, 4, 8 rule that out.) The "if" is discussed in [[SPEC-27 The Prompt Tree Index]] §3: the levels are also depths 0–3 of the complete binary tree on 16 leaves, so one nibble descending through all four levels is a second reading that the author's shape also fits.
 
 ## What Was Decided (DECISION, reversible)
 
