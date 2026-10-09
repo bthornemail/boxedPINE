@@ -156,3 +156,19 @@ test('The four face cells CENTER, LEFT, RIGHT, EXCEPTION partition every printab
   assert.equal(none, 0);
   assert.deepEqual(['+.5', '5.-', '-.+'].map(cell), [['CENTER'], ['CENTER'], ['CENTER']]);
 });
+
+// ---- The fifteen treemap algorithms (SPEC-26) ----
+import { TREEMAPS, partition, asciiCascade } from '../../rosetta/src/grammar/treemaps.ts';
+
+test('Fifteen treemap algorithms fill files 1 to 15; their classes are 1:9:5, 1:1:10:3 and 4:9:2', () => {
+  assert.deepEqual(TREEMAPS.map((t) => t.file), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+  assert.deepEqual(partition('order'), { 'partially ordered': 1, ordered: 9, unordered: 5 });
+  assert.deepEqual(partition('aspect'), { high: 1, 'very high': 1, medium: 10, low: 3 });
+  assert.deepEqual(partition('stability'), { stable: 4, medium: 9, low: 2 });
+});
+
+test('The ASCII cascade reorders the treemaps: it is a second reading, not the enumeration', () => {
+  const files = asciiCascade().map((t) => t.file);
+  assert.deepEqual(files, [13, 1, 14, 9, 15, 12, 10, 4, 6, 5, 2, 8, 7, 11, 3]);
+  assert.deepEqual([...files].sort((a, b) => a - b), TREEMAPS.map((t) => t.file));
+});

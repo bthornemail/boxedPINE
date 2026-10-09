@@ -115,7 +115,7 @@ Added 2026-10-09 after a coverage review of this list. I-1 to I-27 keep their nu
 | I-37 | **The `{2,n}:{n,2}` generator** is the controller space, read through the dual Schläfli pairs `{3,4}:{4,3}` (octahedron/cube), `{3,5}:{5,3}` (icosahedron/dodecahedron), `{3,3,4}:{4,3,3}` (16-cell/tesseract) | DEFINITION (controller space) + THEOREM (each pair is a dual pair) | SRC-10 lines 14078–14160 |
 | I-38 | "`{2,3}`: the tetrahedron / triangle" and "`{2,4}`: the square" (SRC-10 line 14090) | **FAILS** as written | `{2,n}` is the hosohedron (n digons on a sphere), dual to `{n,2}`, the dihedron (two n-gons). The tetrahedron is `{3,3}`, the square `{4}` |
 | I-39 | **The flip-flop:** the orbit of 60 is blocks of 64, alternately named XOR space and XNOR space, up to 65,536. Every block is block 0 shifted: `60 ⊕ (64k + m) = 64k + (60 ⊕ m)` for m < 64 | THEOREM (the shift) + DEFINITION (the names) | I-18; SRC-10 lines 14205–14310 |
-| I-40 | **The 15 treemap algorithms** fill the upper 16 indices, one each, with the 16th as the Hamming/Polybius row | DEFINITION | SRC-10 lines 5322–5500; I-16 |
+| I-40 | **The 15 treemap algorithms** fill the upper 16 indices, one each, with the 16th as the Hamming/Polybius row, now named the **BOM** | DEFINITION | SRC-10 lines 5322–5500; I-16; catalogued in `rosetta/src/grammar/treemaps.ts` as files 1–15 ([[SPEC-26 The Prompt Tree]]) |
 | I-41 | **The seven catalog heads** (SRC-10 lines 6129–6200): `<A?B=C>`, `<?B=C>`, `<A?B>`, `<A=C>`, `<?=C>`, `<A>`, `<A,B,?>`, each slot a set of `{base32, base36, base64}`. Seven = 2³ − 1 | DEFINITION (the seven) + THEOREM (the count) | the rosetta `CATALOG` rule accepts **only** the first form today ([[OPEN-01 Open Questions]] #20) |
 
 ## VIII. Radix, the Mêtron and the Prime Clusters
@@ -130,6 +130,19 @@ From the last stretch of the conversation (SRC-10 lines 15219–16487).
 | I-45 | **Sextuplets lie on the 210 ladder:** past `{7,…,23}`, every prime sextuplet starts at `210n + 97` (found: 97, 16057, 19417) | THEOREM below 20,000; known in general | `core.test.ts` |
 | I-46 | "The ladder is `210·rung + {5, 7, 11, 13, 17, 19}`" (SRC-10 lines 15748–15790) | **FAILS** | rung 1 gives 221 = 13 × 17. `{5,…,19}` hits every residue mod 5, so it can only occur where 5 is in it, once. The regular offsets are `{97, 101, 103, 107, 109, 113}` |
 | I-47 | **Floats, Poisson processes, black-body radiation, pulsars and the prime meridian** are analogies: the frame is arbitrary, the structure is forced, and floating point hides a radix the protocol marks | DEFINITION (pedagogy) | SRC-10 lines 15219–15600 |
+
+## IX. The Tree and the Prompt Tree
+
+Added 2026-10-09 from the author's description of the tree classification model ([[SPEC-26 The Prompt Tree]]).
+
+| # | Invariant | Mark | Evidence |
+|---|-----------|------|----------|
+| I-48 | **The tree is sixteen 65,536-bit files,** addressed by one 20-bit index: file (4 bits) · position in the file (16 bits) | DEFINITION (author: "yes thats correct structrue") | `tree.ts`; `core.test.ts` |
+| I-49 | **The Prompt Tree:** exponent (1 × 16) → exception (2 × 8) → declaration (4 × 4) → definition (8 × 2) → the leaf Blob. Every level is the same 16 positions; the nodes are 1 + 2 + 4 + 8 = 15, and 16 with the leaf | DEFINITION (shape, author) + THEOREM (counts) | `core.test.ts` |
+| I-50 | **The Prompt Tree's levels are the three swaps:** `swap16` (j ⊕ 1) stays in a definition pair, `swap32` (j ⊕ 3) in a declaration quad, `swap64` (j ⊕ 7) in an exception octet | THEOREM | `core.test.ts` |
+| I-51 | **A path is 16 bits, exactly an index into the leaf:** 16⁴ = 2¹⁶ = 65,536, so there is one leaf Blob, not 16 × 8 × 4 × 2 = 1,024 | THEOREM (the count) + DECISION (the nibble order: exponent high) | `core.test.ts` |
+| I-52 | **The BOM is file 0, the prefix,** and holds the Prompt Tree; its leaf bit is a mask: 1 admits a (exponent, exception, declaration, definition) path | DECISION (prefix) + DEFINITION (mask) | ⟦the author does not yet know prefix or suffix⟧ |
+| I-53 | **The fifteen treemaps' classes:** 1 : 9 : 5 by order, 1 : 1 : 10 : 3 by aspect ratio, 4 : 9 : 2 by stability. Their ASCII order differs from their enumeration, so it is a second reading | THEOREM (from the table as pasted) | `rosetta.test.ts` |
 
 ## What Is Still Open
 

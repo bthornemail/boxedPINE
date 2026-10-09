@@ -301,3 +301,33 @@ test('The tree is seeded by fill and read by index', () => {
   assert.equal(readBit(tree, address(15, 8191, 7)), 1);
   assert.equal(readBit(makeTree(), 12345), 0);
 });
+
+// ---- The Prompt Tree (SPEC-26) ----
+import { LEVELS, BOM_FILE, levelReading, promptPath, promptLevels, prompt } from '../../core/src/verified/index.ts';
+
+test('Prompt Tree: every level is the same 16 positions, read as nodes × branching', () => {
+  assert.deepEqual(LEVELS.map((l) => l.role), ['exponent', 'exception', 'declaration', 'definition']);
+  assert.deepEqual(LEVELS.map((l) => l.nodes * l.branching), [16, 16, 16, 16]);
+  assert.equal(LEVELS.reduce((n, l) => n + l.nodes, 0) + 1, 16); // 1 + 2 + 4 + 8 nodes, + the leaf
+  assert.deepEqual(levelReading(1, 12), { node: 1, child: 4 }); // the higher 8
+  assert.deepEqual(levelReading(3, 12), { node: 6, child: 0 });
+});
+
+test('Prompt Tree: the three swaps act inside the nodes of levels 3, 2 and 1', () => {
+  for (const [level, x] of [[3, 1], [2, 3], [1, 7]] as const) {
+    for (let j = 0; j < 16; j++) assert.equal(levelReading(level, j).node, levelReading(level, j ^ x).node);
+  }
+});
+
+test('Prompt Tree: a path is 16 bits, exactly an index into the 65,536-bit leaf', () => {
+  assert.equal(16 ** 4, 65536);
+  assert.equal(16 * 8 * 4 * 2, 1024); // the classic-trie count, which the node counts rule out
+  assert.equal(promptPath(15, 15, 15, 15), 65535);
+  assert.equal(promptPath(3, 12, 0, 0), 0x3c00);
+  for (const path of [0, 1, 60, 0x3c00, 65535]) assert.equal(promptPath(...promptLevels(path)), path);
+  const tree = makeTree((file) => (file === BOM_FILE ? 0x3c : 0));
+  assert.equal(prompt(tree, BOM_FILE, promptPath(0, 0, 0, 2)), 1); // 0x3C has bit 2
+  assert.equal(prompt(tree, BOM_FILE, promptPath(0, 0, 0, 1)), 0);
+  assert.equal(prompt(tree, 1, promptPath(0, 0, 0, 2)), 0);
+  assert.throws(() => promptPath(16, 0, 0, 0), RangeError);
+});

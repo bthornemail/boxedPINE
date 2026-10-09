@@ -229,6 +229,7 @@ tags: [omi-imo, meta, changelog, history]
 - Added [[SPEC-09 The Structure Map]]: every structure mapped to its home, its check and its realizations, with the rule for when a structure is canonical over the medium; 51 tests passing
 - Moved `omi-files/omi-axioms` to the root folder `proofs/` and `omi-files/omi-types` to `types/` (both keep their own repositories and GitHub names); `cabal test all` passes from `types/`
 - Added the tree model, sixteen Blobs addressed by one 20-bit index (`core/src/verified/tree.ts`, [[SPEC-09 The Structure Map]]); 53 tests passing
+- Added [[SPEC-26 The Prompt Tree]]: the BOM at file 0 holds the Prompt Tree (exponent → exception → declaration → definition → the leaf Blob); its levels are the three swaps, and its 16-bit path indexes the leaf exactly. The fifteen treemaps are catalogued in `rosetta/src/grammar/treemaps.ts`. SPEC-07 I-48 to I-53; [[OPEN-01 Open Questions]] #21; 58 tests passing
 
 ## Pending
 

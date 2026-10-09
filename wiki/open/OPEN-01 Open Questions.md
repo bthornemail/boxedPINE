@@ -269,3 +269,15 @@ The ontology conversation ([[SRC-10 The Ontology Conversation]]) reads `{17, 19}
 **Also open:** the rosetta `CATALOG` rule accepts only the first of the seven catalog heads (I-41).
 
 **Status:** Open.
+
+### 21. The BOM: Prefix or Suffix, and the Hamming Index
+
+The author renamed the upper half's zero index (the "Hamming" or "Polybius" row) the **BOM**, because "i dont know if the hamming resolves to the prefix or suffix of the wordform". The BOM holds the **Prompt Tree** ([[SPEC-26 The Prompt Tree]]).
+
+**Decision:** the BOM is **file 0** (index 16), the prefix: a byte order mark comes first, and the author calls it "the 0 index". The suffix reading would make it file 15 (index 31). `BOM_FILE` in `core/src/verified/tree.ts` is the one place to change.
+
+**Tension with #14:** #14 confirmed **17** as the Hamming-distance index. With the BOM at 16, either 17 still names the Hamming distance *inside* the BOM's reading, or the BOM takes that role and #14 is superseded. Not decided.
+
+**Also open** (listed in SPEC-26): the ASCII cascade rule, the "polynomial shape" of the terms, PATRICIA compression, and computing the fifteen layouts.
+
+**Status:** Open.

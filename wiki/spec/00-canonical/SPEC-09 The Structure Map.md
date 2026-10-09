@@ -6,7 +6,8 @@ layer: canonical
 status: review
 spec: OMI-IMO-2026
 up: "[[SPEC-00 Canonical Statement]]"
-down: []
+down:
+  - "[[SPEC-26 The Prompt Tree]]"
 related:
   - "[[SPEC-04 First Principles]]"
   - "[[SPEC-07 The Fundamental Invariants]]"
@@ -113,7 +114,8 @@ The states a structure can be in:
 | The quadratic form, Δ = −704 and 0 | I-34 | — | core.test | `types` BQF.hs | **checked** |
 | Point–line 16 / 64 / 4 | I-36 | — | — | — | **stated** |
 | The `{2,n}:{n,2}` controller space | I-37 | — | — | — | **stated** |
-| The 15 treemap algorithms and the Hamming/Polybius row | I-40 | — | — | — | **stated**: no treemap code exists anywhere in the repository yet |
+| The 15 treemap algorithms, as a catalogue (files 1–15, classes) | I-40, I-53 | `rosetta` treemaps.ts | rosetta.test | — | **canonical** |
+| The 15 treemap algorithms, as layouts | I-40 | — | — | — | **stated**: no layout is computed yet |
 
 ### Naming and Framing (Rosetta)
 
@@ -154,13 +156,15 @@ The states a structure can be in:
 | Structure | Reading | Home | Check | Realizations | State |
 |-----------|---------|------|-------|--------------|-------|
 | The four XOR builds 5T, 6T, 8T, 10T | [[SPEC-44 The Virtual Breadboard]] | — | `breadboard` test.mjs (passes; not part of `npm test`) | `breadboard` | **realized**, with its own check |
-| The tree: 16 Blobs, one 20-bit index | (this note) | `core` tree.ts | core.test | `types/` (proxy) | **canonical** |
+| The tree: 16 Blobs, one 20-bit index | I-48 | `core` tree.ts | core.test | `types/` (proxy) | **canonical** |
+| The Prompt Tree: four levels, the swaps, the 16-bit path | I-49 to I-51 | `core` tree.ts | core.test | — | **canonical** |
+| The BOM at file 0 | I-52 | `core` tree.ts (`BOM_FILE`) | core.test | — | **canonical** as a decision; prefix or suffix still open |
 | The 65,536 Blob | [[SPEC-22 The Blob]] | `core` wordform.ts (`BUFFERS_PER_BLOB`) | core.test | `space` | **canonical** (the count) |
 | The 360 × 65536 tetrahedron view | `space/README.md` | — | — | `space` (eight views planned) | **stated** |
 
 ## The Tree: Sixteen Blobs
 
-**DEFINITION** (author, 2026-10-09: "16 65536 bit files … an indexing of index indices"; the bit layout is my reading, to be confirmed). The tree classification model is **sixteen files of 65,536 bits** (8,192 bytes each), one Blob per file, 2²⁰ bits in all. An address is three indices in one:
+**DEFINITION**, confirmed by the author 2026-10-09 ("16 65536 bit files … an indexing of index indices"; then "yes thats correct structrue"). The tree classification model is **sixteen files of 65,536 bits** (8,192 bytes each), one Blob per file, 2²⁰ bits in all. An address is three indices in one:
 
 | Index | Bits | Range | Picks |
 |-------|------|-------|-------|
@@ -170,11 +174,11 @@ The states a structure can be in:
 
 `address(file, byte, bit) = file · 2¹⁶ + byte · 8 + bit`, and `split` inverts it. The model only indexes; the author seeds the bytes (for example with `fill`). It is in `core/src/verified/tree.ts`, checked in core.test, and so is **canonical** as an index. `types/` is its type-side proxy.
 
-⟦Which tree algorithm each file holds, and whether file 15 (or another) is the Hamming/Polybius row, is still open: I-16, I-17 and I-40.⟧
+File 0 is the **BOM**, which holds the **Prompt Tree**; files 1–15 hold the fifteen treemap algorithms. The 16 bits inside a file are the Prompt Tree's path: exponent · exception · declaration · definition, a nibble each. See [[SPEC-26 The Prompt Tree]]. ⟦BOM as prefix (file 0) is a decision; the suffix (file 15) is the alternative.⟧
 
 ## The Count
 
-Of the 49 rows (2026-10-09): **26 canonical**, **7 checked**, **11 stated**, **1 realized only** (Proxy and Reflect), **1 realized with its own check** (the breadboard), **3 fail**.
+Of the 52 rows (2026-10-09): **29 canonical**, **7 checked**, **11 stated**, **1 realized only** (Proxy and Reflect), **1 realized with its own check** (the breadboard), **3 fail**.
 
 ## What Canonicalizes Next
 
@@ -183,5 +187,5 @@ Of the 49 rows (2026-10-09): **26 canonical**, **7 checked**, **11 stated**, **1
 2. **Check Proxy and Reflect.** `Proxy ⊕ Reflect = throw` was checked by hand (OPEN-01 #19); it needs a home in `core/` and a test.
 3. **Bring the breadboard's check into `npm test`,** so one command checks everything.
 4. **The catalog heads 2–7** wait on the meaning of form 7 (I-41).
-5. **The 15 treemap algorithms** are the largest stated structure with no code. The author places them in `rosetta/` as its tree-algorithm test framework. Their container now exists (the tree's sixteen files); they wait on which file holds which algorithm.
+5. **The 15 treemap layouts** are the largest stated structure with no code. Their catalogue and files are canonical ([[SPEC-26 The Prompt Tree]]); computing a layout is next after the polynomial shape and the ASCII cascade rule are settled.
 6. **The stated rows that are definitions by nature** (the axiom, the four states of a reading, the analogies) stay stated. They are the reading, not the law.
