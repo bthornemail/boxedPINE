@@ -14,6 +14,7 @@ import { createKernel, evaluate, ledLit } from '../../breadboard/kernel.mjs';
 import { LINES } from '../../core/src/verified/fano.ts';
 import { breadboardGeometry, type Vec } from './breadboard.geometry.ts';
 import trackUrl from '../../rosetta/src/assets/walkthrough.vtt?url';
+import { currentFrame, frameIndex, frameText, framePort } from '../../rosetta/src/media.frame.ts';
 
 type Circuit = Parameters<typeof breadboardGeometry>[0][number] & { transistorCount: number; led: { net: string; drive: string } };
 const kernel = createKernel();
@@ -134,6 +135,15 @@ function update() {
 $('inA').onclick = () => { a ^= 1; update(); };
 $('inB').onclick = () => { b ^= 1; update(); };
 update();
+
+// ---- this device's media frame, and the Fano port it converges to (SPEC-07 I-82, I-85) ----
+function showFrame() {
+  const frame = frameIndex(currentFrame((q) => matchMedia(q)));
+  const port = framePort(frame);
+  $('frame').textContent = `${frameText(frame)} → port ${port}`;
+}
+showFrame();
+for (const q of ['(prefers-color-scheme: dark)', '(display-mode: picture-in-picture)', '(prefers-reduced-motion: reduce)']) matchMedia(q).addEventListener('change', showFrame);
 
 // ---- the walkthrough track on a video of the 3D canvas ----
 const video = $<HTMLVideoElement>('video');

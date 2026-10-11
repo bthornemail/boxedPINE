@@ -1,0 +1,183 @@
+[
+ {
+  "name": "orientation",
+  "values": [
+   "portrait",
+   "landscape"
+  ]
+ },
+ {
+  "name": "overflow-block",
+  "values": [
+   "none",
+   "scroll",
+   "paged"
+  ]
+ },
+ {
+  "name": "overflow-inline",
+  "values": [
+   "none",
+   "scroll"
+  ]
+ },
+ {
+  "name": "display-mode",
+  "values": [
+   "fullscreen",
+   "standalone",
+   "minimal-ui",
+   "browser",
+   "picture-in-picture"
+  ]
+ },
+ {
+  "name": "scan",
+  "values": [
+   "interlace",
+   "progressive"
+  ]
+ },
+ {
+  "name": "update",
+  "values": [
+   "none",
+   "slow",
+   "fast"
+  ]
+ },
+ {
+  "name": "environment-blending",
+  "values": [
+   "opaque",
+   "additive",
+   "subtractive"
+  ]
+ },
+ {
+  "name": "color-gamut",
+  "values": [
+   "srgb",
+   "p3",
+   "rec2020"
+  ]
+ },
+ {
+  "name": "dynamic-range",
+  "values": [
+   "standard",
+   "high"
+  ]
+ },
+ {
+  "name": "inverted-colors",
+  "values": [
+   "none",
+   "inverted"
+  ]
+ },
+ {
+  "name": "pointer",
+  "values": [
+   "none",
+   "coarse",
+   "fine"
+  ]
+ },
+ {
+  "name": "hover",
+  "values": [
+   "none",
+   "hover"
+  ]
+ },
+ {
+  "name": "any-pointer",
+  "values": [
+   "none",
+   "coarse",
+   "fine"
+  ]
+ },
+ {
+  "name": "any-hover",
+  "values": [
+   "none",
+   "hover"
+  ]
+ },
+ {
+  "name": "nav-controls",
+  "values": [
+   "none",
+   "back"
+  ]
+ },
+ {
+  "name": "video-color-gamut",
+  "values": [
+   "srgb",
+   "p3",
+   "rec2020"
+  ]
+ },
+ {
+  "name": "video-dynamic-range",
+  "values": [
+   "standard",
+   "high"
+  ]
+ },
+ {
+  "name": "scripting",
+  "values": [
+   "none",
+   "initial-only",
+   "enabled"
+  ]
+ },
+ {
+  "name": "prefers-reduced-motion",
+  "values": [
+   "no-preference",
+   "reduce"
+  ]
+ },
+ {
+  "name": "prefers-reduced-transparency",
+  "values": [
+   "no-preference",
+   "reduce"
+  ]
+ },
+ {
+  "name": "prefers-contrast",
+  "values": [
+   "no-preference",
+   "less",
+   "more",
+   "custom"
+  ]
+ },
+ {
+  "name": "forced-colors",
+  "values": [
+   "none",
+   "active"
+  ]
+ },
+ {
+  "name": "prefers-color-scheme",
+  "values": [
+   "light",
+   "dark"
+  ]
+ },
+ {
+  "name": "prefers-reduced-data",
+  "values": [
+   "no-preference",
+   "reduce"
+  ]
+ }
+]

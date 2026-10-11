@@ -218,6 +218,17 @@ From the author, 2026-10-11 ([[SPEC-27 The Prompt Tree Index]] §8).
 
 | I-81 | **The proof Blob** (author): one 65,536-bit index (8,192 bytes; DECISION: byte j = 60 ⊕ (j & 0xFF), the orbit of 60 through every dial) stored in `proofs/blob/` as `proof.bin`, as the literals `0x`, `0b`, `0o`, `0d`, as base32 (RFC 4648 alphabet A-Z2-7, inside A-Z0-9, no padding) and as a base32 tagged template literal module. Every form, read as a file, Buffer, Blob, ArrayBuffer, Array or template literal, XORs the Blob to **0n** (one BigInt) and **0u** (every unsigned byte). The width comes from the frame, so a literal's dropped leading zeros do not matter (I-6) | THEOREM | `rosetta/src/proof.blob.ts`; `rosetta.test.ts`; `proofs/blob/Equivalence.java` (Java 21) |
 
+## XVI. Frames of Reference and Ports
+
+From the author, 2026-10-11: each frame of reference coordinates on the time and space of its memory pool; text tracks are the cache; media queries travel in HTTP/1.1 headers and VTT cues to browser ports for the 16 Fano drawings and the 2 Hasse diagrams.
+
+| # | Invariant | Mark | Evidence |
+|---|-----------|------|----------|
+| I-82 | **A device's media frame is one index.** One declaration, `Name: … For: @media … Value: …`, reads the W3C Media Queries Level 5 draft (the seed) and finds the **24** features with keyword values; in the spec's order they pack into **35 bits**. Two frames XOR to exactly the features that differ (in headless Chrome, light and dark differ by `0x2`, the `prefers-color-scheme` bit) | THEOREM (derived and tested) + DECISION (spec order, first value = 0) | `rosetta/src/media.frame.ts`; `rosetta.test.ts`; the Breadboard Space |
+| I-83 | **Time and space of a frame.** Time: the kernel's swap32 crystal reads 60, 63, 60, 63 in every time zone, while the wall clock's offset differs (UTC 0, Kolkata +330, Los Angeles −420 minutes). Space: a raw allocation XOR a zeroed one is the pool's contamination: **0 in Node** (fresh pages are zeroed) and **all old contents in a native pool** (C: 65,536 of 65,536 bytes) | THEOREM (measured, tested) | `repl/src/frames.ts`, `repl/native/pool.c`; `repl.test.ts` |
+| I-84 | **The trace is a text track with a cache limit.** One WebVTT cue per tick; propagating appends a cue and drops the oldest past **16** (DECISION: one nibble); backpropagating reads the readings back exactly | THEOREM (tested) + DECISION (16) | `rosetta/src/trace.vtt.ts`; `rosetta.test.ts` |
+| I-85 | **Every frame has one Fano port.** The 35-bit frame folds by XOR into 7 bits (35 = 5 × 7), which converge to one of the 16 constants (I-66). A loopback server binds a request's `Omi-Media-Frame` header (or `?frame=`) to that constant's drawing, serves `/port/0` … `/port/15` and the two Hasse diagrams, and traces each request as a VTT cue. Reading a served drawing (`readFanoSvg`) gives the constant back, so anything that can read the SVG's logic recovers the index | THEOREM (tested) + DEFINITION (author: ports for the 16 drawings and 2 Hasse diagrams) | `repl/src/ports.ts`; `repl.test.ts` |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧

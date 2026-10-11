@@ -297,3 +297,30 @@ test('The stored files match, and read the same as a file, Buffer, Blob, ArrayBu
   }
   assert.equal(BYTES, 8192);
 });
+
+// ---- The media frame (SPEC-07 I-82) and the trace as a text track (I-84) ----
+import { MEDIA_FEATURES, deriveFeatures, FRAME_BITS, frameIndex, frameOf, frameDeviation, frameText, parseFrameText, fold7, framePort } from '../../rosetta/src/media.frame.ts';
+import { propagate, traceVtt, backpropagate, CACHE, type Reading } from '../../rosetta/src/trace.vtt.ts';
+
+test('The media frame: 24 keyword features from the spec pack into 35 bits; two frames XOR to their differences', () => {
+  const spec = new URL('../../_archive/_inbox/Media Queries Level 5.md', import.meta.url);
+  if (existsSync(spec)) assert.deepEqual(deriveFeatures(readFileSync(spec, 'utf8')), MEDIA_FEATURES); // derived, not typed
+  assert.equal(MEDIA_FEATURES.length, 24);
+  assert.equal(FRAME_BITS, 35);
+  const light = frameIndex({ 'prefers-color-scheme': 'light', 'display-mode': 'browser' });
+  const darkPip = frameIndex({ 'prefers-color-scheme': 'dark', 'display-mode': 'picture-in-picture' });
+  assert.deepEqual(frameDeviation(light, darkPip), ['display-mode', 'prefers-color-scheme']);
+  assert.equal(frameOf(darkPip)['display-mode'], 'picture-in-picture');
+  assert.equal(parseFrameText(frameText(darkPip)), darkPip);
+  assert.equal(35 % 7, 0); // five 7-bit pieces fold to one Fano mask
+  for (const f of [0n, light, darkPip, (1n << 35n) - 1n]) assert.ok(framePort(f) >= 0 && framePort(f) < 16);
+  assert.equal(fold7(0x7fn | (0x7fn << 7n)), 0); // equal pieces cancel
+});
+
+test('The trace keeps the last sixteen cues; propagate writes them, backpropagate reads them back', () => {
+  let trace: Reading[] = [];
+  for (let t = 0; t < 40; t++) trace = propagate(trace, { tick: t, frame: '0x3c', port: t & 15, deviation: t & 1 });
+  assert.equal(trace.length, CACHE);
+  assert.equal(trace[0]!.tick, 24);
+  assert.deepEqual(backpropagate(traceVtt(trace)), trace);
+});

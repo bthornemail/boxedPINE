@@ -48,3 +48,58 @@ test('MQTT: the first peer hears no one and announces; the next gets back only t
     broker.kill();
   }
 });
+
+// ---- Frames of reference (I-83), and the ports (I-85) ----
+import { crystal, timeFrame, contamination } from '../../repl/src/frames.ts';
+import { startPorts } from '../../repl/src/ports.ts';
+import { CONSTANTS, readFanoSvg } from '../../core/src/verified/index.ts';
+import { frameIndex, frameText, framePort } from '../../rosetta/src/media.frame.ts';
+import { execFileSync } from 'node:child_process';
+
+test('Time: the kernel tick reads the same in every time zone; only the wall-clock offset differs', () => {
+  const run = (tz: string) => JSON.parse(execFileSync(process.execPath, ['--input-type=module', '-e',
+    `const f = await import(${JSON.stringify(new URL('../../repl/src/frames.ts', import.meta.url).href)});
+     const at = new Date('2026-10-11T12:00:00Z');
+     console.log(JSON.stringify({ states: [0,1,2,3].map((k) => f.timeFrame(k, at).state), offset: f.timeFrame(0, at).localOffsetMinutes }));`],
+    { env: { ...process.env, TZ: tz } }).toString());
+  const utc = run('UTC'), kolkata = run('Asia/Kolkata'), la = run('America/Los_Angeles');
+  assert.deepEqual([utc.states, kolkata.states, la.states], [[60, 63, 60, 63], [60, 63, 60, 63], [60, 63, 60, 63]]);
+  assert.deepEqual([utc.offset, kolkata.offset, la.offset], [0, 330, -420]);
+  assert.equal(crystal(0) ^ crystal(1), 3); // the crystal steps by swap32
+  assert.equal(timeFrame(5).state, 63);
+});
+
+test('Space: a raw allocation XOR a zeroed one is the pool\'s contamination (0 in Node; native pools are not zeroed)', () => {
+  const c = contamination();
+  assert.ok(c >= 0 && c <= 65536);
+  if (spawnSync('which', ['gcc']).status !== 0) return;
+  const dir = new URL('../../repl/native/', import.meta.url);
+  const exe = new URL('pool', `file://${process.env.TMPDIR ?? '/tmp'}/`).pathname + process.pid;
+  execFileSync('gcc', ['-O0', '-o', exe, new URL('pool.c', dir).pathname]);
+  const out = execFileSync(exe).toString();
+  const big = /size\s+65536\s+raw nonzero\s+(\d+)\s+deviation raw\^safe\s+(\d+)/.exec(out)!;
+  assert.equal(big[1], big[2]); // deviation from a zeroed block is exactly the raw contents
+  assert.ok(Number(big[2]) > 0); // the native pool came back with its old contents
+});
+
+test('Ports: a request\'s media frame converges to a Fano drawing, and reading the drawing gives the constant back', async () => {
+  const server = await startPorts(0);
+  try {
+    const base = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
+    const frames = [0n, frameIndex({ 'prefers-color-scheme': 'dark', 'display-mode': 'picture-in-picture' }), (1n << 35n) - 1n];
+    for (const f of frames) {
+      const res = await fetch(`${base}/port`, { headers: { 'Omi-Media-Frame': frameText(f) } });
+      assert.equal(res.headers.get('content-type'), 'image/svg+xml');
+      const i = Number(res.headers.get('omi-fano-constant'));
+      assert.equal(i, framePort(f));
+      assert.equal(readFanoSvg(await res.text()), CONSTANTS[i]); // the drawing carries its own index
+    }
+    for (let i = 0; i < 16; i++) assert.equal(readFanoSvg(await (await fetch(`${base}/port/${i}`)).text()), CONSTANTS[i]);
+    for (const p of ['/hasse', '/hasse/weights']) assert.ok((await (await fetch(base + p)).text()).includes('<svg'));
+    const vtt = await (await fetch(`${base}/trace.vtt`)).text();
+    assert.equal((vtt.match(/^tick-\d+$/gm) ?? []).length, frames.length);
+    assert.equal((await fetch(`${base}/port?frame=nope`)).status, 400);
+  } finally {
+    server.close();
+  }
+});

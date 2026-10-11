@@ -167,6 +167,10 @@ The states a structure can be in:
 | The four XOR builds 5T, 6T, 8T, 10T | [[SPEC-44 The Virtual Breadboard]] | — | `breadboard` test.mjs (passes; not part of `npm test`) | `breadboard` | **realized**, with its own check |
 | The Breadboard Space: geometry as data, XOR on the circle line | [[SPEC-44 The Virtual Breadboard]] | — | space.test, core.test | `space` xr.html, breadboard.geometry.ts | **realized**, with its own check |
 | The sixteen Fano constants: closure, two-step convergence, duality at i ⊕ 15 | I-65 to I-67 | `core` fano.ts; `types` OMI.Fano | core.test; `types` cabal test; `proofs` tracking/BoxedPineInvariants.v | `space` assets/fano (18 files) | **canonical** |
+| The media frame as one index | I-82 | `rosetta` media.frame.ts | rosetta.test | `space` xr.html (browser frame) | **canonical** |
+| Frames of reference: tick vs wall clock; pool contamination | I-83 | — | repl.test | `repl` frames.ts, native/pool.c | **realized**, with its own check |
+| The trace as a text track with a cache limit | I-84 | `rosetta` trace.vtt.ts | rosetta.test | `repl` ports.ts (/trace.vtt) | **canonical** |
+| Fano ports: frame → constant → drawing → constant | I-85 | `rosetta` media.frame.ts (framePort) | repl.test | `repl` ports.ts; `space` assets/fano, assets/hasse | **canonical** |
 | The proof Blob in every literal and carrier | I-81 | `rosetta` proof.blob.ts | rosetta.test; `proofs/blob` Equivalence.java | `proofs/blob` | **canonical** |
 | The Fano files read the same from any buffer | I-68 | `core` fano.ts (`readFanoSvg`) | core.test | `space` assets/fano | **canonical** |
 | A MAC on the loopback: fold, IPP zero, NAT64 | I-69 to I-71 | `core` loopback.ts | core.test | — | **canonical** |
@@ -202,7 +206,7 @@ File 0 is the **BOM**, which holds the **Prompt Tree**; files 1–15 hold the fi
 
 ## The Count
 
-Of the 72 rows (2026-10-11): **42 canonical**, **7 checked**, **14 stated**, **1 realized only** (Proxy and Reflect), **3 realized with their own check** (the breadboard, presence, the Breadboard Space), **5 fail**.
+Of the 76 rows (2026-10-11): **45 canonical**, **7 checked**, **14 stated**, **1 realized only** (Proxy and Reflect), **4 realized with their own check** (the breadboard, presence, the Breadboard Space, frames of reference), **5 fail**.
 
 ## What Canonicalizes Next
 
