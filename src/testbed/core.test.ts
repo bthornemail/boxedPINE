@@ -624,3 +624,14 @@ test('Animation frames and the kernel drive the same meta-cycle', () => {
   for (let i = 0; i < 40; i++) queue.shift()!();
   assert.deepEqual(fromFrames, fromKernel);
 });
+
+test('I-104: the regular 210 ladder starts at 97, just after index 20; the sexy-prime quintuplet with 5 is the only one', () => {
+  const gcd = (a: number, b: number): number => (b ? gcd(b, a % b) : a);
+  const units = Array.from({ length: 210 }, (_, x) => x).filter((x) => gcd(x, 210) === 1);
+  assert.equal(units.length, 48);
+  assert.deepEqual([units[20], units[21]], [89, 97]);
+  for (let r = 1; r < 50; r++) { const l = ladderAsWritten(r); assert.equal(l[0]! % 5, 0); assert.equal(l[1]! % 7, 0); }
+  const quint = Array.from({ length: 100000 }, (_, p) => p).filter((p) => [0, 6, 12, 18, 24].every((k) => isPrime(p + k)));
+  assert.deepEqual(quint, [5]);
+});
+

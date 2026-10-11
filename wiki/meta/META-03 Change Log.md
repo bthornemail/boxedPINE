@@ -266,6 +266,7 @@ tags: [omi-imo, meta, changelog, history]
 - The ESP32 as the parity organ (author): `breadboard/esp32` now only checks the 3-bit parity of 60 ⊕ 0…128 (each octet reads 0x69, the Thue–Morse byte complemented by the flip 4), registers only, reporting any deviation; the host reads it through `repl/src/serial.ts`. SPEC-07 I-102. 114 tests passing
 - The organ's two modes (author): it reflects its parity state every 256 cycles, and answers request lines by content negotiation (300, 200, 304, 307 to the dual, 206, 416, 400), always departing with 218; `rosetta/src/organ.ts` makes the same answers in any frame. The Breadboard Space connects to it over Web Serial and, under hand tracking, places it at the left wrist's XRJointSpace. Reading glitch fixed on the host: duplicated USB packets just after the port opens. SPEC-07 I-103. 116 tests passing
 - The organ's reflect rule (author: "if modulus % 4 = 0 when the modulus 2 is 0, or when the modulus of 2 and the modulus of 4 are not 0"): it reflects on tick n unless n & 3 = 2, and the live board's gaps were exactly those ticks. SPEC-07 I-103. 118 tests passing
+- SPEC-07 I-104 (author, from a podcast on the protocol): the regular 210 ladder starts at residue 97, index 21 of the 48 units mod 210, just after index 20; the ladder as written holds only at rung 0; {5, 11, 17, 23, 29} is the only sexy-prime quintuplet, because it contains 5
 
 ## Pending
 
