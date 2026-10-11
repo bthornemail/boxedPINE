@@ -9,9 +9,9 @@
 // wire between gates crosses from one node to another. wiki: SPEC-07 I-105, I-106.
 import { spawnSync } from 'node:child_process';
 import { openSync, readSync, writeSync, closeSync } from 'node:fs';
-import { respondTwin, GATE_TABLES, buildTwin } from '../../rosetta/src/organ.ts';
+import { respondTwin, GATE_TABLES, buildTwin, intact } from '../../rosetta/src/organ.ts';
 
-export type Node = { name: string; ask(request: string): string[]; close(): void };
+export type Node = { name: string; ask(request: string): string[]; close(): void; retries?: number };
 
 /** A board on a serial port, kept open: every request is a line, every answer ends with 218. */
 export function boardNode(port: string, settleMs = 300): Node {
@@ -20,9 +20,7 @@ export function boardNode(port: string, settleMs = 300): Node {
   const buf = Buffer.alloc(512);
   for (const end = Date.now() + settleMs; Date.now() < end; ) readSync(fd, buf, 0, buf.length, null);
   let rest = '';
-  return {
-    name: port,
-    ask(request) {
+  const once = (request: string): string[] => {
       writeSync(fd, `\n${request}\n`);
       const lines: string[] = [];
       const deadline = Date.now() + 4000;
@@ -37,10 +35,24 @@ export function boardNode(port: string, settleMs = 300): Node {
           if (l === '218 This is fine') return lines;
         }
       }
-      throw new Error(`${port}: no answer to ${request}`);
+      return lines; // incomplete: the fold check below will not pass
+  };
+  const node: Node = {
+    name: port,
+    retries: 0,
+    // An answer counts only when its fold matches what arrived; a damaged or
+    // missing answer is asked again (up to 3 times), and each retry is counted.
+    ask(request) {
+      for (let attempt = 0; attempt < 4; attempt++) {
+        const answer = once(request);
+        if (intact(answer) && answer.at(-1) === '218 This is fine') return answer;
+        node.retries!++;
+      }
+      throw new Error(`${port}: no intact answer to ${request} after 4 tries`);
     },
     close() { closeSync(fd); },
   };
+  return node;
 }
 
 /** A node with no hardware: it answers from the twin (a stand-in for a board not attached). */
@@ -146,5 +158,6 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     console.log(`the builds' inside gates (NAND, OR, NOR): reaches ${inside.reached} of 16; ${inside.matched} matched; ${inside.gateRequests} gate requests over ${inside.nodesUsed} nodes`);
     const seven = sevenXors(nodes);
     console.log(`4 XOR gates across nodes, 3 inputs: ${seven.ok ? 'all 7 combinations right on all 8 rows' : 'MISMATCH'}`);
+    console.log(`retries (answers whose fold did not match): ${nodes.map((n) => `${n.name} ${n.retries ?? 0}`).join(', ')}`);
   } finally { nodes.forEach((n) => n.close()); }
 }

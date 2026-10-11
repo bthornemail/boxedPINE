@@ -70,7 +70,7 @@ export function deviation(board: Reading, host: Reading): Record<string, number[
 }
 
 /** Send a line to a board on a serial port and collect what comes back until `until` (or the timeout). */
-export function readBoard(port = '/dev/ttyUSB0', ask = 'GET /parity', timeoutMs = 8000, until = /\nready\r?\n|218 This is fine\r?\n/, settleMs = 300): string {
+export function readBoard(port = '/dev/ttyUSB0', ask = 'GET /parity', timeoutMs = 8000, until: RegExp | ((text: string) => boolean) = /\nready\r?\n|218 This is fine\r?\n/, settleMs = 300): string {
   // every echo and flow-control flag off: an echoing port feeds the board its own lines
   spawnSync('stty', ['-F', port, '115200', 'cs8', '-cstopb', '-parenb', 'raw', '-echo', '-echoe', '-echok', '-echoctl', '-echoke', '-ixon', '-ixoff', '-crtscts', '-hupcl']);
   const fd = openSync(port, 'r+');
@@ -83,7 +83,8 @@ export function readBoard(port = '/dev/ttyUSB0', ask = 'GET /parity', timeoutMs 
     writeSync(fd, `\n${ask}\n`);
     let text = '';
     const end = Date.now() + timeoutMs;
-    while (Date.now() < end && !until.test(text)) {
+    const done = typeof until === 'function' ? until : (t: string) => until.test(t);
+    while (Date.now() < end && !done(text)) {
       const n = readSync(fd, buf, 0, buf.length, null);
       text += buf.toString('latin1', 0, n);
     }

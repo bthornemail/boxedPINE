@@ -55,7 +55,7 @@ export function respondTwin(request: string, seed = 60): string[] {
     out = b > 128 ? ['416 Range Not Satisfiable', 'content-range m */129']
       : ['206 Partial Content', `content-range m ${a}-${b}/129`, `bits ${Array.from({ length: b - a + 1 }, (_, i) => sense(a + i)).join('')}`];
   } else out = gateRespondTwin(request) ?? ['400 Bad Request'];
-  return [...out, '218 This is fine'];
+  return [...out, foldLine(out), '218 This is fine'];
 }
 
 // ---- Gates and builds (SPEC-07 I-105, I-106): the twin reads breadboard/kernel.mjs ----
@@ -93,4 +93,36 @@ export function gateRespondTwin(request: string): string[] | null {
     return body === null ? ['404 Not Found'] : ['200 OK', `build ${m[1]} ${a}${b} ${body}`];
   }
   return null;
+}
+
+// ---- The fold every answer carries (SPEC-07 I-107) ----
+import { delta16 } from '../../core/src/verified/delta.ts';
+
+/**
+ * Fold an answer as sent (each line and its newline, from the status line on),
+ * pair-wise, like a zipper (the author: "everything is pair-wise"): the bytes
+ * pair up as car (even) and cdr (odd), a last odd byte with 00. bits XORs the
+ * pairs, so any bit that moves changes it; place zips the pairs through the
+ * step law, z = K(z ^ pair, 0x1D), so a pair dropped, repeated or moved changes it.
+ */
+export function fold(lines: string[]): { bits: number; place: number; length: number } {
+  const bytes = [...lines.map((l) => l + '\n').join('')].map((ch) => ch.charCodeAt(0) & 0xff);
+  let bits = 0, place = 0;
+  for (let i = 0; i < bytes.length; i += 2) {
+    const pair = (bytes[i]! << 8) | (bytes[i + 1] ?? 0);
+    bits ^= pair;
+    place = delta16(place ^ pair, 0x1d);
+  }
+  return { bits, place, length: bytes.length };
+}
+
+export const foldLine = (lines: string[]) => {
+  const f = fold(lines);
+  return `fold ${f.bits.toString(16).padStart(4, '0')} ${f.place.toString(16).padStart(4, '0')} ${f.length}`;
+};
+
+/** Whether an answer (status line … fold line, 218) is intact: its fold line matches what arrived. */
+export function intact(answer: string[]): boolean {
+  const i = answer.findIndex((l) => l.startsWith('fold '));
+  return i > 0 && answer[i] === foldLine(answer.slice(0, i));
 }

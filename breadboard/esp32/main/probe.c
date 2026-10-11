@@ -37,9 +37,17 @@
  *   GET /build/B/ab   200 OK, every node of build B (5T 6T 8T 10T) and its LED, on a, b;
  *                     404 Not Found for any other build
  *   anything else     400 Bad Request
+ * Every answer ends, just before 218, with a fold of the bytes it sent from the
+ * status line on, zipped into pairs (car = even byte, cdr = odd byte; a last odd
+ * byte pairs with 00): "fold <bits> <place> <length>". bits XORs the pairs (any
+ * bit that moves changes it); place zips the pairs through the step law,
+ * z = K(z ^ pair, 0x1D), so a pair dropped, repeated or moved changes it.
+ * The author: "xor through the buffer like a zipper, because everything is
+ * pair-wise". wiki: SPEC-07 I-107.
  * The gates and builds are breadboard/kernel.mjs's netlists, as constant
  * tables: a rule is its truth table as 4 bits, indexed a * 2 + b (SPEC-07 I-105).
- * Registers only, apart from those tables and the 32-byte line the prompt arrives in.
+ * Registers only, apart from those tables, the 32-byte line the prompt arrives in and
+ * the 256-byte line an answer is written through.
  */
 #include <stdio.h>
 #include <stdint.h>
@@ -110,69 +118,108 @@ static int bits2(const char *s) {
     return ((s[0] - '0') << 1) | (s[1] - '0');
 }
 
+#include <stdarg.h>
+
+/* The answer's fold, pair-wise: bits XORs the pairs, place zips them through K. */
+static inline uint16_t rotl16(uint16_t x, int n) { return (uint16_t)((x << n) | (x >> (16 - n))); }
+static inline uint16_t K16(uint16_t p) { return rotl16(p, 1) ^ rotl16(p, 3) ^ rotl16(p, 14) ^ 0x1D; }
+static uint32_t fold_bits, fold_place, fold_len, fold_car;
+static void fold_byte(uint32_t c) {
+    if ((fold_len & 1) == 0) fold_car = c;
+    else {
+        uint16_t pair = (uint16_t)((fold_car << 8) | c);
+        fold_bits ^= pair;
+        fold_place = K16((uint16_t)(fold_place ^ pair));
+    }
+    fold_len++;
+}
+static void fold_close(void) {
+    if (fold_len & 1) {
+        uint16_t pair = (uint16_t)(fold_car << 8);
+        fold_bits ^= pair;
+        fold_place = K16((uint16_t)(fold_place ^ pair));
+    }
+}
+static void out(const char *fmt, ...) {
+    char text[256];
+    va_list ap;
+    va_start(ap, fmt);
+    int n = vsnprintf(text, sizeof text, fmt, ap);
+    va_end(ap);
+    if (n < 0) return;
+    if (n > (int)sizeof text - 1) n = (int)sizeof text - 1;
+    for (int i = 0; i < n; i++) fold_byte((uint8_t)text[i]);
+    fputs(text, stdout);
+}
+
 static void respond(const char *line) {
     uint32_t tag = state & 0xff, dev = total_dev;
+    fold_bits = fold_place = fold_len = fold_car = 0;
     if (strcmp(line, "GET /") == 0) {
-        printf("300 Multiple Choices\nchoice /parity\nchoice /atom/0\nchoice /atom/1\nchoice /atom/2\nchoice /atom/3\n"
+        out("300 Multiple Choices\nchoice /parity\nchoice /atom/0\nchoice /atom/1\nchoice /atom/2\nchoice /atom/3\n"
                "choice /atom/4\nchoice /atom/5\nchoice /atom/6\nchoice /atom/7\nchoice /m/0-128\n"
                "choice /gate/NAND/00\nchoice /build/8T/00\n");
     } else if (strcmp(line, "GET /parity") == 0) {
-        printf("200 OK\nparity %02x\npole %u\ndev %02x\nus %lld\nwall %lld\ncycles %u\n", (unsigned)tag,
+        out("200 OK\nparity %02x\npole %u\ndev %02x\nus %lld\nwall %lld\ncycles %u\n", (unsigned)tag,
                (unsigned)((state >> 16) & 1), (unsigned)dev, (long long)us, (long long)(esp_timer_get_time() - t0), (unsigned)cycles);
     } else if (strncmp(line, "GET /parity ", 12) == 0) {
         int h = hexdigit(line[12]), l = hexdigit(line[13]);
-        if (h >= 0 && l >= 0 && line[14] == 0 && (uint32_t)((h << 4) | l) == tag && dev == 0) printf("304 Not Modified\n");
-        else printf("200 OK\nparity %02x\ndev %02x\n", (unsigned)tag, (unsigned)dev);
+        if (h >= 0 && l >= 0 && line[14] == 0 && (uint32_t)((h << 4) | l) == tag && dev == 0) out("304 Not Modified\n");
+        else out("200 OK\nparity %02x\ndev %02x\n", (unsigned)tag, (unsigned)dev);
     } else if (strncmp(line, "GET /atom/", 10) == 0 && hexdigit(line[10]) >= 0 && line[11] == 0) {
         uint32_t a = (uint32_t)hexdigit(line[10]);
-        if (a < 8) printf("200 OK\natom %x parity %u dual %x\n", (unsigned)a, (unsigned)sense(a ^ 4), (unsigned)(a ^ 15));
-        else printf("307 Temporary Redirect\nlocation /atom/%x\n", (unsigned)(a ^ 15));
+        if (a < 8) out("200 OK\natom %x parity %u dual %x\n", (unsigned)a, (unsigned)sense(a ^ 4), (unsigned)(a ^ 15));
+        else out("307 Temporary Redirect\nlocation /atom/%x\n", (unsigned)(a ^ 15));
     } else if (strncmp(line, "GET /m/", 7) == 0) {
         const char *s = line + 7;
         int a = number(&s), b = -1;
         if (*s == '-') { s++; b = number(&s); }
-        if (a < 0 || b < 0 || *s != 0 || a > b) printf("400 Bad Request\n");
-        else if (b > 128) printf("416 Range Not Satisfiable\ncontent-range m */129\n");
+        if (a < 0 || b < 0 || *s != 0 || a > b) out("400 Bad Request\n");
+        else if (b > 128) out("416 Range Not Satisfiable\ncontent-range m */129\n");
         else {
-            printf("206 Partial Content\ncontent-range m %d-%d/129\nbits ", a, b);
-            for (int m = a; m <= b; m++) putchar('0' + (int)sense((uint32_t)m));
-            putchar('\n');
+            char bits[130];
+            int k = 0;
+            for (int m = a; m <= b; m++) bits[k++] = (char)('0' + (int)sense((uint32_t)m));
+            bits[k] = 0;
+            out("206 Partial Content\ncontent-range m %d-%d/129\nbits %s\n", a, b, bits);
         }
     } else if (strncmp(line, "GET /gate/", 10) == 0) {
         const char *r = line + 10, *slash = strchr(r, '/');
         int ab = slash ? bits2(slash + 1) : -1;
-        if (ab < 0) printf("400 Bad Request\n");
+        if (ab < 0) out("400 Bad Request\n");
         else {
             const rule_t *rule = 0;
             for (unsigned i = 0; i < NRULES; i++)
                 if (strlen(RULES[i].name) == (size_t)(slash - r) && strncmp(RULES[i].name, r, (size_t)(slash - r)) == 0) rule = &RULES[i];
-            if (!rule) printf("404 Not Found\n");
-            else printf("200 OK\ngate %s %d%d %u\n", rule->name, ab >> 1, ab & 1, (unsigned)apply(rule->table, (uint32_t)(ab >> 1), (uint32_t)(ab & 1)));
+            if (!rule) out("404 Not Found\n");
+            else out("200 OK\ngate %s %d%d %u\n", rule->name, ab >> 1, ab & 1, (unsigned)apply(rule->table, (uint32_t)(ab >> 1), (uint32_t)(ab & 1)));
         }
     } else if (strncmp(line, "GET /build/", 11) == 0) {
         const char *r = line + 11, *slash = strchr(r, '/');
         int ab = slash ? bits2(slash + 1) : -1;
-        if (ab < 0) printf("400 Bad Request\n");
+        if (ab < 0) out("400 Bad Request\n");
         else {
             const build_t *bd = 0;
             for (unsigned i = 0; i < NBUILDS; i++)
                 if (strlen(BUILDS[i].id) == (size_t)(slash - r) && strncmp(BUILDS[i].id, r, (size_t)(slash - r)) == 0) bd = &BUILDS[i];
-            if (!bd) printf("404 Not Found\n");
+            if (!bd) out("404 Not Found\n");
             else {
                 uint32_t v[7];
                 v[0] = (uint32_t)(ab >> 1); v[1] = (uint32_t)(ab & 1);
-                printf("200 OK\nbuild %s %d%d", bd->id, ab >> 1, ab & 1);
+                out("200 OK\nbuild %s %d%d", bd->id, ab >> 1, ab & 1);
                 for (unsigned i = 0; i < bd->count; i++) {
                     v[2 + i] = apply(bd->nets[i].table, v[bd->nets[i].x], v[bd->nets[i].y]);
-                    printf(" %s=%u", bd->nets[i].net, (unsigned)v[2 + i]);
+                    out(" %s=%u", bd->nets[i].net, (unsigned)v[2 + i]);
                 }
                 uint32_t led = v[2 + bd->led];
-                printf(" led=%u\n", (unsigned)(bd->sink ? 1 - led : led));
+                out(" led=%u\n", (unsigned)(bd->sink ? 1 - led : led));
             }
         }
     } else {
-        printf("400 Bad Request\n");
+        out("400 Bad Request\n");
     }
+    fold_close();
+    printf("fold %04x %04x %u\n", (unsigned)fold_bits, (unsigned)fold_place, (unsigned)fold_len);
     printf("218 This is fine\n");
     fflush(stdout);
 }

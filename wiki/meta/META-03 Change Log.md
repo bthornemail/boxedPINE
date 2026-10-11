@@ -270,6 +270,7 @@ tags: [omi-imo, meta, changelog, history]
 - [[SRC-13 Provenance of the OMI Trees and the Metaverse Spine]]: the omi trees' lineage, the origin of omi-system.omilisp (Codex, commit a456cd6, 2026-05-09), and the ~/devops spine restored to a full local closure pass (final digest ef47d9e0…)
 - SPEC-07 I-105: four XOR gates make the 7 non-zero XOR combinations of three inputs, but XOR gates alone reach only the 16 affine functions; the four breadboard builds light on XOR yet are made of NAND or NOR, and their nodes together reach all 16 two-input gates
 - SPEC-07 I-106: the organ firmware answers single gates and whole builds; a proxy (`repl/src/gates.ts`) spreads gate networks over boards and mock nodes. On two live ESP32 boards: XOR gates reach 8 of 16 two-input functions, the builds' inside gates 16 of 16, and the 4-XOR network the 7 combinations. 124 tests (5 skipped without hardware)
+- SPEC-07 I-107 (author): the zipper fold. Every organ answer carries `fold <bits> <place> <length>` over its bytes zipped into pairs: bits XORs the pairs (movement), place zips them through K (position). On three boards, 2,400 requests: 12 damaged answers caught and re-asked, none accepted wrong. Two live tests fixed (a backtracking stop pattern; the fold over the board's timing lines). The Web MIDI bridge passes live. 125 of 125 tests live on three boards
 
 ## Pending
 

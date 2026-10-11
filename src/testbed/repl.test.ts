@@ -256,18 +256,20 @@ test('The parity organ: every octet of 60 ⊕ 0…128 reads 0x69, the Thue-Morse
   for (const d of Object.values(deviation(board, expectedOrgan()))) assert.ok(d !== 'missing' && d.every((v) => v === 0));
 });
 
+const content = (answer: string[]) => answer.filter((l) => !l.startsWith('fold ')); // the fold has its own test
+
 test('The organ reflects its state unprompted; its answers to prompts are the lifecycle codes, departing with 218', () => {
   const text = readFileSync(new URL('./fixtures/esp32-organ.txt', import.meta.url), 'utf8');
   const reflected = text.split('\n').map(parseReflect).filter((r) => r);
   assert.equal(reflected.length, 3);
   for (const r of reflected) assert.deepEqual([r!.parity, r!.pole, r!.dev], [0x69, 1, 0]);
   // the board's answers on 2026-10-11, as the twin makes them here
-  assert.deepEqual(respondTwin('GET /atom/5'), ['200 OK', 'atom 5 parity 0 dual a', '218 This is fine']);
-  assert.deepEqual(respondTwin('GET /atom/b'), ['307 Temporary Redirect', 'location /atom/4', '218 This is fine']);
-  assert.deepEqual(respondTwin('GET /m/60-70'), ['206 Partial Content', 'content-range m 60-70/129', 'bits 01101001011', '218 This is fine']);
-  assert.deepEqual(respondTwin('GET /m/120-130'), ['416 Range Not Satisfiable', 'content-range m */129', '218 This is fine']);
-  assert.deepEqual(respondTwin('GET /parity 69'), ['304 Not Modified', '218 This is fine']);
-  assert.deepEqual(respondTwin('POST /x'), ['400 Bad Request', '218 This is fine']);
+  assert.deepEqual(content(respondTwin('GET /atom/5')), ['200 OK', 'atom 5 parity 0 dual a', '218 This is fine']);
+  assert.deepEqual(content(respondTwin('GET /atom/b')), ['307 Temporary Redirect', 'location /atom/4', '218 This is fine']);
+  assert.deepEqual(content(respondTwin('GET /m/60-70')), ['206 Partial Content', 'content-range m 60-70/129', 'bits 01101001011', '218 This is fine']);
+  assert.deepEqual(content(respondTwin('GET /m/120-130')), ['416 Range Not Satisfiable', 'content-range m */129', '218 This is fine']);
+  assert.deepEqual(content(respondTwin('GET /parity 69')), ['304 Not Modified', '218 This is fine']);
+  assert.deepEqual(content(respondTwin('POST /x')), ['400 Bad Request', '218 This is fine']);
   assert.equal(respondTwin('GET /')[0], '300 Multiple Choices');
 });
 
@@ -280,8 +282,12 @@ test('A live organ reads the same', { skip: live }, () => {
 
 test('A live organ answers every negotiation strategy as this frame does', { skip: live }, () => {
   const timing = /^(us|wall|cycles) /;
-  for (const request of ['GET /', 'GET /parity', 'GET /parity 69', 'GET /parity 00', 'GET /atom/0', 'GET /atom/7', 'GET /atom/8', 'GET /m/0-128', 'GET /m/64-64', 'GET /m/0-129', 'GET /m/9-3', 'PUT /'])
-    assert.deepEqual(askOrgan(process.env.OMI_SERIAL!, request).filter((l) => !timing.test(l)), respondTwin(request), request);
+  for (const request of ['GET /', 'GET /parity', 'GET /parity 69', 'GET /parity 00', 'GET /atom/0', 'GET /atom/7', 'GET /atom/8', 'GET /m/0-128', 'GET /m/64-64', 'GET /m/0-129', 'GET /m/9-3', 'PUT /', 'GET /gate/NOR/01', 'GET /build/6T/11']) {
+    const answer = askOrgan(process.env.OMI_SERIAL!, request);
+    assert.ok(intact(answer), `${request}: fold matches what arrived`);
+    // the timing lines (and so the fold over them) belong to the board; the rest must equal the twin
+    assert.deepEqual(content(answer).filter((l) => !timing.test(l)), content(respondTwin(request)), request);
+  }
 });
 
 test('The organ reflects three ticks in four: silent exactly when the tick is 2 mod 4', () => {
@@ -291,7 +297,7 @@ test('The organ reflects three ticks in four: silent exactly when the tick is 2 
 });
 
 test('A live organ is silent on the ticks that are 2 mod 4, and only those', { skip: live }, () => {
-  const text = readBoard(process.env.OMI_SERIAL, '', 4000, /(?:reflect [^\n]*\n[^]*){40}/);
+  const text = readBoard(process.env.OMI_SERIAL, '', 4000, (t) => (t.match(/reflect /g)?.length ?? 0) >= 41); // count, no backtracking
   const counts = text.split(/\r?\n/).map(parseReflect).filter((r) => r).map((r) => r!.count);
   assert.ok(counts.length >= 30);
   for (const n of counts) assert.ok(reflectsOn(n), `reflected on tick ${n}`);
@@ -364,5 +370,22 @@ test('The same, with live boards as nodes (OMI_SERIALS=/dev/ttyUSB0,/dev/ttyUSB1
     assert.deepEqual([inside.reached, inside.matched, inside.nodesUsed], [16, 16, nodes.length]);
     assert.ok(sevenXors(nodes).ok);
   } finally { nodes.forEach((n) => n.close()); }
+});
+
+// ---- The pair-wise fold every answer carries (SPEC-07 I-107) ----
+import { fold, intact } from '../../rosetta/src/organ.ts';
+
+test('Every answer carries its zipper fold: bits catches a bit that moves, place catches a pair that moves', () => {
+  for (const r of ['GET /', 'GET /atom/5', 'GET /m/0-128', 'GET /gate/NAND/11', 'GET /build/10T/01', 'PUT /x']) assert.ok(intact(respondTwin(r)), r);
+  const a = respondTwin('GET /build/8T/10');
+  const body = (l: string) => fold([a[0]!, l]);
+  const base = body(a[1]!);
+  const swapped = body(a[1]!.replace('n=1 p=0', 'p=0 n=1')); // two pairs trade places: same pairs, new order
+  assert.equal(swapped.bits, base.bits);
+  assert.notEqual(swapped.place, base.place);
+  const flipped = body(a[1]!.replace('q=1', 'q=0')); // one bit moves
+  assert.notEqual(flipped.bits, base.bits);
+  for (const damage of [(l: string) => l.replace('p=0', 'p\u00000'), (l: string) => l.replace('q=1', 'q==1')])
+    assert.equal(intact([a[0]!, damage(a[1]!), a[2]!, a[3]!]), false);
 });
 
