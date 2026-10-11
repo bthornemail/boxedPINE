@@ -313,3 +313,25 @@ The author, 2026-10-11: "the meta to the meta mask can be like machine language 
 **Open:** how a catalogue entry is weighted, and what the compare-exchange on the moduli 9, 10 and 11 selects.
 
 **Status:** Open.
+
+### 24. Propagation as a Falsifiable Axiom: the Cross-Frame Check
+
+The author, 2026-10-11 ([[SRC-12 The Continuation Brain Dump]]): "the test is the three body problem"; the three bodies are "a proxy, a server reflection from a server proxy, and an HTTP/1.1 header"; "we can use ping to predict UTC"; and predicting "an hour in the future, or a moon cycle … makes the axiom of propagation an axiom that is falsifiable." Reasoning is global; the memory pool's deviation is physical, bound to the observer's temperature and distance; light is the one known limit.
+
+**What exists:** the kernel tick instead of UTC (SPEC-07 I-79), the 32-tick meta-cycle (I-88), presence by deviation over MQTT (I-72), and `repl/src/ping.ts`, which measures a line of addresses (I-99). Two frames have been read (the TOSHIBA and the phone), and the wall at 9.9.9.9:443 differs between them.
+
+**Open:** which three bodies are run first (the TOSHIBA, the phone over `phone-tunnel`, and an outside reflection such as test.mosquitto.org or a TURN server); what is predicted (a closure's tick an hour ahead); and what counts as the prediction failing.
+
+**Status:** Open.
+
+### 25. The 300 Block, 111 in Octal, and the One Parabolic Deviation
+
+The author, 2026-10-11: "we interface through the 300 block of indices where the 111 binary parity is 300 in octal; this is how we drive content negotiation"; "with the BQF of 60 there is only one parabolic deviation to the 7 logical xor operations … for the axiom of choice at index 206."
+
+**What holds (THEOREM):** 0o111 = 73, and 7 · 73 = 511 = 2⁹ − 1; 0o300 = 192; 300 & 7 = 4. The form's discriminant is −704 = −(2⁶ · 11).
+
+**What failed:** read as XOR of k = 1…7 into the coefficients (60, 16, 4), no k gives discriminant 0, so there is no parabolic form under that reading; k = 4, 5, 6 turn the form indefinite ([[SRC-12 The Continuation Brain Dump]]).
+
+**Open:** which operation "the 7 logical xor operations" names, and what "300 in octal" selects in the 3xx block.
+
+**Status:** Open.

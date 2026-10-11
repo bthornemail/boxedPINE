@@ -208,3 +208,27 @@ test('eMMC over NBD: the proof Blob reads back to 0n; a write reads back; a paus
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+// ---- Lines of addresses and the 404 substatus block (SPEC-07 I-99, I-100; SRC-12) ----
+import { line, ip } from '../../repl/src/ping.ts';
+
+test('1.1.1.1, 8.8.8.8 and 9.9.9.9 are an XOR line; a wall is marked where a point does not return', () => {
+  const [a, b, c] = ['1.1.1.1', '8.8.8.8', '9.9.9.9'].map(ip.toInt) as [number, number, number];
+  assert.equal((a ^ b) >>> 0, c);
+  assert.equal((a ^ c) >>> 0, b);
+  assert.equal(ip.fromInt((a ^ b ^ c) >>> 0), '0.0.0.0');
+  const p = (address: string, reachable: boolean) => ({ address, port: 443, samples: [], reachable });
+  const l = line(p('1.1.1.1', true), p('8.8.8.8', true), p('9.9.9.9', false));
+  assert.deepEqual([l.closes, l.wall], [true, 2]);
+  const open = line(p('104.20.23.154', true), p('142.251.155.119', true), p('54.36.178.49', true));
+  assert.equal(open.closes, false); // the control triple is not a line
+});
+
+test('404.N: 60 cancels, the expected value is 404 ⊕ N, and all 21 stay in 404\'s block of 32', () => {
+  for (let n = 0; n <= 20; n++) {
+    const expected = (60 ^ 404) ^ (60 ^ n);
+    assert.equal(expected, 404 ^ n);
+    assert.equal(expected >> 5, 404 >> 5); // 384 to 415
+    assert.equal(expected & 7, (n & 7) ^ 4); // N's atom, flipped by 404's atom 4
+  }
+});

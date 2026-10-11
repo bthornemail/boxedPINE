@@ -261,6 +261,7 @@ tags: [omi-imo, meta, changelog, history]
 - Status codes on the try/catch/finally plane (author): by their low three bits the 2xx codes are try, catch, throw, finally, Reflect, Proxy (206), full path, and 218 indexes the catch; the port server stamps every response with `Omi-Atom`. SPEC-07 I-96; OPEN-01 #19. 108 tests passing
 - The status codes as a ubiquitous catalogue (SPEC-07 I-97, `rosetta/src/http.catalog.ts`), seeded from Node's own list; HTTP/1.1 as the index 11. 109 tests passing
 - WordNet geometry (author): `omi-files/polytron/polyform/wordnet-to-geometry.c` fixed (eight bugs, committed in polytron) and run over all of WordNet: each synset is a nibble, part-of-speech base plus hypernym depth; "propagation" is the 24-cell. SPEC-07 I-98
+- Took in the continuation brain dump as [[SRC-12 The Continuation Brain Dump]]. SPEC-07 I-99: 1.1.1.1, 8.8.8.8 and 9.9.9.9 are an XOR line, and `repl/src/ping.ts` measures one. From the TOSHIBA Quad9 answers TCP 53, 853 and ICMP but not 443, on both wifi interfaces, while the phone reached it, so a wall is a reading of the frame and the port. I-100: 404.N expects 404 ⊕ N (the 60 cancels), all within 384–415. [[OPEN-01 Open Questions]] #24 (propagation made falsifiable by cross-frame checks) and #25 (the 300 block; the parabolic reading failed as tried). 111 tests passing
 
 ## Pending
 
