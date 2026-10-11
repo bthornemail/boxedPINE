@@ -267,6 +267,7 @@ tags: [omi-imo, meta, changelog, history]
 - The organ's two modes (author): it reflects its parity state every 256 cycles, and answers request lines by content negotiation (300, 200, 304, 307 to the dual, 206, 416, 400), always departing with 218; `rosetta/src/organ.ts` makes the same answers in any frame. The Breadboard Space connects to it over Web Serial and, under hand tracking, places it at the left wrist's XRJointSpace. Reading glitch fixed on the host: duplicated USB packets just after the port opens. SPEC-07 I-103. 116 tests passing
 - The organ's reflect rule (author: "if modulus % 4 = 0 when the modulus 2 is 0, or when the modulus of 2 and the modulus of 4 are not 0"): it reflects on tick n unless n & 3 = 2, and the live board's gaps were exactly those ticks. SPEC-07 I-103. 118 tests passing
 - SPEC-07 I-104 (author, from a podcast on the protocol): the regular 210 ladder starts at residue 97, index 21 of the 48 units mod 210, just after index 20; the ladder as written holds only at rung 0; {5, 11, 17, 23, 29} is the only sexy-prime quintuplet, because it contains 5
+- [[SRC-13 Provenance of the OMI Trees and the Metaverse Spine]]: the omi trees' lineage, the origin of omi-system.omilisp (Codex, commit a456cd6, 2026-05-09), and the ~/devops spine restored to a full local closure pass (final digest ef47d9e0…)
 
 ## Pending
 
