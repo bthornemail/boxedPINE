@@ -324,3 +324,15 @@ test('The trace keeps the last sixteen cues; propagate writes them, backpropagat
   assert.equal(trace[0]!.tick, 24);
   assert.deepEqual(backpropagate(traceVtt(trace)), trace);
 });
+
+// ---- Every prefix is a colour code (SPEC-07 I-92) ----
+import { atoms, colourCode, css, sgr } from '../../rosetta/src/colour.code.ts';
+
+test('Prefixes and escape sequences read as colour atoms; each folds to one colour code', () => {
+  assert.deepEqual(['0x', '0b', '0o', '0d'].map((p) => css(colourCode(p))), ['black', 'green', 'white', 'blue']);
+  assert.deepEqual(atoms('\x1b['), [3, 3]); // ESC and '[' are both yellow
+  assert.equal(colourCode('\x1b['), 0); // so the escape introducer folds to black
+  assert.equal(css(colourCode('<=>?')), 'black'); // 4 ^ 5 ^ 6 ^ 7 = 0
+  assert.equal(sgr(colourCode('0b')), '\x1b[32m');
+  assert.equal(colourCode(Uint8Array.of(0x3c, 0x3d)), colourCode('<=')); // bytes and text agree
+});

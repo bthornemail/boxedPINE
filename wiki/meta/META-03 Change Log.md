@@ -255,6 +255,7 @@ tags: [omi-imo, meta, changelog, history]
 - Status codes as an agent's lifecycle (author): the port server offers every port (300, agent-driven negotiation), sends a declared frame to its port (303), serves it (200), answers 304 when the agent already holds the constant, catches a raise (400), departs with 218. SPEC-07 I-87. 99 tests passing
 - Pure bit-shift meta-cycles (`core/src/verified/cycle.ts`): a one-hot ring of 16 and the swap32 crystal, 32 ticks, the same from animation frames and the kernel; the Breadboard Space ticks it by animation frames. 307 and 308 move agents in the port server. The author's bell explained: 60 ⊕ 59 = 7 (BEL); the proof Blob holds 32, so `proofs/blob/README.md` says to use `xxd`. SPEC-07 I-88, I-89. 101 tests passing
 - The colour gate (author: the colour spectrum instead of the bell, for gating kernel space): ANSI colours 30 + n are the Fano points, complements XOR to white; `repl/src/ansi.ts` draws indices in colour and never lets a control byte through. SPEC-07 I-90. 103 tests passing
+- The base atoms in 60 ⊕ 0…63 (I-91) and every prefix as a colour code (I-92, `rosetta/src/colour.code.ts`): 0x black, 0b green, 0o white, 0d blue; ESC[ folds to black. 105 tests passing
 
 ## Pending
 

@@ -240,6 +240,8 @@ From the author, 2026-10-11: each frame of reference coordinates on the time and
 
 | I-91 | **The base atoms** (author: the colours "are revealed in the 60 ⊕ 64 and are the base atoms"). The eight 3-bit indices (black and the seven Fano points) are the base atoms. In the block 60 ⊕ m, m = 0…63, a byte's atom is its low three bits, 4 ⊕ (m & 7): each octet reveals all eight once, in the order blue, magenta, cyan, white, black, red, green, yellow, and each atom appears 8 times in the block. The pole 60 ⊕ 64 = 124 carries the same atom as 60 | DEFINITION (author) + THEOREM (tested) | `repl.test.ts` |
 
+| I-92 | **Every prefix is a colour code** (author: "on all platforms a prefix or escape sequence can be considered a color code"). A byte's atom is its low three bits, so a sequence reads as atoms and folds by XOR to one colour code. The radix prefixes: `0x` black, `0b` green, `0o` white, `0d` blue. ESC and `[` are both yellow, so the escape introducer folds to black; `<=>?` folds to black (4 ⊕ 5 ⊕ 6 ⊕ 7 = 0). The reading is platform-free; showing it is a door (SGR 30 + n in a terminal, the same eight CSS colour keywords in a browser) | THEOREM (tested) + DEFINITION (author) | `rosetta/src/colour.code.ts`; `rosetta.test.ts` |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧
