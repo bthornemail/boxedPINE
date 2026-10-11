@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Breadboard Space</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --paper:#f6f6f2; --ink:#1d1f24; --muted:#5d636e; --rule:#d9dad3; --panel:#ffffffee;
+  --accent:#b8321f; --ok:#2f7d4f; --sel:#2b5fa8;
+  --display:"Newsreader", Georgia, serif; --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#15171b; --ink:#e8e8e3; --muted:#9aa0aa; --rule:#2c3038; --panel:#1d2026ee;
+  --accent:#e2624c; --ok:#5cbf85; --sel:#7aa7e8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#15171b; --ink:#e8e8e3; --muted:#9aa0aa; --rule:#2c3038; --panel:#1d2026ee;
+  --accent:#e2624c; --ok:#5cbf85; --sel:#7aa7e8; color-scheme:dark}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font:13px/1.5 var(--mono)}
+#stage{position:fixed;inset:0}
+#stage canvas{display:block;width:100%;height:100%}
+.panel{position:fixed;top:16px;left:16px;width:min(360px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;
+  background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:14px;display:grid;gap:12px;backdrop-filter:blur(6px)}
+h1{font:600 1.5rem/1.1 var(--display);margin:0}
+.label{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button{font:inherit;color:inherit;background:none;border:1px solid var(--rule);border-radius:4px;padding:5px 10px;cursor:pointer}
+button[aria-pressed="true"]{background:var(--sel);color:var(--paper);border-color:var(--sel)}
+button:focus-visible{outline:2px solid var(--sel);outline-offset:2px}
+#fano{width:100%;max-width:220px}
+#fano .ln{fill:none;stroke:var(--rule);stroke-width:1.6}
+#fano .ln.hit{stroke:var(--accent);stroke-width:3}
+#fano circle.pt{fill:var(--ink)} #fano circle.pt.on{fill:var(--accent)}
+#fano text{fill:var(--paper);font:600 7px var(--mono);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+#cue{min-height:3.2em;border-left:3px solid var(--sel);padding-left:8px}
+#cue i{color:var(--muted)}
+table{border-collapse:collapse;width:100%}
+td{padding:2px 6px 2px 0;border-bottom:1px solid var(--rule);white-space:nowrap}
+.lit{color:var(--ok);font-weight:600}
+video{display:none}
+</style>
+</head>
+<body>
+<div id="stage" aria-label="The four XOR builds in 3D"></div>
+<section class="panel" id="panel" aria-labelledby="title">
+  <div>
+    <div class="label">Breadboard · 3D and 2D · one reading</div>
+    <h1 id="title">Breadboard Space</h1>
+  </div>
+  <div class="row" role="group" aria-label="Inputs">
+    <button id="inA" aria-pressed="false">A = 0</button>
+    <button id="inB" aria-pressed="false">B = 0</button>
+    <span id="out" class="label"></span>
+  </div>
+  <table id="builds" aria-label="The four builds"></table>
+  <div>
+    <div class="label">The same reading on the Fano plane: (a, b, a ⊕ b) is a point of the circle line 3-5-6</div>
+    <svg id="fano" viewBox="0 0 95 86" role="img" aria-label="Fano plane"></svg>
+  </div>
+  <div>
+    <div class="label">Walkthrough track</div>
+    <div id="cue" aria-live="polite">Press play to run the walkthrough.</div>
+  </div>
+  <div class="row">
+    <button id="play">Play walkthrough</button>
+    <button id="pip3d">3D picture-in-picture</button>
+    <button id="pip2d">2D picture-in-picture</button>
+    <span id="xr"></span>
+  </div>
+</section>
+<video id="video" muted playsinline></video>
+<script type="module" src="./src/xr.ts"></script>
+</body>
+</html>

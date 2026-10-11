@@ -288,7 +288,7 @@ The author renamed the upper half's zero index (the "Hamming" or "Polybius" row)
 
 The author's plan (2026-10-11): XR spaces from `breadboard/`, a text track of the walkthrough, a 2D and 3D picture-in-picture space, and "a qemu virt bios.img kernel for rosetta to host a meta memory of an eMMC flashable model for physical propagation based on mac addresses", with "eBPF or qemu GED event bus".
 
-**Done:** the MAC fold, IPP zero, NAT64 and reverse names (`core/src/verified/loopback.ts`, I-69 to I-73); the walkthrough track (`rosetta/src/walkthrough.ts`); presence by UDP and MQTT (`repl/src/presence.ts`, I-72).
+**Done:** stage 2, the Breadboard Space (`space/xr.html`, [[SPEC-44 The Virtual Breadboard]]); the MAC fold, IPP zero, NAT64 and reverse names (`core/src/verified/loopback.ts`, I-69 to I-73); the walkthrough track (`rosetta/src/walkthrough.ts`); presence by UDP and MQTT (`repl/src/presence.ts`, I-72).
 
 **Waiting, because it runs on the system:**
 - boot `omi-files/omi-bios/bios.img` (4 MB raw) or polytron's kernel (`run-qemu.sh`) in QEMU, with an emulated eMMC as rosetta's flashable meta memory;

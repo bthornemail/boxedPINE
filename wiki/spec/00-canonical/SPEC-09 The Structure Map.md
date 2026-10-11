@@ -165,6 +165,7 @@ The states a structure can be in:
 | Structure | Reading | Home | Check | Realizations | State |
 |-----------|---------|------|-------|--------------|-------|
 | The four XOR builds 5T, 6T, 8T, 10T | [[SPEC-44 The Virtual Breadboard]] | — | `breadboard` test.mjs (passes; not part of `npm test`) | `breadboard` | **realized**, with its own check |
+| The Breadboard Space: geometry as data, XOR on the circle line | [[SPEC-44 The Virtual Breadboard]] | — | space.test, core.test | `space` xr.html, breadboard.geometry.ts | **realized**, with its own check |
 | The sixteen Fano constants: closure, two-step convergence, duality at i ⊕ 15 | I-65 to I-67 | `core` fano.ts | core.test | `space` assets/fano (18 files) | **canonical** |
 | The Fano files read the same from any buffer | I-68 | `core` fano.ts (`readFanoSvg`) | core.test | `space` assets/fano | **canonical** |
 | A MAC on the loopback: fold, IPP zero, NAT64 | I-69 to I-71 | `core` loopback.ts | core.test | — | **canonical** |
@@ -196,7 +197,7 @@ File 0 is the **BOM**, which holds the **Prompt Tree**; files 1–15 hold the fi
 
 ## The Count
 
-Of the 70 rows (2026-10-11): **41 canonical**, **7 checked**, **14 stated**, **1 realized only** (Proxy and Reflect), **2 realized with their own check** (the breadboard, presence), **5 fail**.
+Of the 71 rows (2026-10-11): **41 canonical**, **7 checked**, **14 stated**, **1 realized only** (Proxy and Reflect), **3 realized with their own check** (the breadboard, presence, the Breadboard Space), **5 fail**.
 
 ## What Canonicalizes Next
 

@@ -561,3 +561,12 @@ test('Three numbers make a transform of the Fano plane; exactly 168 move it onto
   }
   assert.equal(count, 168);
 });
+
+// ---- XOR's truth table is the Fano circle line (space/xr.html) ----
+test('The rows (a, b, a ⊕ b) of the XOR truth table are 0, 5, 6, 3: the circle line 3-5-6 with zero', () => {
+  const rows = [[0, 0], [1, 0], [0, 1], [1, 1]].map(([x, y]) => x! | (y! << 1) | ((x! ^ y!) << 2));
+  assert.deepEqual(rows, [0, 5, 6, 3]);
+  const mask = rows.filter(Boolean).reduce((m, p) => m | (1 << (p - 1)), 0);
+  assert.equal(mask, 0b0110100);
+  assert.ok(isConstant(mask)); // a line of the plane, one of the sixteen constants
+});

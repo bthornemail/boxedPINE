@@ -182,3 +182,13 @@ Then open `http://localhost:8417`, press *Power on (+5V)* (this starts the `Audi
 - The 5T/6T topology is derived from prose; see above.
 - `SWITCH` has the same truth table as `NAND`. It is a separate rule only because it costs one transistor, not two.
 - The 5T's "cannot forward its output" (SRC-08 claim 11) is not enforced: another circuit could read its `node`.
+
+## The Breadboard Space (2026-10-11)
+
+`space/xr.html` shows the four builds in 3D (three.js; WebXR when a headset is present), the same reading on the Fano plane in 2D, and the wiki walkthrough as a WebVTT track (`rosetta/src/assets/walkthrough.vtt`). The 3D canvas is streamed into a `<video>` that carries the track, so it can go picture-in-picture; the 2D panel goes picture-in-picture through the Document Picture-in-Picture API. `?a=1&b=0` in the address sets the inputs.
+
+**The geometry is data** (author: "aframe extends from threejs and canvas so we just need the geometries"). `space/src/breadboard.geometry.ts` derives boxes, cylinders, spheres and lines from the circuit descriptions, with no renderer; three.js draws them, and `toAframe` writes the same list as A-Frame entities. Tested without a browser: one cylinder per transistor (5, 6, 8, 10), one LED per build.
+
+**One reading in both views** (THEOREM, tested): for inputs a, b the index a | b ≪ 1 | (a ⊕ b) ≪ 2 is 0, 5, 6 or 3, so XOR's truth table is the Fano circle line 3-5-6 with zero, one of the sixteen constants ([[SPEC-16 The Fano Invariant]]). The page lights that point as the LEDs change.
+
+Checked in headless Chrome (software WebGL): the four boards render, A = 1 lights all four LEDs and point 5, A = B = 1 lights none and point 3.

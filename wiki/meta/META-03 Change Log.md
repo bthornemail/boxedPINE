@@ -245,6 +245,7 @@ tags: [omi-imo, meta, changelog, history]
 - Reverse names (RFC 2317 classless delegation, `ip6.arpa`) for loopback and NAT64 addresses; the RFC's blocks are levels of the last octet's high nibble (SPEC-07 I-73, SPEC-27 §1). Stage 3 recorded as [[OPEN-01 Open Questions]] #22, with eBPF and the QEMU GED event bus. 81 tests passing
 - Index integrity (author: "every number is an index"): sizes rewritten as shifts and masks, value arithmetic fenced in three VALUE DOORS (metron, period, the fano reader), and a test that fails on × ÷ % in `core/src/verified/` outside a door. SPEC-07 I-74; 82 tests passing
 - Ports as Prompt Tree paths with CIDR in nibbles (the prefix as a location), two numbers dialling the lens from a point, three numbers as a Fano transform matrix (exactly 168 symmetries), and casing styles as literals of one word sequence ([[SPEC-27 The Prompt Tree Index]] §8, SPEC-07 I-75 to I-78). An earlier first-letter dial reading was corrected by the author and removed. 86 tests passing
+- Stage 2: the Breadboard Space (`space/xr.html`): the four builds in 3D with WebXR, the Fano reading in 2D, the walkthrough track, picture-in-picture for both; the geometry as renderer-free data (`space/src/breadboard.geometry.ts`, A-Frame writer); XOR's truth table is the circle line 3-5-6. Two pages now build (`vite.config.ts`). 89 tests passing
 
 ## Pending
 
