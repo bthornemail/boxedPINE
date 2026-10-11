@@ -212,6 +212,8 @@ From the author, 2026-10-11 ([[SPEC-27 The Prompt Tree Index]] §8).
 | I-77 | **Any three numbers make a transform matrix** of the Fano plane by XOR of columns; exactly **168** of the 512 triples move the plane onto itself, its whole symmetry group | DEFINITION (author) + THEOREM (168) | `fano.ts`; `core.test.ts` |
 | I-78 | **Casing styles are literals of one word sequence:** five styles, one set of words; the axis is the first position's case bit and the boundary mark | THEOREM | `casing.ts`; `rosetta.test.ts` |
 
+| I-79 | **The sequence is the kernel's tick, not UTC.** The atomic kernel never stops: a logic crystal whose cycle speed is set by the speed of logic processing, "basically swap32 ad infinitum"; proxy, reflect and catch take their sequence from it instead of UTC. swap32 undoes itself, so the crystal alternates between two readings forever | DEFINITION (author, 2026-10-11) + THEOREM (swap32 is an involution, I-3) | [[USE-00 Use Case Scenarios]]; `omi-files/atomic-kernel` |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧

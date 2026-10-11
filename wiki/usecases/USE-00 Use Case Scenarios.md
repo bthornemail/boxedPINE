@@ -39,13 +39,13 @@ For a builder, each scenario says what the demonstration must make possible and 
 | Hear and see the gates | `breadboard` (moved from `omi`) | 0, 5 | `breadboard/` | checked (`npm test`) |
 | Reduce a declaration to a canvas | `omi-canvas` | 2–4 | `rosetta/`, `space/` | checked (`cabal test all`) |
 | Name every type once | `types/` (repo `omi-types`, a fork of `omi-canvas`; moved out of `omi-files/` 2026-10-09) | 0–5 | `core/`, `rosetta/` | checked (`cabal test all`) |
-| Declare in OMI-Lisp | `omi-lisp` | 2–5 | `rosetta/` | not run |
-| Segment before parsing | `omnicron` | 1–3 | `rosetta/` | not run |
-| Execute on a fixed-width ISA | `omi-isa` | 0, 4 | `core/` | not run |
-| Replay deterministically | `atomic-kernel` | 0, 4 | `core/`, `src/` | not run |
-| Witness across four authorities | `omi-tetragrammatron` | 3–5 | `rosetta/`, `space/` | not run |
-| Address and conform | `tetragrammatron` | 1, 4 | `src/` | not run |
-| Boot on bare metal | `polytron`, `omi-bios` | 0, 4 | `core/` | not run |
+| Declare in OMI-Lisp | `omi-lisp` | 2–5 | `rosetta/` | checked 2026-10-11 (`make test` passes) |
+| Segment before parsing | `omnicron` | 1–3 | `rosetta/` | checked 2026-10-11 (`make test` passes) |
+| Execute on a fixed-width ISA | `omi-isa` | 0, 4 | `core/` | checked 2026-10-11 **outside the tree**: `make test` passes in a copy, but fails in place, because boxedPINE's root `package.json` sets `"type": "module"` and Node then reads `omi-isa`'s CommonJS `.js` as ES modules |
+| Replay deterministically | `atomic-kernel` | 0, 4 | `core/`, `src/` | checked 2026-10-11: `tests/test_all.py` passes 47/47; `tests/test_v1.py` runs without end, **by design** (author: the kernel "never stops running … a logic crystal … swap32 ad infinitum") |
+| Witness across four authorities | `omi-tetragrammatron` | 3–5 | `rosetta/`, `space/` | **fails** 2026-10-11: `make smoke` stops at the portal build, `@vitejs/plugin-react` is not installed (its `npm install` was never run; not run now) |
+| Address and conform | `tetragrammatron` | 1, 4 | `src/` | checked 2026-10-11 (`npm test`: 167 of 167 pass) |
+| Boot on bare metal | `polytron`, `omi-bios` | 0, 4 | `core/` | `polytron` checked 2026-10-11 (`make verify` passes; not booted: [[OPEN-01 Open Questions]] #22) |
 | Compose with sound | `omi-music` | 5 | `space/` | empty workspace |
 
 ## The Scenarios
