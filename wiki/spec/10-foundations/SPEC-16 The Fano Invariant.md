@@ -22,7 +22,10 @@ sources:
   - "[[SRC-01 XOR Tetrahedron Transform]]"
   - "[[SRC-03 Protocol Sequence Analysis]]"
   - "[[SRC-05 Conspiracy Check]]"
-code: []
+code:
+  - "core/src/verified/fano.ts"
+  - "space/src/assets/fano/"
+  - "src/testbed/core.test.ts"
 dimensions: []
 symbols: []
 tags: [omi-imo, fano, invariant, projective-plane, 7-points]
@@ -146,6 +149,25 @@ reading      — the result
 ```
 
 The observer reads the Fano plane. The reading is the materialized meaning.
+
+## The Sixteen Constants
+
+Added 2026-10-11, from the Fano icon set in `space/src/assets/fano/`: 18 Inkscape files by Watchduck, public domain (CC0), taken from Wikimedia Commons. The author: "these files should be convergent in any Buffer and Autonomous on any FPGA". `core/src/verified/fano.ts` makes them so.
+
+**A constant is a 7-bit mask:** bit n − 1 is point n, where the points are the nonzero 3-bit indices 1..7. Everything below is THEOREM, checked over every case in `core.test.ts`.
+
+| Fact | |
+|------|---|
+| **Exactly 16 of the 128 masks are XOR-closed** (with a and b marked, a ⊕ b is marked) | the 16 subspaces of three bits: empty, 7 points, 7 lines, full. They are the 16 icons |
+| **Every byte converges to one of them** under "mark a ⊕ b for every marked pair", in **at most 2 steps** | each step is, per point, one OR of three ANDs (the three lines through it): seven small gates, no clock and no arithmetic. So an FPGA converges any input in two gate stages |
+| **Duality is bitwise:** the dual of a mask is every point meeting each marked point an even number of times | point 7 ↔ the circle line 3-5-6, point 1 ↔ line 2-6-4, empty ↔ full |
+| **The 16-byte table `CONSTANTS`** puts the dual of index i at index **i ⊕ 15**: 0 empty, 1..7 the points, 8..14 the lines (15 − n is the line dual to point n), 15 full | so the direction flip of the Prompt Tree ([[SPEC-27 The Prompt Tree Index]] §5) is the Fano point–line duality |
+| **Every file reads to the constant its name says**, from text, a Node `Buffer`, a `Uint8Array` or a `SharedArrayBuffer` | the reader (`readFanoSvg`) uses whole numbers only: each decimal is read as an integer count of millionths, so no float, rounding mode or SVG parser can change the answer |
+| **Two files hold the same constant exactly when their masks XOR to 0**, which is when their 7-bit XNOR is 1111111 | the two `(Copy)` files are byte-identical to their originals and read Hamming 0: "same coordinate, two views" |
+
+The 16 constants are the same 16 positions as the nibble, the tree's 16 files and the Prompt Tree's 16 positions.
+
+The original Wikimedia web pages, which are HTML and not drawings, stay in `_archive/_inbox/icons/set`. The page that first read these files (`_archive/_inbox/Fano Constants.html`) used a browser SVG parser and floating-point matrices; `fano.ts` reads the same constants without either.
 
 ## The Fano Invariant
 

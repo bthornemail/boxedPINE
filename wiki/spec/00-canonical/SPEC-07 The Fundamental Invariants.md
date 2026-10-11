@@ -175,6 +175,17 @@ From the author, 2026-10-09 ([[SPEC-04 First Principles]], "The Only Input").
 | I-63 | **The protocol's only purpose is propagation,** and the Axiom of Propagation is its only axiom | DEFINITION (author) | [[SPEC-05 The Axiom of Propagation]] |
 | I-64 | **The protocol names no regex symbols and no words. It works on regex as it is.** Any regex variant two people share serves, when it gives them the same results; the result depends on the environment in the end ("the closest thing to non-deterministic determinism") | DEFINITION (author) | [[SPEC-04 First Principles]] |
 
+## XIII. The Sixteen Fano Constants
+
+Added 2026-10-11 ([[SPEC-16 The Fano Invariant]], "The Sixteen Constants").
+
+| # | Invariant | Mark | Evidence |
+|---|-----------|------|----------|
+| I-65 | **Exactly 16 of the 128 seven-bit masks are XOR-closed:** the 16 subspaces of three bits, which are the 16 Fano icons | THEOREM | `fano.ts`; `core.test.ts` (all 128) |
+| I-66 | **Every byte converges to one of the 16 in at most two steps** of "mark a ⊕ b for every marked pair"; one step is seven OR-of-three-ANDs gates | THEOREM | `core.test.ts` (all 256) |
+| I-67 | **In the 16-byte table, index i ⊕ 15 is the dual of index i**, so the Prompt Tree's direction flip is the point–line duality | THEOREM (duality) + DEFINITION (the indexing) | `core.test.ts` |
+| I-68 | **The Fano files read to their constants identically from any buffer,** using whole numbers only; two files hold the same constant exactly when their masks XOR to 0 (7-bit XNOR all ones) | THEOREM | `core.test.ts` (18 files, 4 kinds of buffer) |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧

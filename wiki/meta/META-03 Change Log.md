@@ -237,6 +237,10 @@ tags: [omi-imo, meta, changelog, history]
 - Inscribed the author's **only input** ([[SPEC-04 First Principles]]): a declaration regex and a seed, nothing else; added the resolver `rosetta/src/grammar/resolve.ts`. "A polynomial is a regex expression" checked: exact for bounded regexes (I-61). The fifteen treemaps' enumeration and ASCII cascade both derive from one binding (I-62). Corrected SPEC-05: "Axiom of Direction" was proposed in conversation, not named by the author. 69 tests passing
 - The author declined the name "Axiom of Direction": the Axiom of Propagation is the only axiom, and propagation the protocol's only purpose (I-63). SPEC-05's section is now "The Linear Sequencing of Causality", in the author's words. Inscribed "regex as it is" (I-64): the protocol names no regex symbols or words, and any shared regex variant serves; the earlier "portability comes from conformance tests" in SPEC-04 is superseded
 
+## 2026-10-11
+
+- Made the Fano icon files "convergent in any Buffer and autonomous on any FPGA" (author): `core/src/verified/fano.ts` holds the 16 constants (exactly the XOR-closed 7-bit masks), a two-step convergence of any byte, the duality at index i ⊕ 15, and a whole-number reader; the 18 drawings are in `space/src/assets/fano/`. [[SPEC-16 The Fano Invariant]] "The Sixteen Constants"; SPEC-07 I-65 to I-68; 72 tests passing
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`

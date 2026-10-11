@@ -165,6 +165,8 @@ The states a structure can be in:
 | Structure | Reading | Home | Check | Realizations | State |
 |-----------|---------|------|-------|--------------|-------|
 | The four XOR builds 5T, 6T, 8T, 10T | [[SPEC-44 The Virtual Breadboard]] | — | `breadboard` test.mjs (passes; not part of `npm test`) | `breadboard` | **realized**, with its own check |
+| The sixteen Fano constants: closure, two-step convergence, duality at i ⊕ 15 | I-65 to I-67 | `core` fano.ts | core.test | `space` assets/fano (18 files) | **canonical** |
+| The Fano files read the same from any buffer | I-68 | `core` fano.ts (`readFanoSvg`) | core.test | `space` assets/fano | **canonical** |
 | The tree: 16 Blobs, one 20-bit index | I-48 | `core` tree.ts | core.test | `types/` (proxy) | **canonical** |
 | The Prompt Tree: four levels, the swaps, the 16-bit path | I-49 to I-51; [[SPEC-27 The Prompt Tree Index]] | `core` tree.ts; `rosetta` grammar.ts (`PROMPT_PATH`) | core.test, rosetta.test; the readings file | — | **canonical** |
 | The BOM in both directions (file 0 prefix, file 15 suffix) | I-52, I-54 | `core` tree.ts (`BOM_FILE`, `BOM_SUFFIX_FILE`, `reverse`) | core.test | — | **canonical** |
@@ -188,7 +190,7 @@ File 0 is the **BOM**, which holds the **Prompt Tree**; files 1–15 hold the fi
 
 ## The Count
 
-Of the 62 rows (2026-10-09): **34 canonical**, **7 checked**, **14 stated**, **1 realized only** (Proxy and Reflect), **1 realized with its own check** (the breadboard), **5 fail**.
+Of the 64 rows (2026-10-11): **36 canonical**, **7 checked**, **14 stated**, **1 realized only** (Proxy and Reflect), **1 realized with its own check** (the breadboard), **5 fail**.
 
 ## What Canonicalizes Next
 
