@@ -250,6 +250,8 @@ The transcript's own candidate ("try, catch, finally / three exits / the full pa
 **The two names (author, 2026-10-07):** they are the Proxy and the Reflect of `core/src/broadcast.ts`, where iExtant meets the user. There RegExp declarations and string definitions are crosslinked with the iExtant's Exponent and Exception. In `core/src/model.ts` terms this is the `Node`, inside a `Domain`. `launchBroadcast(declared: RegExp, defined: string)` returns `proxy()` and `reflect()`, one step forward and one step back. They are the two poles `{c + r, c − r}` with r = 1, each a compare-exchange on the iExtant.
 
 Which is which follows the protocol's roles (Regex constrains, Proxy traps, Reflect performs): try ⊕ finally is the operation witnessed, so Reflect; catch ⊕ finally is the trap witnessed, so Proxy. On the Fano lines this gives **Proxy ⊕ Reflect = throw**: a step forward and a step back differ by exactly the throw (checked). Swap the two if the author intends the reverse.
+
+**Over HTTP (2026-10-11):** read by their low three bits, the 2xx status codes fill this table: 201 try, 202 catch, 203 throw, 204 finally, 205 Reflect, 206 Proxy, 207 full path, and the departure 218 indexes the catch. 206 ⊕ 205 is again the throw (SPEC-07 I-96).
 **Status:** Resolved.
 
 ### 20. Three Readings of `{17, 19}` and the Triangulation of 23

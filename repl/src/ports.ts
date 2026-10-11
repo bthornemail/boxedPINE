@@ -15,6 +15,7 @@ import { CONSTANTS, readFanoSvg } from '../../core/src/verified/fano.ts';
 import { FRAME_HEADER, frameText, parseFrameText, framePort } from '../../rosetta/src/media.frame.ts';
 import { propagate, traceVtt, type Reading } from '../../rosetta/src/trace.vtt.ts';
 import { proofBlob } from '../../rosetta/src/proof.blob.ts';
+import { statusRole } from '../../rosetta/src/colour.code.ts';
 
 /** The departure's status (author: the finally is 218). Non-standard; clients read an unknown 2xx as 200. */
 export const DEPARTURE = 218;
@@ -50,6 +51,13 @@ export function startPorts(port = 0, host = '127.0.0.1'): Promise<Server> {
   const body = (req: import('node:http').IncomingMessage) => new Promise<string>((ok) => { let t = ''; req.on('data', (c) => { t += c; }); req.on('end', () => ok(t.trim())); });
   const server = createServer(async (req, res) => {
     const url = new URL(req.url ?? '/', 'http://loopback');
+    // Every response carries its status code's atom and role on the try/catch/finally plane (I-96).
+    const writeHead = res.writeHead.bind(res) as (...a: unknown[]) => typeof res;
+    (res as { writeHead: unknown }).writeHead = (code: number, ...rest: unknown[]) => {
+      const { atom, role } = statusRole(code);
+      res.setHeader('Omi-Atom', `${atom} ${role}`);
+      return writeHead(code, ...rest);
+    };
     const svg = (body: string, headers: Record<string, string> = {}) => {
       res.writeHead(200, { 'Content-Type': 'image/svg+xml', ...headers });
       res.end(body);

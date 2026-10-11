@@ -354,3 +354,14 @@ test('Each constant generates an SVG, CSS, a cue and panner positions, and compi
   assert.equal(metaCues().length, 16);
   assert.throws(() => compileCue('port=3 etag="3" mask=0b0000001'), RangeError); // mask disagrees with port
 });
+
+// ---- Status codes on the try / catch / finally plane (SPEC-07 I-96) ----
+import { statusRole } from '../../rosetta/src/colour.code.ts';
+
+test('2xx codes fill the try/catch/finally plane by their low three bits; 206 is Proxy, 218 indexes catch', () => {
+  assert.deepEqual([201, 202, 203, 204, 205, 206, 207].map((c) => statusRole(c).role), ['try', 'catch', 'throw', 'finally', 'Reflect', 'Proxy', 'full path']);
+  assert.equal(statusRole(218).role, 'catch');
+  assert.equal(statusRole(206 ^ 205).role, 'throw'); // Proxy ⊕ Reflect = the throw
+  assert.equal(statusRole(206 ^ 218).role, 'finally'); // Proxy ⊕ catch = finally
+  assert.equal(statusRole(200).role, 'none');
+});

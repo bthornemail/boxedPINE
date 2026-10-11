@@ -20,3 +20,12 @@ export const colourCode = (s: string | Uint8Array) => atoms(s).reduce((x, a) => 
 /** The code drawn in a terminal (SGR) and named for a browser (CSS). */
 export const sgr = (atom: number) => `\x1b[${30 + (atom & 7)}m`;
 export const css = (atom: number) => ATOMS[atom & 7];
+
+// ---- Status codes on the try / catch / finally plane (SPEC-07 I-96) ----
+// try = 001, catch = 010, finally = 100 (OPEN-01 #19); a status code's atom is
+// its low three bits. The author: "206 is the built-in throw coordinate to Proxy
+// or Reflect the Catch throw at 218 index".
+export const ROLES = ['none', 'try', 'catch', 'throw', 'finally', 'Reflect', 'Proxy', 'full path'] as const;
+
+/** A status code's atom and role. */
+export const statusRole = (code: number) => ({ atom: code & 7, role: ROLES[code & 7]!, colour: ATOMS[code & 7]! });

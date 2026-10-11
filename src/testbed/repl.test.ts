@@ -127,10 +127,12 @@ test('Ports: a request\'s media frame converges to a Fano drawing, and reading t
     assert.equal(part.status, 206);
     assert.equal(part.headers.get('content-range'), 'bytes 59-59/8192');
     assert.equal(part.headers.get('etag'), tag); // the same ETag a 200 carries
+    assert.equal(part.headers.get('omi-atom'), '6 Proxy'); // 206 is Proxy
     assert.deepEqual([...new Uint8Array(await part.arrayBuffer())], [60 ^ 59]); // index 59 holds 7, the bell
     assert.equal((await fetch(`${base}/blob`, { headers: { Range: 'bytes=9000-' } })).status, 416);
     const exit = await fetch(`${base}/anything-undecided`); // nothing decided: finally departs with 218
     assert.deepEqual([exit.status, exit.statusText, exit.ok], [218, 'This is fine', true]);
+    assert.equal(exit.headers.get('omi-atom'), '2 catch'); // 218 indexes the catch
     assert.equal(await exit.text(), '/anything-undecided'); // the request passes through
   } finally {
     server.close();
