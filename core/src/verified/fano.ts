@@ -66,6 +66,7 @@ export const CONSTANTS = Uint8Array.from({ length: 16 }, (_, i) =>
 export const constantIndex = (mask: number) => CONSTANTS.indexOf(mask);
 
 // ---- Reading an Inkscape Fano file with whole numbers only ----
+// VALUE DOOR: a drawing's geometry is values; what comes out is an index (a mask).
 
 const SCALE = 1_000_000n;
 
@@ -129,3 +130,4 @@ export function readFanoSvg(source: string | Uint8Array): number {
   }
   return mask;
 }
+// END VALUE DOOR

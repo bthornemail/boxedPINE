@@ -15,9 +15,9 @@
 // Verified 2026-10-07 (wiki: OPEN-01 Open Questions #13; the reading is the author's).
 
 export const BLOB_BITS = 65536;
-export const BLOB_BYTES = BLOB_BITS / 8;      // 8192
+export const BLOB_BYTES = BLOB_BITS >>> 3;    // 8192
 export const BUFFER_BYTES = 64;
-export const BUFFERS_PER_BLOB = BLOB_BYTES / BUFFER_BYTES; // 128
+export const BUFFERS_PER_BLOB = BLOB_BYTES >>> 6; // 128: BUFFER_BYTES is 64 = 1 << 6
 
 /** The last-block offset at a given bit width: all ones except the lowest two bits. */
 export function lastBlockOffset(width: number): number {

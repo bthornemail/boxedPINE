@@ -8,6 +8,7 @@
 // This file only derives the numbers in it (SPEC-07 I-57, I-58). Like
 // isPrime in metron.ts, it computes on values to produce evidence.
 
+// VALUE DOOR: the period of 1/p is a claim about values (SPEC-07 I-57, I-58).
 /** How many digits 1/p repeats over when written in `base` (the order of base mod p). */
 export function period(base: number, p: number): number | null {
   if (base % p === 0) return null;
@@ -29,3 +30,4 @@ export function lensesKeepingPeriods(): number[] {
   }
   return out;
 }
+// END VALUE DOOR

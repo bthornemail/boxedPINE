@@ -199,6 +199,8 @@ Added 2026-10-11, from the author: physical propagation keyed by MAC address, wi
 
 | I-73 | **Reverse names read an address from the other end.** RFC 2317 (classless IN-ADDR.ARPA delegation) names a /24 + k block by its first address and length, `128/26`; that block is level k of the last octet's high nibble (/25, /26, /27, /28 = 2, 4, 8, 16 groups). `ip6.arpa` (RFC 3596) reverses an IPv6 address one nibble per label. The RFC's own examples are test cases; names use `-` as the RFC advises, `/` on request | THEOREM | `loopback.ts`; `core.test.ts` (all 256 last octets) |
 
+| I-74 | **Index integrity** (author, 2026-10-11: "every number is an index so we can maintain integrity to indexing"). In `core/src/verified/`, numbers are combined only by XOR, shifts, masks, walks (`+ 1`) and complements (`w − n`, `(1 << w) − 1`). Sizes are shifts (`count << 2`, `bits >>> 3`, `16 << 16`), and a radix belongs to the literal (I-42). Value arithmetic (× ÷ %) appears only inside three marked **VALUE DOORS**, where values from outside enter and an index comes out: primality and the 210 ladder (`metron.ts`), the periods of 1/p (`period.ts`), and the geometry of a drawing (`fano.ts`'s reader) | THEOREM (enforced: `npm test` fails on × ÷ % outside a door) + DEFINITION (I-1) | `core.test.ts` |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧

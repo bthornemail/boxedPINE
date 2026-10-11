@@ -22,6 +22,7 @@ export function bind(unbound: BigInt64Array, metron: BigInt64Array = METRON) {
   return { carrier, metron: metron.slice() };
 }
 
+// VALUE DOOR: primality and the 210 ladder are claims about values (SPEC-07 I-44 to I-46).
 export function isPrime(n: number): boolean {
   if (n < 2) return false;
   for (let d = 2; d * d <= n; d++) if (n % d === 0) return false;
@@ -44,3 +45,4 @@ export function clusters(pattern: readonly number[], limit: number): number[] {
 export function ladderAsWritten(rung: number): number[] {
   return [5, 7, 11, 13, 17, 19].map((k) => 210 * rung + k);
 }
+// END VALUE DOOR

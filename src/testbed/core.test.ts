@@ -504,3 +504,22 @@ test('Reverse names read a loopback address from the other end; ip6.arpa goes on
   assert.ok(name.startsWith('e.6.0.2.2.1.f.7.'));
   assert.ok(name.endsWith('1.0.0.0.b.9.f.f.4.6.0.0.ip6.arpa'));
 });
+
+// ---- Index integrity (SPEC-07 I-1, I-74) ----
+import { readdirSync as listDir, readFileSync as readText } from 'node:fs';
+
+test('Index integrity: no ×, ÷ or % on numbers in core/src/verified outside a marked VALUE DOOR', () => {
+  const dir = new URL('../../core/src/verified/', import.meta.url);
+  const offenders: string[] = [];
+  for (const name of listDir(dir).filter((f) => f.endsWith('.ts'))) {
+    let door = false;
+    readText(new URL(name, dir), 'utf8').split('\n').forEach((line, i) => {
+      if (/\/\/ VALUE DOOR/.test(line)) door = true;
+      if (/\/\/ END VALUE DOOR/.test(line)) door = false;
+      const code = line.replace(/\/\/.*$/, '').replace(/'[^']*'|"[^"]*"|`[^`]*`/g, '').trim();
+      if (door || code.startsWith('*') || code.startsWith('/*') || /^(export|import) \* /.test(code)) return;
+      if (/[\w)\]]\s*[*/%]\s*[\w(]/.test(code)) offenders.push(`${name}:${i + 1}: ${line.trim()}`);
+    });
+  }
+  assert.deepEqual(offenders, []);
+});

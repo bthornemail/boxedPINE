@@ -12,8 +12,8 @@
 
 export const FILES = 16;
 export const BITS_PER_FILE = 65536;
-export const BYTES_PER_FILE = BITS_PER_FILE / 8;
-export const TREE_BITS = FILES * BITS_PER_FILE;
+export const BYTES_PER_FILE = BITS_PER_FILE >>> 3;
+export const TREE_BITS = FILES << 16;
 
 export type Address = { file: number; byte: number; bit: number };
 

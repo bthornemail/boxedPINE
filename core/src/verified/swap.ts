@@ -20,7 +20,7 @@ export type SwapName = keyof typeof SWAP_MASK;
 
 /** Return a new array with byte j moved to j ⊕ mask (within each 8-byte group). */
 export function permute(bytes: Uint8Array, mask: number): Uint8Array {
-  if (bytes.length % 8 !== 0) throw new RangeError('length must be a multiple of 8');
+  if ((bytes.length & 7) !== 0) throw new RangeError('length must be a multiple of 8');
   const out = new Uint8Array(bytes.length);
   for (let j = 0; j < bytes.length; j++) out[j] = bytes[j ^ mask]!;
   return out;

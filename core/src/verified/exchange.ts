@@ -39,5 +39,5 @@ export function digest(slots: Int32Array, index: number, expected: number, repla
 
 /** A fresh set of slots that Atomics can act on. */
 export function makeSlots(count: number): Int32Array {
-  return new Int32Array(new SharedArrayBuffer(count * Int32Array.BYTES_PER_ELEMENT));
+  return new Int32Array(new SharedArrayBuffer(count << 2)); // 4 bytes per Int32 slot
 }

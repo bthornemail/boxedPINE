@@ -14,7 +14,7 @@ export const PROOFS: Record<number, string> = {
   12: 'proofs/coq/04-execution/Delta16HasExactPeriodEight.v',
 };
 
-/** Seconds each cue is shown. DECISION: eight, one per slot of the ruler. */
+/** Seconds each cue is shown. DECISION: eight, one per slot of the ruler, so cue i starts at i << 3. */
 export const CUE_SECONDS = 8;
 
 const plain = (md: string) => md
@@ -24,6 +24,7 @@ const plain = (md: string) => md
   .replace(/-->/g, '→')
   .trim();
 
+// The timestamp writes an index of seconds in base 60, the literal's radix (SPEC-07 I-42).
 const stamp = (s: number) =>
   `${String(Math.floor(s / 3600)).padStart(2, '0')}:${String(Math.floor(s / 60) % 60).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}.000`;
 
@@ -46,7 +47,7 @@ export function steps(spec08: string): Step[] {
 export function walkthroughVtt(spec08: string): string {
   const cues = steps(spec08).map((s, i) => [
     `part-${s.part}`,
-    `${stamp(i * CUE_SECONDS)} --> ${stamp((i + 1) * CUE_SECONDS)}`,
+    `${stamp(i << 3)} --> ${stamp((i + 1) << 3)}`,
     `<b>Part ${s.part}</b> ${s.step}`,
     `<i>${s.note === '—' ? 'no note yet' : s.note}</i> · ${s.status === '—' ? 'unmarked' : s.status}`,
     ...(s.proofs.length ? [`proof: ${s.proofs.join('; ')}`] : []),
