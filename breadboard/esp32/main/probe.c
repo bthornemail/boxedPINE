@@ -32,8 +32,14 @@
  *                     307 Temporary Redirect to /atom/(a ^ 15) for a = 8-f
  *   GET /m/a-b        206 Partial Content, the parities of m = a … b (decimal);
  *                     416 Range Not Satisfiable past 128
+ *   GET /gate/R/ab    200 OK, gate R (NAND NOR OR SWITCH NOT XOR XNOR AND) on bits a, b;
+ *                     404 Not Found for any other rule
+ *   GET /build/B/ab   200 OK, every node of build B (5T 6T 8T 10T) and its LED, on a, b;
+ *                     404 Not Found for any other build
  *   anything else     400 Bad Request
- * Registers only, apart from the 32-byte line the prompt arrives in.
+ * The gates and builds are breadboard/kernel.mjs's netlists, as constant
+ * tables: a rule is its truth table as 4 bits, indexed a * 2 + b (SPEC-07 I-105).
+ * Registers only, apart from those tables and the 32-byte line the prompt arrives in.
  */
 #include <stdio.h>
 #include <stdint.h>
@@ -78,11 +84,38 @@ static int number(const char **s) {
     return v;
 }
 
+/* Rules as truth tables over the index a * 2 + b, as in kernel.mjs. */
+typedef struct { const char *name; uint8_t table; } rule_t;
+static const rule_t RULES[] = {
+    {"NAND", 0x7}, {"NOR", 0x1}, {"OR", 0xE}, {"SWITCH", 0x7},
+    {"NOT", 0x3}, {"XOR", 0x6}, {"XNOR", 0x9}, {"AND", 0x8},
+};
+#define NRULES (sizeof RULES / sizeof RULES[0])
+static inline uint32_t apply(uint8_t table, uint32_t a, uint32_t b) { return (table >> ((a << 1) | b)) & 1; }
+
+/* The four builds: nets read node 0 (A), 1 (B) or an earlier net (2 + its place). */
+typedef struct { const char *net; uint8_t table; uint8_t x, y; } net_t;
+typedef struct { const char *id; uint8_t count; uint8_t led; uint8_t sink; net_t nets[5]; } build_t;
+static const build_t BUILDS[] = {
+    {"5T", 3, 2, 1, {{"n", 0x7, 0, 1}, {"o", 0xE, 0, 1}, {"node", 0x7, 2, 3}}},
+    {"6T", 4, 3, 0, {{"n", 0x7, 0, 1}, {"o", 0xE, 0, 1}, {"node", 0x7, 2, 3}, {"out", 0x3, 4, 4}}},
+    {"8T", 4, 3, 0, {{"n", 0x7, 0, 1}, {"p", 0x7, 0, 2}, {"q", 0x7, 1, 2}, {"out", 0x7, 3, 4}}},
+    {"10T", 5, 4, 0, {{"n1", 0x1, 0, 1}, {"n2", 0x1, 0, 2}, {"n3", 0x1, 1, 2}, {"n4", 0x1, 3, 4}, {"out", 0x1, 5, 5}}},
+};
+#define NBUILDS (sizeof BUILDS / sizeof BUILDS[0])
+
+/* "ab" at s: two bits; -1 if malformed. */
+static int bits2(const char *s) {
+    if ((s[0] != '0' && s[0] != '1') || (s[1] != '0' && s[1] != '1') || s[2] != 0) return -1;
+    return ((s[0] - '0') << 1) | (s[1] - '0');
+}
+
 static void respond(const char *line) {
     uint32_t tag = state & 0xff, dev = total_dev;
     if (strcmp(line, "GET /") == 0) {
         printf("300 Multiple Choices\nchoice /parity\nchoice /atom/0\nchoice /atom/1\nchoice /atom/2\nchoice /atom/3\n"
-               "choice /atom/4\nchoice /atom/5\nchoice /atom/6\nchoice /atom/7\nchoice /m/0-128\n");
+               "choice /atom/4\nchoice /atom/5\nchoice /atom/6\nchoice /atom/7\nchoice /m/0-128\n"
+               "choice /gate/NAND/00\nchoice /build/8T/00\n");
     } else if (strcmp(line, "GET /parity") == 0) {
         printf("200 OK\nparity %02x\npole %u\ndev %02x\nus %lld\nwall %lld\ncycles %u\n", (unsigned)tag,
                (unsigned)((state >> 16) & 1), (unsigned)dev, (long long)us, (long long)(esp_timer_get_time() - t0), (unsigned)cycles);
@@ -104,6 +137,38 @@ static void respond(const char *line) {
             printf("206 Partial Content\ncontent-range m %d-%d/129\nbits ", a, b);
             for (int m = a; m <= b; m++) putchar('0' + (int)sense((uint32_t)m));
             putchar('\n');
+        }
+    } else if (strncmp(line, "GET /gate/", 10) == 0) {
+        const char *r = line + 10, *slash = strchr(r, '/');
+        int ab = slash ? bits2(slash + 1) : -1;
+        if (ab < 0) printf("400 Bad Request\n");
+        else {
+            const rule_t *rule = 0;
+            for (unsigned i = 0; i < NRULES; i++)
+                if (strlen(RULES[i].name) == (size_t)(slash - r) && strncmp(RULES[i].name, r, (size_t)(slash - r)) == 0) rule = &RULES[i];
+            if (!rule) printf("404 Not Found\n");
+            else printf("200 OK\ngate %s %d%d %u\n", rule->name, ab >> 1, ab & 1, (unsigned)apply(rule->table, (uint32_t)(ab >> 1), (uint32_t)(ab & 1)));
+        }
+    } else if (strncmp(line, "GET /build/", 11) == 0) {
+        const char *r = line + 11, *slash = strchr(r, '/');
+        int ab = slash ? bits2(slash + 1) : -1;
+        if (ab < 0) printf("400 Bad Request\n");
+        else {
+            const build_t *bd = 0;
+            for (unsigned i = 0; i < NBUILDS; i++)
+                if (strlen(BUILDS[i].id) == (size_t)(slash - r) && strncmp(BUILDS[i].id, r, (size_t)(slash - r)) == 0) bd = &BUILDS[i];
+            if (!bd) printf("404 Not Found\n");
+            else {
+                uint32_t v[7];
+                v[0] = (uint32_t)(ab >> 1); v[1] = (uint32_t)(ab & 1);
+                printf("200 OK\nbuild %s %d%d", bd->id, ab >> 1, ab & 1);
+                for (unsigned i = 0; i < bd->count; i++) {
+                    v[2 + i] = apply(bd->nets[i].table, v[bd->nets[i].x], v[bd->nets[i].y]);
+                    printf(" %s=%u", bd->nets[i].net, (unsigned)v[2 + i]);
+                }
+                uint32_t led = v[2 + bd->led];
+                printf(" led=%u\n", (unsigned)(bd->sink ? 1 - led : led));
+            }
         }
     } else {
         printf("400 Bad Request\n");

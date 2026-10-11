@@ -339,3 +339,30 @@ test('A live organ, bridged to an ALSA MIDI port, answers prompts sent as SysEx 
   }
 });
 
+// ---- Cross-channel logic: gates spread over nodes, wired by a proxy (SPEC-07 I-106) ----
+import { mockNode, boardNode, measure, crossChannel, sevenXors } from '../../repl/src/gates.ts';
+
+test('Through the proxy, XOR gates reach 8 of 16 two-input functions, the builds\' inside gates all 16, and 4 XORs make the 7 combinations', () => {
+  const nodes = [mockNode('m1'), mockNode('m2'), mockNode('m3'), mockNode('m4')];
+  for (const n of nodes) assert.deepEqual(measure(n), []);
+  const xor = crossChannel(['XOR'], true, nodes);
+  assert.deepEqual([xor.reached, xor.matched], [8, 8]);
+  const inside = crossChannel(['NAND', 'OR', 'NOR'], false, nodes);
+  assert.deepEqual([inside.reached, inside.matched, inside.nodesUsed], [16, 16, 4]);
+  assert.ok(sevenXors(nodes).ok);
+});
+
+const serials = (process.env.OMI_SERIALS ?? '').split(',').filter((p) => p && existsSync(p));
+
+test('The same, with live boards as nodes (OMI_SERIALS=/dev/ttyUSB0,/dev/ttyUSB1)', { skip: !serials.length && 'set OMI_SERIALS' }, () => {
+  const nodes = [...serials.map((p) => boardNode(p)), mockNode('m')];
+  try {
+    for (const n of nodes) assert.deepEqual(measure(n), [], n.name);
+    const xor = crossChannel(['XOR'], true, nodes);
+    assert.deepEqual([xor.reached, xor.matched], [8, 8]);
+    const inside = crossChannel(['NAND', 'OR', 'NOR'], false, nodes);
+    assert.deepEqual([inside.reached, inside.matched, inside.nodesUsed], [16, 16, nodes.length]);
+    assert.ok(sevenXors(nodes).ok);
+  } finally { nodes.forEach((n) => n.close()); }
+});
+

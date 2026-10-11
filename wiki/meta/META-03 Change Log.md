@@ -269,6 +269,7 @@ tags: [omi-imo, meta, changelog, history]
 - SPEC-07 I-104 (author, from a podcast on the protocol): the regular 210 ladder starts at residue 97, index 21 of the 48 units mod 210, just after index 20; the ladder as written holds only at rung 0; {5, 11, 17, 23, 29} is the only sexy-prime quintuplet, because it contains 5
 - [[SRC-13 Provenance of the OMI Trees and the Metaverse Spine]]: the omi trees' lineage, the origin of omi-system.omilisp (Codex, commit a456cd6, 2026-05-09), and the ~/devops spine restored to a full local closure pass (final digest ef47d9e0…)
 - SPEC-07 I-105: four XOR gates make the 7 non-zero XOR combinations of three inputs, but XOR gates alone reach only the 16 affine functions; the four breadboard builds light on XOR yet are made of NAND or NOR, and their nodes together reach all 16 two-input gates
+- SPEC-07 I-106: the organ firmware answers single gates and whole builds; a proxy (`repl/src/gates.ts`) spreads gate networks over boards and mock nodes. On two live ESP32 boards: XOR gates reach 8 of 16 two-input functions, the builds' inside gates 16 of 16, and the 4-XOR network the 7 combinations. 124 tests (5 skipped without hardware)
 
 ## Pending
 

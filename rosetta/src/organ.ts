@@ -14,7 +14,7 @@ export type Reading = Record<string, number[]>;
 export const reflectsOn = (n: number) => (n & 3) !== 2;
 
 /** The paths the organ offers with 300 Multiple Choices. */
-export const ORGAN_CHOICES = ['/parity', ...[0, 1, 2, 3, 4, 5, 6, 7].map((a) => `/atom/${a}`), '/m/0-128'];
+export const ORGAN_CHOICES = ['/parity', ...[0, 1, 2, 3, 4, 5, 6, 7].map((a) => `/atom/${a}`), '/m/0-128', '/gate/NAND/00', '/build/8T/00'];
 
 const parity3 = (a: number) => (a ^ (a >> 1) ^ (a >> 2)) & 1;
 
@@ -54,6 +54,43 @@ export function respondTwin(request: string, seed = 60): string[] {
     const a = Number(m[1]), b = Number(m[2]);
     out = b > 128 ? ['416 Range Not Satisfiable', 'content-range m */129']
       : ['206 Partial Content', `content-range m ${a}-${b}/129`, `bits ${Array.from({ length: b - a + 1 }, (_, i) => sense(a + i)).join('')}`];
-  } else out = ['400 Bad Request'];
+  } else out = gateRespondTwin(request) ?? ['400 Bad Request'];
   return [...out, '218 This is fine'];
+}
+
+// ---- Gates and builds (SPEC-07 I-105, I-106): the twin reads breadboard/kernel.mjs ----
+import { createKernel, evaluate, ledLit } from '../../breadboard/kernel.mjs';
+
+const KERNEL = createKernel();
+/** Truth tables over a * 2 + b: the kernel's grammar, plus XOR, XNOR and AND. */
+export const GATE_TABLES: Record<string, number[]> = {
+  ...Object.fromEntries([...KERNEL.grammar.values()].map((r: { name: string; table: number[] }) => [r.name, r.table])),
+  XOR: [0, 1, 1, 0], XNOR: [1, 0, 0, 1], AND: [0, 0, 0, 1],
+};
+export const gateTwin = (rule: string, a: number, b: number) => GATE_TABLES[rule]![a * 2 + b]!;
+
+/** A build's nodes and LED on a, b, as the kernel evaluates them: "n=1 p=0 … led=1". */
+export function buildTwin(id: string, a: number, b: number): string | null {
+  const c = KERNEL.circuits.find((x: { id: string }) => x.id === id);
+  if (!c) return null;
+  const bits = evaluate(c, a, b);
+  return `${c.gates.map((g: { net: string }) => `${g.net}=${bits.get(g.net)}`).join(' ')} led=${ledLit(c, bits)}`;
+}
+
+/** The twin's answers to the gate and build requests (respondTwin calls this). */
+export function gateRespondTwin(request: string): string[] | null {
+  let m = /^GET \/gate\/([^/]+)\/(.*)$/.exec(request);
+  if (m) {
+    if (!/^[01][01]$/.test(m[2]!)) return ['400 Bad Request'];
+    const [a, b] = [Number(m[2]![0]), Number(m[2]![1])];
+    return m[1]! in GATE_TABLES ? ['200 OK', `gate ${m[1]} ${a}${b} ${gateTwin(m[1]!, a, b)}`] : ['404 Not Found'];
+  }
+  m = /^GET \/build\/([^/]+)\/(.*)$/.exec(request);
+  if (m) {
+    if (!/^[01][01]$/.test(m[2]!)) return ['400 Bad Request'];
+    const [a, b] = [Number(m[2]![0]), Number(m[2]![1])];
+    const body = buildTwin(m[1]!, a, b);
+    return body === null ? ['404 Not Found'] : ['200 OK', `build ${m[1]} ${a}${b} ${body}`];
+  }
+  return null;
 }
