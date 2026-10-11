@@ -166,13 +166,14 @@ The states a structure can be in:
 |-----------|---------|------|-------|--------------|-------|
 | The four XOR builds 5T, 6T, 8T, 10T | [[SPEC-44 The Virtual Breadboard]] | — | `breadboard` test.mjs (passes; not part of `npm test`) | `breadboard` | **realized**, with its own check |
 | The Breadboard Space: geometry as data, XOR on the circle line | [[SPEC-44 The Virtual Breadboard]] | — | space.test, core.test | `space` xr.html, breadboard.geometry.ts | **realized**, with its own check |
-| The sixteen Fano constants: closure, two-step convergence, duality at i ⊕ 15 | I-65 to I-67 | `core` fano.ts | core.test | `space` assets/fano (18 files) | **canonical** |
+| The sixteen Fano constants: closure, two-step convergence, duality at i ⊕ 15 | I-65 to I-67 | `core` fano.ts; `types` OMI.Fano | core.test; `types` cabal test; `proofs` tracking/BoxedPineInvariants.v | `space` assets/fano (18 files) | **canonical** |
+| The proof Blob in every literal and carrier | I-81 | `rosetta` proof.blob.ts | rosetta.test; `proofs/blob` Equivalence.java | `proofs/blob` | **canonical** |
 | The Fano files read the same from any buffer | I-68 | `core` fano.ts (`readFanoSvg`) | core.test | `space` assets/fano | **canonical** |
 | A MAC on the loopback: fold, IPP zero, NAT64 | I-69 to I-71 | `core` loopback.ts | core.test | — | **canonical** |
 | Presence: UDP claim and MQTT deviation | I-72 | — | repl.test | `repl` presence.ts | **realized**, with its own check |
 | The walkthrough as a text track, with its proofs | SPEC-08 | `rosetta` walkthrough.ts | rosetta.test | `proofs` (cited) | **canonical** |
 | Ports as paths, CIDR in nibbles | I-75 | `core` tree.ts | core.test | — | **canonical** |
-| Two numbers dial the lens; three make the transform (168) | I-76, I-77 | `core` wordform.ts, fano.ts | core.test | — | **canonical** |
+| Two numbers dial the lens; three make the transform (168) | I-76, I-77 | `core` wordform.ts, fano.ts; `types` OMI.Fano | core.test; `types`; `proofs` tracking | — | **canonical** |
 | Casing styles as literals of one word sequence | I-78 | `rosetta` casing.ts, grammar.ts | rosetta.test | — | **canonical** |
 | The tree: 16 Blobs, one 20-bit index | I-48 | `core` tree.ts | core.test | `types/` (proxy) | **canonical** |
 | The Prompt Tree: four levels, the swaps, the 16-bit path | I-49 to I-51; [[SPEC-27 The Prompt Tree Index]] | `core` tree.ts; `rosetta` grammar.ts (`PROMPT_PATH`) | core.test, rosetta.test; the readings file | — | **canonical** |
@@ -195,9 +196,13 @@ The states a structure can be in:
 
 File 0 is the **BOM**, which holds the **Prompt Tree**; files 1–15 hold the fifteen treemap algorithms. The 16 bits inside a file are the Prompt Tree's path: exponent · exception · declaration · definition, a nibble each. See [[SPEC-26 The Prompt Tree]]. ⟦BOM as prefix (file 0) is a decision; the suffix (file 15) is the alternative.⟧
 
+## Tracked in Types and Proofs
+
+`types/src/OMI/Fano.hs` (Haskell, no integers: `step` is the gate netlist) and `proofs/tracking/BoxedPineInvariants.v` (Coq, every theorem by computation, no admits) state the Fano constants (I-65, I-66), the 168 symmetries (I-77), the swap family (I-3) and I-80, so the types and the proofs move with the code. The Coq file sits outside `coq/`, whose 70-module registry is locked by `proofs/AGENTS.md`; build it with `make tracking`.
+
 ## The Count
 
-Of the 71 rows (2026-10-11): **41 canonical**, **7 checked**, **14 stated**, **1 realized only** (Proxy and Reflect), **3 realized with their own check** (the breadboard, presence, the Breadboard Space), **5 fail**.
+Of the 72 rows (2026-10-11): **42 canonical**, **7 checked**, **14 stated**, **1 realized only** (Proxy and Reflect), **3 realized with their own check** (the breadboard, presence, the Breadboard Space), **5 fail**.
 
 ## What Canonicalizes Next
 

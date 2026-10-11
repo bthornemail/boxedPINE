@@ -216,6 +216,8 @@ From the author, 2026-10-11 ([[SPEC-27 The Prompt Tree Index]] §8).
 
 | I-80 | **swap32 is the boolean of the 11th index in observation of the 9th ⊕ 10th** (author). 9 ⊕ 10 = 3, swap32's mask; index 11 observed through it is 11 ⊕ 3 = 8, a single bit; swap32 reverses the quad 8–11 (9 ↔ 10, 11 ↔ 8). For every aligned quad, the XOR of its top three members is its base; the pairwise XORs of 9, 10, 11 are 3, 2, 1. These are the moduli of the author's selector `(i % 9) ^ (i % 10) ^ (i % 11)` | DEFINITION (author) + THEOREM (the values) | `core.test.ts` |
 
+| I-81 | **The proof Blob** (author): one 65,536-bit index (8,192 bytes; DECISION: byte j = 60 ⊕ (j & 0xFF), the orbit of 60 through every dial) stored in `proofs/blob/` as `proof.bin`, as the literals `0x`, `0b`, `0o`, `0d`, as base32 (RFC 4648 alphabet A-Z2-7, inside A-Z0-9, no padding) and as a base32 tagged template literal module. Every form, read as a file, Buffer, Blob, ArrayBuffer, Array or template literal, XORs the Blob to **0n** (one BigInt) and **0u** (every unsigned byte). The width comes from the frame, so a literal's dropped leading zeros do not matter (I-6) | THEOREM | `rosetta/src/proof.blob.ts`; `rosetta.test.ts`; `proofs/blob/Equivalence.java` (Java 21) |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧

@@ -261,3 +261,39 @@ test('The five styles are one word sequence: the words are the index, the style 
   assert.equal('P'.charCodeAt(0) ^ 'p'.charCodeAt(0), 0x20); // the case bit, as e ⊕ E
 });
 
+
+// ---- The proof Blob: one 65,536-bit index, written every way (SPEC-07 I-81) ----
+import { proofBlob, proofFiles, toLiteral, fromLiteral, toBase32, fromBase32, xorProof, BYTES } from '../../rosetta/src/proof.blob.ts';
+
+test('Every literal of the proof Blob (0x, 0b, 0o, 0d, base32) XORs it to 0n and 0u', () => {
+  const blob = proofBlob();
+  assert.equal(blob.length << 3, 65536);
+  for (const radix of ['x', 'b', 'o', 'd'] as const) {
+    const back = fromLiteral(toLiteral(blob, radix));
+    const { n, u } = xorProof(blob, back);
+    assert.equal(n, 0n, radix);
+    assert.ok(u.every((b) => b === 0), radix);
+  }
+  assert.equal(xorProof(blob, fromBase32(toBase32(blob))).n, 0n);
+  assert.ok(/^[A-Z2-7]+$/.test(toBase32(blob))); // inside A-Z0-9, nothing to escape
+});
+
+test('The stored files match, and read the same as a file, Buffer, Blob, ArrayBuffer, Array and template literal', async () => {
+  const dir = new URL('../../proofs/blob/', import.meta.url);
+  const files = proofFiles();
+  for (const [name, data] of Object.entries(files)) {
+    const disk = readFileSync(new URL(name, dir));
+    assert.deepEqual(new Uint8Array(disk), typeof data === 'string' ? new TextEncoder().encode(data) : data, name);
+  }
+  const buffer = readFileSync(new URL('proof.bin', dir));
+  const fromBlob = new Uint8Array(await new Blob([buffer]).arrayBuffer());
+  const arrayBuffer = buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
+  const array = Array.from(buffer);
+  const template = (await import(new URL('proof.template.mjs', dir).href)).default as Uint8Array;
+  const readings = [new Uint8Array(buffer), fromBlob, new Uint8Array(arrayBuffer), Uint8Array.from(array), template];
+  for (const r of readings) assert.equal(xorProof(proofBlob(), r).n, 0n);
+  for (const radix of ['0x', '0b', '0o', '0d']) {
+    assert.equal(xorProof(new Uint8Array(buffer), fromLiteral(readFileSync(new URL(`proof.${radix}`, dir), 'utf8'))).n, 0n, radix);
+  }
+  assert.equal(BYTES, 8192);
+});

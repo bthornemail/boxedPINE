@@ -249,6 +249,7 @@ tags: [omi-imo, meta, changelog, history]
 - Took in the author's UI brain dump as [[SRC-11 The UI Brain Dump]]: what is already built, each claim marked (the knot is XOR, THEOREM; monad laws, Turing-completeness, "no collisions", sub-cycle XOR and thread-safe PannerNode FAIL as stated; conformance levels superseded), and three UI pieces to take next. 91 tests passing
 - Ran every `omi-files` project's own tests (2026-10-11): omi-canvas, omi-lisp, omnicron, tetragrammatron (167/167) and polytron (`verify`) pass; atomic-kernel passes 47/47 and its v1 suite runs without end by design; omi-isa passes outside the tree but not in place (the root `"type": "module"`); omi-tetragrammatron's portal needs its `npm install`. No project repo was changed. [[USE-00 Use Case Scenarios]]; SPEC-07 I-79 (the sequence is the kernel's tick, not UTC)
 - SPEC-07 I-80 (author): swap32 is the boolean of index 11 observed through 9 ⊕ 10 (9 ⊕ 10 = 3; 11 ⊕ 3 = 8, one bit; swap32 reverses the quad 8–11); tested. 92 tests passing
+- `types/` and `proofs/` now track the code: `OMI.Fano` (Haskell gates) and `proofs/tracking/BoxedPineInvariants.v` (Coq, 7 theorems by computation, outside the 70-module registry). The proof Blob (I-81): one 65,536-bit index in `proofs/blob/` as a file, the literals 0x/0b/0o/0d, base32 and a base32 tagged template literal; every form XORs to 0n and 0u, checked in Node and Java. [[OPEN-01 Open Questions]] #23 records the meta-mask catalogue. 94 tests passing
 
 ## Pending
 

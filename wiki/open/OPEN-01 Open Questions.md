@@ -299,3 +299,13 @@ The author's plan (2026-10-11): XR spaces from `breadboard/`, a text track of th
 ⟦Author to confirm which image boots, and whether root-level pieces (eBPF, a NAT64 gateway) may be installed.⟧
 
 **Status:** Open.
+
+### 23. The Meta to the Meta Mask as a Machine-Language Catalogue
+
+The author, 2026-10-11: "the meta to the meta mask can be like machine language cataloging code since it's weighted and can be factorial in the `<=>?` characters of the 60 ⊕ 0…64…128 indices, compare and exchange on the 9, 10 and 11 modulus."
+
+**What it rests on (THEOREM):** `< = > ?` are bytes 60–63, that is 60 ⊕ 0…3, block 0 of the orbit of 60 (I-24); their orderings number 4! = 24, the same 24 as the carry-forward period (I-11) and the generator's product (I-33); 9 ⊕ 10 = 3 is swap32 and 11 ⊕ 3 = 8 (I-80). The transport encoding is base32 (I-81), itself a custom encoding, which the author calls the meta to the meta mask.
+
+**Open:** how a catalogue entry is weighted, and what the compare-exchange on the moduli 9, 10 and 11 selects.
+
+**Status:** Open.
