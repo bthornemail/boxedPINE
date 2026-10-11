@@ -260,6 +260,7 @@ tags: [omi-imo, meta, changelog, history]
 - A sandboxed eMMC over NBD in a QEMU virt machine, all user space (SPEC-07 I-94; SD standing in for eMMC on QEMU 8.2); 206 Partial Content as the address of an index, with 416 outside the Blob (I-95). 107 tests passing
 - Status codes on the try/catch/finally plane (author): by their low three bits the 2xx codes are try, catch, throw, finally, Reflect, Proxy (206), full path, and 218 indexes the catch; the port server stamps every response with `Omi-Atom`. SPEC-07 I-96; OPEN-01 #19. 108 tests passing
 - The status codes as a ubiquitous catalogue (SPEC-07 I-97, `rosetta/src/http.catalog.ts`), seeded from Node's own list; HTTP/1.1 as the index 11. 109 tests passing
+- WordNet geometry (author): `omi-files/polytron/polyform/wordnet-to-geometry.c` fixed (eight bugs, committed in polytron) and run over all of WordNet: each synset is a nibble, part-of-speech base plus hypernym depth; "propagation" is the 24-cell. SPEC-07 I-98
 
 ## Pending
 

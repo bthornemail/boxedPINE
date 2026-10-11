@@ -251,6 +251,8 @@ From the author, 2026-10-11: each frame of reference coordinates on the time and
 
 | I-97 | **The status codes are a ubiquitous catalogue** (author: they "are a version and ubiquitous for cataloguing http requests at a 1.1 or 11 in indexing"). Seeded from Node's built-in `http.STATUS_CODES` (63 codes, 100 to 511) plus the informal 218, each code is catalogued by class, atom, role and colour. The version HTTP/1.1 reads as the index **11**: atom 3, the throw, and 11 ⊕ (9 ⊕ 10) = 8 (I-80). The port server speaks HTTP/1.1 (checked) | DEFINITION (author) + THEOREM (tested) | `rosetta/src/http.catalog.ts`; tests |
 
+| I-98 | **WordNet synsets as nibbles** (`omi-files/polytron/polyform/wordnet-to-geometry.c`, author). A synset's geometry index is its part of speech's base (noun 0, verb 1, adjective 2, adverb 3) plus its hypernym depth, capped at 15: one of 16 named geometries from the point to `s127`, a nibble like the tree's files and the Fano constants. A word's stream is its hypernym path as `U+10100 + index` (Aegean numbers), framed by the ASCII separators FS, GS, RS. "propagation" (sense 1) is depth 7, the 24-cell; "entity" is depth 0, the point; "exchange" is depth 10, the Hopf fibre. The tool did not run before 2026-10-11: eight bugs fixed in polytron (quadratic hash stall, duplicate synsets, part of speech lost, out-of-bounds child marks, a 10¹⁰-step search, a negative histogram index, and two path-loop errors), checked under AddressSanitizer | DEFINITION (the mapping, the author's) + THEOREM (run) | polytron `17573fb`; [[USE-00 Use Case Scenarios]] |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧
