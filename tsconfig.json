@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2023",
     "module": "esnext",
-      "lib": ["ES2023,ESNEXT", "DOM"],
+      "lib": ["ES2023", "ESNext", "DOM"],
     "types": ["vite/client"],
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
