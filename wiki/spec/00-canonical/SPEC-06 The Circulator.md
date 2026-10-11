@@ -79,6 +79,18 @@ The author: an exit "will continue to raise on a tree that fell in the woods wit
 
 `OMI.Try` in `types` is a smaller circulator. Its `Attempt` is either `Tried` (forward) or `Caught` (a raise turned into a value, carrying its repair), and `finally` is its departure. It does not yet have terminate, modify-and-forward or exit.
 
+## Over HTTP: the Departure Is 218
+
+The author, 2026-10-11: "the finally of the try..catch..finally is the 218 http code". The Fano port server (`repl/src/ports.ts`) answers each request as a circulator:
+
+| State | HTTP | In the server |
+|-------|------|---------------|
+| forward | **200** | a decided request: the port's drawing, the trace |
+| raise, taken by the handler | **400** | a frame that does not parse is caught |
+| exit, then the departure | **218 This is fine** | nothing was decided; `finally` always runs and lets the request pass, its path as the body |
+
+218 is **not a standard code**: it is informal, and its attribution to Apache is unsourced and circular. It is still safe, because an HTTP client must treat an unrecognised status as the first code of its class, so every client reads 218 as a 2xx success (`fetch` reports `ok`). ⟦Candidates, not built: 203 for modify-and-forward (a transforming proxy's modified response) and 204 for terminate (resolved, nothing returned).⟧
+
 ## The Inscription
 
 > A circulator is a decision-bearing boundary. Its states are raise, terminate, forward, modify-and-forward, and exit. Its decision is the path. Its delta is the modification. Its departure is unconditional. Its accountability is for the decision and the delta, and for nothing else. Its returns are the consequences it observes.

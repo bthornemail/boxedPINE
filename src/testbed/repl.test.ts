@@ -99,6 +99,9 @@ test('Ports: a request\'s media frame converges to a Fano drawing, and reading t
     const vtt = await (await fetch(`${base}/trace.vtt`)).text();
     assert.equal((vtt.match(/^tick-\d+$/gm) ?? []).length, frames.length);
     assert.equal((await fetch(`${base}/port?frame=nope`)).status, 400);
+    const exit = await fetch(`${base}/anything-undecided`); // nothing decided: finally departs with 218
+    assert.deepEqual([exit.status, exit.statusText, exit.ok], [218, 'This is fine', true]);
+    assert.equal(await exit.text(), '/anything-undecided'); // the request passes through
   } finally {
     server.close();
   }

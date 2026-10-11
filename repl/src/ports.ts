@@ -15,6 +15,10 @@ import { CONSTANTS, readFanoSvg } from '../../core/src/verified/fano.ts';
 import { FRAME_HEADER, frameText, parseFrameText, framePort } from '../../rosetta/src/media.frame.ts';
 import { propagate, traceVtt, type Reading } from '../../rosetta/src/trace.vtt.ts';
 
+/** The departure's status (author: the finally is 218). Non-standard; clients read an unknown 2xx as 200. */
+export const DEPARTURE = 218;
+export const DEPARTURE_PHRASE = 'This is fine';
+
 const FANO = new URL('../../space/src/assets/fano/', import.meta.url);
 const HASSE = new URL('../../space/src/assets/hasse/', import.meta.url);
 
@@ -43,8 +47,11 @@ export function startPorts(port = 0, host = '127.0.0.1'): Promise<Server> {
       res.writeHead(200, { 'Content-Type': 'image/svg+xml', ...headers });
       res.end(body);
     };
+    // try / catch / finally as the circulator (SPEC-06): try decides (200), catch
+    // takes a raise (400), and finally, the departure, always runs; when nothing
+    // was decided (the exit), it answers 218 This is fine and lets the request pass.
     try {
-      if (url.pathname === '/trace.vtt') { res.writeHead(200, { 'Content-Type': 'text/vtt' }); return res.end(traceVtt(trace)); }
+      if (url.pathname === '/trace.vtt') { res.writeHead(200, { 'Content-Type': 'text/vtt' }); res.end(traceVtt(trace)); return; }
       if (hasse[url.pathname]) return svg(hasse[url.pathname]!);
       const fixed = /^\/port\/(\d+)$/.exec(url.pathname);
       if (fixed && Number(fixed[1]) < 16) return svg(svgs[Number(fixed[1])]!, { 'Omi-Fano-Constant': fixed[1]! });
@@ -55,9 +62,10 @@ export function startPorts(port = 0, host = '127.0.0.1'): Promise<Server> {
         trace = propagate(trace, { tick: tick++, frame: frameText(frame), port: i, deviation: 0 });
         return svg(svgs[i]!, { [FRAME_HEADER]: frameText(frame), 'Omi-Fano-Constant': String(i) });
       }
-      res.writeHead(404).end();
     } catch (e) {
       res.writeHead(400, { 'Content-Type': 'text/plain' }).end(String((e as Error).message));
+    } finally {
+      if (!res.headersSent) res.writeHead(DEPARTURE, DEPARTURE_PHRASE, { 'Content-Type': 'text/plain' }).end(url.pathname);
     }
   });
   return new Promise((resolve) => server.listen(port, host, () => resolve(server)));

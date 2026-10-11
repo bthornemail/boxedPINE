@@ -251,6 +251,7 @@ tags: [omi-imo, meta, changelog, history]
 - SPEC-07 I-80 (author): swap32 is the boolean of index 11 observed through 9 ⊕ 10 (9 ⊕ 10 = 3; 11 ⊕ 3 = 8, one bit; swap32 reverses the quad 8–11); tested. 92 tests passing
 - `types/` and `proofs/` now track the code: `OMI.Fano` (Haskell gates) and `proofs/tracking/BoxedPineInvariants.v` (Coq, 7 theorems by computation, outside the 70-module registry). The proof Blob (I-81): one 65,536-bit index in `proofs/blob/` as a file, the literals 0x/0b/0o/0d, base32 and a base32 tagged template literal; every form XORs to 0n and 0u, checked in Node and Java. [[OPEN-01 Open Questions]] #23 records the meta-mask catalogue. 94 tests passing
 - Frames of reference and ports (SPEC-07 I-82 to I-85): the media frame derived from the Media Queries 5 draft (24 features, 35 bits); the kernel tick is the same in every time zone while wall-clock offsets differ; raw pool contamination is 0 in Node and total in a native pool; the trace as a 16-cue WebVTT cache; a loopback server binding each request's media frame to one of the 16 Fano drawings (plus the 2 Hasse diagrams), whose reading returns the constant. The Breadboard Space shows the browser's own frame. 99 tests passing
+- The departure is HTTP 218 (author): the port server is a try/catch/finally circulator, 200 / 400 / 218 This is fine ([[SPEC-06 The Circulator]], SPEC-07 I-86). 99 tests passing
 
 ## Pending
 

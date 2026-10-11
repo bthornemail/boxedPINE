@@ -229,6 +229,8 @@ From the author, 2026-10-11: each frame of reference coordinates on the time and
 | I-84 | **The trace is a text track with a cache limit.** One WebVTT cue per tick; propagating appends a cue and drops the oldest past **16** (DECISION: one nibble); backpropagating reads the readings back exactly | THEOREM (tested) + DECISION (16) | `rosetta/src/trace.vtt.ts`; `rosetta.test.ts` |
 | I-85 | **Every frame has one Fano port.** The 35-bit frame folds by XOR into 7 bits (35 = 5 × 7), which converge to one of the 16 constants (I-66). A loopback server binds a request's `Omi-Media-Frame` header (or `?frame=`) to that constant's drawing, serves `/port/0` … `/port/15` and the two Hasse diagrams, and traces each request as a VTT cue. Reading a served drawing (`readFanoSvg`) gives the constant back, so anything that can read the SVG's logic recovers the index | THEOREM (tested) + DEFINITION (author: ports for the 16 drawings and 2 Hasse diagrams) | `repl/src/ports.ts`; `repl.test.ts` |
 
+| I-86 | **The departure is HTTP 218** (author): in the port server, try decides (200), catch takes a raise (400), and finally always runs, answering **218 This is fine** when nothing was decided. 218 is non-standard, but clients read an unknown 2xx as 200, so it always passes | DEFINITION (author) + THEOREM (tested: status 218, ok) | `repl/src/ports.ts`; `repl.test.ts`; [[SPEC-06 The Circulator]] |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧
