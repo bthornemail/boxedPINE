@@ -55,6 +55,7 @@ Each source has a MOC that summarizes it and links to its part notes.
 | [[SRC-08 XOR Gate Built with Transistors]] | Reference | [[SRC-08 XOR Gate Built with Transistors]] |
 | [[SRC-09 Try XOR Catch XNOR Finally]] | Archive conversation after the reorg | single file, outside the vault |
 | [[SRC-10 The Ontology Conversation]] | The ontology conversation: first principles, the Axiom of Propagation, the Circulator, the derivation path | single file, `_archive/_chat_history/` |
+| [[SRC-11 The UI Brain Dump]] | Drafts on a user interface: the three primitives, the PannerNode as 0D readout, the kaleidoscope, BusyBox and CIDR ports; claims checked | two files, `_archive/_inbox/` |
 
 ## The Unprocessed Sources
 

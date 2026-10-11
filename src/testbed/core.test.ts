@@ -570,3 +570,19 @@ test('The rows (a, b, a ⊕ b) of the XOR truth table are 0, 5, 6, 3: the circle
   assert.equal(mask, 0b0110100);
   assert.ok(isConstant(mask)); // a line of the plane, one of the sixteen constants
 });
+
+// ---- Two checks from the UI brain dump (SRC-11) ----
+test('A knot is XOR: k = a ⊕ b read with either end gives the other, and bind is symmetric', () => {
+  for (let a = 0; a < 64; a++) for (let b = 0; b < 64; b++) {
+    const k = a ^ b;
+    assert.equal(k ^ a, b);
+    assert.equal(k ^ b, a);
+    assert.equal(k, b ^ a);
+  }
+});
+
+test('ASCII 0x00 to 0x7F splits into eight rows of sixteen by the high nibble', () => {
+  const rows = new Map<number, number>();
+  for (let c = 0; c < 128; c++) rows.set(c >> 4, (rows.get(c >> 4) ?? 0) + 1);
+  assert.deepEqual([...rows.entries()], [0, 1, 2, 3, 4, 5, 6, 7].map((r) => [r, 16]));
+});
