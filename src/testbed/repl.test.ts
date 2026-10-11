@@ -300,3 +300,42 @@ test('A live organ is silent on the ticks that are 2 mod 4, and only those', { s
     assert.ok(gap.every((n) => !reflectsOn(n)), `missing ticks ${gap}`);
   }
 });
+
+// ---- The organ as a MIDI port (SPEC-07 I-104) ----
+import { lineToSysex, sysexToLine, reflectToCC, ccToReflect, statusKind, statusChannel, isStatus } from '../../rosetta/src/midi.ts';
+
+test('MIDI: a status byte is 8 kinds by 16 channels; organ lines ride as SysEx 0x7D, reflections also as Control Change', () => {
+  const kinds = new Set(Array.from({ length: 256 }, (_, b) => b).filter(isStatus).map(statusKind));
+  assert.equal(kinds.size, 8); // the status nibbles 8-F: 8 of the 16
+  assert.equal(statusChannel(0xb4), 4);
+  for (const line of ['reflect 69 1 00 9ae4', 'GET /atom/5', '206 Partial Content', 'bits 01101001011', '218 This is fine']) {
+    const x = lineToSysex(line);
+    assert.ok([...x.slice(1, -1)].every((b) => b < 0x80)); // all data bytes
+    assert.equal(sysexToLine(x), line);
+  }
+  assert.deepEqual([...reflectToCC('reflect 69 1 00 9ae4')!], [0xb4, 0x69, 64]); // as the bridge sent it on 2026-10-11
+  assert.deepEqual(ccToReflect([0xb4, 0x69, 64]), { channel: 4, parity: 0x69, pole: 1, deviated: false });
+  assert.equal(sysexToLine([0xf0, 0x7e, 0x41, 0xf7]), null); // another maker's
+});
+
+const hasAlsa = existsSync('/usr/include/alsa/asoundlib.h') && existsSync('/dev/snd/seq');
+
+test('A live organ, bridged to an ALSA MIDI port, answers prompts sent as SysEx as this frame does', { skip: (live || (!hasAlsa && 'no ALSA')) as string | false }, async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'organ-midi-'));
+  const bin = join(dir, 'organ-midi');
+  assert.equal(spawnSync('cc', ['-O2', '-o', bin, new URL('../../repl/native/organ-midi.c', import.meta.url).pathname, '-lasound']).status, 0);
+  const bridge = spawn(bin, [process.env.OMI_SERIAL!], { stdio: 'ignore' });
+  try {
+    await new Promise((r) => setTimeout(r, 1500));
+    const listened = spawnSync(bin, ['--listen', '4'], { encoding: 'utf8' }).stdout.trim().split('\n');
+    assert.ok(listened.some((l) => /^sysex reflect 69 1 00 /.test(l)) && listened.some((l) => /^cc channel \d+ controller 105 value 64$/.test(l)), listened.join(' | '));
+    for (const request of ['GET /', 'GET /atom/5', 'GET /atom/b', 'GET /m/60-70', 'GET /m/0-200', 'PUT /']) {
+      const answer = spawnSync(bin, ['--ask', request], { encoding: 'utf8' }).stdout.trim().split('\n');
+      assert.deepEqual(answer, respondTwin(request), request);
+    }
+  } finally {
+    bridge.kill();
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
