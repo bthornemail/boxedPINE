@@ -586,3 +586,13 @@ test('ASCII 0x00 to 0x7F splits into eight rows of sixteen by the high nibble', 
   for (let c = 0; c < 128; c++) rows.set(c >> 4, (rows.get(c >> 4) ?? 0) + 1);
   assert.deepEqual([...rows.entries()], [0, 1, 2, 3, 4, 5, 6, 7].map((r) => [r, 16]));
 });
+
+// ---- swap32 as the boolean of index 11 observed through 9 ⊕ 10 (SPEC-07 I-80) ----
+test('swap32 is 9 ⊕ 10; index 11 observed through it is 8, one bit; swap32 reverses the quad 8 to 11', () => {
+  assert.equal(9 ^ 10, 3); // swap32's mask (I-3)
+  assert.equal(11 ^ (9 ^ 10), 8);
+  assert.equal(8 & (8 - 1), 0); // a single bit: a boolean
+  assert.deepEqual([8, 9, 10, 11].map((j) => j ^ (9 ^ 10)), [11, 10, 9, 8]);
+  assert.deepEqual([9 ^ 10, 9 ^ 11, 10 ^ 11], [3, 2, 1]);
+  for (let b = 0; b < 256; b += 4) assert.equal((b + 1) ^ (b + 2) ^ (b + 3), b); // every aligned quad
+});

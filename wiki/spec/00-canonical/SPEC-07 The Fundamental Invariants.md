@@ -214,6 +214,8 @@ From the author, 2026-10-11 ([[SPEC-27 The Prompt Tree Index]] §8).
 
 | I-79 | **The sequence is the kernel's tick, not UTC.** The atomic kernel never stops: a logic crystal whose cycle speed is set by the speed of logic processing, "basically swap32 ad infinitum"; proxy, reflect and catch take their sequence from it instead of UTC. swap32 undoes itself, so the crystal alternates between two readings forever | DEFINITION (author, 2026-10-11) + THEOREM (swap32 is an involution, I-3) | [[USE-00 Use Case Scenarios]]; `omi-files/atomic-kernel` |
 
+| I-80 | **swap32 is the boolean of the 11th index in observation of the 9th ⊕ 10th** (author). 9 ⊕ 10 = 3, swap32's mask; index 11 observed through it is 11 ⊕ 3 = 8, a single bit; swap32 reverses the quad 8–11 (9 ↔ 10, 11 ↔ 8). For every aligned quad, the XOR of its top three members is its base; the pairwise XORs of 9, 10, 11 are 3, 2, 1. These are the moduli of the author's selector `(i % 9) ^ (i % 10) ^ (i % 11)` | DEFINITION (author) + THEOREM (the values) | `core.test.ts` |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧
