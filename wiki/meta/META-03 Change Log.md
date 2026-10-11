@@ -259,6 +259,7 @@ tags: [omi-imo, meta, changelog, history]
 - Meta-generation and meta-compilation (SPEC-07 I-93): each constant generated into SVG, CSS on its ETag, a WebVTT cue and PannerNode corners, and compiled back; `space/meta.html` runs it across canvas, video, text track, panner, CSS and IntersectionObserver, checked headless. 106 tests passing
 - A sandboxed eMMC over NBD in a QEMU virt machine, all user space (SPEC-07 I-94; SD standing in for eMMC on QEMU 8.2); 206 Partial Content as the address of an index, with 416 outside the Blob (I-95). 107 tests passing
 - Status codes on the try/catch/finally plane (author): by their low three bits the 2xx codes are try, catch, throw, finally, Reflect, Proxy (206), full path, and 218 indexes the catch; the port server stamps every response with `Omi-Atom`. SPEC-07 I-96; OPEN-01 #19. 108 tests passing
+- The status codes as a ubiquitous catalogue (SPEC-07 I-97, `rosetta/src/http.catalog.ts`), seeded from Node's own list; HTTP/1.1 as the index 11. 109 tests passing
 
 ## Pending
 

@@ -365,3 +365,16 @@ test('2xx codes fill the try/catch/finally plane by their low three bits; 206 is
   assert.equal(statusRole(206 ^ 218).role, 'finally'); // Proxy ⊕ catch = finally
   assert.equal(statusRole(200).role, 'none');
 });
+
+// ---- The status codes as a catalogue (SPEC-07 I-97) ----
+import { CATALOGUE, catalogue, versionIndex } from '../../rosetta/src/http.catalog.ts';
+
+test('Every status code is catalogued by class, atom and role; 218 is the informal departure; HTTP/1.1 is index 11', () => {
+  assert.ok(CATALOGUE.length > 60);
+  assert.ok(CATALOGUE.every((e) => e.class >= 1 && e.class <= 5 && e.atom === (e.code & 7)));
+  assert.deepEqual([catalogue(206).role, catalogue(218).role, catalogue(218).standard], ['Proxy', 'catch', false]);
+  assert.equal(catalogue(404).phrase, 'Not Found');
+  assert.equal(versionIndex('1.1'), 11);
+  assert.equal(11 & 7, 3); // its atom: the throw
+  assert.equal(11 ^ (9 ^ 10), 8); // and I-80: 11 observed through 9 ⊕ 10
+});

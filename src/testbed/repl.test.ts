@@ -118,6 +118,11 @@ test('Ports: a request\'s media frame converges to a Fano drawing, and reading t
     assert.deepEqual([permanent.status, permanent.headers.get('location')], [308, '/port/5']); // 37 & 15
     const temporary = await fetch(`${base}/dual/7`, { redirect: 'manual' });
     assert.deepEqual([temporary.status, temporary.headers.get('location')], [307, '/port/8']); // 7 ⊕ 15
+    // the server speaks HTTP/1.1: the version is the index 11
+    const version = await new Promise<string>((ok) => {
+      import('node:http').then(({ get }) => get(`${base}/blob`, (r) => { r.resume(); ok(r.httpVersion); }));
+    });
+    assert.equal(version, '1.1');
     // 206: a byte range is the address of an index
     const whole = await fetch(`${base}/blob`);
     assert.equal(whole.status, 200);

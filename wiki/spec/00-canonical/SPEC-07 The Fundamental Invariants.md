@@ -249,6 +249,8 @@ From the author, 2026-10-11: each frame of reference coordinates on the time and
 
 | I-96 | **Status codes on the try/catch/finally plane** (author: "206 is the built-in throw coordinate to Proxy or Reflect the Catch throw at 218 index"). Read a status code by its atom (low three bits; try = 001, catch = 010, finally = 100, OPEN-01 #19): 201 try, 202 catch, 203 throw, 204 finally, 205 Reflect, **206 Proxy**, 207 full path, and **218 catch**. 206 ⊕ 205 (Proxy ⊕ Reflect) is the throw; 206 ⊕ 218 is finally. Every response of the port server carries `Omi-Atom` (206 → `6 Proxy`, 218 → `2 catch`) | DEFINITION (author) + THEOREM (tested) | `rosetta/src/colour.code.ts`; `repl/src/ports.ts`; tests |
 
+| I-97 | **The status codes are a ubiquitous catalogue** (author: they "are a version and ubiquitous for cataloguing http requests at a 1.1 or 11 in indexing"). Seeded from Node's built-in `http.STATUS_CODES` (63 codes, 100 to 511) plus the informal 218, each code is catalogued by class, atom, role and colour. The version HTTP/1.1 reads as the index **11**: atom 3, the throw, and 11 ⊕ (9 ⊕ 10) = 8 (I-80). The port server speaks HTTP/1.1 (checked) | DEFINITION (author) + THEOREM (tested) | `rosetta/src/http.catalog.ts`; tests |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧
