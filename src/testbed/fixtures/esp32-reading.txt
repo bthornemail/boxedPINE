@@ -1,0 +1,9 @@
+omi arch=xtensa-lx6 model=1 cores=2 rev=301
+orbit 4242 061b fd75 6e04 b7b7 3f22 0880 573d 4242
+period 8
+constants 00 01 02 04 08 10 20 40 34 61 52 07 4c 19 2a 7f
+converge 128 2
+blob 00
+meta 32
+tick_us 11487
+ready

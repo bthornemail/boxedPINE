@@ -262,6 +262,7 @@ tags: [omi-imo, meta, changelog, history]
 - The status codes as a ubiquitous catalogue (SPEC-07 I-97, `rosetta/src/http.catalog.ts`), seeded from Node's own list; HTTP/1.1 as the index 11. 109 tests passing
 - WordNet geometry (author): `omi-files/polytron/polyform/wordnet-to-geometry.c` fixed (eight bugs, committed in polytron) and run over all of WordNet: each synset is a nibble, part-of-speech base plus hypernym depth; "propagation" is the 24-cell. SPEC-07 I-98
 - Took in the continuation brain dump as [[SRC-12 The Continuation Brain Dump]]. SPEC-07 I-99: 1.1.1.1, 8.8.8.8 and 9.9.9.9 are an XOR line, and `repl/src/ping.ts` measures one. From the TOSHIBA Quad9 answers TCP 53, 853 and ICMP but not 443, on both wifi interfaces, while the phone reached it, so a wall is a reading of the frame and the port. I-100: 404.N expects 404 ⊕ N (the 60 cancels), all within 384–415. [[OPEN-01 Open Questions]] #24 (propagation made falsifiable by cross-frame checks) and #25 (the 300 block; the parabolic reading failed as tried). 111 tests passing
+- An ESP32 (ELEGOO ESP-WROOM-32, Xtensa LX6) as a second architecture: the probe firmware `breadboard/esp32` (ESP-IDF 6.0.1, no Wi-Fi) and the host reader `repl/src/serial.ts`; orbit, period, constants, convergence, Blob fold and meta-cycle deviate by 0 from x86_64; the board's own tick is 11.48 ms per 65,536 steps. The board's factory flash is kept, git-ignored, in `breadboard/esp32/backup/`. SPEC-07 I-101. 113 tests passing
 
 ## Pending
 
