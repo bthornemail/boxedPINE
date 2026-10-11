@@ -225,3 +225,23 @@ test('A PROMPT_PATH binding derives labelled indices from a seed', () => {
   assert.deepEqual(r.enumeration.map((t) => [t.term, t.positions]), [['0x03C00', [0, 16]], ['0x1ABCD', [8]]]);
   assert.deepEqual(r.enumeration[1]!.groups, { file: '1', exponent: 'A', exception: 'B', declaration: 'C', definition: 'D' });
 });
+
+// ---- The walkthrough as a text track (rosetta/src/walkthrough.ts) ----
+import { walkthroughVtt, steps, PROOFS, TRACK } from '../../rosetta/src/walkthrough.ts';
+import { existsSync } from 'node:fs';
+
+test('The walkthrough track is derived from SPEC-08 and up to date, one cue per part', () => {
+  const spec08 = readFileSync(new URL('../../wiki/spec/00-canonical/SPEC-08 The Derivation Path.md', import.meta.url), 'utf8');
+  const vtt = walkthroughVtt(spec08);
+  assert.equal(readFileSync(new URL('../../' + TRACK, import.meta.url), 'utf8'), vtt, 'run: node rosetta/src/walkthrough.ts');
+  assert.ok(vtt.startsWith('WEBVTT'));
+  const parts = steps(spec08).map((s) => s.part);
+  assert.deepEqual(parts, Array.from({ length: 20 }, (_, i) => i + 1));
+  assert.equal((vtt.match(/^\d\d:\d\d:\d\d\.000 --> \d\d:\d\d:\d\d\.000$/gm) ?? []).length, 20);
+});
+
+test('Every proof a cue cites exists in proofs/', () => {
+  for (const cited of Object.values(PROOFS)) {
+    assert.ok(existsSync(new URL('../../' + cited.split(' ')[0], import.meta.url)), cited);
+  }
+});

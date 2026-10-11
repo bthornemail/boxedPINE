@@ -20,6 +20,7 @@ Status of the whole project, level by level: [wiki/progress/PROG-00 Homoiconic S
 | `src/verified/tree.ts` | The tree: sixteen 65,536-bit files addressed by one 20-bit index (file · byte · bit) | ✅ |
 | `src/verified/period.ts` | The periods of 1/7 and 1/73 (6, 8), the two prime gaps (sum 6, product 8), and the lens 60 ⊕ 64 that keeps both periods | ✅ |
 | `src/verified/fano.ts` | The sixteen Fano constants: the XOR-closed 7-bit masks, two-step convergence of any byte, duality at index i ⊕ 15, and a whole-number reader for the Fano files | ✅ |
+| `src/verified/loopback.ts` | A MAC folded to a 127/8 loopback address; index 0 served by CUPS IPP at 127.0.0.1:631; NAT64 in 64:ff9b:1::/48 | ✅ |
 | `src/broadcast.ts` | The headless proxy presenter: `launchBroadcast(declared: RegExp, defined: string)` returns `proxy()` (one step forward), `reflect()` (one step back) and `extant()`, each a compare-exchange on the iExtant | Author's core example |
 | `src/model.ts` | `Node` (bind / apply / eval / pin) and `Domain` (declarations, expressions, values, variables): the Node is where iExtant meets the user, inside a Domain | Author's core example |
 | `src/animation.frame.ts` | Frequency spectra, like an `OscillatorNode` in the DOM; the sexagesimal XOR loop | Author's core example |

@@ -186,6 +186,16 @@ Added 2026-10-11 ([[SPEC-16 The Fano Invariant]], "The Sixteen Constants").
 | I-67 | **In the 16-byte table, index i ⊕ 15 is the dual of index i**, so the Prompt Tree's direction flip is the point–line duality | THEOREM (duality) + DEFINITION (the indexing) | `core.test.ts` |
 | I-68 | **The Fano files read to their constants identically from any buffer,** using whole numbers only; two files hold the same constant exactly when their masks XOR to 0 (7-bit XNOR all ones) | THEOREM | `core.test.ts` (18 files, 4 kinds of buffer) |
 
+## XIV. Propagation on the Loopback
+
+Added 2026-10-11, from the author: physical propagation keyed by MAC address, with 127.0.0.0/8 as the local 0, a CUPS IPP address for the 0 of the subnet, and NAT64.
+
+| # | Invariant | Mark | Evidence |
+|---|-----------|------|----------|
+| I-69 | **A MAC folds to a loopback address** by XOR of its halves (maker's 24 bits ⊕ device's 24 bits), giving 127.a.b.c. The fold is carry-free: the fold of two MACs' XOR is the XOR of their folds. It is a fold, not a code: the address does not give the MAC back | THEOREM | `core/src/verified/loopback.ts`; `core.test.ts` |
+| I-70 | **All-zero and all-one MACs both fold to 0,** the 0 of the subnet: convergence at 0 from both 0 and 1. 127.0.0.0 itself is the network address and refuses connections (checked), so **index 0 is served at `ipp://127.0.0.1:631/`**, where CUPS listens | THEOREM (the fold) + DECISION (where 0 is served) | `core.test.ts`; checked on this machine |
+| I-71 | **NAT64:** the loopback address rides in the local-use prefix 64:ff9b:1::/48 (RFC 8215), not the well-known 64:ff9b::/96, which must not carry non-global addresses (RFC 6052) | THEOREM (the embedding) + DECISION (the prefix) | `core.test.ts` |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧

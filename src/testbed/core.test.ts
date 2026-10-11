@@ -451,3 +451,26 @@ test('Every Fano file reads to the constant its name says, from text or from any
   }
   assert.equal(seen.size, 16); // all sixteen constants are present
 });
+
+// ---- A MAC as an index on the loopback (SPEC-07 I-69 to I-71) ----
+import { parseMac, foldMac, loopbackAddress, propagationAddress, IPP_ZERO, nat64 } from '../../core/src/verified/index.ts';
+
+test('A MAC folds to a 127/8 address by XOR of its halves; all-zero and all-one MACs both fold to the IPP zero', () => {
+  assert.equal(foldMac(parseMac('00:00:00:00:00:00')), 0);
+  assert.equal(foldMac(parseMac('ff:ff:ff:ff:ff:ff')), 0); // converges at 0 from both 0 and 1
+  assert.equal(propagationAddress(parseMac('00:00:00:00:00:00')), IPP_ZERO);
+  const mac = parseMac('02:00:5e:10:20:30'); // an example locally administered MAC
+  assert.equal(foldMac(mac), (0x02 ^ 0x10) << 16 | (0x00 ^ 0x20) << 8 | (0x5e ^ 0x30));
+  assert.equal(propagationAddress(mac), '127.18.32.110');
+  assert.equal(loopbackAddress(0xffffff), '127.255.255.255');
+  // the fold is carry-free: folding is XOR, so folding two MACs' XOR is the XOR of their folds
+  const other = parseMac('3c:33:32:00:11:22');
+  const x = Uint8Array.from(mac, (b, i) => b ^ other[i]!);
+  assert.equal(foldMac(x), foldMac(mac) ^ foldMac(other));
+  assert.throws(() => parseMac('00:11:22:33:44'), RangeError);
+});
+
+test('NAT64 carries the loopback address in the local-use prefix 64:ff9b:1::/48', () => {
+  assert.equal(nat64(0), '64:ff9b:1::7f00:0');
+  assert.equal(nat64(foldMac(parseMac('02:00:5e:10:20:30'))), '64:ff9b:1::7f12:206e');
+});

@@ -11,3 +11,4 @@ export * from './metron.ts';
 export * from './tree.ts';
 export * from './period.ts';
 export * from './fano.ts';
+export * from './loopback.ts';

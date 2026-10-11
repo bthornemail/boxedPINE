@@ -30,6 +30,8 @@ It is **pedagogy**: "doors, not the room". The room is [[SPEC-04 First Principle
 
 ## The Path
 
+The path is also a text track: `rosetta/src/assets/walkthrough.vtt`, one WebVTT cue per part, derived from this note by `node rosetta/src/walkthrough.ts`; each cue names its note, its mark, and the Coq proof in `proofs/` that checks it, where there is one. A test fails if the track falls behind this note.
+
 | Part | Step | In the vault | Status |
 |------|------|--------------|--------|
 | 1 | **First principles:** buffer, index, prompt, exchange, three swaps; base36; try/catch | [[SPEC-04 First Principles]] | THEOREM for the operations (I-2, I-3, I-4) |
