@@ -474,3 +474,32 @@ test('NAT64 carries the loopback address in the local-use prefix 64:ff9b:1::/48'
   assert.equal(nat64(0), '64:ff9b:1::7f00:0');
   assert.equal(nat64(foldMac(parseMac('02:00:5e:10:20:30'))), '64:ff9b:1::7f12:206e');
 });
+
+// ---- Reverse names: RFC 2317 and ip6.arpa (SPEC-07 I-73) ----
+import { reverseName, classlessName, ip6ArpaName } from '../../core/src/verified/index.ts';
+
+test('RFC 2317 classless names, checked against the RFC\'s own examples', () => {
+  assert.equal(classlessName([192, 0, 2, 1], 25, '/'), '1.0/25.2.0.192.in-addr.arpa');
+  assert.equal(classlessName([192, 0, 2, 129], 26, '/'), '129.128/26.2.0.192.in-addr.arpa');
+  assert.equal(classlessName([192, 0, 2, 193], 26, '/'), '193.192/26.2.0.192.in-addr.arpa');
+  assert.equal(classlessName([192, 0, 2, 129], 26), '129.128-26.2.0.192.in-addr.arpa');
+  assert.throws(() => classlessName([192, 0, 2, 1], 24), RangeError);
+});
+
+test('A /24+k block is level k of the last octet\'s high nibble: its first address is the group, shifted back', () => {
+  for (let d = 0; d < 256; d++) {
+    for (let k = 1; k <= 4; k++) {
+      const first = Number(classlessName([127, 0, 0, d], 24 + k).split('.')[1]!.split('-')[0]);
+      assert.equal(first >> (8 - k), levelReading(k, d >> 4).node);
+    }
+  }
+});
+
+test('Reverse names read a loopback address from the other end; ip6.arpa goes one nibble per label', () => {
+  const index = foldMac(parseMac('02:00:5e:10:20:30')); // 127.18.32.110
+  assert.equal(reverseName(index), '110.32.18.127.in-addr.arpa');
+  const name = ip6ArpaName(index);
+  assert.equal(name.split('.').length, 32 + 2);
+  assert.ok(name.startsWith('e.6.0.2.2.1.f.7.'));
+  assert.ok(name.endsWith('1.0.0.0.b.9.f.f.4.6.0.0.ip6.arpa'));
+});

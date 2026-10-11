@@ -50,3 +50,37 @@ export function nat64(index: number): string {
   const v4 = (0x7f000000 | (index & 0xffffff)) >>> 0;
   return `${NAT64_LOCAL_PREFIX}${(v4 >>> 16).toString(16)}:${(v4 & 0xffff).toString(16)}`;
 }
+
+// ---- Reverse names (wiki: SPEC-27 §1, SPEC-07 I-73) ----
+//
+// A reverse name reads an address from the other end. RFC 2317 delegates the
+// last octet on non-octet boundaries: a /24+k block is named by its first
+// address and length ("128/26"), which is the node of level k of the last
+// octet's high nibble. ip6.arpa (RFC 3596) reverses an IPv6 address one
+// nibble per label.
+
+/** The four octets of a loopback index. */
+const octets = (index: number) => [127, (index >>> 16) & 255, (index >>> 8) & 255, index & 255] as const;
+
+/** The plain reverse name: d.c.b.a.in-addr.arpa. */
+export const reverseName = (index: number) => [...octets(index)].reverse().join('.') + '.in-addr.arpa';
+
+/**
+ * The RFC 2317 classless name of an address in a /25 to /32 block:
+ * host.first<sep>len.c.b.a.in-addr.arpa. The RFC's examples use "/" but
+ * advise a conservative character such as "-" in practice, hence the default.
+ */
+export function classlessName(address: readonly [number, number, number, number], prefixLength: number, sep = '-'): string {
+  if (!(prefixLength >= 25 && prefixLength <= 32)) throw new RangeError('RFC 2317 delegates blocks of fewer than 256 addresses: /25 to /32');
+  const [a, b, c, d] = address;
+  const first = d & ~((1 << (32 - prefixLength)) - 1) & 255;
+  return `${d}.${first}${sep}${prefixLength}.${c}.${b}.${a}.in-addr.arpa`;
+}
+
+/** The ip6.arpa name of a NAT64 loopback address: 32 nibbles, last first. */
+export function ip6ArpaName(index: number): string {
+  const v4 = (0x7f000000 | (index & 0xffffff)) >>> 0;
+  // 64:ff9b:0001:0000:0000:0000 then the IPv4 address as 8 nibbles
+  const hex = '0064ff9b0001' + '0'.repeat(12) + v4.toString(16).padStart(8, '0');
+  return [...hex].reverse().join('.') + '.ip6.arpa';
+}
