@@ -411,3 +411,43 @@ test('The two poles are not the two directions: 124 reversed at 8 bits is 131, n
   assert.equal((60 ^ 64) ^ 255, 131);
   assert.equal((60 ^ 64) ^ (60 ^ 128), 0xc0);
 });
+
+// ---- The sixteen Fano constants (SPEC-16, SPEC-07 I-65 to I-68) ----
+import { LINES as FANO_LINES, step, converge, isConstant, perp, CONSTANTS, constantIndex, readFanoSvg } from '../../core/src/verified/index.ts';
+import { readdirSync, readFileSync as readFile } from 'node:fs';
+
+test('Of the 128 seven-bit masks exactly 16 are XOR-closed, and every mask converges to one in at most two steps', () => {
+  const closed = [...Array(128).keys()].filter(isConstant);
+  assert.equal(closed.length, 16);
+  assert.deepEqual([...CONSTANTS].sort((a, b) => a - b), closed);
+  for (let m = 0; m < 256; m++) {
+    assert.ok(isConstant(converge(m)));
+    assert.equal(step(step(m & 0x7f)), converge(m)); // two steps always suffice
+  }
+  const key = (t: readonly number[]) => [...t].sort().join('');
+  assert.deepEqual(FANO_LINES.map(key).sort(), xorTriples(3).map(key).sort());
+});
+
+test('The constant at index i ⊕ 15 is the dual of the constant at index i', () => {
+  for (let i = 0; i < 16; i++) assert.equal(CONSTANTS[i ^ 15], perp(CONSTANTS[i]!));
+  assert.equal(perp(1 << 6), 0b0110100); // point 7 is dual to the circle line 3-5-6
+});
+
+test('Every Fano file reads to the constant its name says, from text or from any buffer', () => {
+  const dir = new URL('../../space/src/assets/fano/', import.meta.url);
+  const seen = new Set<number>();
+  for (const name of readdirSync(dir).filter((f) => f.endsWith('.svg'))) {
+    const bytes = readFile(new URL(name, dir));
+    const mask = readFanoSvg(bytes.toString('utf8'));
+    const shared = new Uint8Array(new SharedArrayBuffer(bytes.length));
+    shared.set(bytes);
+    assert.equal(readFanoSvg(new Uint8Array(bytes)), mask);
+    assert.equal(readFanoSvg(shared), mask);
+    const named = name.includes('empty') ? 0 : name.includes('full') ? 0x7f
+      : [...name.matchAll(/_(\d)/g)].reduce((m, d) => m | (1 << (Number(d[1]) - 1)), 0);
+    assert.equal(mask, named, name);
+    assert.ok(isConstant(mask));
+    seen.add(constantIndex(mask));
+  }
+  assert.equal(seen.size, 16); // all sixteen constants are present
+});
