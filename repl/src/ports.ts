@@ -14,6 +14,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { CONSTANTS, readFanoSvg } from '../../core/src/verified/fano.ts';
 import { FRAME_HEADER, frameText, parseFrameText, framePort } from '../../rosetta/src/media.frame.ts';
 import { propagate, traceVtt, type Reading } from '../../rosetta/src/trace.vtt.ts';
+import { proofBlob } from '../../rosetta/src/proof.blob.ts';
 
 /** The departure's status (author: the finally is 218). Non-standard; clients read an unknown 2xx as 200. */
 export const DEPARTURE = 218;
@@ -39,6 +40,11 @@ export function startPorts(port = 0, host = '127.0.0.1'): Promise<Server> {
     '/hasse': readFileSync(new URL('Fano_plane_Hasse_diagram.svg', HASSE), 'utf8'),
     '/hasse/weights': readFileSync(new URL('Fano_plane_Hasse_diagram_weights.svg', HASSE), 'utf8'),
   } as Record<string, string>;
+  const blob = proofBlob();
+  // The Blob's ETag: its sixteen-bit XOR fold, so any change to it changes the tag.
+  let fold = 0;
+  for (let i = 0; i < blob.length; i += 2) fold ^= (blob[i]! << 8) | blob[i + 1]!;
+  const blobTag = `"blob-${fold.toString(16).padStart(4, '0')}"`;
   let trace: Reading[] = [];
   let tick = 0;
   const body = (req: import('node:http').IncomingMessage) => new Promise<string>((ok) => { let t = ''; req.on('data', (c) => { t += c; }); req.on('end', () => ok(t.trim())); });
@@ -51,11 +57,26 @@ export function startPorts(port = 0, host = '127.0.0.1'): Promise<Server> {
     // try / catch / finally as the circulator (SPEC-06), and the codes as an agent's
     // lifecycle (SPEC-07 I-87): 300 offers the ports (agent-driven negotiation),
     // 303 sends a declared frame to its port, 200 serves it, 304 when the agent
-    // already holds it, 307 to a dual port, 308 from a port past 15 to its
-    // nibble, 400 a caught raise, and finally, the departure, 218.
+    // already holds it, 206 for a byte range of the Blob (the address of an
+    // index), 307 to a dual port, 308 from a port past 15 to its nibble, 400 a
+    // caught raise, 416 a range outside the Blob, and finally, the departure, 218.
     try {
       if (url.pathname === '/trace.vtt') { res.writeHead(200, { 'Content-Type': 'text/vtt' }); res.end(traceVtt(trace)); return; }
       if (hasse[url.pathname]) return svg(hasse[url.pathname]!);
+      if (url.pathname === '/blob') {
+        // 206: a Range is the address of an index; the agent prompts it and gets just those bytes.
+        const headers = { 'Content-Type': 'application/octet-stream', 'Accept-Ranges': 'bytes', ETag: blobTag };
+        const range = /^bytes=(\d+)-(\d*)$/.exec(String(req.headers.range ?? ''));
+        if (!req.headers.range) { res.writeHead(200, headers); res.end(blob); return; }
+        const first = range ? Number(range[1]) : NaN;
+        const last = range && range[2] ? Math.min(Number(range[2]), blob.length - 1) : blob.length - 1;
+        if (!range || first > last || first >= blob.length) {
+          res.writeHead(416, { 'Content-Range': `bytes */${blob.length}` }); res.end(); return;
+        }
+        res.writeHead(206, { ...headers, 'Content-Range': `bytes ${first}-${last}/${blob.length}` });
+        res.end(blob.subarray(first, last + 1));
+        return;
+      }
       const fixed = /^\/port\/(\d+)$/.exec(url.pathname);
       // 308: a port number past 15 folds, for good, to its nibble.
       if (fixed && Number(fixed[1]) > 15) { res.writeHead(308, { Location: `/port/${Number(fixed[1]) & 15}` }); res.end(); return; }

@@ -87,6 +87,7 @@ The author, 2026-10-11: "the finally of the try..catch..finally is the 218 http 
 |-------|------|---------------|
 | arrival, no frame yet | **300 Multiple Choices** | agent-driven negotiation: all 16 ports and the 2 Hasse diagrams, as a `text/uri-list` and `Link` headers; the agent chooses |
 | a frame declared (POST) | **303 See Other** | `Location: /port/i`, the port the frame converges to |
+| prompts an index | **206 Partial Content** | `Range: bytes=a-b` on `/blob`: just those bytes, with `Content-Range` and the Blob's ETag; **416** if outside |
 | forward | **200** | a decided request: the port's drawing (with `ETag: "i"`), the trace |
 | moved for a reading | **307 Temporary Redirect** | `/dual/i` → `/port/(i ⊕ 15)`, the dual constant (SPEC-07 I-67) |
 | moved for good | **308 Permanent Redirect** | a port past 15 → its nibble, `/port/(n & 15)` |

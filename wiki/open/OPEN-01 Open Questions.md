@@ -290,6 +290,8 @@ The author's plan (2026-10-11): XR spaces from `breadboard/`, a text track of th
 
 **Done:** stage 2, the Breadboard Space (`space/xr.html`, [[SPEC-44 The Virtual Breadboard]]); the MAC fold, IPP zero, NAT64 and reverse names (`core/src/verified/loopback.ts`, I-69 to I-73); the walkthrough track (`rosetta/src/walkthrough.ts`); presence by UDP and MQTT (`repl/src/presence.ts`, I-72).
 
+**Done 2026-10-11, in user space:** the eMMC over NBD in a paused RISC-V `virt` machine (SPEC-07 I-94), with an SD card standing in for eMMC on QEMU 8.2.
+
 **Waiting, because it runs on the system:**
 - boot `omi-files/omi-bios/bios.img` (4 MB raw) or polytron's kernel (`run-qemu.sh`) in QEMU, with an emulated eMMC as rosetta's flashable meta memory;
 - the QEMU **Generic Event Device** (the `virt` machine's event bus) to signal into the guest;

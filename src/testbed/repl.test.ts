@@ -118,6 +118,17 @@ test('Ports: a request\'s media frame converges to a Fano drawing, and reading t
     assert.deepEqual([permanent.status, permanent.headers.get('location')], [308, '/port/5']); // 37 & 15
     const temporary = await fetch(`${base}/dual/7`, { redirect: 'manual' });
     assert.deepEqual([temporary.status, temporary.headers.get('location')], [307, '/port/8']); // 7 ⊕ 15
+    // 206: a byte range is the address of an index
+    const whole = await fetch(`${base}/blob`);
+    assert.equal(whole.status, 200);
+    const tag = whole.headers.get('etag');
+    await whole.arrayBuffer();
+    const part = await fetch(`${base}/blob`, { headers: { Range: 'bytes=59-59' } });
+    assert.equal(part.status, 206);
+    assert.equal(part.headers.get('content-range'), 'bytes 59-59/8192');
+    assert.equal(part.headers.get('etag'), tag); // the same ETag a 200 carries
+    assert.deepEqual([...new Uint8Array(await part.arrayBuffer())], [60 ^ 59]); // index 59 holds 7, the bell
+    assert.equal((await fetch(`${base}/blob`, { headers: { Range: 'bytes=9000-' } })).status, 416);
     const exit = await fetch(`${base}/anything-undecided`); // nothing decided: finally departs with 218
     assert.deepEqual([exit.status, exit.statusText, exit.ok], [218, 'This is fine', true]);
     assert.equal(await exit.text(), '/anything-undecided'); // the request passes through
@@ -155,4 +166,38 @@ test('The base atoms are revealed in 60 ⊕ 0..63: each octet shows all eight co
   for (let o = 0; o < 64; o += 8) assert.deepEqual([...colours.slice(o, o + 8)].sort(), [0, 1, 2, 3, 4, 5, 6, 7]);
   assert.deepEqual(colours.slice(0, 8).map((n) => COLOURS[n]), ['blue', 'magenta', 'cyan', 'white', 'black', 'red', 'green', 'yellow']);
   assert.equal((60 ^ 64) & 7, 4); // the pole 124 carries the same atom as 60: blue
+});
+
+// ---- A sandboxed eMMC over NBD in a QEMU virt machine (SPEC-07 I-94) ----
+import { makeImage, serveNbd, readNbd, writeNbd, bootVirt, qmp, CONSTANTS_AT } from '../../repl/src/emmc.ts';
+import { proofBlob as blob, xorProof as xorBlob } from '../../rosetta/src/proof.blob.ts';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
+const hasQemu = ['qemu-nbd', 'qemu-img', 'qemu-io', 'qemu-system-riscv64'].every((c) => spawnSync('which', [c]).status === 0);
+
+test('eMMC over NBD: the proof Blob reads back to 0n; a write reads back; a paused virt machine holds the drive', { skip: !hasQemu && 'QEMU tools not installed' }, async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'emmc-'));
+  const nbd = await serveNbd((makeImage(join(dir, 'emmc.img')), join(dir, 'emmc.img')), join(dir, 'nbd.sock'));
+  try {
+    let back = readNbd(join(dir, 'nbd.sock'), join(dir, 'r1.raw'));
+    assert.equal(xorBlob(back.slice(0, 8192), blob()).n, 0n);
+    assert.deepEqual([...back.slice(CONSTANTS_AT, CONSTANTS_AT + 16)], [...CONSTANTS]);
+    writeNbd(join(dir, 'nbd.sock'), 16384, 60, 512);
+    back = readNbd(join(dir, 'nbd.sock'), join(dir, 'r2.raw'));
+    assert.ok(back.slice(16384, 16896).every((b) => b === 60));
+    assert.deepEqual([back[16383], back[16896]], [0, 0]);
+    const vm = await bootVirt(join(dir, 'nbd.sock'), join(dir, 'qmp.sock'));
+    try {
+      const [status, block] = (await qmp(join(dir, 'qmp.sock'), [{ execute: 'query-status' }, { execute: 'query-block' }])) as [{ status: string }, { device: string; inserted?: { image: { filename: string } } }[]];
+      assert.equal(status.status, 'prelaunch');
+      assert.match(block.find((b) => b.device === 'emmc')!.inserted!.image.filename, /^nbd\+unix:/);
+    } finally {
+      vm.kill();
+    }
+  } finally {
+    nbd.kill();
+    rmSync(dir, { recursive: true, force: true });
+  }
 });

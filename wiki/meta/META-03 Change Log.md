@@ -257,6 +257,7 @@ tags: [omi-imo, meta, changelog, history]
 - The colour gate (author: the colour spectrum instead of the bell, for gating kernel space): ANSI colours 30 + n are the Fano points, complements XOR to white; `repl/src/ansi.ts` draws indices in colour and never lets a control byte through. SPEC-07 I-90. 103 tests passing
 - The base atoms in 60 ⊕ 0…63 (I-91) and every prefix as a colour code (I-92, `rosetta/src/colour.code.ts`): 0x black, 0b green, 0o white, 0d blue; ESC[ folds to black. 105 tests passing
 - Meta-generation and meta-compilation (SPEC-07 I-93): each constant generated into SVG, CSS on its ETag, a WebVTT cue and PannerNode corners, and compiled back; `space/meta.html` runs it across canvas, video, text track, panner, CSS and IntersectionObserver, checked headless. 106 tests passing
+- A sandboxed eMMC over NBD in a QEMU virt machine, all user space (SPEC-07 I-94; SD standing in for eMMC on QEMU 8.2); 206 Partial Content as the address of an index, with 416 outside the Blob (I-95). 107 tests passing
 
 ## Pending
 
