@@ -242,6 +242,8 @@ From the author, 2026-10-11: each frame of reference coordinates on the time and
 
 | I-92 | **Every prefix is a colour code** (author: "on all platforms a prefix or escape sequence can be considered a color code"). A byte's atom is its low three bits, so a sequence reads as atoms and folds by XOR to one colour code. The radix prefixes: `0x` black, `0b` green, `0o` white, `0d` blue. ESC and `[` are both yellow, so the escape introducer folds to black; `<=>?` folds to black (4 ⊕ 5 ⊕ 6 ⊕ 7 = 0). The reading is platform-free; showing it is a door (SGR 30 + n in a terminal, the same eight CSS colour keywords in a browser) | THEOREM (tested) + DEFINITION (author) | `rosetta/src/colour.code.ts`; `rosetta.test.ts` |
 
+| I-93 | **Meta-generation and meta-compilation.** One function set (`rosetta/src/meta.generate.ts`), run in Node and the browser, generates each Fano constant into an SVG drawn from first principles, CSS rules on its ETag, a WebVTT cue, and PannerNode positions (each point's bits as a corner of the unit cube). Compiling runs back: the cue compiles to its index and the generated SVG reads back to its constant (`readFanoSvg`), for all 16. `space/meta.html` plays the cues on a video of a canvas, paints the canvas from the cue's SVG, moves a PannerNode, colours tiles by CSS on their ETags, and records them with an IntersectionObserver: checked in headless Chrome (port 13: cue, compile and read-back agree; panner at (1, 0, 0); 16 of 16 tiles observed) | THEOREM (tested in Node; checked in the browser) | `rosetta/src/meta.generate.ts`; `rosetta.test.ts`; `space/meta.html` |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧

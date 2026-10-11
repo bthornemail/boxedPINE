@@ -336,3 +336,21 @@ test('Prefixes and escape sequences read as colour atoms; each folds to one colo
   assert.equal(sgr(colourCode('0b')), '\x1b[32m');
   assert.equal(colourCode(Uint8Array.of(0x3c, 0x3d)), colourCode('<=')); // bytes and text agree
 });
+
+// ---- Meta-generation and meta-compilation (SPEC-07 I-93) ----
+import { constantSvg, constantCss, cueText, compileCue, pannerPositions, metaCues, etag } from '../../rosetta/src/meta.generate.ts';
+import { CONSTANTS as FANO_CONSTANTS, readFanoSvg as readFano } from '../../core/src/verified/fano.ts';
+
+test('Each constant generates an SVG, CSS, a cue and panner positions, and compiles back to itself', () => {
+  for (let i = 0; i < 16; i++) {
+    assert.equal(readFano(constantSvg(i)), FANO_CONSTANTS[i]); // the generated drawing reads back
+    assert.equal(compileCue(cueText(i)), i); // the cue compiles back
+    const corners = pannerPositions(i);
+    assert.equal(corners.length, [...FANO_CONSTANTS[i]!.toString(2)].filter((b) => b === '1').length);
+    for (const [x, y, z] of corners) assert.ok([x, y, z].every((v) => v === 0 || v === 1) && (x | y | z) === 1);
+  }
+  const css = constantCss();
+  for (let i = 0; i < 16; i++) assert.ok(css.includes(`[data-etag='${etag(i)}']`));
+  assert.equal(metaCues().length, 16);
+  assert.throws(() => compileCue('port=3 etag="3" mask=0b0000001'), RangeError); // mask disagrees with port
+});

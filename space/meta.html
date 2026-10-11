@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Meta Generation</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--paper:#f6f6f2;--ink:#1d1f24;--muted:#5d636e;--rule:#d9dad3;--tile:#fff;--sel:#2b5fa8;
+  --display:"Newsreader",Georgia,serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#15171b;--ink:#e8e8e3;--muted:#9aa0aa;--rule:#2c3038;--tile:#f2f2ec;--sel:#7aa7e8;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#15171b;--ink:#e8e8e3;--muted:#9aa0aa;--rule:#2c3038;--tile:#f2f2ec;--sel:#7aa7e8;color-scheme:dark}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.5 var(--mono)}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 16px 48px;display:grid;gap:24px}
+h1{font:600 2rem/1.1 var(--display);margin:0}
+.label{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.stage{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:720px){.stage{grid-template-columns:1fr}}
+canvas{width:100%;max-width:320px;aspect-ratio:95/86;background:var(--tile);border:1px solid var(--rule);border-radius:6px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.tile{margin:0;background:var(--tile);border:1px solid var(--rule);border-radius:6px;padding:6px;outline:3px solid transparent;outline-offset:-3px}
+.tile[data-active]{outline-style:solid}
+.tile svg{width:100%;display:block}
+.tile .label{color:#5d636e}
+#status{display:grid;grid-template-columns:auto 1fr;gap:2px 12px}
+button{font:inherit;color:inherit;background:none;border:1px solid var(--rule);border-radius:4px;padding:5px 10px;cursor:pointer}
+button:focus-visible{outline:2px solid var(--sel);outline-offset:2px}
+video{display:none}
+</style>
+<style id="generated"></style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="label">One source · SVG · canvas · video · text track · panner · CSS · intersection</div>
+    <h1>Meta Generation</h1>
+  </header>
+  <section class="stage">
+    <div>
+      <div class="label">Canvas, painted from the current cue's SVG</div>
+      <canvas id="canvas" width="380" height="344" aria-label="The current constant"></canvas>
+      <p><button id="play">Play the sixteen cues</button></p>
+    </div>
+    <div>
+      <div class="label">Readings</div>
+      <div id="status" aria-live="polite"></div>
+    </div>
+  </section>
+  <section>
+    <div class="label">The sixteen generated drawings; CSS queries each tile's ETag, and an IntersectionObserver marks the ones seen</div>
+    <div class="tiles" id="tiles"></div>
+  </section>
+</div>
+<video id="video" muted playsinline></video>
+<script type="module" src="./src/meta.ts"></script>
+</body>
+</html>
