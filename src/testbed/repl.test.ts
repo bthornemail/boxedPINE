@@ -125,3 +125,26 @@ test('Ports: a request\'s media frame converges to a Fano drawing, and reading t
     server.close();
   }
 });
+
+// ---- The colour gate (SPEC-07 I-90) ----
+import { gate, colour, COLOURS, RESET } from '../../repl/src/ansi.ts';
+
+test('ANSI colours are the Fano plane: 30 + n with n = (red, green, blue) bits; complements XOR to white', () => {
+  assert.deepEqual([1, 2, 4].map((n) => COLOURS[n]), ['red', 'green', 'blue']);
+  assert.equal(COLOURS[1 ^ 2], 'yellow'); // red ⊕ green: the line 1-2-3
+  for (const [a, b] of [['red', 'cyan'], ['green', 'magenta'], ['blue', 'yellow']] as const) {
+    assert.equal(COLOURS.indexOf(a) ^ COLOURS.indexOf(b), 7); // the three lines through white
+  }
+  assert.equal(colour(6), '\x1b[36m');
+});
+
+test('The gate lets no control byte through: no BEL, and every escape is a colour or the reset', () => {
+  const orbit = Array.from({ length: 65536 }, (_, i) => (60 ^ i) & 0xff);
+  const out = gate(orbit);
+  assert.equal(out.includes('\x07'), false); // the 256 bells are gone
+  const escapes = out.match(/\x1b[^m]*m/g)!;
+  assert.ok(escapes.every((e) => /^\x1b\[(3[0-7]|0)m$/.test(e)));
+  assert.equal(escapes.length, 65536 + 1); // one colour per byte, then the reset
+  assert.equal(out.replace(/\x1b\[(3[0-7]|0)m/g, '').length, 65536); // one glyph per byte
+  assert.ok(out.endsWith(RESET));
+});
