@@ -1,6 +1,9 @@
 // READING ANOTHER ARCHITECTURE OVER SERIAL
 //
-// The ESP32 probe (breadboard/esp32) prints the readings core/ makes, one per
+// The ESP32 is now the parity organ (breadboard/esp32, SPEC-07 I-102): it
+// cycles 60 ^ 0 … 128 and reports the 3-bit parity byte, the poles and the
+// deviation it sensed; expectedOrgan() is the same reading made here. The
+// first probe (I-101) printed the readings core/ makes, one per
 // line. This file computes the same readings here, parses the board's, and
 // reports each line's deviation: the XOR of the two words, 0 where the two
 // frames agree. The board's tick_us is a physical reading of its own frame and
@@ -16,9 +19,9 @@ export type Reading = Record<string, number[]>;
 /** The word lists of a transcript: "orbit 4242 061b …" → { orbit: [0x4242, 0x061b, …] }. */
 export function parseReading(text: string): Reading {
   const out: Reading = {};
-  const hexKeys = new Set(['orbit', 'constants', 'blob']);
+  const hexKeys = new Set(['orbit', 'constants', 'blob', 'parity', 'dev']);
   for (const line of text.split(/\r?\n/)) {
-    const m = /^(orbit|period|constants|converge|blob|meta|tick_us) ((?:[0-9a-f]+ ?)+)$/.exec(line.trim());
+    const m = /^(orbit|period|constants|converge|blob|meta|tick_us|parity|pole|dev|us|wall|cycles) ((?:[0-9a-f]+ ?)+)$/.exec(line.trim());
     if (m) out[m[1]!] = m[2]!.trim().split(' ').map((w) => parseInt(w, hexKeys.has(m[1]!) ? 16 : 10));
   }
   return out;
@@ -42,6 +45,18 @@ export function expectedReading(seed = 0x4242): Reading {
   let meta = tick(META_START), ticks = 1;
   while (meta.ring !== META_START.ring || meta.crystal !== META_START.crystal) { meta = tick(meta); ticks++; }
   return { orbit, period: [period], constants: [...CONSTANTS], converge: [closed, most], blob: [fold], meta: [ticks] };
+}
+
+const parity3 = (a: number) => (a ^ (a >> 1) ^ (a >> 2)) & 1;
+
+/** The parity organ's reading, made here: one octet's byte, the poles, and no deviation. */
+export function expectedOrgan(seed = 60): Reading {
+  const octet = (k: number) => [0, 1, 2, 3, 4, 5, 6, 7].reduce((p, i) => p | (parity3((seed ^ ((k << 3) | i)) & 7) << i), 0);
+  let dev = 0;
+  for (let k = 0; k < 16; k++) dev |= octet(k) ^ octet(0);
+  const p = parity3(seed & 7);
+  const pole = Number(parity3((seed ^ 64) & 7) === p && parity3((seed ^ 128) & 7) === p);
+  return { parity: [octet(0)], pole: [pole], dev: [dev] };
 }
 
 /** Per line, the XOR of the two frames' words; all zero means the frames agree. */
@@ -79,7 +94,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const port = process.argv[2] ?? '/dev/ttyUSB0';
   const text = readBoard(port);
   const board = parseReading(text);
-  console.log(text.trim().split(/\r?\n/).filter((l) => /^(omi|tick_us)/.test(l)).join('\n'));
-  for (const [k, d] of Object.entries(deviation(board, expectedReading())))
+  console.log(text.trim().split(/\r?\n/).filter((l) => /^(omi|tick_us|us|wall|cycles)/.test(l)).join('\n'));
+  for (const [k, d] of Object.entries(deviation(board, 'parity' in board ? expectedOrgan() : expectedReading())))
     console.log(`${k.padEnd(10)} ${d === 'missing' ? 'missing' : d.every((v) => v === 0) ? '0 (same)' : d.map((v) => v.toString(16)).join(' ')}`);
 }

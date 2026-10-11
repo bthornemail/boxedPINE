@@ -235,7 +235,7 @@ test('404.N: 60 cancels, the expected value is 404 ⊕ N, and all 21 stay in 404
 
 // ---- Another architecture over serial (SPEC-07 I-101) ----
 import { readFileSync, existsSync } from 'node:fs';
-import { parseReading, expectedReading, deviation, readBoard } from '../../repl/src/serial.ts';
+import { parseReading, expectedReading, expectedOrgan, deviation, readBoard } from '../../repl/src/serial.ts';
 
 test('An ESP32 (Xtensa LX6) reading, captured 2026-10-11, deviates by 0 on every line from this frame', () => {
   const board = parseReading(readFileSync(new URL('./fixtures/esp32-reading.txt', import.meta.url), 'utf8'));
@@ -246,7 +246,16 @@ test('An ESP32 (Xtensa LX6) reading, captured 2026-10-11, deviates by 0 on every
   assert.deepEqual(board.orbit!.slice(0, 2), [0x4242, 0x061b]); // polytron's chain root, K(0x4242, 0x1D)
 });
 
-test('A live board, when one is attached, reads the same', { skip: !(process.env.OMI_SERIAL && existsSync(process.env.OMI_SERIAL)) && 'set OMI_SERIAL=/dev/ttyUSB0' }, () => {
+test('The parity organ: every octet of 60 ⊕ 0…128 reads 0x69, the Thue-Morse byte flipped; the poles agree', () => {
+  assert.deepEqual(expectedOrgan(), { parity: [0x69], pole: [1], dev: [0] });
+  const thueMorse = [0, 1, 2, 3, 4, 5, 6, 7].reduce((p, a) => p | (((a ^ (a >> 1) ^ (a >> 2)) & 1) << a), 0);
+  assert.equal(thueMorse, 0x96);
+  assert.equal(0x69, thueMorse ^ 0xff); // 4 has odd parity, so the flip complements every parity
+  const board = parseReading(readFileSync(new URL('./fixtures/esp32-organ.txt', import.meta.url), 'utf8'));
+  for (const d of Object.values(deviation(board, expectedOrgan()))) assert.ok(d !== 'missing' && d.every((v) => v === 0));
+});
+
+test('A live organ, when one is attached, reads the same', { skip: !(process.env.OMI_SERIAL && existsSync(process.env.OMI_SERIAL)) && 'set OMI_SERIAL=/dev/ttyUSB0' }, () => {
   const board = parseReading(readBoard(process.env.OMI_SERIAL));
-  for (const d of Object.values(deviation(board, expectedReading()))) assert.ok(d !== 'missing' && d.every((v) => v === 0));
+  for (const d of Object.values(deviation(board, expectedOrgan()))) assert.ok(d !== 'missing' && d.every((v) => v === 0));
 });
