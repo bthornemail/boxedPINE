@@ -51,11 +51,17 @@ export function startPorts(port = 0, host = '127.0.0.1'): Promise<Server> {
     // try / catch / finally as the circulator (SPEC-06), and the codes as an agent's
     // lifecycle (SPEC-07 I-87): 300 offers the ports (agent-driven negotiation),
     // 303 sends a declared frame to its port, 200 serves it, 304 when the agent
-    // already holds it, 400 a caught raise, and finally, the departure, 218.
+    // already holds it, 307 to a dual port, 308 from a port past 15 to its
+    // nibble, 400 a caught raise, and finally, the departure, 218.
     try {
       if (url.pathname === '/trace.vtt') { res.writeHead(200, { 'Content-Type': 'text/vtt' }); res.end(traceVtt(trace)); return; }
       if (hasse[url.pathname]) return svg(hasse[url.pathname]!);
       const fixed = /^\/port\/(\d+)$/.exec(url.pathname);
+      // 308: a port number past 15 folds, for good, to its nibble.
+      if (fixed && Number(fixed[1]) > 15) { res.writeHead(308, { Location: `/port/${Number(fixed[1]) & 15}` }); res.end(); return; }
+      // 307: the dual of port i is port i ⊕ 15 (I-67); a reading, so the move is temporary.
+      const dual = /^\/dual\/(\d+)$/.exec(url.pathname);
+      if (dual && Number(dual[1]) < 16) { res.writeHead(307, { Location: `/port/${Number(dual[1]) ^ 15}` }); res.end(); return; }
       if (fixed && Number(fixed[1]) < 16) {
         const i = Number(fixed[1]);
         // 304: the agent already holds this constant (its ETag); the deviation is 0, nothing to resend.

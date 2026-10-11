@@ -233,6 +233,9 @@ From the author, 2026-10-11: each frame of reference coordinates on the time and
 
 | I-87 | **Status codes as an agent's lifecycle** (author: they "power the autonomous agents lifecycle" and index agent-driven content negotiation): an agent arrives and is offered every port (**300**), declares its frame and is sent to its port (**303**), reads it (**200**), finds it already holds it (**304**, deviation 0), raises (**400**), departs (**218**) | DEFINITION (author) + DECISION (which code when) + THEOREM (tested end to end) | `repl/src/ports.ts`; `repl.test.ts`; [[SPEC-06 The Circulator]] |
 
+| I-88 | **Pure bit-shift meta-cycles** (author: animation frames in JavaScript, the atomic kernel anywhere, "platform agnostic pure bit-shift meta-cycles"). Inner: a one-hot ring of 16 walked by shifts, `(s << 1 \| s >>> 15) & 0xFFFF`. Outer: the swap32 crystal, flipping 60 ↔ 63 at each wrap. Together they return after 32 ticks; animation frames and the kernel give the identical sequence. The port server also moves agents: **307** from `/dual/i` to port i ⊕ 15, **308** from a port past 15 to its nibble | DEFINITION (author) + THEOREM (tested) | `core/src/verified/cycle.ts`; `repl/src/ports.ts`; tests; the Breadboard Space shows it |
+| I-89 | **The bell.** The author heard a bell for every byte read "because the 60 ⊕ 0n": a terminal rings on byte 0x07 (BEL), and 60 ⊕ 59 = 7, so in the orbit of 60 the bell is the dial `;` (0x3B). The proof Blob holds 32 BEL bytes and 32 ESC bytes, one byte in eight below 0x20, so it is viewed with `xxd`, never printed raw | THEOREM (counted) | `proofs/blob/README.md` |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧

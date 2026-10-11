@@ -516,7 +516,7 @@ test('Index integrity: no ×, ÷ or % on numbers in core/src/verified outside a 
     readText(new URL(name, dir), 'utf8').split('\n').forEach((line, i) => {
       if (/\/\/ VALUE DOOR/.test(line)) door = true;
       if (/\/\/ END VALUE DOOR/.test(line)) door = false;
-      const code = line.replace(/\/\/.*$/, '').replace(/'[^']*'|"[^"]*"|`[^`]*`/g, '').trim();
+      const code = line.replace(/\/\/.*$/, '').replace(/'[^']*'|"[^"]*"|`[^`]*`/g, '').replace(/function\s*\*/g, 'function ').trim(); // a generator's * is not ×
       if (door || code.startsWith('*') || code.startsWith('/*') || /^(export|import) \* /.test(code)) return;
       if (/[\w)\]]\s*[*/%]\s*[\w(]/.test(code)) offenders.push(`${name}:${i + 1}: ${line.trim()}`);
     });
@@ -595,4 +595,32 @@ test('swap32 is 9 ⊕ 10; index 11 observed through it is 8, one bit; swap32 rev
   assert.deepEqual([8, 9, 10, 11].map((j) => j ^ (9 ^ 10)), [11, 10, 9, 8]);
   assert.deepEqual([9 ^ 10, 9 ^ 11, 10 ^ 11], [3, 2, 1]);
   for (let b = 0; b < 256; b += 4) assert.equal((b + 1) ^ (b + 2) ^ (b + 3), b); // every aligned quad
+});
+
+// ---- Pure bit-shift meta-cycles (SPEC-07 I-88) ----
+import { ring, place, tick, META_START, kernelTicks, animationTicks } from '../../core/src/verified/index.ts';
+
+test('The ring walks the 16 places by shifts; the meta-cycle with the crystal returns after 32 ticks', () => {
+  let s = 1;
+  const places: number[] = [];
+  for (let k = 0; k < 16; k++) { places.push(place(s)); s = ring(s); }
+  assert.deepEqual(places, [...Array(16).keys()]);
+  assert.equal(s, 1);
+  let m = META_START;
+  const crystals: number[] = [];
+  for (let k = 1; k <= 32; k++) { m = tick(m); if ((k & 15) === 0) crystals.push(m.crystal); }
+  assert.deepEqual(m, META_START); // back to the start after 32
+  assert.deepEqual(crystals, [63, 60]); // the crystal flips at each wrap, by swap32
+});
+
+test('Animation frames and the kernel drive the same meta-cycle', () => {
+  const fromKernel: number[] = [];
+  const k = kernelTicks();
+  k.next(); // the start itself
+  for (let i = 0; i < 40; i++) fromKernel.push(k.next().value!.ring);
+  const fromFrames: number[] = [];
+  const queue: (() => void)[] = [];
+  animationTicks((cb) => queue.push(cb), (m) => fromFrames.push(m.ring));
+  for (let i = 0; i < 40; i++) queue.shift()!();
+  assert.deepEqual(fromFrames, fromKernel);
 });

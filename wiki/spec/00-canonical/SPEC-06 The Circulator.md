@@ -88,6 +88,8 @@ The author, 2026-10-11: "the finally of the try..catch..finally is the 218 http 
 | arrival, no frame yet | **300 Multiple Choices** | agent-driven negotiation: all 16 ports and the 2 Hasse diagrams, as a `text/uri-list` and `Link` headers; the agent chooses |
 | a frame declared (POST) | **303 See Other** | `Location: /port/i`, the port the frame converges to |
 | forward | **200** | a decided request: the port's drawing (with `ETag: "i"`), the trace |
+| moved for a reading | **307 Temporary Redirect** | `/dual/i` → `/port/(i ⊕ 15)`, the dual constant (SPEC-07 I-67) |
+| moved for good | **308 Permanent Redirect** | a port past 15 → its nibble, `/port/(n & 15)` |
 | already held | **304 Not Modified** | `If-None-Match` names the same constant: the deviation is 0, nothing is resent |
 | raise, taken by the handler | **400** | a frame that does not parse is caught |
 | exit, then the departure | **218 This is fine** | nothing was decided; `finally` always runs and lets the request pass, its path as the body |

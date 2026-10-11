@@ -253,6 +253,7 @@ tags: [omi-imo, meta, changelog, history]
 - Frames of reference and ports (SPEC-07 I-82 to I-85): the media frame derived from the Media Queries 5 draft (24 features, 35 bits); the kernel tick is the same in every time zone while wall-clock offsets differ; raw pool contamination is 0 in Node and total in a native pool; the trace as a 16-cue WebVTT cache; a loopback server binding each request's media frame to one of the 16 Fano drawings (plus the 2 Hasse diagrams), whose reading returns the constant. The Breadboard Space shows the browser's own frame. 99 tests passing
 - The departure is HTTP 218 (author): the port server is a try/catch/finally circulator, 200 / 400 / 218 This is fine ([[SPEC-06 The Circulator]], SPEC-07 I-86). 99 tests passing
 - Status codes as an agent's lifecycle (author): the port server offers every port (300, agent-driven negotiation), sends a declared frame to its port (303), serves it (200), answers 304 when the agent already holds the constant, catches a raise (400), departs with 218. SPEC-07 I-87. 99 tests passing
+- Pure bit-shift meta-cycles (`core/src/verified/cycle.ts`): a one-hot ring of 16 and the swap32 crystal, 32 ticks, the same from animation frames and the kernel; the Breadboard Space ticks it by animation frames. 307 and 308 move agents in the port server. The author's bell explained: 60 ⊕ 59 = 7 (BEL); the proof Blob holds 32, so `proofs/blob/README.md` says to use `xxd`. SPEC-07 I-88, I-89. 101 tests passing
 
 ## Pending
 

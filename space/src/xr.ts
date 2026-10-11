@@ -15,6 +15,7 @@ import { LINES } from '../../core/src/verified/fano.ts';
 import { breadboardGeometry, type Vec } from './breadboard.geometry.ts';
 import trackUrl from '../../rosetta/src/assets/walkthrough.vtt?url';
 import { currentFrame, frameIndex, frameText, framePort } from '../../rosetta/src/media.frame.ts';
+import { animationTicks, place } from '../../core/src/verified/cycle.ts';
 
 type Circuit = Parameters<typeof breadboardGeometry>[0][number] & { transistorCount: number; led: { net: string; drive: string } };
 const kernel = createKernel();
@@ -143,6 +144,10 @@ function showFrame() {
   $('frame').textContent = `${frameText(frame)} → port ${port}`;
 }
 showFrame();
+
+// ---- the meta-cycle, ticked by animation frames (the kernel ticks it anywhere else; SPEC-07 I-88) ----
+const meta = $('meta');
+animationTicks((cb) => requestAnimationFrame(cb), (m) => { meta.textContent = `place ${place(m.ring)} · ${String.fromCharCode(m.crystal)} (${m.crystal})`; });
 for (const q of ['(prefers-color-scheme: dark)', '(display-mode: picture-in-picture)', '(prefers-reduced-motion: reduce)']) matchMedia(q).addEventListener('change', showFrame);
 
 // ---- the walkthrough track on a video of the 3D canvas ----

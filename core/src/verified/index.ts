@@ -12,3 +12,4 @@ export * from './tree.ts';
 export * from './period.ts';
 export * from './fano.ts';
 export * from './loopback.ts';
+export * from './cycle.ts';

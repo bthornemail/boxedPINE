@@ -114,6 +114,10 @@ test('Ports: a request\'s media frame converges to a Fano drawing, and reading t
     const etag = got.headers.get('etag')!;
     await got.text();
     assert.equal((await fetch(base + location, { headers: { 'If-None-Match': etag } })).status, 304);
+    const permanent = await fetch(`${base}/port/37`, { redirect: 'manual' });
+    assert.deepEqual([permanent.status, permanent.headers.get('location')], [308, '/port/5']); // 37 & 15
+    const temporary = await fetch(`${base}/dual/7`, { redirect: 'manual' });
+    assert.deepEqual([temporary.status, temporary.headers.get('location')], [307, '/port/8']); // 7 ⊕ 15
     const exit = await fetch(`${base}/anything-undecided`); // nothing decided: finally departs with 218
     assert.deepEqual([exit.status, exit.statusText, exit.ok], [218, 'This is fine', true]);
     assert.equal(await exit.text(), '/anything-undecided'); // the request passes through
