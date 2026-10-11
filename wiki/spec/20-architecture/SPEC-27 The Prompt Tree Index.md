@@ -58,6 +58,8 @@ Every row still covers all 16 positions. This is the **complete binary tree on 1
 | The two groups of 8 are the lower 8 and higher 8 indices, the two poles of 60 (I-14) | 2 × 8 |
 | The four groups of 4 end at 3, 7, 11, 15: the four-block family of I-14 and the generator's `{3,7,11,15}` (I-33) | 4 × 4 |
 | A byte pair, which `swap16` exchanges | 8 × 2 |
+| RFC 2317 reverse delegation of a /24: blocks /25, /26, /27, /28 are named by first address and length (`128/26`), the groups of levels 1 to 4 of the last octet's high nibble | 2 × 8 … 16 × 1 (I-73) |
+| `ip6.arpa` names: one label per nibble, read from the other end | the 16 positions, reversed (I-73) |
 
 ## 2. The Labels (chosen)
 

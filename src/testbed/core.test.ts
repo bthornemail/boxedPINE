@@ -490,7 +490,8 @@ test('A /24+k block is level k of the last octet\'s high nibble: its first addre
   for (let d = 0; d < 256; d++) {
     for (let k = 1; k <= 4; k++) {
       const first = Number(classlessName([127, 0, 0, d], 24 + k).split('.')[1]!.split('-')[0]);
-      assert.equal(first >> (8 - k), levelReading(k, d >> 4).node);
+      const group = k < 4 ? levelReading(k, d >> 4).node : d >> 4; // at /28 the group is the whole nibble
+      assert.equal(first >> (8 - k), group);
     }
   }
 });

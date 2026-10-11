@@ -197,6 +197,8 @@ Added 2026-10-11, from the author: physical propagation keyed by MAC address, wi
 | I-71 | **NAT64:** the loopback address rides in the local-use prefix 64:ff9b:1::/48 (RFC 8215), not the well-known 64:ff9b::/96, which must not carry non-global addresses (RFC 6052). This is the address form only: NAT64 translation (IPv6-only clients reaching IPv4, with DNS64) needs a gateway such as Jool or TAYGA, and none runs here | THEOREM (the embedding) + DECISION (the prefix) | `core.test.ts` |
 | I-72 | **Is anyone already broadcasting?** UDP: binding an address is a compare-exchange; it holds the address, or throws EADDRINUSE because someone is there. MQTT: a peer subscribes to `omi/presence/<address>`, and what comes back is only the **deviation**, each heard index ⊕ its own (0 = same index); if no one is heard it announces its index, retained, with a will that clears it | THEOREM (the UDP claim; the deviation) | `repl/src/presence.ts`; `repl.test.ts` (private broker); one live check on test.mosquitto.org, 2026-10-11, cleared after |
 
+| I-73 | **Reverse names read an address from the other end.** RFC 2317 (classless IN-ADDR.ARPA delegation) names a /24 + k block by its first address and length, `128/26`; that block is level k of the last octet's high nibble (/25, /26, /27, /28 = 2, 4, 8, 16 groups). `ip6.arpa` (RFC 3596) reverses an IPv6 address one nibble per label. The RFC's own examples are test cases; names use `-` as the RFC advises, `/` on request | THEOREM | `loopback.ts`; `core.test.ts` (all 256 last octets) |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧

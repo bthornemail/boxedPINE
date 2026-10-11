@@ -283,3 +283,19 @@ The author renamed the upper half's zero index (the "Hamming" or "Polybius" row)
 **Still open** (listed in SPEC-26): the ASCII cascade rule, the "polynomial shape" of the terms, PATRICIA compression, and computing the fifteen layouts.
 
 **Status:** Open.
+
+### 22. Stage 3: Booting the Meta Memory
+
+The author's plan (2026-10-11): XR spaces from `breadboard/`, a text track of the walkthrough, a 2D and 3D picture-in-picture space, and "a qemu virt bios.img kernel for rosetta to host a meta memory of an eMMC flashable model for physical propagation based on mac addresses", with "eBPF or qemu GED event bus".
+
+**Done:** the MAC fold, IPP zero, NAT64 and reverse names (`core/src/verified/loopback.ts`, I-69 to I-73); the walkthrough track (`rosetta/src/walkthrough.ts`); presence by UDP and MQTT (`repl/src/presence.ts`, I-72).
+
+**Waiting, because it runs on the system:**
+- boot `omi-files/omi-bios/bios.img` (4 MB raw) or polytron's kernel (`run-qemu.sh`) in QEMU, with an emulated eMMC as rosetta's flashable meta memory;
+- the QEMU **Generic Event Device** (the `virt` machine's event bus) to signal into the guest;
+- **eBPF** to observe the UDP claims and loopback traffic in the kernel without changing them (needs root);
+- a NAT64 gateway (Jool or TAYGA) if translation, not only the address form, is wanted.
+
+⟦Author to confirm which image boots, and whether root-level pieces (eBPF, a NAT64 gateway) may be installed.⟧
+
+**Status:** Open.
