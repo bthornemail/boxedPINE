@@ -5,7 +5,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
-import { udpClaim, mqttProbe, presenceTopic, PRESENCE_PORT } from '../../repl/src/presence.ts';
+import { udpClaim, mqttProbe, presenceTopic, indexPayload, PRESENCE_PORT } from '../../repl/src/presence.ts';
 import { parseMac, foldMac, loopbackAddress } from '../../core/src/verified/index.ts';
 
 const address = loopbackAddress(foldMac(parseMac('02:00:5e:10:20:30'))); // 127.18.32.110
@@ -24,20 +24,27 @@ test('UDP: the first claim on an address holds it; a second finds someone alread
 
 const hasMosquitto = spawnSync('which', ['mosquitto']).status === 0;
 
-test('MQTT: the first peer hears no one and announces; the next hears it', { skip: !hasMosquitto && 'mosquitto not installed' }, async () => {
+test('MQTT: the first peer hears no one and announces; the next gets back only the deviation', { skip: !hasMosquitto && 'mosquitto not installed' }, async () => {
   const port = 18000 + (process.pid % 1000);
   const broker = spawn('mosquitto', ['-p', String(port)], { stdio: 'ignore' });
+  const clients: { endAsync: () => Promise<void> }[] = [];
   try {
     await new Promise((r) => setTimeout(r, 400));
     const url = `mqtt://127.0.0.1:${port}`;
-    const a = await mqttProbe(url, address, 'peer A', { waitMs: 300 });
+    const index = foldMac(parseMac('02:00:5e:10:20:30'));
+    const a = await mqttProbe(url, address, index, { waitMs: 300 });
+    clients.push(a.client);
     assert.deepEqual([a.heard, a.announced], [[], true]);
-    const b = await mqttProbe(url, address, 'peer B', { waitMs: 300 });
-    assert.deepEqual([b.heard, b.announced], [['peer A'], false]);
+    const b = await mqttProbe(url, address, index ^ 0x06, { waitMs: 300 });
+    clients.push(b.client);
+    assert.deepEqual([b.heard, b.deviations, b.announced], [[index], [0x06], false]);
+    const c = await mqttProbe(url, address, index, { waitMs: 300, announce: false });
+    clients.push(c.client);
+    assert.deepEqual(c.deviations, [0]); // same index: the deviation is 0
+    assert.equal(indexPayload(index), '12206e');
     assert.equal(presenceTopic(address), 'omi/presence/127.18.32.110');
-    await a.client.endAsync();
-    await b.client.endAsync();
   } finally {
+    await Promise.all(clients.map((x) => x.endAsync()));
     broker.kill();
   }
 });

@@ -241,6 +241,7 @@ tags: [omi-imo, meta, changelog, history]
 
 - Made the Fano icon files "convergent in any Buffer and autonomous on any FPGA" (author): `core/src/verified/fano.ts` holds the 16 constants (exactly the XOR-closed 7-bit masks), a two-step convergence of any byte, the duality at index i ⊕ 15, and a whole-number reader; the 18 drawings are in `space/src/assets/fano/`. [[SPEC-16 The Fano Invariant]] "The Sixteen Constants"; SPEC-07 I-65 to I-68; 72 tests passing
 - Stage 1 of the author's XR / text-track / QEMU plan: a MAC folds to a 127/8 loopback address (`core/src/verified/loopback.ts`), index 0 served by CUPS IPP at 127.0.0.1:631, carried over NAT64 in 64:ff9b:1::/48; the wiki walkthrough as a WebVTT track citing its Coq proofs (`rosetta/src/walkthrough.ts`, `rosetta/src/assets/walkthrough.vtt`). SPEC-07 I-69 to I-71; 76 tests passing
+- Presence (author: "mqtt subscriptions and publication to see if anyone is already broadcasting; udp also"; "we only get back deviation"): `repl/src/presence.ts`, a UDP bind as compare-exchange and an MQTT probe that returns only the deviation of heard indices; tested on a private mosquitto, checked once live on test.mosquitto.org (IPv4; this machine has no IPv6 route) and cleared. SPEC-07 I-72; 78 tests passing
 
 ## Pending
 

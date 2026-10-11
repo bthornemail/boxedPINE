@@ -168,6 +168,7 @@ The states a structure can be in:
 | The sixteen Fano constants: closure, two-step convergence, duality at i ⊕ 15 | I-65 to I-67 | `core` fano.ts | core.test | `space` assets/fano (18 files) | **canonical** |
 | The Fano files read the same from any buffer | I-68 | `core` fano.ts (`readFanoSvg`) | core.test | `space` assets/fano | **canonical** |
 | A MAC on the loopback: fold, IPP zero, NAT64 | I-69 to I-71 | `core` loopback.ts | core.test | — | **canonical** |
+| Presence: UDP claim and MQTT deviation | I-72 | — | repl.test | `repl` presence.ts | **realized**, with its own check |
 | The walkthrough as a text track, with its proofs | SPEC-08 | `rosetta` walkthrough.ts | rosetta.test | `proofs` (cited) | **canonical** |
 | The tree: 16 Blobs, one 20-bit index | I-48 | `core` tree.ts | core.test | `types/` (proxy) | **canonical** |
 | The Prompt Tree: four levels, the swaps, the 16-bit path | I-49 to I-51; [[SPEC-27 The Prompt Tree Index]] | `core` tree.ts; `rosetta` grammar.ts (`PROMPT_PATH`) | core.test, rosetta.test; the readings file | — | **canonical** |
@@ -192,7 +193,7 @@ File 0 is the **BOM**, which holds the **Prompt Tree**; files 1–15 hold the fi
 
 ## The Count
 
-Of the 66 rows (2026-10-11): **38 canonical**, **7 checked**, **14 stated**, **1 realized only** (Proxy and Reflect), **1 realized with its own check** (the breadboard), **5 fail**.
+Of the 67 rows (2026-10-11): **38 canonical**, **7 checked**, **14 stated**, **1 realized only** (Proxy and Reflect), **2 realized with their own check** (the breadboard, presence), **5 fail**.
 
 ## What Canonicalizes Next
 

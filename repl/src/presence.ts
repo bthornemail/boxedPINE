@@ -1,7 +1,8 @@
 // IS ANYONE ALREADY BROADCASTING HERE?
 //
 // The author: "we can use mqtt subscriptions and publication to see if anyone
-// is already broadcasting; udp also". Before a peer propagates on its loopback
+// is already broadcasting; udp also", and "we only get back deviation".
+// Before a peer propagates on its loopback
 // address (core/src/verified/loopback.ts), it asks two ways:
 //
 //   UDP  — try to bind the address. Binding is a compare-exchange: it succeeds
@@ -34,22 +35,35 @@ export function udpClaim(address: string, port = PRESENCE_PORT): Promise<Claim> 
 
 export const presenceTopic = (address: string) => `omi/presence/${address}`;
 
-export type Probe = { heard: string[]; announced: boolean; client: MqttClient };
+export type Probe = { heard: number[]; deviations: number[]; announced: boolean; client: MqttClient };
+
+/** A presence payload is only the 24-bit loopback index, as six hex digits. */
+export const indexPayload = (index: number) => (index & 0xffffff).toString(16).padStart(6, '0');
 
 /**
- * Listen on the address's presence topic for waitMs. If no one is heard and
- * announce is set, publish a retained presence, with a will that clears it if
- * this peer drops. The broker is the caller's choice; nothing is published
- * anywhere else.
+ * Listen on the address's presence topic for waitMs. What comes back is only
+ * the deviation: each heard index ⊕ this peer's index. 0 means the same index
+ * (convergence); anything else is the reading. If no one is heard and announce
+ * is set, publish this peer's index retained, with a will that clears it if the
+ * peer drops. The broker is the caller's choice.
  */
-export async function mqttProbe(broker: string, address: string, payload: string, { waitMs = 500, announce = true } = {}): Promise<Probe> {
+export async function mqttProbe(broker: string, address: string, index: number, { waitMs = 500, announce = true } = {}): Promise<Probe> {
   const topic = presenceTopic(address);
-  const client = await connectAsync(broker, { will: { topic, payload: '', retain: true, qos: 1 } });
-  const heard: string[] = [];
-  client.on('message', (t, message) => { if (t === topic && message.length) heard.push(message.toString()); });
+  const client = await connectAsync(broker, { reconnectPeriod: 0, will: { topic, payload: '', retain: true, qos: 1 } });
+  const collected: number[] = [];
+  const onMessage = (t: string, message: Buffer) => {
+    if (t === topic && /^[0-9a-f]{6}$/.test(message.toString())) collected.push(parseInt(message.toString(), 16));
+  };
+  client.on('message', onMessage);
   await client.subscribeAsync(topic, { qos: 1 });
   await new Promise((r) => setTimeout(r, waitMs));
+  client.off('message', onMessage); // stop before announcing, so a peer never hears itself
+  const heard = [...collected];
   const announced = announce && heard.length === 0;
-  if (announced) await client.publishAsync(topic, payload, { retain: true, qos: 1 });
-  return { heard, announced, client };
+  if (announced) await client.publishAsync(topic, indexPayload(index), { retain: true, qos: 1 });
+  return { heard, deviations: heard.map((h) => h ^ (index & 0xffffff)), announced, client };
 }
+
+/** Clear this address's retained presence (an empty retained message). */
+export const clearPresence = (client: MqttClient, address: string) =>
+  client.publishAsync(presenceTopic(address), '', { retain: true, qos: 1 });
