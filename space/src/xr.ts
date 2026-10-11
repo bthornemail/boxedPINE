@@ -16,6 +16,7 @@ import { breadboardGeometry, type Vec } from './breadboard.geometry.ts';
 import trackUrl from '../../rosetta/src/assets/walkthrough.vtt?url';
 import { currentFrame, frameIndex, frameText, framePort } from '../../rosetta/src/media.frame.ts';
 import { animationTicks, place } from '../../core/src/verified/cycle.ts';
+import { parseReflect, expectedOrgan, ORGAN_CHOICES } from '../../rosetta/src/organ.ts';
 
 type Circuit = Parameters<typeof breadboardGeometry>[0][number] & { transistorCount: number; led: { net: string; drive: string } };
 const kernel = createKernel();
@@ -78,15 +79,35 @@ function resize() {
 }
 addEventListener('resize', resize);
 resize();
+// The parity organ in 3D: a small sphere on the board; in an immersive session
+// with hand tracking it rides on the left wrist, so its origin is that joint's
+// XRJointSpace (SPEC-07 I-103).
+const organMat = new THREE.MeshStandardMaterial({ color: 0x8a8f99 });
+const organ = new THREE.Mesh(new THREE.SphereGeometry(0.035, 24, 16), organMat);
+organ.position.set(0, 0.12, 0);
+board.add(organ);
+const leftHand = renderer.xr.getHand(0);
+scene.add(leftHand);
+const wristAt = new THREE.Vector3();
+
 renderer.setAnimationLoop((t) => {
   board.rotation.y = Math.sin(t / 4000) * 0.12;
+  const wrist = (leftHand as unknown as { joints: Record<string, THREE.Object3D | undefined> }).joints['wrist'];
+  if (renderer.xr.isPresenting && wrist?.visible) {
+    if (organ.parent !== scene) scene.add(organ);
+    wrist.getWorldPosition(wristAt);
+    organ.position.copy(wristAt).add(new THREE.Vector3(0, 0.05, 0));
+  } else if (organ.parent !== board) {
+    board.add(organ);
+    organ.position.set(0, 0.12, 0);
+  }
   renderer.render(scene, camera);
 });
 
 const xr = $('xr');
 if ('xr' in navigator) {
   navigator.xr!.isSessionSupported('immersive-vr').then((ok) => {
-    if (ok) xr.appendChild(VRButton.createButton(renderer));
+    if (ok) xr.appendChild(VRButton.createButton(renderer, { optionalFeatures: ['hand-tracking'] }));
     else xr.textContent = 'No VR headset here';
   });
 } else xr.textContent = 'WebXR not available';
@@ -179,3 +200,49 @@ $('pip2d').onclick = async () => {
   win.document.body.appendChild(panel);
   win.addEventListener('pagehide', () => document.body.appendChild(panel));
 };
+
+// ---- the parity organ over Web Serial (SPEC-07 I-102, I-103) ----
+// Unprompted, the board reflects its state every 256 cycles; prompted with a
+// request line, it answers with a status line and departs with 218.
+type SerialPortLike = { open(o: { baudRate: number }): Promise<void>; readable: ReadableStream<Uint8Array>; writable: WritableStream<Uint8Array> };
+const serial = (navigator as unknown as { serial?: { requestPort(): Promise<SerialPortLike> } }).serial;
+const organText = $('organ'), answer = $('organAnswer');
+const ask = $<HTMLSelectElement>('organAsk'), send = $<HTMLButtonElement>('organSend');
+for (const c of ['/', ...ORGAN_CHOICES, '/atom/b', '/m/0-200']) ask.add(new Option(`GET ${c}`, `GET ${c}`));
+const want = expectedOrgan();
+let writer: WritableStreamDefaultWriter<Uint8Array> | null = null;
+let answering: string[] | null = null;
+
+function onLine(line: string) {
+  const r = parseReflect(line);
+  if (r) {
+    const same = r.parity === want.parity![0] && r.pole === want.pole![0] && r.dev === 0;
+    organText.textContent = `reflect · parity ${r.parity.toString(16)} · pole ${r.pole} · deviation ${r.dev.toString(16).padStart(2, '0')} · ${r.count} × 256 cycles`;
+    organMat.color.set(same ? css('--ok') : css('--accent'));
+    return;
+  }
+  if (/^\d{3} /.test(line) && !answering) answering = [];
+  if (answering) {
+    answering.push(line);
+    if (line.startsWith('218 ')) { answer.textContent = answering.join('\n'); answering = null; }
+  }
+}
+
+$('organConnect').onclick = async () => {
+  if (!serial) { organText.textContent = 'Web Serial is not available in this browser.'; return; }
+  const port = await serial.requestPort();
+  await port.open({ baudRate: 115200 });
+  writer = port.writable.getWriter();
+  ask.disabled = send.disabled = false;
+  organText.textContent = 'Connected; waiting for its reflection.';
+  const reader = port.readable.pipeThrough(new TextDecoderStream() as unknown as ReadableWritablePair<string, Uint8Array>).getReader();
+  let rest = '';
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    const lines = (rest + value).split(/\r?\n/);
+    rest = lines.pop() ?? '';
+    lines.forEach(onLine);
+  }
+};
+send.onclick = () => { writer?.write(new TextEncoder().encode(`${ask.value}\n`)); };

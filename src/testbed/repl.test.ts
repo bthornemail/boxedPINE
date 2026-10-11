@@ -235,7 +235,8 @@ test('404.N: 60 cancels, the expected value is 404 ⊕ N, and all 21 stay in 404
 
 // ---- Another architecture over serial (SPEC-07 I-101) ----
 import { readFileSync, existsSync } from 'node:fs';
-import { parseReading, expectedReading, expectedOrgan, deviation, readBoard } from '../../repl/src/serial.ts';
+import { reflectsOn } from '../../rosetta/src/organ.ts';
+import { parseReading, parseReflect, expectedReading, expectedOrgan, respondTwin, askOrgan, deviation, readBoard } from '../../repl/src/serial.ts';
 
 test('An ESP32 (Xtensa LX6) reading, captured 2026-10-11, deviates by 0 on every line from this frame', () => {
   const board = parseReading(readFileSync(new URL('./fixtures/esp32-reading.txt', import.meta.url), 'utf8'));
@@ -255,7 +256,47 @@ test('The parity organ: every octet of 60 ⊕ 0…128 reads 0x69, the Thue-Morse
   for (const d of Object.values(deviation(board, expectedOrgan()))) assert.ok(d !== 'missing' && d.every((v) => v === 0));
 });
 
-test('A live organ, when one is attached, reads the same', { skip: !(process.env.OMI_SERIAL && existsSync(process.env.OMI_SERIAL)) && 'set OMI_SERIAL=/dev/ttyUSB0' }, () => {
+test('The organ reflects its state unprompted; its answers to prompts are the lifecycle codes, departing with 218', () => {
+  const text = readFileSync(new URL('./fixtures/esp32-organ.txt', import.meta.url), 'utf8');
+  const reflected = text.split('\n').map(parseReflect).filter((r) => r);
+  assert.equal(reflected.length, 3);
+  for (const r of reflected) assert.deepEqual([r!.parity, r!.pole, r!.dev], [0x69, 1, 0]);
+  // the board's answers on 2026-10-11, as the twin makes them here
+  assert.deepEqual(respondTwin('GET /atom/5'), ['200 OK', 'atom 5 parity 0 dual a', '218 This is fine']);
+  assert.deepEqual(respondTwin('GET /atom/b'), ['307 Temporary Redirect', 'location /atom/4', '218 This is fine']);
+  assert.deepEqual(respondTwin('GET /m/60-70'), ['206 Partial Content', 'content-range m 60-70/129', 'bits 01101001011', '218 This is fine']);
+  assert.deepEqual(respondTwin('GET /m/120-130'), ['416 Range Not Satisfiable', 'content-range m */129', '218 This is fine']);
+  assert.deepEqual(respondTwin('GET /parity 69'), ['304 Not Modified', '218 This is fine']);
+  assert.deepEqual(respondTwin('POST /x'), ['400 Bad Request', '218 This is fine']);
+  assert.equal(respondTwin('GET /')[0], '300 Multiple Choices');
+});
+
+const live = !(process.env.OMI_SERIAL && existsSync(process.env.OMI_SERIAL)) && 'set OMI_SERIAL=/dev/ttyUSB0';
+
+test('A live organ reads the same', { skip: live }, () => {
   const board = parseReading(readBoard(process.env.OMI_SERIAL));
   for (const d of Object.values(deviation(board, expectedOrgan()))) assert.ok(d !== 'missing' && d.every((v) => v === 0));
+});
+
+test('A live organ answers every negotiation strategy as this frame does', { skip: live }, () => {
+  const timing = /^(us|wall|cycles) /;
+  for (const request of ['GET /', 'GET /parity', 'GET /parity 69', 'GET /parity 00', 'GET /atom/0', 'GET /atom/7', 'GET /atom/8', 'GET /m/0-128', 'GET /m/64-64', 'GET /m/0-129', 'GET /m/9-3', 'PUT /'])
+    assert.deepEqual(askOrgan(process.env.OMI_SERIAL!, request).filter((l) => !timing.test(l)), respondTwin(request), request);
+});
+
+test('The organ reflects three ticks in four: silent exactly when the tick is 2 mod 4', () => {
+  const ticks = Array.from({ length: 16 }, (_, n) => n).filter(reflectsOn);
+  assert.deepEqual(ticks, [0, 1, 3, 4, 5, 7, 8, 9, 11, 12, 13, 15]);
+  for (let n = 0; n < 1 << 16; n++) assert.equal(reflectsOn(n), (n % 4 === 0) || (n % 2 !== 0 && n % 4 !== 0)); // the author's words
+});
+
+test('A live organ is silent on the ticks that are 2 mod 4, and only those', { skip: live }, () => {
+  const text = readBoard(process.env.OMI_SERIAL, '', 4000, /(?:reflect [^\n]*\n[^]*){40}/);
+  const counts = text.split(/\r?\n/).map(parseReflect).filter((r) => r).map((r) => r!.count);
+  assert.ok(counts.length >= 30);
+  for (const n of counts) assert.ok(reflectsOn(n), `reflected on tick ${n}`);
+  for (let i = 1; i < counts.length; i++) {
+    const gap = Array.from({ length: counts[i]! - counts[i - 1]! - 1 }, (_, k) => counts[i - 1]! + 1 + k);
+    assert.ok(gap.every((n) => !reflectsOn(n)), `missing ticks ${gap}`);
+  }
 });

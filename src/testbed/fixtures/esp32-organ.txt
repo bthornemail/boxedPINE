@@ -1,8 +1,12 @@
 omi organ=parity3 arch=xtensa-lx6 memory=none
+reflect 69 1 00 0001
+reflect 69 1 00 0002
+200 OK
 parity 69
 pole 1
 dev 00
-us 1856257
-wall 2559508
-cycles 65536
-ready
+us 1250092
+wall 1723749
+cycles 43969
+218 This is fine
+reflect 69 1 00 0003

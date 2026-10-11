@@ -13,6 +13,9 @@ import { openSync, readSync, writeSync, closeSync } from 'node:fs';
 import { CONSTANTS, converge, isConstant, step } from '../../core/src/verified/fano.ts';
 import { delta16 } from '../../core/src/verified/delta.ts';
 import { tick, META_START } from '../../core/src/verified/cycle.ts';
+import { expectedOrgan, respondTwin, parseReflect } from '../../rosetta/src/organ.ts';
+
+export { expectedOrgan, respondTwin, parseReflect };
 
 export type Reading = Record<string, number[]>;
 
@@ -47,16 +50,13 @@ export function expectedReading(seed = 0x4242): Reading {
   return { orbit, period: [period], constants: [...CONSTANTS], converge: [closed, most], blob: [fold], meta: [ticks] };
 }
 
-const parity3 = (a: number) => (a ^ (a >> 1) ^ (a >> 2)) & 1;
-
-/** The parity organ's reading, made here: one octet's byte, the poles, and no deviation. */
-export function expectedOrgan(seed = 60): Reading {
-  const octet = (k: number) => [0, 1, 2, 3, 4, 5, 6, 7].reduce((p, i) => p | (parity3((seed ^ ((k << 3) | i)) & 7) << i), 0);
-  let dev = 0;
-  for (let k = 0; k < 16; k++) dev |= octet(k) ^ octet(0);
-  const p = parity3(seed & 7);
-  const pole = Number(parity3((seed ^ 64) & 7) === p && parity3((seed ^ 128) & 7) === p);
-  return { parity: [octet(0)], pole: [pole], dev: [dev] };
+/** Prompt the organ: send one request line, collect its answer up to the departure, leaving out reflect lines. */
+export function askOrgan(port: string, request: string, timeoutMs = 4000): string[] {
+  const text = readBoard(port, request, timeoutMs, /218 This is fine\r?\n/);
+  const end = text.indexOf('218 This is fine');
+  const lines = (end < 0 ? text : text.slice(0, end + 16)).split(/\r?\n/).filter((l) => l && !l.startsWith('reflect') && !l.startsWith('omi '));
+  const start = lines.findIndex((l) => /^\d{3} /.test(l));
+  return start < 0 ? lines : lines.slice(start);
 }
 
 /** Per line, the XOR of the two frames' words; all zero means the frames agree. */
@@ -69,17 +69,21 @@ export function deviation(board: Reading, host: Reading): Record<string, number[
   return out;
 }
 
-/** Ask a board on a serial port for its reading ("?") and collect lines until "ready". */
-export function readBoard(port = '/dev/ttyUSB0', ask = '?', timeoutMs = 8000): string {
+/** Send a line to a board on a serial port and collect what comes back until `until` (or the timeout). */
+export function readBoard(port = '/dev/ttyUSB0', ask = 'GET /parity', timeoutMs = 8000, until = /\nready\r?\n|218 This is fine\r?\n/, settleMs = 300): string {
   // every echo and flow-control flag off: an echoing port feeds the board its own lines
   spawnSync('stty', ['-F', port, '115200', 'cs8', '-cstopb', '-parenb', 'raw', '-echo', '-echoe', '-echok', '-echoctl', '-echoke', '-ixon', '-ixoff', '-crtscts', '-hupcl']);
   const fd = openSync(port, 'r+');
   try {
-    writeSync(fd, `\n${ask}\n`);
     const buf = Buffer.alloc(256);
+    // Just after the port opens, the USB serial layer can hand over the same
+    // packet more than once (seen on 2026-10-11 with cat and with Node). Let it
+    // settle: read and discard for settleMs, the organ's reflect lines keep reads returning.
+    for (const settle = Date.now() + settleMs; Date.now() < settle; ) readSync(fd, buf, 0, buf.length, null);
+    writeSync(fd, `\n${ask}\n`);
     let text = '';
     const end = Date.now() + timeoutMs;
-    while (Date.now() < end && !/\nready\r?\n/.test(text)) {
+    while (Date.now() < end && !until.test(text)) {
       const n = readSync(fd, buf, 0, buf.length, null);
       text += buf.toString('latin1', 0, n);
     }
