@@ -148,3 +148,11 @@ test('The gate lets no control byte through: no BEL, and every escape is a colou
   assert.equal(out.replace(/\x1b\[(3[0-7]|0)m/g, '').length, 65536); // one glyph per byte
   assert.ok(out.endsWith(RESET));
 });
+
+test('The base atoms are revealed in 60 ⊕ 0..63: each octet shows all eight colours once, in the order j ⊕ 4', () => {
+  const colours = Array.from({ length: 64 }, (_, m) => (60 ^ m) & 7);
+  for (let m = 0; m < 64; m++) assert.equal(colours[m], 4 ^ (m & 7));
+  for (let o = 0; o < 64; o += 8) assert.deepEqual([...colours.slice(o, o + 8)].sort(), [0, 1, 2, 3, 4, 5, 6, 7]);
+  assert.deepEqual(colours.slice(0, 8).map((n) => COLOURS[n]), ['blue', 'magenta', 'cyan', 'white', 'black', 'red', 'green', 'yellow']);
+  assert.equal((60 ^ 64) & 7, 4); // the pole 124 carries the same atom as 60: blue
+});

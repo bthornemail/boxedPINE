@@ -238,6 +238,8 @@ From the author, 2026-10-11: each frame of reference coordinates on the time and
 
 | I-90 | **The colour gate.** The author, after the bell: move to the colour spectrum, `\x1b[30m` … `\x1b[36m` with `\x1b[0m`, "especially for gating kernel space" (and that is how the author learned of 0u). ANSI's foreground colours are SGR 30 + n with n a 3-bit index (bit 0 red, bit 1 green, bit 2 blue), so 0 is black and **1..7 are the seven Fano points**: mixing is XOR (red ⊕ green = yellow, the line 1-2-3), and the complementary pairs XOR to white, the three lines through 7. The gate draws each byte in the colour of its low three bits and shows a control byte as `·`, so no BEL or stray escape reaches the terminal: over 60 ⊕ i for i < 65,536 the output holds no BEL and only colour and reset escapes | THEOREM (tested) + DEFINITION (author: the gate) | `repl/src/ansi.ts`; `repl.test.ts`; run `node repl/src/ansi.ts` |
 
+| I-91 | **The base atoms** (author: the colours "are revealed in the 60 ⊕ 64 and are the base atoms"). The eight 3-bit indices (black and the seven Fano points) are the base atoms. In the block 60 ⊕ m, m = 0…63, a byte's atom is its low three bits, 4 ⊕ (m & 7): each octet reveals all eight once, in the order blue, magenta, cyan, white, black, red, green, yellow, and each atom appears 8 times in the block. The pole 60 ⊕ 64 = 124 carries the same atom as 60 | DEFINITION (author) + THEOREM (tested) | `repl.test.ts` |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧
