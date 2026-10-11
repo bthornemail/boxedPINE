@@ -157,3 +157,19 @@ It never stays inside an octet, so the direction acts only at the root.
 - ⟦Which reading of the shape is meant: across, down, or both as above.⟧
 - ⟦The ASCII cascade rule and the "polynomial shape" by which the fifteen are ordered ([[SPEC-26 The Prompt Tree]]).⟧
 - ⟦PATRICIA compression: whether a label is skipped when only one position is admitted.⟧
+
+## 8. Ports, Dials, Transforms and Casing
+
+From the author, 2026-10-11.
+
+**A port is a Prompt Tree path.** A port is 16 bits: four nibbles, one per label. The presence port `0x3C40` is exponent 3 · exception C · declaration 4 · definition 0. **CIDR in nibbles:** a prefix of /4, /8, /12 or /16 fixes the first one to four labels and names a block of 4096, 256, 16 or 1 ports (`portBlock`, `portCidr` in `core/src/verified/tree.ts`; `0x3C40/8` is 0x3C00 to 0x3CFF). THEOREM, tested.
+
+**The prefix is a location** (DEFINITION, author: "CIDR prefixes would be used at different locations in the network"). A node near the root holds a short prefix and a large block; a node further out holds a longer prefix and a smaller one, as RFC 2317 delegates /25 to /28 blocks to different organisations (I-73).
+
+**Any two numbers dial the lens from a point** (DEFINITION, author). The two are nibbles, one byte m, and the lens is point ⊕ m (`dialLens` in `wordform.ts`). From 60: dial 4,0 gives 124, the 60 ⊕ 64 pole; 8,0 gives 188; 3,6 gives 10, the decimal lens that keeps the periods of 1/7 and 1/73 (I-58). Dialling twice returns to the point. THEOREM, tested.
+
+**Any three numbers make the transform matrix** (DEFINITION, author). Three 3-bit indices are the columns of a 3 × 3 matrix of bits; a position goes through it by XOR of the columns its bits select (`transform3` in `fano.ts`), index-only. THEOREM, tested over all 512 triples: every such matrix takes XOR to XOR, and **exactly 168** move the Fano plane onto itself, taking lines to lines: the plane's whole symmetry group. They are the triples where no number is the XOR of the other two.
+
+**Casing is a literal of one word sequence** (`rosetta/src/grammar/casing.ts`, declared as the `CASING` rules in `grammar.ts`). camelCase, PascalCase, snake_case, kebab-case and SCREAMING_SNAKE all read to the same words (the index); the style is how they are written. The axis between them is the first position's case bit (0x20, as e ⊕ E) and the boundary mark: a case flip, `_` or `-`. THEOREM (the five styles round-trip), tested.
+
+⟦An earlier reading, that an uppercase A–F in the first position dials the lens, was corrected by the author and removed.⟧

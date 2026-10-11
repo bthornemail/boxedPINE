@@ -65,6 +65,23 @@ export const CONSTANTS = Uint8Array.from({ length: 16 }, (_, i) =>
 
 export const constantIndex = (mask: number) => CONSTANTS.indexOf(mask);
 
+// ---- The transform matrix from any three numbers (author, 2026-10-11) ----
+//
+// Three 3-bit indices are the three columns of a 3×3 matrix of bits. Applying
+// it to a position XORs together the columns its bits select: index-only. The
+// matrix moves the Fano plane onto itself exactly when the three are
+// independent (none is the XOR of the other two); there are 7 · 6 · 4 = 168
+// such ordered triples, the plane's whole symmetry group.
+
+/** The position x sent through the matrix with columns a, b, c. */
+export function transform3(a: number, b: number, c: number, x: number): number {
+  return ((x & 1 ? a : 0) ^ (x & 2 ? b : 0) ^ (x & 4 ? c : 0)) & 7;
+}
+
+/** Whether a, b, c are independent, so the matrix permutes the seven points. */
+export const independent = (a: number, b: number, c: number) =>
+  a !== 0 && b !== 0 && a !== b && c !== 0 && c !== a && c !== b && c !== (a ^ b);
+
 // ---- Reading an Inkscape Fano file with whole numbers only ----
 // VALUE DOOR: a drawing's geometry is values; what comes out is an index (a mask).
 

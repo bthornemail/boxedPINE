@@ -201,6 +201,17 @@ Added 2026-10-11, from the author: physical propagation keyed by MAC address, wi
 
 | I-74 | **Index integrity** (author, 2026-10-11: "every number is an index so we can maintain integrity to indexing"). In `core/src/verified/`, numbers are combined only by XOR, shifts, masks, walks (`+ 1`) and complements (`w − n`, `(1 << w) − 1`). Sizes are shifts (`count << 2`, `bits >>> 3`, `16 << 16`), and a radix belongs to the literal (I-42). Value arithmetic (× ÷ %) appears only inside three marked **VALUE DOORS**, where values from outside enter and an index comes out: primality and the 210 ladder (`metron.ts`), the periods of 1/p (`period.ts`), and the geometry of a drawing (`fano.ts`'s reader) | THEOREM (enforced: `npm test` fails on × ÷ % outside a door) + DEFINITION (I-1) | `core.test.ts` |
 
+## XV. Ports, Dials, Transforms and Casing
+
+From the author, 2026-10-11 ([[SPEC-27 The Prompt Tree Index]] §8).
+
+| # | Invariant | Mark | Evidence |
+|---|-----------|------|----------|
+| I-75 | **A port is a 16-bit Prompt Tree path,** and CIDR in nibbles (/4, /8, /12, /16) fixes one to four labels: blocks of 4096, 256, 16, 1 ports. The prefix is a location in the network | THEOREM (blocks) + DEFINITION (location) | `tree.ts`; `core.test.ts` |
+| I-76 | **Any two numbers dial the lens from a point:** point ⊕ (high nibble, low nibble). From 60: 4,0 → 124; 8,0 → 188; 3,6 → 10 | DEFINITION (author) + THEOREM (the values) | `wordform.ts`; `core.test.ts` |
+| I-77 | **Any three numbers make a transform matrix** of the Fano plane by XOR of columns; exactly **168** of the 512 triples move the plane onto itself, its whole symmetry group | DEFINITION (author) + THEOREM (168) | `fano.ts`; `core.test.ts` |
+| I-78 | **Casing styles are literals of one word sequence:** five styles, one set of words; the axis is the first position's case bit and the boundary mark | THEOREM | `casing.ts`; `rosetta.test.ts` |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧

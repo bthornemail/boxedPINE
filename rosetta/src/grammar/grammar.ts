@@ -11,7 +11,7 @@
 //
 // ⟦PLACEHOLDER⟧ marks a decision only the author can make.
 
-export type Group = 'reference' | 'wordform' | 'set' | 'bracket' | 'face' | 'palindrome' | 'higher';
+export type Group = 'reference' | 'wordform' | 'set' | 'bracket' | 'face' | 'palindrome' | 'higher' | 'casing';
 
 export type Rule = { name: string; group: Group; pattern: RegExp; note?: string };
 
@@ -37,6 +37,13 @@ export const RULES: Rule[] = [
   { name: 'STRUCT',   group: 'wordform', pattern: /^(\d+)([e.])(\d+)([boxd])(\d+)([pin])$/ },
   { name: 'PINEBOXED', group: 'wordform', pattern: /^0?[boxd]?\d+[eE.]?\d[PIN]$/,
     note: 'The author\'s current draft (wiki SPEC-36): uppercase PIN index axis, lowercase boxd value radix, e exponent / E exception / . decimal dot, reducible to 0n concatenation so that XOR of two literals is the XNOR of a 0n Hamming distance. ⟦PLACEHOLDER⟧ 0P / 0x5P not admitted; the scale is one digit; see SPEC-36.' },
+  // CASING — one word sequence, written five ways (wiki SPEC-27 §8). The style is the
+  // literal; the words are the index. Not position rules, so they do not widen admissibility.
+  { name: 'CAMEL',     group: 'casing', pattern: /^[a-z][a-z0-9]*(?:[A-Z][a-z0-9]+)+$/, note: 'promptTreeIndex' },
+  { name: 'PASCAL',    group: 'casing', pattern: /^(?:[A-Z][a-z0-9]+)+$/, note: 'PromptTreeIndex: the first position carries the case bit' },
+  { name: 'SNAKE',     group: 'casing', pattern: /^[a-z][a-z0-9]*(?:_[a-z0-9]+)+$/, note: 'prompt_tree_index' },
+  { name: 'KEBAB',     group: 'casing', pattern: /^[a-z][a-z0-9]*(?:-[a-z0-9]+)+$/, note: 'prompt-tree-index' },
+  { name: 'SCREAMING', group: 'casing', pattern: /^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+$/, note: 'PROMPT_TREE_INDEX' },
   { name: 'PROMPT_PATH', group: 'wordform',
     pattern: /^0x(?<file>[0-9A-F])(?<exponent>[0-9A-F])(?<exception>[0-9A-F])(?<declaration>[0-9A-F])(?<definition>[0-9A-F])$/,
     note: 'The Prompt Tree index as a declaration (wiki SPEC-27): five uppercase hex digits after a lowercase 0x, one per label. E.g. 0x03C00 = file 0 (the BOM), exponent 3, exception C, declaration 0, definition 0.' },

@@ -523,3 +523,41 @@ test('Index integrity: no ×, ÷ or % on numbers in core/src/verified outside a 
   }
   assert.deepEqual(offenders, []);
 });
+
+// ---- A port as a Prompt Tree path, CIDR in nibbles (SPEC-27 §8) ----
+import { portBlock, portCidr } from '../../core/src/verified/index.ts';
+
+test('A port is a 16-bit Prompt Tree path; /4, /8, /12, /16 fix one to four labels', () => {
+  assert.deepEqual(promptLevels(0x3c40), [3, 0xc, 4, 0]); // the presence port
+  assert.deepEqual([0, 1, 2, 3, 4].map((k) => { const b = portBlock(0x3c40, k); return b.last - b.first + 1; }), [65536, 4096, 256, 16, 1]);
+  assert.equal(portCidr(0x3c40, 2), '0x3C00/8');
+  for (let k = 1; k <= 4; k++) {
+    const { first } = portBlock(0x3c40, k);
+    assert.deepEqual(promptLevels(first).slice(0, k), promptLevels(0x3c40).slice(0, k)); // the fixed labels
+  }
+});
+
+// ---- Any two numbers dial the lens; any three make the transform (SPEC-27 §8) ----
+import { dialLens, transform3, independent } from '../../core/src/verified/index.ts';
+
+test('Two numbers dial the lens from a point: 60 ⊕ (high, low)', () => {
+  assert.deepEqual([[4, 0], [8, 0], [3, 6]].map(([h, l]) => dialLens(60, h!, l!)), [124, 188, 10]);
+  assert.equal(period(dialLens(60, 3, 6), 7), 6); // the decimal lens keeps 1/7's period
+  assert.equal(dialLens(dialLens(60, 4, 0), 4, 0), 60); // dialling twice returns to the point
+});
+
+test('Three numbers make a transform of the Fano plane; exactly 168 move it onto itself', () => {
+  assert.deepEqual([1, 2, 3, 4, 5, 6, 7].map((x) => transform3(1, 2, 4, x)), [1, 2, 3, 4, 5, 6, 7]); // identity
+  let count = 0;
+  for (let a = 0; a < 8; a++) for (let b = 0; b < 8; b++) for (let c = 0; c < 8; c++) {
+    for (let x = 0; x < 8; x++) for (let y = 0; y < 8; y++) {
+      assert.equal(transform3(a, b, c, x ^ y), transform3(a, b, c, x) ^ transform3(a, b, c, y)); // XOR in, XOR out
+    }
+    if (!independent(a, b, c)) continue;
+    count++;
+    const image = new Set([1, 2, 3, 4, 5, 6, 7].map((x) => transform3(a, b, c, x)));
+    assert.equal(image.size, 7); // the seven points are permuted
+    for (const [p, q, r] of FANO_LINES) assert.equal(transform3(a, b, c, p) ^ transform3(a, b, c, q), transform3(a, b, c, r)); // lines go to lines
+  }
+  assert.equal(count, 168);
+});

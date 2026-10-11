@@ -170,6 +170,9 @@ The states a structure can be in:
 | A MAC on the loopback: fold, IPP zero, NAT64 | I-69 to I-71 | `core` loopback.ts | core.test | — | **canonical** |
 | Presence: UDP claim and MQTT deviation | I-72 | — | repl.test | `repl` presence.ts | **realized**, with its own check |
 | The walkthrough as a text track, with its proofs | SPEC-08 | `rosetta` walkthrough.ts | rosetta.test | `proofs` (cited) | **canonical** |
+| Ports as paths, CIDR in nibbles | I-75 | `core` tree.ts | core.test | — | **canonical** |
+| Two numbers dial the lens; three make the transform (168) | I-76, I-77 | `core` wordform.ts, fano.ts | core.test | — | **canonical** |
+| Casing styles as literals of one word sequence | I-78 | `rosetta` casing.ts, grammar.ts | rosetta.test | — | **canonical** |
 | The tree: 16 Blobs, one 20-bit index | I-48 | `core` tree.ts | core.test | `types/` (proxy) | **canonical** |
 | The Prompt Tree: four levels, the swaps, the 16-bit path | I-49 to I-51; [[SPEC-27 The Prompt Tree Index]] | `core` tree.ts; `rosetta` grammar.ts (`PROMPT_PATH`) | core.test, rosetta.test; the readings file | — | **canonical** |
 | The BOM in both directions (file 0 prefix, file 15 suffix) | I-52, I-54 | `core` tree.ts (`BOM_FILE`, `BOM_SUFFIX_FILE`, `reverse`) | core.test | — | **canonical** |
@@ -193,7 +196,7 @@ File 0 is the **BOM**, which holds the **Prompt Tree**; files 1–15 hold the fi
 
 ## The Count
 
-Of the 67 rows (2026-10-11): **38 canonical**, **7 checked**, **14 stated**, **1 realized only** (Proxy and Reflect), **2 realized with their own check** (the breadboard, presence), **5 fail**.
+Of the 70 rows (2026-10-11): **41 canonical**, **7 checked**, **14 stated**, **1 realized only** (Proxy and Reflect), **2 realized with their own check** (the breadboard, presence), **5 fail**.
 
 ## What Canonicalizes Next
 

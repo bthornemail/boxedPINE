@@ -244,6 +244,7 @@ tags: [omi-imo, meta, changelog, history]
 - Presence (author: "mqtt subscriptions and publication to see if anyone is already broadcasting; udp also"; "we only get back deviation"): `repl/src/presence.ts`, a UDP bind as compare-exchange and an MQTT probe that returns only the deviation of heard indices; tested on a private mosquitto, checked once live on test.mosquitto.org (IPv4; this machine has no IPv6 route) and cleared. SPEC-07 I-72; 78 tests passing
 - Reverse names (RFC 2317 classless delegation, `ip6.arpa`) for loopback and NAT64 addresses; the RFC's blocks are levels of the last octet's high nibble (SPEC-07 I-73, SPEC-27 §1). Stage 3 recorded as [[OPEN-01 Open Questions]] #22, with eBPF and the QEMU GED event bus. 81 tests passing
 - Index integrity (author: "every number is an index"): sizes rewritten as shifts and masks, value arithmetic fenced in three VALUE DOORS (metron, period, the fano reader), and a test that fails on × ÷ % in `core/src/verified/` outside a door. SPEC-07 I-74; 82 tests passing
+- Ports as Prompt Tree paths with CIDR in nibbles (the prefix as a location), two numbers dialling the lens from a point, three numbers as a Fano transform matrix (exactly 168 symmetries), and casing styles as literals of one word sequence ([[SPEC-27 The Prompt Tree Index]] §8, SPEC-07 I-75 to I-78). An earlier first-letter dial reading was corrected by the author and removed. 86 tests passing
 
 ## Pending
 

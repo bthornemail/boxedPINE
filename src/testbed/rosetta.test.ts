@@ -245,3 +245,19 @@ test('Every proof a cue cites exists in proofs/', () => {
     assert.ok(existsSync(new URL('../../' + cited.split(' ')[0], import.meta.url)), cited);
   }
 });
+
+// ---- Casing: one word sequence, five literals (SPEC-27 §8) ----
+import { words, style, axis, write } from '../../rosetta/src/grammar/casing.ts';
+
+test('The five styles are one word sequence: the words are the index, the style is the literal', () => {
+  const forms = ['promptTreeIndex', 'PromptTreeIndex', 'prompt_tree_index', 'prompt-tree-index', 'PROMPT_TREE_INDEX'];
+  assert.deepEqual(forms.map(style), ['CAMEL', 'PASCAL', 'SNAKE', 'KEBAB', 'SCREAMING']);
+  for (const f of forms) assert.deepEqual(words(f), ['prompt', 'tree', 'index']);
+  for (const to of ['CAMEL', 'PASCAL', 'SNAKE', 'KEBAB', 'SCREAMING'] as const) {
+    assert.equal(style(write(words('PromptTreeIndex'), to)), to);
+  }
+  assert.deepEqual(axis('PromptTreeIndex'), { firstUpper: true, boundary: 'case' });
+  assert.deepEqual(axis('prompt-tree-index'), { firstUpper: false, boundary: '-' });
+  assert.equal('P'.charCodeAt(0) ^ 'p'.charCodeAt(0), 0x20); // the case bit, as e ⊕ E
+});
+

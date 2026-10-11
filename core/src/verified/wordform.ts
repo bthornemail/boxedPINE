@@ -85,3 +85,14 @@ export function separation(byte: number) {
 
 /** The Polybius gauge diagonals: each XORs to 0 (and sums to 0x1E). */
 export const GAUGE = { dPlus: [0x0, 0x5, 0xa, 0xf], dMinus: [0x3, 0x6, 0x9, 0xc] } as const;
+
+/**
+ * Dial a lens from a point with any two numbers (author, 2026-10-11): the two
+ * are nibbles, one byte m, and the lens is point ⊕ m. From 60: dial 4,0 gives
+ * 124 (the 60 ⊕ 64 pole), 8,0 gives 188, and 3,6 gives 10, the decimal lens
+ * (SPEC-07 I-58).
+ */
+export function dialLens(point: number, high: number, low: number): number {
+  if (!(high >= 0 && high < 16 && low >= 0 && low < 16)) throw new RangeError('a dial is two nibbles');
+  return point ^ ((high << 4) | low);
+}

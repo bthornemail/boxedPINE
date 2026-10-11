@@ -104,3 +104,20 @@ export function promptLevels(path: number): [number, number, number, number] {
 export function prompt(tree: Uint8Array[], file: number, path: number): number {
   return readBit(tree, (file << 16) | path);
 }
+
+// ---- A port as a Prompt Tree path, with CIDR in nibbles (wiki: SPEC-27 §8) ----
+//
+// A port is 16 bits: four nibbles, one per label. A prefix of /4, /8, /12 or
+// /16 fixes the first one, two, three or four labels, so it names the block
+// of 4096, 256, 16 or 1 ports that share them.
+
+/** The block a port falls in at a nibble prefix: first and last port, inclusive. */
+export function portBlock(port: number, prefixNibbles: number) {
+  if (!(port >= 0 && port < 65536 && prefixNibbles >= 0 && prefixNibbles <= 4)) throw new RangeError(`no block ${port}/${prefixNibbles << 2}`);
+  const free = (1 << ((4 - prefixNibbles) << 2)) - 1;
+  return { first: port & ~free & 0xffff, last: port | free, prefixLength: prefixNibbles << 2 };
+}
+
+/** CIDR notation for a port block: 0x3C40/8 names 0x3C00 to 0x3CFF. */
+export const portCidr = (port: number, prefixNibbles: number) =>
+  `0x${portBlock(port, prefixNibbles).first.toString(16).toUpperCase().padStart(4, '0')}/${prefixNibbles << 2}`;
