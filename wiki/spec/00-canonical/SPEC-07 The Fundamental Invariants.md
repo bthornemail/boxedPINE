@@ -231,6 +231,8 @@ From the author, 2026-10-11: each frame of reference coordinates on the time and
 
 | I-86 | **The departure is HTTP 218** (author): in the port server, try decides (200), catch takes a raise (400), and finally always runs, answering **218 This is fine** when nothing was decided. 218 is non-standard, but clients read an unknown 2xx as 200, so it always passes | DEFINITION (author) + THEOREM (tested: status 218, ok) | `repl/src/ports.ts`; `repl.test.ts`; [[SPEC-06 The Circulator]] |
 
+| I-87 | **Status codes as an agent's lifecycle** (author: they "power the autonomous agents lifecycle" and index agent-driven content negotiation): an agent arrives and is offered every port (**300**), declares its frame and is sent to its port (**303**), reads it (**200**), finds it already holds it (**304**, deviation 0), raises (**400**), departs (**218**) | DEFINITION (author) + DECISION (which code when) + THEOREM (tested end to end) | `repl/src/ports.ts`; `repl.test.ts`; [[SPEC-06 The Circulator]] |
+
 ## What Is Still Open
 
 - ⟦I-26: what the "16-character, 32-bit" of the preheader counts.⟧

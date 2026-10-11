@@ -41,26 +41,46 @@ export function startPorts(port = 0, host = '127.0.0.1'): Promise<Server> {
   } as Record<string, string>;
   let trace: Reading[] = [];
   let tick = 0;
-  const server = createServer((req, res) => {
+  const body = (req: import('node:http').IncomingMessage) => new Promise<string>((ok) => { let t = ''; req.on('data', (c) => { t += c; }); req.on('end', () => ok(t.trim())); });
+  const server = createServer(async (req, res) => {
     const url = new URL(req.url ?? '/', 'http://loopback');
     const svg = (body: string, headers: Record<string, string> = {}) => {
       res.writeHead(200, { 'Content-Type': 'image/svg+xml', ...headers });
       res.end(body);
     };
-    // try / catch / finally as the circulator (SPEC-06): try decides (200), catch
-    // takes a raise (400), and finally, the departure, always runs; when nothing
-    // was decided (the exit), it answers 218 This is fine and lets the request pass.
+    // try / catch / finally as the circulator (SPEC-06), and the codes as an agent's
+    // lifecycle (SPEC-07 I-87): 300 offers the ports (agent-driven negotiation),
+    // 303 sends a declared frame to its port, 200 serves it, 304 when the agent
+    // already holds it, 400 a caught raise, and finally, the departure, 218.
     try {
       if (url.pathname === '/trace.vtt') { res.writeHead(200, { 'Content-Type': 'text/vtt' }); res.end(traceVtt(trace)); return; }
       if (hasse[url.pathname]) return svg(hasse[url.pathname]!);
       const fixed = /^\/port\/(\d+)$/.exec(url.pathname);
-      if (fixed && Number(fixed[1]) < 16) return svg(svgs[Number(fixed[1])]!, { 'Omi-Fano-Constant': fixed[1]! });
+      if (fixed && Number(fixed[1]) < 16) {
+        const i = Number(fixed[1]);
+        // 304: the agent already holds this constant (its ETag); the deviation is 0, nothing to resend.
+        if (req.headers['if-none-match'] === `"${i}"`) { res.writeHead(304, { ETag: `"${i}"` }); res.end(); return; }
+        return svg(svgs[i]!, { 'Omi-Fano-Constant': String(i), ETag: `"${i}"` });
+      }
       if (url.pathname === '/port') {
-        const text = url.searchParams.get('frame') ?? String(req.headers[FRAME_HEADER.toLowerCase()] ?? '0x0');
-        const frame = parseFrameText(text);
+        const declared = url.searchParams.get('frame') ?? req.headers[FRAME_HEADER.toLowerCase()];
+        if (declared === undefined && req.method !== 'POST') {
+          // 300: agent-driven negotiation. The agent arrives with no frame; offer every port.
+          const choices = [...svgs.keys()].map((i) => `/port/${i}`).concat(Object.keys(hasse));
+          res.writeHead(300, { 'Content-Type': 'text/uri-list', Link: choices.map((c) => `<${c}>; rel="alternate"`).join(', ') });
+          res.end(choices.join('\r\n') + '\r\n');
+          return;
+        }
+        const frame = parseFrameText(String(declared ?? await body(req)));
         const i = framePort(frame);
         trace = propagate(trace, { tick: tick++, frame: frameText(frame), port: i, deviation: 0 });
-        return svg(svgs[i]!, { [FRAME_HEADER]: frameText(frame), 'Omi-Fano-Constant': String(i) });
+        if (req.method === 'POST') {
+          // 303: the agent declared its frame; see the port it converges to.
+          res.writeHead(303, { Location: `/port/${i}`, [FRAME_HEADER]: frameText(frame), 'Omi-Fano-Constant': String(i) });
+          res.end();
+          return;
+        }
+        return svg(svgs[i]!, { [FRAME_HEADER]: frameText(frame), 'Omi-Fano-Constant': String(i), ETag: `"${i}"` });
       }
     } catch (e) {
       res.writeHead(400, { 'Content-Type': 'text/plain' }).end(String((e as Error).message));

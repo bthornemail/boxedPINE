@@ -99,6 +99,21 @@ test('Ports: a request\'s media frame converges to a Fano drawing, and reading t
     const vtt = await (await fetch(`${base}/trace.vtt`)).text();
     assert.equal((vtt.match(/^tick-\d+$/gm) ?? []).length, frames.length);
     assert.equal((await fetch(`${base}/port?frame=nope`)).status, 400);
+    // the agent lifecycle: 300 → 303 → 200 → 304 → 218
+    const offer = await fetch(`${base}/port`, { redirect: 'manual' });
+    assert.equal(offer.status, 300);
+    const choices = (await offer.text()).trim().split('\r\n');
+    assert.equal(choices.length, 18); // 16 ports and 2 Hasse diagrams
+    const frame = frameIndex({ 'prefers-color-scheme': 'dark' });
+    const declared = await fetch(`${base}/port`, { method: 'POST', body: frameText(frame), redirect: 'manual' });
+    assert.equal(declared.status, 303);
+    const location = declared.headers.get('location')!;
+    assert.equal(location, `/port/${framePort(frame)}`);
+    const got = await fetch(base + location);
+    assert.equal(got.status, 200);
+    const etag = got.headers.get('etag')!;
+    await got.text();
+    assert.equal((await fetch(base + location, { headers: { 'If-None-Match': etag } })).status, 304);
     const exit = await fetch(`${base}/anything-undecided`); // nothing decided: finally departs with 218
     assert.deepEqual([exit.status, exit.statusText, exit.ok], [218, 'This is fine', true]);
     assert.equal(await exit.text(), '/anything-undecided'); // the request passes through
