@@ -45,7 +45,9 @@ assert.strictEqual(ESC, 27, "ESC = 0x1B = 27");
 assert.strictEqual(BOM_UTF16BE, 0xFEFF, "BOM BE = 0xFEFF");
 assert.strictEqual(BOM_UTF16LE, 0xFFFE, "BOM LE = 0xFFFE");
 // both are "frame follows"
-assert.strictEqual(BOM_UTF16BE, (~BOM_UTF16LE & 0xFFFF), "BOM BE and LE are bit-complements");
+// they are byte swaps of each other (swap16), not bit complements: ~0xFFFE & 0xFFFF is 0x0001
+assert.strictEqual(((BOM_UTF16BE & 0xFF) << 8) | (BOM_UTF16BE >> 8), BOM_UTF16LE, "BOM BE and LE are byte swaps (swap16)");
+assert.strictEqual(BOM_UTF16BE ^ BOM_UTF16LE, 0x0101, "BOM BE ⊕ LE = 0x0101: each byte flips its low bit");
 
 // ── 6. The C0/C1 mirror ─────────────────────────────────────────
 // C0: 0x00-0x1F ; C1: 0x80-0x9F ; distance = 0x80
