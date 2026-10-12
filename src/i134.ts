@@ -137,6 +137,7 @@ function cobsEncode(data: Uint8Array): Uint8Array {
     }
   }
   out[codeIndex] = code;
+  out.push(0); // the frame delimiter: the only zero in a framed COBS packet
   return new Uint8Array(out);
 }
 const input = new Uint8Array([1, 0, 2, 0, 3]);
