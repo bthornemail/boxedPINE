@@ -10,10 +10,11 @@
 // base 36, I-141 is 3X): tags name the literals, never a hash.
 
 export type From = 'author' | 'agent';
+// `by` names which coding agent spoke (claude-code, opencode), when more than one shares the bridge
 export type Message =
-  | { kind: 'say'; from: From; text: string }
-  | { kind: 'point'; from: From; tag: string; how: 'xr' | 'pointer' | 'tool' }
-  | { kind: 'show'; from: 'agent'; tag: string };
+  | { kind: 'say'; from: From; text: string; by?: string }
+  | { kind: 'point'; from: From; tag: string; how: 'xr' | 'pointer' | 'tool'; by?: string }
+  | { kind: 'show'; from: 'agent'; tag: string; by?: string };
 export type Posted = Message & { id: number; at: number };
 
 export const BRIDGE_PORT = 8743;
@@ -29,22 +30,26 @@ export const tagOf = (id: string) => {
 export const idOf = (tag: string) => `I-${parseInt(tag.slice(0, 2), 36)}${tag.slice(2).toLowerCase()}`;
 
 /** Check a message arriving from outside; return it, or the reason it is refused. */
+export const AGENT_NAME = /^[a-z0-9-]{1,32}$/;
 export function check(x: unknown): Message | string {
   const m = x as Record<string, unknown>;
   if (!m || typeof m !== 'object') return 'not an object';
   if (m.from !== 'author' && m.from !== 'agent') return 'from is author or agent';
-  if (m.kind === 'say') return typeof m.text === 'string' && m.text.trim() && m.text.length <= 4000 ? { kind: 'say', from: m.from, text: m.text.trim() } : 'say needs text (1 to 4000 characters)';
-  if (m.kind === 'point') return typeof m.tag === 'string' && TAG.test(m.tag) && ['xr', 'pointer', 'tool'].includes(m.how as string) ? { kind: 'point', from: m.from, tag: m.tag, how: m.how as 'xr' } : 'point needs an /A-Z0-9/ tag and how (xr, pointer, tool)';
-  if (m.kind === 'show') return m.from === 'agent' && typeof m.tag === 'string' && TAG.test(m.tag) ? { kind: 'show', from: 'agent', tag: m.tag } : 'show is the agent\'s, with an /A-Z0-9/ tag';
+  if (m.by !== undefined && (m.from !== 'agent' || typeof m.by !== 'string' || !AGENT_NAME.test(m.by))) return 'by names an agent: a-z, 0-9 and -';
+  const by = m.by === undefined ? {} : { by: m.by as string };
+  if (m.kind === 'say') return typeof m.text === 'string' && m.text.trim() && m.text.length <= 4000 ? { kind: 'say', from: m.from, text: m.text.trim(), ...by } : 'say needs text (1 to 4000 characters)';
+  if (m.kind === 'point') return typeof m.tag === 'string' && TAG.test(m.tag) && ['xr', 'pointer', 'tool'].includes(m.how as string) ? { kind: 'point', from: m.from, tag: m.tag, how: m.how as 'xr', ...by } : 'point needs an /A-Z0-9/ tag and how (xr, pointer, tool)';
+  if (m.kind === 'show') return m.from === 'agent' && typeof m.tag === 'string' && TAG.test(m.tag) ? { kind: 'show', from: 'agent', tag: m.tag, ...by } : 'show is the agent\'s, with an /A-Z0-9/ tag';
   return 'kind is say, point or show';
 }
 
 /** One line for a reader: "[3X I-141] pointed at in XR". */
 export function line(p: Posted): string {
   const t = new Date(p.at).toISOString().slice(11, 19);
-  if (p.kind === 'say') return `${t} #${p.id} ${p.from}: ${p.text}`;
-  if (p.kind === 'point') return `${t} #${p.id} ${p.from} pointed at ${p.tag} (${idOf(p.tag)}) by ${p.how}`;
-  return `${t} #${p.id} agent shows ${p.tag} (${idOf(p.tag)})`;
+  const who = p.by ?? p.from;
+  if (p.kind === 'say') return `${t} #${p.id} ${who}: ${p.text}`;
+  if (p.kind === 'point') return `${t} #${p.id} ${who} pointed at ${p.tag} (${idOf(p.tag)}) by ${p.how}`;
+  return `${t} #${p.id} ${who} shows ${p.tag} (${idOf(p.tag)})`;
 }
 
 type Schema = { type: 'object'; properties: Record<string, { type: string; description: string }>; required?: string[] };

@@ -40,7 +40,7 @@ function receive(p: Posted) {
   row.className = p.from;
   row.dataset.id = String(p.id);
   const t = new Date(p.at).toLocaleTimeString();
-  row.textContent = `${t} [${INDEX16[slotOf(p.id)]!.replace('Fano_', '')}] ${p.from === 'author' ? 'you' : 'agent'}: ` +
+  row.textContent = `${t} [${INDEX16[slotOf(p.id)]!.replace('Fano_', '')}] ${p.from === 'author' ? 'you' : p.by ?? 'agent'}: ` +
     (p.kind === 'say' ? p.text : p.kind === 'point' ? `pointed at ${p.tag} (${idOf(p.tag)})` : `shows ${p.tag} (${idOf(p.tag)})`);
   $('log').append(row);
   $('log').scrollTop = $('log').scrollHeight;
