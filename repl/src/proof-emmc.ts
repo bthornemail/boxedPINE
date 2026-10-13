@@ -32,12 +32,12 @@ const ENTRY = 64; // tag (8, ASCII), offset (4), length (4), SHA3-256 (32), spar
 const MAGIC = 'OMIPROOF';
 const SECTOR = 512;
 
-export type Entry = { tag: string; id: string; offset: number; length: number; sha256: string };
+export type Entry = { tag: string; id: string; offset: number; length: number; hash: string };
 
-// SHA3-256 (Keccak, a sponge), not SHA-256: the author, 2026-10-13, "if sha256 we should use sha3".
+// SHA3-256 (Keccak, a sponge), not SHA-256: the author, 2026-10-13, "if hash we should use sha3".
 const sha = (b: Uint8Array | string) => createHash('sha3-256').update(b).digest('hex');
 /** The tree's root: the hash of its records' hashes, in order. */
-export const rootOf = (entries: Entry[]) => sha(entries.map((e) => e.sha256).join(''));
+export const rootOf = (entries: Entry[]) => sha(entries.map((e) => e.hash).join(''));
 
 /** The proof tree: each catalogue record's tag, id and base64 script, in catalogue order. */
 export function proofTree(): { tag: string; id: string; script: Uint8Array }[] {
@@ -59,7 +59,7 @@ export function makeProofImage(path: string): Entry[] {
     view.setUint32(e + 8, at, true);
     view.setUint32(e + 12, r.script.length, true);
     image.set(Buffer.from(sha(r.script), 'hex'), e + 16);
-    const entry = { tag: r.tag, id: r.id, offset: at, length: r.script.length, sha256: sha(r.script) };
+    const entry = { tag: r.tag, id: r.id, offset: at, length: r.script.length, hash: sha(r.script) };
     at = Math.ceil((at + r.script.length) / SECTOR) * SECTOR;
     return entry;
   });
@@ -79,7 +79,7 @@ export function readIndex(image: Uint8Array): { root: string; entries: Entry[] }
   const entries = Array.from({ length: view.getUint32(INDEX_AT + 8, true) }, (_, i) => {
     const e = INDEX_AT + HEADER + i * ENTRY;
     const tag = new TextDecoder().decode(image.subarray(e, e + 8)).trim();
-    return { tag, id: ids.get(tag) ?? '?', offset: view.getUint32(e + 8, true), length: view.getUint32(e + 12, true), sha256: Buffer.from(image.subarray(e + 16, e + 48)).toString('hex') };
+    return { tag, id: ids.get(tag) ?? '?', offset: view.getUint32(e + 8, true), length: view.getUint32(e + 12, true), hash: Buffer.from(image.subarray(e + 16, e + 48)).toString('hex') };
   });
   return { root: Buffer.from(image.subarray(INDEX_AT + 16, INDEX_AT + 48)).toString('hex'), entries };
 }
@@ -87,7 +87,7 @@ export function readIndex(image: Uint8Array): { root: string; entries: Entry[] }
 /** Scrub: every record whose bytes no longer hash to its index entry (and whether the index still matches its root). */
 export function scrub(image: Uint8Array): { indexIntact: boolean; damaged: Entry[] } {
   const { root, entries } = readIndex(image);
-  return { indexIntact: rootOf(entries) === root, damaged: entries.filter((e) => sha(image.subarray(e.offset, e.offset + e.length)) !== e.sha256) };
+  return { indexIntact: rootOf(entries) === root, damaged: entries.filter((e) => sha(image.subarray(e.offset, e.offset + e.length)) !== e.hash) };
 }
 
 /** Replay: decode and run the intact records from the image; a record's result is null when it holds. */
@@ -111,7 +111,7 @@ export function restore(nbdSocket: string, damaged: Entry[]): number {
   try {
     for (const e of damaged) {
       const script = tree.get(e.tag);
-      if (!script || script.length !== e.length || sha(script) !== e.sha256) throw new Error(`${e.id}: the proof tree no longer holds the bytes the image indexed`);
+      if (!script || script.length !== e.length || sha(script) !== e.hash) throw new Error(`${e.id}: the proof tree no longer holds the bytes the image indexed`);
       const file = join(dir, `${e.tag}.b64`);
       writeFileSync(file, script);
       execFileSync('qemu-io', ['-f', 'raw', '-c', `write -s ${file} ${e.offset} ${e.length}`, `nbd+unix:///?socket=${nbdSocket}`], { stdio: 'ignore' });
