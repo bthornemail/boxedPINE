@@ -80,6 +80,7 @@ type LM = { availability(o: object): Promise<string>; create(o: object): Promise
 const LanguageModel = (globalThis as unknown as { LanguageModel?: LM }).LanguageModel;
 const audioOptions = { expectedInputs: [{ type: 'audio' }], expectedOutputs: [{ type: 'text', languages: ['en'] }] };
 let recorder: MediaRecorder | null = null;
+let held = false; // whether the button is still down once the microphone opens
 async function hear(blob: Blob) {
   if (!LanguageModel) return;
   $('status').textContent = 'listening to the recording …';
@@ -93,6 +94,7 @@ async function hear(blob: Blob) {
 }
 async function startMic() {
   if (!LanguageModel) return;
+  held = true;
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   const chunks: Blob[] = [];
   recorder = new MediaRecorder(stream);
@@ -100,11 +102,29 @@ async function startMic() {
   recorder.onstop = () => { stream.getTracks().forEach((t) => t.stop()); hear(new Blob(chunks, { type: recorder!.mimeType })); };
   recorder.start();
   $('mic').setAttribute('aria-pressed', 'true');
+  if (!held) stopMic(); // released while the microphone was opening
 }
-function stopMic() { if (recorder?.state === 'recording') recorder.stop(); $('mic').setAttribute('aria-pressed', 'false'); }
-$('mic').addEventListener('pointerdown', startMic);
-$('mic').addEventListener('pointerup', stopMic);
-$('mic').addEventListener('pointerleave', stopMic);
+function stopMic() { held = false; if (recorder?.state === 'recording') recorder.stop(); $('mic').setAttribute('aria-pressed', 'false'); }
+// Hold to speak, with the Observable API (on in Chrome by default): each press records
+// until the button is released or the pointer leaves it, whichever comes first.
+type Sub<T> = { filter(f: (v: T) => boolean): Sub<T>; subscribe(f: (v: T) => void, o?: { signal: AbortSignal }): void };
+type When = { when?: (type: string) => Sub<PointerEvent> };
+const mic = $('mic') as HTMLElement & When;
+if (mic.when) {
+  mic.when('pointerdown').filter((e) => e.button === 0).subscribe(() => {
+    startMic();
+    const end = new AbortController();
+    const stop = () => { end.abort(); stopMic(); };
+    mic.when!('pointerup').subscribe(stop, { signal: end.signal });
+    mic.when!('pointerleave').subscribe(stop, { signal: end.signal });
+  });
+  caps.push('Observable API: on');
+} else {
+  mic.addEventListener('pointerdown', startMic);
+  mic.addEventListener('pointerup', stopMic);
+  mic.addEventListener('pointerleave', stopMic);
+  caps.push('Observable API: not here (using event listeners)');
+}
 if (LanguageModel) {
   LanguageModel.availability(audioOptions).then((a) => { caps.push(`speech: the browser's model is ${a}`); showCaps(); if (a === 'unavailable') $('mic').setAttribute('disabled', ''); });
 } else { $('mic').setAttribute('disabled', ''); caps.push('speech: no Prompt API here (Chrome, with the Prompt API flag on)'); }
