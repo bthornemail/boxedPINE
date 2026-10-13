@@ -425,7 +425,7 @@ test('The electrical reading, live (OMI_SERIALS)', { skip: !serials.length && 's
 });
 
 // ---- The proof tree on the eMMC: restore, reset, replay, scrub (SPEC-07 I-190) ----
-import { makeProofImage, step, replay, readIndex, rootOf } from '../../repl/src/proof-emmc.ts';
+import { makeProofImage, step, replay, readIndex, rootOf, scrub } from '../../repl/src/proof-emmc.ts';
 
 test('The proof tree on the eMMC: the scrub names the damaged records, restore writes them back, the reset is the signal, the root returns', { skip: !hasQemu && 'QEMU tools not installed' }, async () => {
   const dir = mkdtempSync(join(tmpdir(), 'pe-'));
@@ -433,8 +433,18 @@ test('The proof tree on the eMMC: the scrub names the damaged records, restore w
   const nbd = await serveNbd(join(dir, 'emmc.img'), join(dir, 'n.sock'));
   const vm = await bootVirt(join(dir, 'n.sock'), join(dir, 'q.sock'));
   try {
+    // tags name the literals across logic (/A-Z0-9/, the record number in base 36); hashes only guard the values
+    for (const e of entries) {
+      assert.match(e.tag, /^[A-Z0-9]+$/, `${e.id}: the tag is /A-Z0-9/`);
+      const [, n, letter = ''] = /^I-(\d+)([a-z]?)$/.exec(e.id)!;
+      assert.equal(e.tag, (Number(n).toString(36) + letter).toUpperCase(), `${e.id}: the tag is its number in base 36`);
+    }
+    assert.equal(new Set(entries.map((e) => e.tag)).size, entries.length, 'one tag per record');
     const victims = [entries[3]!, entries[40]!];
     for (const v of victims) writeNbd(join(dir, 'n.sock'), v.offset + 100, 0x00, 64);
+    const damaged = readNbd(join(dir, 'n.sock'), join(dir, 'd.img'));
+    assert.deepEqual(readIndex(damaged).entries.map((e) => e.tag), entries.map((e) => e.tag), 'damage leaves every tag as it was');
+    assert.deepEqual(scrub(damaged).damaged.map((e) => e.tag), victims.map((v) => v.tag), 'the scrub names the damaged records by tag: their values changed, their names did not');
     const s = await step(join(dir, 'n.sock'), join(dir, 'q.sock'), dir);
     assert.deepEqual(s.found, victims.map((v) => v.id), 'n - 1: the scrub names exactly the damaged records');
     assert.equal(s.restored, 2);
