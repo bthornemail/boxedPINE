@@ -31,3 +31,8 @@ test('The Fano icons read as masks, and their Hasse diagrams (proofs/svg)', () =
   const r = spawnSync(process.execPath, [new URL('../../proofs/svg/tools/build.mjs', import.meta.url).pathname], { encoding: 'utf8', timeout: 60000 });
   assert.equal(r.status, 0, r.stderr);
 });
+
+test('E8 on its Coxeter plane, in both frames (proofs/svg/e8)', () => {
+  const r = spawnSync(process.execPath, [new URL('../../proofs/svg/tools/e8.mjs', import.meta.url).pathname], { encoding: 'utf8', timeout: 60000 });
+  assert.equal(r.status, 0, r.stderr);
+});
