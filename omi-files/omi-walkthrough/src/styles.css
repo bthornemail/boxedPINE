@@ -1,0 +1,99 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap");
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Newsreader", "Iowan Old Style", "Palatino Linotype", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --color-bg: #f1eee6;
+  --color-bg-warm: #e4dfd2;
+  --color-surface: #faf8f3;
+  --color-fg: #1a1d21;
+  --color-muted: #5c6168;
+  --color-subtle: #8a8f96;
+  --color-border: #d4cec0;
+  --color-primary: #1f2a30;
+  --color-primary-fg: #f4f1ea;
+  --color-accent: #2f4d56;
+  --color-led: #1f8a5a;
+  --color-led-dim: #9aa89a;
+  --color-high: #1f8a5a;
+  --color-low: #8f4e4e;
+  --color-rail-v: #8d3a3a;
+  --color-rail-g: #2d4a6c;
+  --color-trace: #3c4248;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+
+  --shadow-border: 0 0 0 1px rgba(26, 29, 33, 0.06), 0 1px 2px -1px rgba(26, 29, 33, 0.06),
+    0 2px 8px 0 rgba(26, 29, 33, 0.04);
+  --shadow-border-hover: 0 0 0 1px rgba(26, 29, 33, 0.1), 0 2px 8px -1px rgba(26, 29, 33, 0.08),
+    0 8px 20px -8px rgba(26, 29, 33, 0.1);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--color-bg);
+    color: var(--color-fg);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-bg);
+    color: var(--color-fg);
+    min-height: 100dvh;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.paper-rule {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 27px,
+    color-mix(in oklab, var(--color-fg) 7%, transparent) 27px,
+    color-mix(in oklab, var(--color-fg) 7%, transparent) 28px
+  );
+}
