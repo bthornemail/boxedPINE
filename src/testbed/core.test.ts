@@ -635,3 +635,12 @@ test('I-104: the regular 210 ladder starts at 97, just after index 20; the sexy-
   assert.deepEqual(quint, [5]);
 });
 
+
+// ---- The sixteen constants are the sixteen Fano icons (proofs/svg) ----
+test('The sixteen Fano constants are the masks the sixteen Commons icons read as: the 16-index', () => {
+  const masks = JSON.parse(readFile(new URL('../../proofs/svg/fano/masks.json', import.meta.url), 'utf8')) as Record<string, number>;
+  const byIndex = ['Fano_empty.svg', ...[1, 2, 3, 4, 5, 6, 7].map((n) => `Fano_point_${n}.svg`), 'Fano_line_3_5_6.svg', 'Fano_line_1_7_6.svg', 'Fano_line_2_7_5.svg', 'Fano_line_1_3_2.svg', 'Fano_line_4_7_3.svg', 'Fano_line_1_5_4.svg', 'Fano_line_2_6_4.svg', 'Fano_full.svg'];
+  assert.deepEqual(byIndex.map((f) => masks[f]), [...CONSTANTS], 'index i of the constants is the icon read at i');
+  assert.deepEqual([CONSTANTS[4], CONSTANTS[10], CONSTANTS[4 ^ 10]], [0x08, 0x52, 0x2a], 'read 4: point 4; read 10: line 2-7-5; read 4 ^ 10 = 14: line 2-6-4');
+  assert.ok((CONSTANTS[14]! & CONSTANTS[4]!) !== 0, 'point 4 is on line 2-6-4');
+});
