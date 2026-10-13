@@ -423,3 +423,31 @@ test('The electrical reading, live (OMI_SERIALS)', { skip: !serials.length && 's
     console.log(port, JSON.stringify({ ...r, answer: undefined, samples: r.samples.join(' ') }));
   }
 });
+
+// ---- The proof tree on the eMMC: restore, reset, replay, scrub (SPEC-07 I-190) ----
+import { makeProofImage, step, replay, readIndex, rootOf } from '../../repl/src/proof-emmc.ts';
+
+test('The proof tree on the eMMC: the scrub names the damaged records, restore writes them back, the reset is the signal, the root returns', { skip: !hasQemu && 'QEMU tools not installed' }, async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'pe-'));
+  const entries = makeProofImage(join(dir, 'emmc.img'));
+  const nbd = await serveNbd(join(dir, 'emmc.img'), join(dir, 'n.sock'));
+  const vm = await bootVirt(join(dir, 'n.sock'), join(dir, 'q.sock'));
+  try {
+    const victims = [entries[3]!, entries[40]!];
+    for (const v of victims) writeNbd(join(dir, 'n.sock'), v.offset + 100, 0x00, 64);
+    const s = await step(join(dir, 'n.sock'), join(dir, 'q.sock'), dir);
+    assert.deepEqual(s.found, victims.map((v) => v.id), 'n - 1: the scrub names exactly the damaged records');
+    assert.equal(s.restored, 2);
+    assert.deepEqual(s.signal, { event: 'RESET', reason: 'host-qmp-system-reset' }, 'n: the reset on the host event bus');
+    assert.ok(s.clean && s.sameRoot, 'n + 1: clean, and the root of n - 1');
+    assert.equal(readIndex(s.after).root, rootOf(entries));
+    const r = await replay(s.after, victims.map((v) => v.tag));
+    assert.deepEqual(r.map((x) => x.result), [null, null], 'the restored records replay and hold');
+    const again = await step(join(dir, 'n.sock'), join(dir, 'q.sock'), dir);
+    assert.deepEqual([again.found.length, again.clean, again.sameRoot], [0, true, true], 'a step with nothing damaged changes nothing');
+  } finally {
+    vm.kill();
+    nbd.kill();
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
