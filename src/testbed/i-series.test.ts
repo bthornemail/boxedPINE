@@ -19,7 +19,7 @@ for (const file of modules) {
   });
 }
 
-test('the I-series is all here (the roll-up and 48 modules; three more wait in proofs/js/pending)', () => assert.equal(modules.length, 49));
+test('the I-series is all here (the roll-up and 51 modules; I-177 waits in proofs/js/pending)', () => assert.equal(modules.length, 52));
 
 test('proofs/js: every subject-predicate-object triple holds and every must-reject fails', () => {
   const r = spawnSync(process.execPath, [new URL('../../proofs/js/spo/check.mjs', import.meta.url).pathname], { encoding: 'utf8', timeout: 60000 });
