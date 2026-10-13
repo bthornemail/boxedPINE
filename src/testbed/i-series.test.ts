@@ -26,3 +26,8 @@ test('proofs/js: every subject-predicate-object triple holds and every must-reje
   assert.equal(r.status, 0, r.stdout.split('\n').filter((l) => l.startsWith('✗')).join('\n'));
   assert.match(r.stdout, /0 problems/);
 });
+
+test('The Fano icons read as masks, and their Hasse diagrams (proofs/svg)', () => {
+  const r = spawnSync(process.execPath, [new URL('../../proofs/svg/tools/build.mjs', import.meta.url).pathname], { encoding: 'utf8', timeout: 60000 });
+  assert.equal(r.status, 0, r.stderr);
+});
