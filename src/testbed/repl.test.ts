@@ -425,36 +425,39 @@ test('The electrical reading, live (OMI_SERIALS)', { skip: !serials.length && 's
 });
 
 // ---- The proof tree on the eMMC: restore, reset, replay, scrub (SPEC-07 I-190) ----
-import { makeProofImage, step, replay, readIndex, rootOf, scrub } from '../../repl/src/proof-emmc.ts';
+import { makeProofImage, step, replay, readIndex, scrub, layout } from '../../repl/src/proof-emmc.ts';
 
-test('The proof tree on the eMMC: the scrub names the damaged records, restore writes them back, the reset is the signal, the root returns', { skip: !hasQemu && 'QEMU tools not installed' }, async () => {
+test('The proof tree on the eMMC, without hashing: the scrub XORs against the literals, restore writes them back, the reset is the signal', { skip: !hasQemu && 'QEMU tools not installed' }, async () => {
   const dir = mkdtempSync(join(tmpdir(), 'pe-'));
   const entries = makeProofImage(join(dir, 'emmc.img'));
   const nbd = await serveNbd(join(dir, 'emmc.img'), join(dir, 'n.sock'));
   const vm = await bootVirt(join(dir, 'n.sock'), join(dir, 'q.sock'));
   try {
-    // tags name the literals across logic (/A-Z0-9/, the record number in base 36); hashes only guard the values
+    // tags name the literals across logic (/A-Z0-9/, the record number in base 36); the address is the identity
     for (const e of entries) {
       assert.match(e.tag, /^[A-Z0-9]+$/, `${e.id}: the tag is /A-Z0-9/`);
       const [, n, letter = ''] = /^I-(\d+)([a-z]?)$/.exec(e.id)!;
       assert.equal(e.tag, (Number(n).toString(36) + letter).toUpperCase(), `${e.id}: the tag is its number in base 36`);
     }
     assert.equal(new Set(entries.map((e) => e.tag)).size, entries.length, 'one tag per record');
+    const clean = readNbd(join(dir, 'n.sock'), join(dir, 'c.img'));
+    assert.deepEqual(scrub(clean), { indexIntact: true, difference: 0, damaged: [] }, 'as written: the XOR against the literals is 0 everywhere');
     const victims = [entries[3]!, entries[40]!];
     for (const v of victims) writeNbd(join(dir, 'n.sock'), v.offset + 100, 0x00, 64);
     const damaged = readNbd(join(dir, 'n.sock'), join(dir, 'd.img'));
-    assert.deepEqual(readIndex(damaged).entries.map((e) => e.tag), entries.map((e) => e.tag), 'damage leaves every tag as it was');
-    assert.deepEqual(scrub(damaged).damaged.map((e) => e.tag), victims.map((v) => v.tag), 'the scrub names the damaged records by tag: their values changed, their names did not');
+    assert.deepEqual(readIndex(damaged), layout(), 'damage leaves the addresses as they were');
+    const found = scrub(damaged);
+    assert.deepEqual(found.damaged.map((e) => e.tag), victims.map((v) => v.tag), 'the scrub names the damaged records by tag');
+    for (const [i, d] of found.damaged.entries()) assert.ok(d.first >= victims[i]!.offset + 100 && d.last < victims[i]!.offset + 164, `${d.id}: and says where: ${d.bytes} bytes from ${d.first} to ${d.last}`);
     const s = await step(join(dir, 'n.sock'), join(dir, 'q.sock'), dir);
     assert.deepEqual(s.found, victims.map((v) => v.id), 'n - 1: the scrub names exactly the damaged records');
     assert.equal(s.restored, 2);
     assert.deepEqual(s.signal, { event: 'RESET', reason: 'host-qmp-system-reset' }, 'n: the reset on the host event bus');
-    assert.ok(s.clean && s.sameRoot, 'n + 1: clean, and the root of n - 1');
-    assert.equal(readIndex(s.after).root, rootOf(entries));
+    assert.ok(s.clean, 'n + 1: the index as laid out, and the XOR difference 0');
     const r = await replay(s.after, victims.map((v) => v.tag));
-    assert.deepEqual(r.map((x) => x.result), [null, null], 'the restored records replay and hold');
+    assert.deepEqual(r.map((x) => x.result), [null, null], 'the restored records replay and hold: the carry-forward');
     const again = await step(join(dir, 'n.sock'), join(dir, 'q.sock'), dir);
-    assert.deepEqual([again.found.length, again.clean, again.sameRoot], [0, true, true], 'a step with nothing damaged changes nothing');
+    assert.deepEqual([again.found.length, again.clean], [0, true], 'a step with nothing damaged changes nothing');
   } finally {
     vm.kill();
     nbd.kill();
