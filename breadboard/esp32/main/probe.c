@@ -36,6 +36,10 @@
  *                     404 Not Found for any other rule
  *   GET /build/B/ab   200 OK, every node of build B (5T 6T 8T 10T) and its LED, on a, b;
  *                     404 Not Found for any other build
+ *   GET /analog/c     200 OK, 64 raw 12-bit readings of ADC1 channel c (0-7: GPIO 36 37
+ *                     38 39 32 33 34 35), four lines of 16, hex; 404 Not Found past 7.
+ *                     The readings are the board's, like its timing lines: the
+ *                     electrical reading under the 1s and 0s (SPEC-07 I-181).
  *   anything else     400 Bad Request
  * Every answer ends, just before 218, with a fold of the bytes it sent from the
  * status line on, zipped into pairs (car = even byte, cdr = odd byte; a last odd
@@ -55,6 +59,7 @@
 #include "driver/uart.h"
 #include "driver/uart_vfs.h"
 #include "esp_timer.h"
+#include "esp_adc/adc_oneshot.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
@@ -152,13 +157,29 @@ static void out(const char *fmt, ...) {
     fputs(text, stdout);
 }
 
+static adc_oneshot_unit_handle_t adc1;
+static uint8_t adc_ready; /* one bit per channel, configured on first read */
+static int analog(int ch) {
+    if (!adc1) {
+        adc_oneshot_unit_init_cfg_t unit = { .unit_id = ADC_UNIT_1 };
+        if (adc_oneshot_new_unit(&unit, &adc1) != ESP_OK) return -1;
+    }
+    if (!(adc_ready & (1u << ch))) {
+        adc_oneshot_chan_cfg_t cfg = { .atten = ADC_ATTEN_DB_12, .bitwidth = ADC_BITWIDTH_12 };
+        if (adc_oneshot_config_channel(adc1, (adc_channel_t)ch, &cfg) != ESP_OK) return -1;
+        adc_ready |= (uint8_t)(1u << ch);
+    }
+    int raw;
+    return adc_oneshot_read(adc1, (adc_channel_t)ch, &raw) == ESP_OK ? raw : -1;
+}
+
 static void respond(const char *line) {
     uint32_t tag = state & 0xff, dev = total_dev;
     fold_bits = fold_place = fold_len = fold_car = 0;
     if (strcmp(line, "GET /") == 0) {
         out("300 Multiple Choices\nchoice /parity\nchoice /atom/0\nchoice /atom/1\nchoice /atom/2\nchoice /atom/3\n"
                "choice /atom/4\nchoice /atom/5\nchoice /atom/6\nchoice /atom/7\nchoice /m/0-128\n"
-               "choice /gate/NAND/00\nchoice /build/8T/00\n");
+               "choice /gate/NAND/00\nchoice /build/8T/00\nchoice /analog/0\n");
     } else if (strcmp(line, "GET /parity") == 0) {
         out("200 OK\nparity %02x\npole %u\ndev %02x\nus %lld\nwall %lld\ncycles %u\n", (unsigned)tag,
                (unsigned)((state >> 16) & 1), (unsigned)dev, (long long)us, (long long)(esp_timer_get_time() - t0), (unsigned)cycles);
@@ -214,6 +235,15 @@ static void respond(const char *line) {
                 uint32_t led = v[2 + bd->led];
                 out(" led=%u\n", (unsigned)(bd->sink ? 1 - led : led));
             }
+        }
+    } else if (strncmp(line, "GET /analog/", 12) == 0 && line[12] >= '0' && line[12] <= '9' && line[13] == 0) {
+        int ch = line[12] - '0';
+        if (ch > 7) out("404 Not Found\n");
+        else {
+            int r[64];
+            for (int i = 0; i < 64; i++) r[i] = analog(ch);
+            out("200 OK\nanalog %d\n", ch);
+            for (int i = 0; i < 64; i++) out(i % 16 == 15 ? "%03x\n" : i % 16 ? "%03x " : "samples %03x ", (unsigned)(r[i] & 0xfff));
         }
     } else {
         out("400 Bad Request\n");

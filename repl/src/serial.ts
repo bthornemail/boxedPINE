@@ -13,7 +13,8 @@ import { openSync, readSync, writeSync, closeSync } from 'node:fs';
 import { CONSTANTS, converge, isConstant, step } from '../../core/src/verified/fano.ts';
 import { delta16 } from '../../core/src/verified/delta.ts';
 import { tick, META_START } from '../../core/src/verified/cycle.ts';
-import { expectedOrgan, respondTwin, parseReflect } from '../../rosetta/src/organ.ts';
+import { expectedOrgan, respondTwin, parseReflect, intact } from '../../rosetta/src/organ.ts';
+import { parseAnalog, readAnalog } from '../../rosetta/src/analog.ts';
 
 export { expectedOrgan, respondTwin, parseReflect };
 
@@ -57,6 +58,16 @@ export function askOrgan(port: string, request: string, timeoutMs = 4000): strin
   const lines = (end < 0 ? text : text.slice(0, end + 16)).split(/\r?\n/).filter((l) => l && !l.startsWith('reflect') && !l.startsWith('omi '));
   const start = lines.findIndex((l) => /^\d{3} /.test(l));
   return start < 0 ? lines : lines.slice(start);
+}
+
+/** Ask the organ for 64 raw readings of ADC1 channel ch (I-181), and read them as logic, values and spectrum; asks again if the fold breaks. */
+export function askAnalog(port: string, ch = 0, tries = 4) {
+  for (let i = 0; i < tries; i++) {
+    const answer = askOrgan(port, `GET /analog/${ch}`);
+    const readings = parseAnalog(answer);
+    if (intact(answer) && readings.length === 64) return { answer, ...readAnalog(readings), samples: readings };
+  }
+  throw new Error(`no whole answer to GET /analog/${ch} in ${tries} tries`);
 }
 
 /** Per line, the XOR of the two frames' words; all zero means the frames agree. */

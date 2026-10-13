@@ -389,3 +389,37 @@ test('Every answer carries its zipper fold: bits catches a bit that moves, place
     assert.equal(intact([a[0]!, damage(a[1]!), a[2]!, a[3]!]), false);
 });
 
+
+import { parseAnalog, logical, entropy as analogEntropy, spectrum, spectralEntropy, readAnalog, THRESHOLD } from '../../rosetta/src/analog.ts';
+import { askAnalog } from '../../repl/src/serial.ts';
+
+test('The electrical reading: logic, values and spectrum of one set of readings (I-181)', () => {
+  // the twin knows the frame of the answer, not the voltages
+  assert.deepEqual(respondTwin('GET /analog/3').slice(0, 2), ['200 OK', 'analog 3']);
+  assert.equal(respondTwin('GET /analog/8')[0], '404 Not Found');
+  assert.ok(respondTwin('GET /').includes('choice /analog/0'));
+  // the answer's sample lines parse in order
+  assert.deepEqual(parseAnalog(['200 OK', 'analog 0', 'samples 000 7ff 800 fff', 'fold 0 0 0']), [0, 0x7ff, 0x800, 0xfff]);
+  assert.deepEqual(logical([0, THRESHOLD - 1, THRESHOLD, 4095]), [0, 0, 1, 1]);
+  // a steady reading: one value, no spectrum
+  const steady = Array(64).fill(3000);
+  assert.deepEqual([analogEntropy(steady), spectralEntropy(steady)], [0, 0]);
+  // readings that all read as 1 can still differ: the logic has no entropy, the values do
+  const near = Array.from({ length: 64 }, (_, t) => 3000 + (t % 4));
+  const r = readAnalog(near);
+  assert.deepEqual([r.logic, r.entropyOfLogic, r.distinct, r.entropyOfReadings], [[1], 0, 4, 2]);
+  // a square wave holds only its odd harmonics; one tone holds one frequency
+  const square = Array.from({ length: 64 }, (_, t) => (t % 16 < 8 ? 3500 : 500));
+  assert.deepEqual(spectrum(square).flatMap((p, k) => (p > 1 ? [k + 1] : [])), [4, 12, 20, 28]);
+  const tone = Array.from({ length: 64 }, (_, t) => 2048 + 1000 * Math.sin((2 * Math.PI * 4 * t) / 64));
+  assert.ok(spectralEntropy(tone) < 1e-6);
+});
+
+test('The electrical reading, live (OMI_SERIALS)', { skip: !serials.length && 'set OMI_SERIALS' }, () => {
+  for (const port of serials) {
+    const r = askAnalog(port, 0);
+    assert.equal(r.readings, 64, port);
+    assert.ok(r.samples.every((s) => s >= 0 && s < 4096), port);
+    console.log(port, JSON.stringify({ ...r, answer: undefined, samples: r.samples.join(' ') }));
+  }
+});

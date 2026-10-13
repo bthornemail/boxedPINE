@@ -14,7 +14,7 @@ export type Reading = Record<string, number[]>;
 export const reflectsOn = (n: number) => (n & 3) !== 2;
 
 /** The paths the organ offers with 300 Multiple Choices. */
-export const ORGAN_CHOICES = ['/parity', ...[0, 1, 2, 3, 4, 5, 6, 7].map((a) => `/atom/${a}`), '/m/0-128', '/gate/NAND/00', '/build/8T/00'];
+export const ORGAN_CHOICES = ['/parity', ...[0, 1, 2, 3, 4, 5, 6, 7].map((a) => `/atom/${a}`), '/m/0-128', '/gate/NAND/00', '/build/8T/00', '/analog/0'];
 
 const parity3 = (a: number) => (a ^ (a >> 1) ^ (a >> 2)) & 1;
 
@@ -54,6 +54,9 @@ export function respondTwin(request: string, seed = 60): string[] {
     const a = Number(m[1]), b = Number(m[2]);
     out = b > 128 ? ['416 Range Not Satisfiable', 'content-range m */129']
       : ['206 Partial Content', `content-range m ${a}-${b}/129`, `bits ${Array.from({ length: b - a + 1 }, (_, i) => sense(a + i)).join('')}`];
+  } else if ((m = /^GET \/analog\/(\d)$/.exec(request))) {
+    // The readings are the board's (I-181): the twin knows the frame, not the voltages.
+    out = Number(m[1]) > 7 ? ['404 Not Found'] : ['200 OK', `analog ${m[1]}`];
   } else out = gateRespondTwin(request) ?? ['400 Bad Request'];
   return [...out, foldLine(out), '218 This is fine'];
 }
