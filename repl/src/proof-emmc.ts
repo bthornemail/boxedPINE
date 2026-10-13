@@ -5,7 +5,7 @@
 // event bus"; and "reset as the signal of the n in n+1 and n-1". The image of
 // SPEC-07 I-94 holds the proof Blob and the sixteen constants; after them this
 // writes the proofs catalogue, every record's check as its base64 classic script
-// (proofs/js/vm), with an index of tag, place, length and SHA-256, and a root
+// (proofs/js/vm), with an index of tag, place, length and SHA3-256, and a root
 // hash over the index. One step of the cycle, through NBD and QMP:
 //   n - 1  read the tree back; scrub names each damaged record; restore writes
 //          it back from the proof tree, byte for byte;
@@ -27,14 +27,15 @@ import { makeImage, IMAGE_BYTES, readNbd } from './emmc.ts';
 const PROOFS = new URL('../../proofs/js/', import.meta.url);
 /** Where the index starts: after the Blob (0) and the constants (8192), on a 16 KiB boundary. */
 export const INDEX_AT = 16384;
-const HEADER = 48; // "OMIPROOF", count (4), spare (4), root SHA-256 (32)
-const ENTRY = 64; // tag (8, ASCII), offset (4), length (4), SHA-256 (32), spare (16)
+const HEADER = 48; // "OMIPROOF", count (4), spare (4), root SHA3-256 (32)
+const ENTRY = 64; // tag (8, ASCII), offset (4), length (4), SHA3-256 (32), spare (16)
 const MAGIC = 'OMIPROOF';
 const SECTOR = 512;
 
 export type Entry = { tag: string; id: string; offset: number; length: number; sha256: string };
 
-const sha = (b: Uint8Array | string) => createHash('sha256').update(b).digest('hex');
+// SHA3-256 (Keccak, a sponge), not SHA-256: the author, 2026-10-13, "if sha256 we should use sha3".
+const sha = (b: Uint8Array | string) => createHash('sha3-256').update(b).digest('hex');
 /** The tree's root: the hash of its records' hashes, in order. */
 export const rootOf = (entries: Entry[]) => sha(entries.map((e) => e.sha256).join(''));
 
