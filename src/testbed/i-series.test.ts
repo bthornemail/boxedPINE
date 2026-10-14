@@ -19,7 +19,7 @@ for (const file of modules) {
   });
 }
 
-test('the I-series is all here (the roll-up and 65 modules)', () => assert.equal(modules.length, 66));
+test('the I-series is all here (the roll-up and 66 modules)', () => assert.equal(modules.length, 67));
 
 test('proofs/js: every subject-predicate-object triple holds and every must-reject fails', () => {
   const r = spawnSync(process.execPath, [new URL('../../proofs/js/spo/check.mjs', import.meta.url).pathname], { encoding: 'utf8', timeout: 60000 });
@@ -34,5 +34,10 @@ test('The Fano icons read as masks, and their Hasse diagrams (proofs/svg)', () =
 
 test('E8 on its Coxeter plane, in both frames (proofs/svg/e8)', () => {
   const r = spawnSync(process.execPath, [new URL('../../proofs/svg/tools/e8.mjs', import.meta.url).pathname], { encoding: 'utf8', timeout: 60000 });
+  assert.equal(r.status, 0, r.stderr);
+});
+
+test('The five exceptional Lie algebras on their Coxeter planes (proofs/svg/lie)', () => {
+  const r = spawnSync(process.execPath, [new URL('../../proofs/svg/tools/lie.mjs', import.meta.url).pathname], { encoding: 'utf8', timeout: 60000 });
   assert.equal(r.status, 0, r.stderr);
 });
