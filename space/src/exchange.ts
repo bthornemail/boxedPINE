@@ -20,6 +20,14 @@
 // gate.frame = n is the hand-over: the set trap performs the write with
 // Reflect, then runs the exchange at 60 ^ n inside Catch, so the outcome comes
 // back as a value, { ok, value } or { ok: false, error }, never as a throw.
+//
+// And the reset: "we can set the reset to animation frame to auto restore a
+// state using a Proxy and Reflect at the uncanny Catch 22 index". The gate
+// keeps the state's literal, the state as it stood when the gate was made.
+// When the index handed over is 22 (frame 42 in each half: 60 XOR 22 = 42),
+// the trap does not exchange: it restores every byte from the literal, and
+// the outcome counts the bytes it put back (the scrub, I-190: the state XOR
+// the literal, byte by byte). By frame 42, frames 0-41 have written 42 bytes.
 import { DEFAULT_INTERFACE, type CatchResult, type KernelInterface } from '../../rosetta/src/grammar/interface.ts';
 
 export const STATE_BYTES = 128, BASE = 60, READ = 127, WRITE = 63;
@@ -55,16 +63,27 @@ export const written = (state: Uint8Array) => state.reduce((n, b) => n + (b === 
 /** Which Hasse file a byte shows. */
 export const hasseFor = (value: number): HasseFile => (value === WRITE ? 'Hasse_XNOR' : 'Hasse_XOR');
 
-export type FrameGate = { frame: number; readonly last: CatchResult<Exchanged> | null };
+export const CATCH22 = 22;
+export type Restored = { index: number; restored: number };
+export type FrameGate = { frame: number; readonly last: CatchResult<Exchanged | Restored> | null };
 
-/** The hand-over: gate.frame = n gives the index to Atomics; gate.last is the Catch's outcome. */
+/** Put the literal back: every byte that differs from it (state XOR literal not 0), counted. */
+export function restore(state: Uint8Array, literal: Uint8Array): number {
+  let n = 0;
+  for (let i = 0; i < state.length; i++) if ((Atomics.load(state, i) ^ literal[i]!) !== 0) { Atomics.store(state, i, literal[i]!); n++; }
+  return n;
+}
+
+/** The hand-over: gate.frame = n gives the index to Atomics (or, at index 22, restores the literal); gate.last is the Catch's outcome. */
 export function frameGate(state: Uint8Array, k: KernelInterface = DEFAULT_INTERFACE, exchange: (s: Uint8Array, f: number) => Exchanged = tick): FrameGate {
-  const target = { frame: -1, last: null as CatchResult<Exchanged> | null };
+  const literal = Uint8Array.from(state);
+  const target = { frame: -1, last: null as CatchResult<Exchanged | Restored> | null };
   return new k.Proxy(target, {
     set(t, key, value, receiver) {
       if (key !== 'frame') return false; // only the frame is handed over; last is the gate's to write
       const ok = k.Reflect.set(t, key, value, receiver);
-      t.last = k.catch(() => exchange(state, value as number));
+      const frame = value as number;
+      t.last = k.catch((): Exchanged | Restored => (indexOf(frame) === CATCH22 ? { index: CATCH22, restored: restore(state, literal) } : exchange(state, frame)));
       return ok;
     },
   }) as FrameGate;

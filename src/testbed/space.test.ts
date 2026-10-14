@@ -378,3 +378,20 @@ test('The sound, in a browser: the graph renders offline; read is left, write ri
   assert.ok(result.maxDiff < 1e-5, 'two renders of one score agree closely');
   assert.deepEqual(result.rows.map((x: { side: string; loudest: number }) => [x.side, x.loudest]), [['left', 2], ['right', 6], ['left', 3], ['right', 5]]);
 });
+
+test('The reset at the Catch-22 index: frame 42 (60 XOR 22) restores the literal through the Proxy, putting back the 42 bytes frames 0-41 wrote', async () => {
+  const { newState, frameGate, written, CATCH22, READ } = await import('../../space/src/exchange.ts');
+  assert.equal(60 ^ CATCH22, 42, 'the Catch-22 index comes at frame 42');
+  const state = newState();
+  const gate = frameGate(state);
+  for (let f = 0; f < 42; f++) gate.frame = f;
+  assert.equal(written(state), 42, 'frames 0-41 wrote 42 bytes');
+  gate.frame = 42;
+  assert.deepEqual(gate.last, { ok: true, value: { index: 22, restored: 42 } }, 'at index 22 the trap restores, and counts 42');
+  assert.equal(written(state), 0, 'the state is its literal again');
+  assert.ok(state.every((b) => b === READ));
+  gate.frame = 43;
+  assert.equal(written(state), 1, 'and the exchange goes on from frame 43');
+  gate.frame = 128 + 42;
+  assert.equal(gate.last?.ok && 'restored' in gate.last.value ? gate.last.value.restored : -1, 1, 'in the XNOR half the reset comes again at frame 170, putting back what changed');
+});
