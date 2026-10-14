@@ -485,3 +485,23 @@ test('The colour agents\' natural language: Unicode glyphs inherited like hues, 
   assert.ok(by('black').glyphName === 'BLACK LARGE SQUARE');
   assert.equal(by('entity').glyph, undefined, 'the route above color has none');
 });
+
+test('The tag functor: XOR 0x20 toggles case and back; Uppercase<S> makes any word a type literal, or never', async () => {
+  const { toggle, toTag } = await import('../../rosetta/src/tag-type.ts');
+  assert.equal(toggle('Metatron'), 'mETATRON');
+  assert.equal(toggle(toggle('Metatron 22')), 'Metatron 22', 'twice gives the word back');
+  assert.equal(toTag('metatron'), 'METATRON');
+  assert.equal(toTag('procedural'), null, 'ten letters: not a tag');
+  assert.equal(toTag('catch 22'), null, 'the space: not one tag');
+  const { deprecate, isDeprecated } = await import('../../rosetta/src/tag-type.ts');
+  assert.equal(deprecate('METATRON'), 'metatron', 'upper to lower: deprecated');
+  assert.equal(toTag(deprecate('METATRON')!), 'METATRON', 'and lower to upper generates it again');
+  assert.equal(isDeprecated('metatron'), true);
+  assert.equal(isDeprecated('22'), false, 'digits have no case: a number cannot be deprecated');
+  assert.equal(deprecate('22'), '22');
+  assert.equal(new URL('http://METATRON/').host, deprecate('METATRON'), 'a host holds a tag deprecated');
+  // and at compile time: tsc checks src/testbed/tag-type.check.ts
+  const { spawnSync } = await import('node:child_process');
+  const r = spawnSync('npx', ['--no-install', 'tsc', '--ignoreConfig', '--noEmit', '--strict', '--target', 'es2022', '--module', 'nodenext', '--allowImportingTsExtensions', new URL('./tag-type.check.ts', import.meta.url).pathname], { encoding: 'utf8' });
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+});
