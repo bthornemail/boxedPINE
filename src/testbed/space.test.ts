@@ -557,3 +557,21 @@ test('A folder as a lattice that meta-log-db reads: tree edges vertical (v:child
   assert.ok(facts(lattice).every((f) => f === 'horizontal'), 'the lattice\'s edges are horizontal facts');
   assert.equal(lattice.edges.length, 4, 'a and b each join LAW and METATRON; c joins nothing');
 });
+
+test('The tag tree: each path\'s tags are its name\'s words promoted; its address is its place among its siblings, in base 36', async () => {
+  const { tagsOf, tagTree } = await import('../../scripts/tag-tree.mjs');
+  assert.deepEqual(tagsOf('canon-player.js'), ['CANON', 'PLAYER', 'JS']);
+  assert.deepEqual(tagsOf('omi-tetragrammatron'), ['OMI'], 'fifteen letters cannot be a tag');
+  assert.deepEqual(tagsOf('MyersBriggsProfile.ts'), ['MYERS', 'BRIGGS', 'PROFILE', 'TS'], 'camel case splits where lower turns upper');
+  const { mkdtempSync, mkdirSync, writeFileSync } = await import('node:fs');
+  const { join } = await import('node:path');
+  const dir = mkdtempSync(join((await import('node:os')).tmpdir(), 'tags-'));
+  mkdirSync(join(dir, 'alpha-docs')); writeFileSync(join(dir, 'alpha-docs', 'README.md'), ''); mkdirSync(join(dir, 'beta')); writeFileSync(join(dir, 'beta', 'readme.txt'), '');
+  const t = tagTree(dir);
+  const by = (p: string) => t.nodes.find((n: { path: string }) => n.path.endsWith(p))!;
+  assert.equal(by('alpha-docs').id.split('/').slice(1).join('/'), '0');
+  assert.equal(by('README.md').id.split('/').slice(1).join('/'), '0/0', 'folder by folder, base 36');
+  assert.equal(by('readme.txt').id.split('/').slice(1).join('/'), '1/0');
+  assert.deepEqual(t.universal.map((u: { tag: string }) => u.tag), ['README'], 'README in two projects: a universal tag');
+  assert.equal(t.edges.filter((e: { type: string }) => e.type === 'v:child').length, t.nodes.length - 1, 'every path but the root has its parent edge');
+});

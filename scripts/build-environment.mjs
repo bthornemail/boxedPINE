@@ -4,6 +4,7 @@ import { existsSync } from 'node:fs';
 import { spawn } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { tagTreeCanvasL } from './tag-tree.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const manifestPath = resolve(root, 'space/environment.json');
@@ -33,6 +34,19 @@ if (!['check', 'build', 'run'].includes(mode)) fail(`unknown command ${mode}`);
 console.log(`environment: ${manifest.title} (${manifest.id})`);
 console.log(`runtime: ${manifest.runtime.kind} · ${manifest.runtime.space}/${manifest.runtime.tile}`);
 console.log(`projections: ${manifest.projections.join(', ')}`);
+
+// The tagging mnemonics, propagated by every build (the author: "add tags to all the omi-files folders
+// and files, and to the build script in the metaverse build, to forever propagate the tagging
+// mnemonics"): scripts/tag-tree.mjs derives each path's tags and address; check reports whether the
+// index is current, build writes it again.
+const tagIndex = resolve(root, 'public/tags/omi-files.canvasl');
+const tags = existsSync(resolve(root, 'omi-files')) ? tagTreeCanvasL(resolve(root, 'omi-files')) : null;
+const relative = (text) => text.replaceAll(`${resolve(root, 'omi-files')}`, 'omi-files');
+if (tags) {
+  const current = existsSync(tagIndex) && (await readFile(tagIndex, 'utf8')) === relative(tags.text);
+  console.log(`tags: ${tags.nodes} paths under omi-files, ${tags.universal.length} universal; index ${current ? 'current' : mode === 'build' ? 'rewritten' : 'stale (npm run environment:build rewrites it)'}`);
+  if (mode === 'build' && !current) { await mkdir(dirname(tagIndex), { recursive: true }); await writeFile(tagIndex, relative(tags.text)); }
+}
 if (mode === 'check') process.exit(0);
 
 if (mode === 'build') {
