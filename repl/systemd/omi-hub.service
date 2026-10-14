@@ -1,0 +1,16 @@
+# The OMI hub: the omi-bios image in QEMU, and the agent bridge for the page,
+# kept running while you are logged in (repl/src/omi-hub.ts).
+# Install:   cp repl/systemd/omi-hub.service ~/.config/systemd/user/ && systemctl --user daemon-reload && systemctl --user enable --now omi-hub
+# Watch:     journalctl --user -u omi-hub -f
+# Remove:    systemctl --user disable --now omi-hub && rm ~/.config/systemd/user/omi-hub.service
+[Unit]
+Description=OMI hub: omi-bios in QEMU and the agent bridge
+
+[Service]
+ExecStart=/home/main/.config/nvm/versions/node/v24.9.0/bin/node /home/main/Programs/boxedPINE/repl/src/omi-hub.ts
+WorkingDirectory=/home/main/Programs/boxedPINE
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

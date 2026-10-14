@@ -295,7 +295,7 @@ The author's plan (2026-10-11): XR spaces from `breadboard/`, a text track of th
 **Done 2026-10-11, in user space:** the eMMC over NBD in a paused RISC-V `virt` machine (SPEC-07 I-94), with an SD card standing in for eMMC on QEMU 8.2.
 
 **Waiting, because it runs on the system:**
-- boot `omi-files/omi-bios/bios.img` (4 MB raw) or polytron's kernel (`run-qemu.sh`) in QEMU, with an emulated eMMC as rosetta's flashable meta memory;
+- ~~boot `omi-files/omi-bios/bios.img` (4 MB raw)~~ **done 2026-10-13**: the image is zeros but for nine bytes at the reset vector 0xFFFFFFF0, which write "Hi" (0x48, 0x69) to port 0xE9 and halt; it boots in QEMU at login as part of the OMI hub (`repl/src/omi-hub.ts`, the user service `repl/systemd/omi-hub.service`), beside the agent bridge, with its QMP socket open. Still to do: polytron's kernel (`run-qemu.sh`), and an emulated eMMC as rosetta's flashable meta memory;
 - the QEMU **Generic Event Device** (the `virt` machine's event bus) to signal into the guest;
 - **eBPF** to observe the UDP claims and loopback traffic in the kernel without changing them (needs root);
 - a NAT64 gateway (Jool or TAYGA) if translation, not only the address form, is wanted.

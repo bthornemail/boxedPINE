@@ -93,11 +93,18 @@ const http = createServer((req, res) => {
   }
   res.writeHead(404).end();
 });
+// A copy kept up without an agent (AGENT_BRIDGE_STAY, the hub) keeps trying for the
+// port while another copy holds it, and takes it over when that one closes.
+const stay = Boolean(process.env.AGENT_BRIDGE_STAY);
 http.on('error', (e) => {
-  if ((e as NodeJS.ErrnoException).code === 'EADDRINUSE') { relay = true; log(`port ${port} is held by another agent's bridge; ${agent} relays through it`); }
-  else log(`the page's side is not up: ${(e as Error).message}`);
+  if ((e as NodeJS.ErrnoException).code === 'EADDRINUSE') {
+    if (!relay) log(`port ${port} is held by another agent's bridge; ${agent} relays through it${stay ? ', and will take the port when it is free' : ''}`);
+    relay = true;
+    if (stay) setTimeout(() => http.listen(port, '127.0.0.1'), 5000);
+  } else log(`the page's side is not up: ${(e as Error).message}`);
 });
-http.listen(port, '127.0.0.1', () => log(`page side on http://127.0.0.1:${port}`));
+http.on('listening', () => { relay = false; log(`page side on http://127.0.0.1:${port}`); });
+http.listen(port, '127.0.0.1');
 
 // ---- the agent's side: MCP over stdio ----
 const primary = `http://127.0.0.1:${port}`;
