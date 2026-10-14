@@ -13,6 +13,9 @@ Status, level by level: [wiki/progress/PROG-00 Homoiconic Syntax Tracker.md](../
 | `src/assets/commands.vtt` | The REPL commands (`src/define.commands.ts`) as WebVTT cues, one per command, for a TextTrack; a test keeps the two in step | ✅ tested |
 | `src/assets/omi_rosetta_stone.yaml` | The Rosetta Stone: circuits, canvases and sourcemaps (the 5T/6T/8T/10T breadboards) | Reference |
 | `src/assets/rosetta_stone.json`, `src/assets/codex.yaml` | The codex | Reference |
+| `src/agent.ts` | The agent channel's messages, the 16-index, tag routing (`tagRoute`) and the port as the 4-bit parity (`portFor`) | ✅ tested |
+| `src/tag-type.ts` | The tag functor: lower to upper promotes a subject to an object, upper to lower deprecates; at type level `ToTag<S>`, `Deprecate<S>` | ✅ tested (tsc checks the types) |
+| `src/canvasl.ts` | Markdown as a CanvasL document tree (after `types` OMI.Markdown), and a folder's lattice of shared tags | ✅ tested |
 | `src/rfc/`, `src/omi-ii.ts`, `src/omicron.ts`, `src/bin.ts`, `src/mcp.ts`, `src/rosetta.ts` | Earlier code: the RFC app, type sketches, the SSE server, the stream bus | Placeholders |
 | `index.html`, `canvas.html`, `examples.html` | Earlier pages | Placeholders |
 

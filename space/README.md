@@ -75,6 +75,13 @@ Prior work that informs this folder (see [wiki/usecases/USE-00 Use Case Scenario
 | `src/index.ts`, `src/main.ts` | Notes on closures, combinators and generators | Learning notes |
 | `index.html` | Earlier page | Placeholder |
 | `breadboard/` | The virtual breadboard (view 8): canvas plus Web Audio, its own `npm test` | ✅ working |
+| `index.html`, `src/hub.ts` | The Agent Commons in 3D: stations, the gnomon dial, the Dalí cross, synset and bridge agents | ✅ builds |
+| `map.html`, `src/map.ts` | The z-indexed maps: the colour wheel (2D, 2.5D), a character's state, the pair mask, the story, the terms box, the witness | ✅ tested modules |
+| `src/gnomon.ts`, `src/polyform.ts`, `src/commons-agents.ts` | Polytron's K and gnomon; the polyform generator from a MaxiCode declaration; the agents' steps | ✅ tested |
+| `src/avatar.ts`, `src/border.ts` | Avatars as z-indexed SVG parts (Light Garden's format); a name and cues in an SVG's margin | ✅ tested |
+| `src/exchange.ts`, `src/trace.ts` | The exchange (compareExchange through a Proxy, the Catch-22 reset); the 65,536 trace | ✅ tested |
+| `src/story.ts`, `src/score.ts`, `src/sound.ts`, `src/witness.ts` | The story on the plane; the score, sound graph and witness video | ✅ tested (sound and witness in headless Chrome) |
+| `src/identity.ts` | Identity without hashing, and its chain | ✅ tested |
 
 ## ⟦Placeholders⟧ for the author
 

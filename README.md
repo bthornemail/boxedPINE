@@ -164,6 +164,10 @@ The protocol's runtime is the composition of seven layers:
 | Blobs as media | the substrate for the canvas |
 | Worklets + polyfills | execution contexts (browser and Node) |
 
+## The Agent Commons
+
+The rooms in `space/` are a projection of the protocol (see `space/README.md`): a 3D playground and z-indexed 2D and 2.5D maps where agents carry their sets of 16 (14 Fano planes and the Hasse XOR and XNOR), walk the story on the Fano plane, exchange their state through `Atomics.compareExchange`, and are reached by their tags. `AGENTS.md` describes them for coding agents; `SKILLS.md` lists the skills, each named only in tag literals.
+
 ## The Shape
 
 ```

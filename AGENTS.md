@@ -33,3 +33,20 @@
 - `repl/src/agent-bridge.ts` is both an MCP-over-stdio server and a loopback HTTP bridge for `space/agent.html`, normally on `127.0.0.1:8743`; messages are memory-only and capped at 1000.
 - Run the bridge manually with `node repl/src/agent-bridge.ts`; use `AGENT_BRIDGE_STAY=1 AGENT_NAME=hub node repl/src/agent-bridge.ts </dev/null` for a standing hub. A second agent can share the port by setting `AGENT_NAME` and relaying through the first.
 - Open the channel page at `http://localhost:5173/space/agent.html` while `npm run dev` and the bridge are running. It supports typed messages, record pointing, WebXR, and optional browser Prompt API/WebMCP features; browser flags are not required for the basic channel.
+
+## The Agent Commons
+
+- `space/index.html` is the 3D playground (the gnomon dial and the Dalí cross at the Polytron station, synset and bridge agents walking); `space/map.html` the z-indexed maps: the 144 colour synsets on the colour wheel (2D, 2.5D), a character's 128-byte state, the 65,536-pair mask, the story on the plane, the terms box and the witness recorder.
+- Each of Light Garden's characters (`space/src/border.ts`, tags METATRON SOLOMON SOLON ASABIYAH ENOCH SPEAKER GENESIS OBSERVER) has its own set of 16 in `public/characters/<TAG>/`: the 14 Fano planes and two Hasse diagrams, XOR (read, place 0) and XNOR (write, place 15), each file's margin carrying the tag and its place. Regenerate with `node scripts/character-trees.mjs`.
+- The exchange (`space/src/exchange.ts`) is `Atomics.compareExchange(svg, 60 ⊕ frame, 127, 63)` on 128 bytes, handed over through a Proxy with Reflect and Catch (rosetta's interface carrier); its reset restores the literal at byte 22 (frame 42) unless `CATCH n` moves it.
+- The trace (`space/src/trace.ts`) XORs each of an agent's 16 files' places into a 65,536 buffer at its name pairs: an intact set traces to zero.
+
+## Tags
+
+- A tag is `/^[A-Z0-9]{1,8}$/` (rosetta `TAG`). Lower to upper promotes a word (a subject) to a tag (an object); upper to lower deprecates it (`rosetta/src/tag-type.ts`, at type level `ToTag<S>` and `Deprecate<S>`). A word over 8 letters cannot be a tag; a tag of digits has no case.
+- The bridge answers an agent by its tag in the Host (`metatron.localhost`) or the path (`/METATRON/...`); a Host-named agent must arrive on the port of its block of 16 whose nibble parity is its tag's (rosetta `portFor`), or gets 421.
+- No hash is identity anywhere here: identities are their entropy as tags, records their literals (see `types/AGENTS.md`).
+
+## Skills
+
+`SKILLS.md` lists the skills in the `omi-files` projects' format, each name made only of tag literals derived from the tags those projects share. The `AGENTS.md` and `SKILLS.md` files under `omi-files/` belong to their projects; read the nearest one before editing a project.
