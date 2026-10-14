@@ -19,7 +19,7 @@
 // Run by hand to try the page without the agent: node repl/src/agent-bridge.ts
 import { createServer, type ServerResponse } from 'node:http';
 import { createInterface } from 'node:readline';
-import { AGENT_TOOLS, BRIDGE_PORT, TAG, check, line, idOf, type Message, type Posted } from '../../rosetta/src/agent.ts';
+import { AGENT_TOOLS, BRIDGE_PORT, TAG, check, line, idOf, tagRoute, type Message, type Posted } from '../../rosetta/src/agent.ts';
 
 const port = Number(process.env.AGENT_BRIDGE_PORT ?? BRIDGE_PORT);
 const agent = process.env.AGENT_NAME ?? 'claude-code';
@@ -89,6 +89,19 @@ const http = createServer((req, res) => {
       log(line(p));
       res.writeHead(201, { 'content-type': 'application/json' }).end(JSON.stringify(p));
     });
+    return;
+  }
+  // an agent by its tag: //metatron.localhost:8743/P2/L6 or /METATRON/P2/L6 (rosetta tagRoute)
+  const route = tagRoute(req.headers.host, new URL(req.url ?? '/', 'http://bridge').pathname);
+  if (route && req.method === 'GET') {
+    const said = posted.filter((p) => p.who === route.agent || p.by === route.agent.toLowerCase());
+    res.writeHead(200, { 'content-type': 'application/json' }).end(JSON.stringify({ ...route, said }));
+    return;
+  }
+  if (route && req.method === 'POST' && route.terms.length) {
+    const m = check({ kind: 'say', from: 'author', text: route.text });
+    if (typeof m === 'string') { res.writeHead(400).end(m); return; }
+    res.writeHead(200, { 'content-type': 'application/json' }).end(JSON.stringify(post(m)));
     return;
   }
   res.writeHead(404).end();

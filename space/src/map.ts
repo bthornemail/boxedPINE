@@ -18,7 +18,9 @@ import { BRIDGE_PORT } from '../../rosetta/src/agent.ts';
 import { newState, frameGate, written, READ } from './exchange.ts';
 import { CHARACTER_TAGS } from './border.ts';
 import { LINES, choices, linesThrough, newWalker, step as storyStep, type Passage } from './story.ts';
-import { parseTerms } from './score.ts';
+import { parseTerms, BEAT } from './score.ts';
+import { recordWitness } from './witness.ts';
+import { fileOf } from './exchange.ts';
 
 type Color = AvatarAgent & { parent: number | null; hueFrom: string | null };
 type Placed = { a: AvatarAgent; x: number; y: number; z: number; state: number; beat: number; next: number; el: SVGGElement; to?: { x: number; y: number } };
@@ -183,6 +185,18 @@ function showStory(last: ReturnType<typeof storyStep> | null) {
   box.append(k);
 }
 pick.addEventListener('change', startWalk);
+
+// ── The witness: the selected agent's next 8 steps by K, recorded to video (witness.ts) ──
+document.querySelector('#witness-go')!.addEventListener('click', async () => {
+  const button = document.querySelector<HTMLButtonElement>('#witness-go')!, canvas = document.querySelector<HTMLCanvasElement>('#witness-canvas')!, video = document.querySelector<HTMLVideoElement>('#witness-video')!;
+  const ahead = structuredClone(walker);
+  const steps = [...Array(8).keys()].map((i) => { const s = storyStep(ahead, passages); return { point: s.point, line: s.line, state: fileOf(Math.round(i * BEAT * 60)) === 'Hasse_XOR' ? 'read' as const : 'write' as const }; });
+  const hue = colors.find((c) => c.word.toUpperCase() === pick.value)?.hue ?? (Object.entries(CHARACTER_TAGS).findIndex(([, t]) => t === pick.value) * 51) % 360;
+  button.disabled = true; button.textContent = 'recording…'; canvas.style.display = 'block'; video.style.display = 'none';
+  try { video.src = await recordWitness(canvas, pick.value, hue, steps); video.style.display = 'block'; canvas.style.display = 'none'; }
+  catch (e) { document.querySelector('#terms-said')!.textContent = `the witness could not record: ${(e as Error).message}`; }
+  button.disabled = false; button.textContent = 'record the witness';
+});
 
 // ── Uppercase terms: METATRON P2 L6 takes a step; CATCH n moves the reset (score.ts parseTerms) ──
 document.querySelector('#terms-form')!.addEventListener('submit', (e) => {

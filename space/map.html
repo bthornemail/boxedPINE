@@ -38,6 +38,10 @@
     <div id="story-choices" class="views" style="flex-wrap:wrap"></div>
     <form id="terms-form" class="views"><input id="terms" aria-label="Uppercase terms" placeholder="METATRON P2 L6 · CATCH 22" autocomplete="off" style="flex:1;background:#0c1015;color:inherit;border:1px solid var(--line);border-radius:5px;padding:6px 9px;font:inherit"><button>go</button></form>
     <div id="terms-said" class="kicker" aria-live="polite"></div>
+    <div class="kicker" style="margin-top:14px">the witness · 8 steps by K, drawn, heard, recorded</div>
+    <div class="views"><button id="witness-go">record the witness</button></div>
+    <canvas id="witness-canvas" width="560" height="300" style="width:100%;display:none;border-radius:4px"></canvas>
+    <video id="witness-video" controls playsinline style="width:100%;display:none;border-radius:4px"></video>
   </section>
   <script type="module" src="./src/map.ts"></script>
 </body>

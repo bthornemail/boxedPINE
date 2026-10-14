@@ -32,6 +32,23 @@ export const tagOf = (id: string) => {
 /** And back: 3X -> I-141, 3JB -> I-127b. */
 export const idOf = (tag: string) => `I-${parseInt(tag.slice(0, 2), 36)}${tag.slice(2).toLowerCase()}`;
 
+/** An agent reached by its tag: the Host's first label (http://metatron.localhost/...) or the path's first
+ *  segment (/METATRON/...), then the path's segments as terms, each an /A-Z0-9/ tag. The author:
+ *  "each agent should be reachable by the tag literal URI or URL, with the escape character inverted,
+ *  so / instead of \\, in the host header": \\METATRON\P2\L6 inverted is //METATRON/P2/L6, METATRON
+ *  the host. A host folds to lowercase (metatron: the tag XOR 0x20 letter by letter), so it is read
+ *  back in uppercase; a path keeps its case. Returns null when no tag is there. */
+export function tagRoute(host: string | undefined, pathname: string): { agent: string; terms: string[]; via: 'host' | 'path'; text: string } | null {
+  const segs = pathname.split('/').filter(Boolean).map((s) => decodeURIComponent(s));
+  const label = (host ?? '').split(':')[0]!.split('.');
+  const fromHost = label.length > 1 && label.at(-1) === 'localhost' && /^[a-z0-9]{1,8}$/i.test(label[0]!) ? label[0]!.toUpperCase() : null;
+  const agent = fromHost ?? (segs[0] && TAG.test(segs[0]) ? segs[0] : null);
+  if (!agent) return null;
+  const terms = fromHost ? segs : segs.slice(1);
+  if (!terms.every((t) => TAG.test(t))) return null;
+  return { agent, terms, via: fromHost ? 'host' : 'path', text: [agent, ...terms].join(' ') };
+}
+
 /** Check a message arriving from outside; return it, or the reason it is refused. */
 export const AGENT_NAME = /^[a-z0-9-]{1,32}$/;
 export function check(x: unknown): Message | string {

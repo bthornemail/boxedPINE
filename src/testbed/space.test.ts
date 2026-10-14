@@ -412,3 +412,43 @@ test('CATCH 22, with the space: a command pair, the verb and the reset\'s index;
   assert.equal(written(state), 1);
   assert.throws(() => { gate.catchAt = 200; }, TypeError, 'an index outside the 128 bytes is refused');
 });
+
+test('The witness draws the story\'s (cyclic) plane: every line is three collinear points, except the one drawn as the circle', async () => {
+  globalThis.AudioContext ??= class {} as never; // witness.ts imports sound.ts, which only builds graphs when asked
+  const { P, CIRCLE, CENTRE } = await import('../../space/src/witness.ts');
+  const { LINES } = await import('../../space/src/story.ts');
+  const area = (a: number[], b: number[], c: number[]) => Math.abs((b[0]! - a[0]!) * (c[1]! - a[1]!) - (c[0]! - a[0]!) * (b[1]! - a[1]!));
+  const circles = LINES.filter((l) => area(P[l[0]!]!, P[l[1]!]!, P[l[2]!]!) > 1e-9);
+  assert.deepEqual(circles.map((l) => [...l].sort().join()), [CIRCLE], 'six lines straight, one the circle');
+  const [cx, cy] = P[CENTRE]!;
+  const r = CIRCLE.split(',').map((p) => Math.hypot(P[Number(p)]![0] - cx, P[Number(p)]![1] - cy));
+  assert.ok(Math.abs(r[0]! - r[1]!) < 0.02 && Math.abs(r[0]! - r[2]!) < 0.02, 'the circle\'s three points are about equally far from the centre');
+});
+
+test('An agent by its tag: //metatron.localhost/P2/L6 (the host folds to lowercase, the tag XOR 0x20) or /METATRON/P2/L6', async () => {
+  const { tagRoute } = await import('../../rosetta/src/agent.ts');
+  assert.equal(new URL('http://METATRON/').host, 'metatron', 'a host folds to lowercase');
+  assert.equal([...'METATRON'].map((c) => String.fromCharCode(c.charCodeAt(0) ^ 0x20)).join(''), 'metatron', 'which is the tag XOR 0x20, letter by letter');
+  assert.deepEqual(tagRoute('metatron.localhost:8743', '/P2/L6'), { agent: 'METATRON', terms: ['P2', 'L6'], via: 'host', text: 'METATRON P2 L6' });
+  assert.deepEqual(tagRoute('127.0.0.1:8743', '/METATRON/P2/L6'), { agent: 'METATRON', terms: ['P2', 'L6'], via: 'path', text: 'METATRON P2 L6' });
+  assert.deepEqual(tagRoute('localhost:8743', '/CATCH/22'), { agent: 'CATCH', terms: ['22'], via: 'path', text: 'CATCH 22' }, 'the command pair as a path');
+  assert.equal(tagRoute('localhost:8743', '/metatron'), null, 'a path keeps its case: lowercase is not a tag');
+  assert.equal(tagRoute('localhost:8743', '/events'), null);
+  assert.equal(tagRoute('toolongname9.localhost', '/'), null, 'a host label of more than 8 is no tag');
+});
+
+test('The bridge answers an agent by its tag, and a POST says its terms', { timeout: 30000 }, async () => {
+  const { spawn } = await import('node:child_process');
+  const port = 8791;
+  const bridge = spawn(process.execPath, [new URL('../../repl/src/agent-bridge.ts', import.meta.url).pathname], { env: { ...process.env, AGENT_BRIDGE_PORT: String(port), AGENT_BRIDGE_STAY: '1', AGENT_NAME: 'hub' }, stdio: ['pipe', 'ignore', 'ignore'] });
+  try {
+    for (let i = 0; i < 40; i++) { try { if ((await fetch(`http://127.0.0.1:${port}/health`)).ok) break; } catch {} await new Promise((r) => setTimeout(r, 150)); }
+    const said = await (await fetch(`http://127.0.0.1:${port}/METATRON/P2/L6`, { method: 'POST' })).json();
+    assert.equal(said.text, 'METATRON P2 L6');
+    const { request } = await import('node:http');
+    const viaHost = await new Promise<{ agent: string; via: string }>((ok, fail) => request({ host: '127.0.0.1', port, path: '/P2/L6', headers: { host: `metatron.localhost:${port}` } }, (res) => { let b = ''; res.on('data', (d) => (b += d)).on('end', () => ok(JSON.parse(b))); }).on('error', fail).end());
+    assert.equal(viaHost.agent, 'METATRON');
+    assert.equal(viaHost.via, 'host');
+    assert.equal((await fetch(`http://127.0.0.1:${port}/nothing`)).status, 404);
+  } finally { bridge.kill(); }
+});
