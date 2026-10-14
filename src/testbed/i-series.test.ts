@@ -8,7 +8,7 @@ import { readdirSync } from 'node:fs';
 
 const src = new URL('../../proofs/js/catalog/', import.meta.url).pathname;
 const modules = readdirSync(src)
-  .filter((f) => /^I-1\d\d[a-z]?\.ts$/.test(f))
+  .filter((f) => /^I-\d{3}[a-z]?\.ts$/.test(f))
   .sort((a, b) => (a === 'I-122.ts' ? -1 : b === 'I-122.ts' ? 1 : a.localeCompare(b)));
 
 for (const file of modules) {
@@ -19,7 +19,7 @@ for (const file of modules) {
   });
 }
 
-test('the I-series is all here (the roll-up and 66 modules)', () => assert.equal(modules.length, 73));
+test('the I-series is all here (the roll-up and 72 modules)', () => assert.equal(modules.length, 73));
 
 test('proofs/js: every subject-predicate-object triple holds and every must-reject fails', () => {
   const r = spawnSync(process.execPath, [new URL('../../proofs/js/spo/check.mjs', import.meta.url).pathname], { encoding: 'utf8', timeout: 60000 });
