@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { RULES, makeGrammar, classifyAll } from '../../rosetta/src/grammar/grammar.ts';
 import { makeKernel, regenerate, admissible, digest, readAsProgram } from '../../rosetta/src/grammar/kernel.ts';
+import { indexOfOrdinal, ordinalOfIndex } from '../../rosetta/src/grammar/interface.ts';
 import { catalog, readCatalog, CATALOG } from '../../rosetta/src/grammar/catalog.ts';
 
 test('The grammar holds the 29 Level 3 symbols from DeepSeek0, plus the EXCEPTION face', () => {
@@ -39,6 +40,27 @@ test('The handler admits grammar positions and refuses others', () => {
   k.state['5p'] = 42;
   assert.equal(k.state['5p'], 42);
   assert.throws(() => { k.state['hello world'] = 1; }, TypeError);
+});
+
+test('The interface carries Proxy, Reflect, Catch results, and tagged template literals', () => {
+  const k = makeKernel();
+  k.state['5p'] = 42;
+  assert.equal(k.interface.Reflect.get(k.state, '5p'), 42);
+  const literal = k.interface.template`position=${'5p'}`;
+  assert.equal(literal.text, 'position=5p');
+  assert.deepEqual([...literal.values], ['5p']);
+  assert.equal(literal.raw, literal.strings.raw);
+  assert.deepEqual(k.interface.catch(() => 7), { ok: true, value: 7 });
+  const caught = k.interface.catch(() => { throw new TypeError('deviation'); });
+  assert.equal(caught.ok, false);
+  if (!caught.ok) assert.equal((caught.error as Error).message, 'deviation');
+});
+
+test('The interface keeps ordinal records and zero-based storage indices distinct', () => {
+  assert.equal(indexOfOrdinal(11), 10);
+  assert.equal(ordinalOfIndex(10), 11);
+  assert.throws(() => indexOfOrdinal(0), RangeError);
+  assert.throws(() => ordinalOfIndex(-1), RangeError);
 });
 
 test('A step is a compare-exchange: the miss reports the XOR difference', () => {

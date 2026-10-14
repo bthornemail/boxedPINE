@@ -15,6 +15,7 @@
 //     Pass a shared Map to get the transcript's "global scope" behaviour.
 
 import { makeGrammar, POSITION_RULES } from './grammar.ts';
+import { DEFAULT_INTERFACE, type KernelInterface } from './interface.ts';
 
 export type Grammar = Map<string, RegExp>;
 
@@ -29,23 +30,23 @@ export const admissible = (position: unknown, grammar: Grammar) => classify(posi
 type State = Record<string, number> & { learn?: (name: string, source: string) => string; grammar?: Grammar };
 
 /** A Proxy over plain state: every position read or written must pass the grammar. */
-export function makeHandler(state: Record<string, number>, grammar: Grammar): State {
-  return new Proxy(state as State, {
+export function makeHandler(state: Record<string, number>, grammar: Grammar, runtime: KernelInterface = DEFAULT_INTERFACE): State {
+  return new runtime.Proxy(state as State, {
     get(target, position) {
-      if (typeof position === 'symbol') return Reflect.get(target, position);
+      if (typeof position === 'symbol') return runtime.Reflect.get(target, position);
       if (position === 'learn') return (name: string, source: string) => { grammar.set(name, new RegExp(source)); return name; };
       if (position === 'grammar') return grammar;
       if (!admissible(position, grammar)) throw new TypeError(`inadmissible position read: ${position}`);
-      return Reflect.get(target, position);
+      return runtime.Reflect.get(target, position);
     },
     set(target, position, value) {
-      if (typeof position === 'symbol') return Reflect.set(target, position, value);
+      if (typeof position === 'symbol') return runtime.Reflect.set(target, position, value);
       if (!admissible(position, grammar)) throw new TypeError(`inadmissible position write: ${position}`);
-      return Reflect.set(target, position, value);
+      return runtime.Reflect.set(target, position, value);
     },
     has(target, position) {
-      if (typeof position === 'symbol') return Reflect.has(target, position);
-      return admissible(position, grammar) && Reflect.has(target, position);
+      if (typeof position === 'symbol') return runtime.Reflect.has(target, position);
+      return admissible(position, grammar) && runtime.Reflect.has(target, position);
     },
   });
 }
@@ -71,13 +72,14 @@ type HistoryEntry =
   | { generation: number; position: string; result: ReturnType<typeof compareExchange> }
   | { generation: number; learned: string; source: string };
 
-export function makeKernel(grammar: Grammar = makeGrammar(POSITION_RULES), initial: Record<string, number> = {}) {
-  const state = makeHandler(initial, grammar);
+export function makeKernel(grammar: Grammar = makeGrammar(POSITION_RULES), initial: Record<string, number> = {}, runtime: KernelInterface = DEFAULT_INTERFACE) {
+  const state = makeHandler(initial, grammar, runtime);
   const history: HistoryEntry[] = [];
   let generation = 0;
 
   return {
     state,
+    interface: runtime,
     history,
     get generation() { return generation; },
 

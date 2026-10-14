@@ -1,0 +1,22 @@
+{
+  "schema": "boxedpine.metaverse.environment.v0",
+  "id": "boxedpine-agent-commons",
+  "title": "boxedPINE Agent Commons",
+  "runtime": {
+    "kind": "metaverse-kit",
+    "rootEnv": "METAVERSE_KIT_ROOT",
+    "clientUrl": "http://localhost:3000",
+    "serverUrl": "http://localhost:8080",
+    "world": "world",
+    "space": "demo",
+    "tile": "z0/x0/y0"
+  },
+  "projections": [
+    "commons",
+    "breadboard",
+    "meta",
+    "agent-channel",
+    "polytron",
+    "metaverse-kit-3d"
+  ]
+}

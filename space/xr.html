@@ -22,6 +22,9 @@ html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font:13p
 #stage canvas{display:block;width:100%;height:100%}
 .panel{position:fixed;top:16px;left:16px;width:min(360px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;
   background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:14px;display:grid;gap:12px;backdrop-filter:blur(6px)}
+.space-nav{position:fixed;top:16px;right:16px;z-index:2;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.space-nav a{color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:5px 9px;text-decoration:none;backdrop-filter:blur(6px)}
+.space-nav a:hover,.space-nav a:focus-visible{border-color:var(--sel);color:var(--sel)}
 h1{font:600 1.5rem/1.1 var(--display);margin:0}
 .label{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
@@ -44,6 +47,7 @@ video{display:none}
 </head>
 <body>
 <div id="stage" aria-label="The four XOR builds in 3D"></div>
+<nav class="space-nav" aria-label="Space rooms"><a href="./index.html">Commons</a><a href="./meta.html">Meta</a><a href="./agent.html">Agent</a><a href="./examples.html">Examples</a><a href="./polytron.html">Polytron</a><a href="./metaverse.html">Living world</a></nav>
 <section class="panel" id="panel" aria-labelledby="title">
   <div>
     <div class="label">Breadboard · 3D and 2D · one reading</div>

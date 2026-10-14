@@ -28,12 +28,16 @@
     .hasse image { opacity: 0.25; } .hasse image.lit { opacity: 1; } .hasse image.last { outline: 2px solid var(--hot); }
     .hasse text { fill: var(--dim); font: 11px ui-monospace, monospace; }
     .caps { color: var(--dim); font-size: 12px; margin-top: 6px; }
+    nav { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+    nav a { color:var(--ink); text-decoration:none; border:1px solid var(--line); border-radius:5px; padding:5px 9px; }
+    nav a:hover, nav a:focus-visible { border-color:var(--agent); color:var(--agent); }
   </style>
 </head>
 <body>
   <header>
     <h1>Agent Channel</h1>
     <div class="status" id="status">connecting to the bridge on 127.0.0.1:8743 …</div>
+    <nav aria-label="Space rooms"><a href="./index.html">Commons</a><a href="./xr.html">Breadboard</a><a href="./meta.html">Meta</a><a href="./examples.html">Examples</a><a href="./polytron.html">Polytron</a><a href="./metaverse.html">Living world</a></nav>
   </header>
   <main>
     <div class="grid">
