@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Commons Map</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&family=JetBrains+Mono:wght@400;600&display=swap">
+  <style>
+    :root { color-scheme:dark; --ink:#edf0e9; --muted:#9da6ad; --line:#34404a; --panel:#10151bd9; --cyan:#74c8c0; }
+    * { box-sizing:border-box; }
+    html,body { margin:0; min-height:100%; background:#0c1015; color:var(--ink); font:13px/1.5 "JetBrains Mono",ui-monospace,monospace; }
+    #map { position:fixed; inset:0; width:100%; height:100%; }
+    .panel { position:fixed; top:16px; left:16px; width:min(380px,calc(100vw - 32px)); max-height:calc(100vh - 32px); overflow:auto; padding:15px; border:1px solid var(--line); border-radius:9px; background:var(--panel); backdrop-filter:blur(12px); }
+    nav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; } nav a,button { color:inherit; background:none; border:1px solid var(--line); border-radius:5px; padding:6px 9px; text-decoration:none; font:inherit; cursor:pointer; }
+    nav a:hover,nav a:focus-visible,button:hover,button:focus-visible,button[aria-pressed="true"] { color:var(--cyan); border-color:var(--cyan); }
+    .kicker { color:var(--muted); font-size:10px; letter-spacing:.1em; text-transform:uppercase; } h1 { margin:3px 0 8px; font:600 2rem/1 Newsreader,Georgia,serif; } p { color:var(--muted); }
+    .views { display:flex; gap:6px; margin:12px 0; }
+  </style>
+</head>
+<body>
+  <svg id="map" role="img" aria-label="The colour synsets on the colour wheel"></svg>
+  <section class="panel" aria-labelledby="title">
+    <nav aria-label="Space rooms"><a href="./index.html">Commons (3D)</a><a href="./agent.html">Agent</a><a href="./polytron.html">Polytron</a></nav>
+    <div class="kicker">Agent Commons · z-indexed maps</div>
+    <h1 id="title">The colour wheel</h1>
+    <p>The 144 synsets of WordNet's <i>color</i> (proofs I-199) as agents: hue is the angle, depth in WordNet the distance out. Light Garden's eight characters stand on their hues. In 2D deeper synsets lie on top; in 2.5D depth lifts them. Each steps K on its own beat; speakers on the agent bridge join and walk to a colour they name.</p>
+    <div class="views"><button data-view="2d">2D</button><button data-view="2.5d">2.5D</button></div>
+    <div id="status" aria-live="polite"></div>
+  </section>
+  <script type="module" src="./src/map.ts"></script>
+</body>
+</html>

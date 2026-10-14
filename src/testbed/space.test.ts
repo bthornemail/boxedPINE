@@ -95,3 +95,44 @@ test('The Commons agents: synset agents and bridge agents step K; messages namin
   assert.equal(namedSynset('is that a Physical Entity or a thing?', m.agents)?.word, 'physical entity', 'the longer name first');
   assert.equal(namedSynset('nothing here', m.agents), undefined);
 });
+
+test('The colour synsets: 144, one tree to entity, each hue its own CSS name or its nearest ancestor\'s', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { colors } = JSON.parse(readFileSync(new URL('../../public/polytron/colors.json', import.meta.url), 'utf8')) as { colors: { id: number; parent: number | null; word: string; depth: number; hue: number | null; hueFrom: string | null }[] };
+  assert.equal(colors.length, 144, 'proofs I-199');
+  const byId = new Map(colors.map((c) => [c.id, c]));
+  assert.equal(byId.size, 144);
+  assert.deepEqual(colors.filter((c) => c.parent === null).map((c) => c.word), ['entity']);
+  for (const c of colors) {
+    if (c.parent !== null) assert.equal(c.depth, byId.get(c.parent)!.depth + 1, `${c.word}: one deeper than its parent`);
+    if (c.hue !== null) {
+      assert.ok(c.hue >= 0 && c.hue < 360);
+      if (c.hueFrom !== c.word) { const p = byId.get(c.parent!)!; assert.equal(c.hue, p.hue, `${c.word} inherits ${p.word}'s hue`); }
+    }
+  }
+  const hue = (w: string) => colors.find((c) => c.word === w)!.hue;
+  assert.deepEqual(['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'].map(hue), [0, 39, 60, 120, 240, 275, 300]);
+  assert.equal(hue('black'), null);
+});
+
+test('An agent avatar: Light Garden\'s z-indexed parts, drawn lowest first, recorded without a hash', async () => {
+  const { avatarParts, avatarSvg, avatarRecords } = await import('../../space/src/avatar.ts');
+  const red = { id: 104962784, word: 'red', depth: 7, hue: 0 };
+  assert.deepEqual(avatarParts(red).map((p) => [p.category, p.zIndex]), [['ring', 0], ['head', 5], ['body', 10], ['label', 20]]);
+  const svg = avatarSvg(red);
+  assert.ok(svg.startsWith('<svg') && svg.endsWith('</svg>'));
+  assert.ok(svg.indexOf('data-part="ring.0"') < svg.indexOf('data-part="label.104962784"'), 'lowest z first');
+  assert.equal((svg.match(/<g /g) ?? []).length, (svg.match(/<\/g>/g) ?? []).length);
+  const lines = avatarRecords(red).trim().split('\n').map((l) => JSON.parse(l));
+  assert.deepEqual(lines.map((l) => l.kind), ['avatar.part', 'avatar.part', 'avatar.part', 'avatar.part', 'avatar.manifest']);
+  assert.deepEqual(lines.at(-1).payload.z_order, [0, 5, 10, 20]);
+  assert.ok(!JSON.stringify(lines).includes('sha'), 'no hash: the parts are named by their ids');
+  assert.equal(avatarSvg(red), avatarSvg(red), 'the same agent, the same avatar');
+  assert.ok(avatarSvg({ ...red, word: '<b>' }).includes('&lt;b&gt;'), 'the word is escaped');
+});
+
+test('Light Garden\'s characters stand on whole sectors of 30', () => {
+  const ratios = [0, 1 / 12, 1 / 6, 1 / 3, 2 / 3, 3 / 4, 5 / 6];
+  assert.deepEqual(ratios.map((r) => Math.round(r * 360)), [0, 30, 60, 120, 240, 270, 300]);
+  assert.ok(ratios.every((r) => Number.isInteger(Math.round(r * 360 * 1e9) / 1e9 / 30)), 'each a whole number of 30-degree sectors');
+});

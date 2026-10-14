@@ -1,0 +1,1157 @@
+{
+ "source": "WordNet 3.0 (Prolog): color, the synsets below it, its route to entity (proofs I-199); hues from CSS Color 4 names",
+ "colors": [
+  {
+   "id": 100001740,
+   "parent": null,
+   "word": "entity",
+   "depth": 0,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 100002137,
+   "parent": 100001740,
+   "word": "abstraction",
+   "depth": 1,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 100024264,
+   "parent": 100002137,
+   "word": "attribute",
+   "depth": 2,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104916342,
+   "parent": 100024264,
+   "word": "property",
+   "depth": 3,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104950126,
+   "parent": 104916342,
+   "word": "visual property",
+   "depth": 4,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104956594,
+   "parent": 104950126,
+   "word": "color",
+   "depth": 5,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104957176,
+   "parent": 104956594,
+   "word": "primary color",
+   "depth": 6,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104958146,
+   "parent": 104956594,
+   "word": "heather mixture",
+   "depth": 6,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104958865,
+   "parent": 104956594,
+   "word": "mottle",
+   "depth": 6,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104959230,
+   "parent": 104956594,
+   "word": "shade",
+   "depth": 6,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104959672,
+   "parent": 104956594,
+   "word": "chromatic color",
+   "depth": 6,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104960079,
+   "parent": 104956594,
+   "word": "achromatic color",
+   "depth": 6,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104975988,
+   "parent": 104956594,
+   "word": "coloration",
+   "depth": 6,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104976952,
+   "parent": 104956594,
+   "word": "complexion",
+   "depth": 6,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104978561,
+   "parent": 104956594,
+   "word": "nonsolid color",
+   "depth": 6,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104957356,
+   "parent": 104957176,
+   "word": "primary color for pigments",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104957589,
+   "parent": 104957176,
+   "word": "primary color for light",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104958302,
+   "parent": 104959230,
+   "word": "mellowness",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104958460,
+   "parent": 104959230,
+   "word": "richness",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104959567,
+   "parent": 104959230,
+   "word": "undertone",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104962784,
+   "parent": 104959672,
+   "word": "red",
+   "depth": 7,
+   "hue": 0,
+   "hueFrom": "red"
+  },
+  {
+   "id": 104965179,
+   "parent": 104959672,
+   "word": "orange",
+   "depth": 7,
+   "hue": 39,
+   "hueFrom": "orange"
+  },
+  {
+   "id": 104965371,
+   "parent": 104959672,
+   "word": "salmon",
+   "depth": 7,
+   "hue": 6,
+   "hueFrom": "salmon"
+  },
+  {
+   "id": 104965661,
+   "parent": 104959672,
+   "word": "yellow",
+   "depth": 7,
+   "hue": 60,
+   "hueFrom": "yellow"
+  },
+  {
+   "id": 104966017,
+   "parent": 104959672,
+   "word": "blond",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104967191,
+   "parent": 104959672,
+   "word": "green",
+   "depth": 7,
+   "hue": 120,
+   "hueFrom": "green"
+  },
+  {
+   "id": 104968895,
+   "parent": 104959672,
+   "word": "blue",
+   "depth": 7,
+   "hue": 240,
+   "hueFrom": "blue"
+  },
+  {
+   "id": 104970059,
+   "parent": 104959672,
+   "word": "purple",
+   "depth": 7,
+   "hue": 300,
+   "hueFrom": "purple"
+  },
+  {
+   "id": 104970916,
+   "parent": 104959672,
+   "word": "pink",
+   "depth": 7,
+   "hue": 350,
+   "hueFrom": "pink"
+  },
+  {
+   "id": 104971928,
+   "parent": 104959672,
+   "word": "brown",
+   "depth": 7,
+   "hue": 0,
+   "hueFrom": "brown"
+  },
+  {
+   "id": 104974340,
+   "parent": 104959672,
+   "word": "olive",
+   "depth": 7,
+   "hue": 60,
+   "hueFrom": "olive"
+  },
+  {
+   "id": 104974575,
+   "parent": 104959672,
+   "word": "pastel",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104975739,
+   "parent": 104959672,
+   "word": "complementary color",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104960277,
+   "parent": 104960079,
+   "word": "black",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": "black"
+  },
+  {
+   "id": 104960729,
+   "parent": 104960079,
+   "word": "white",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": "white"
+  },
+  {
+   "id": 104961691,
+   "parent": 104960079,
+   "word": "gray",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": "gray"
+  },
+  {
+   "id": 104976188,
+   "parent": 104975988,
+   "word": "hair coloring",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104976319,
+   "parent": 104975988,
+   "word": "pigmentation",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104976687,
+   "parent": 104975988,
+   "word": "depigmentation",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104978792,
+   "parent": 104975988,
+   "word": "protective coloration",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104977247,
+   "parent": 104976952,
+   "word": "paleness",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104977412,
+   "parent": 104976952,
+   "word": "ruddiness",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104977561,
+   "parent": 104976952,
+   "word": "lividness",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104977946,
+   "parent": 104976952,
+   "word": "sallowness",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104978050,
+   "parent": 104976952,
+   "word": "tawniness",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104978216,
+   "parent": 104976952,
+   "word": "darkness",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104978371,
+   "parent": 104976952,
+   "word": "whiteness",
+   "depth": 7,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104957854,
+   "parent": 104957589,
+   "word": "primary subtractive color for light",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104963111,
+   "parent": 104962784,
+   "word": "sanguine",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "red"
+  },
+  {
+   "id": 104963201,
+   "parent": 104962784,
+   "word": "chrome red",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "red"
+  },
+  {
+   "id": 104963307,
+   "parent": 104962784,
+   "word": "Turkey red",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "red"
+  },
+  {
+   "id": 104963449,
+   "parent": 104962784,
+   "word": "cardinal",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "red"
+  },
+  {
+   "id": 104963588,
+   "parent": 104962784,
+   "word": "crimson",
+   "depth": 8,
+   "hue": 348,
+   "hueFrom": "crimson"
+  },
+  {
+   "id": 104963740,
+   "parent": 104962784,
+   "word": "dark red",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "dark red"
+  },
+  {
+   "id": 104964287,
+   "parent": 104962784,
+   "word": "purplish red",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "red"
+  },
+  {
+   "id": 104964443,
+   "parent": 104962784,
+   "word": "cerise",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "red"
+  },
+  {
+   "id": 104964977,
+   "parent": 104962784,
+   "word": "scarlet",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "red"
+  },
+  {
+   "id": 104965451,
+   "parent": 104965179,
+   "word": "reddish orange",
+   "depth": 8,
+   "hue": 39,
+   "hueFrom": "orange"
+  },
+  {
+   "id": 104966114,
+   "parent": 104965661,
+   "word": "canary yellow",
+   "depth": 8,
+   "hue": 60,
+   "hueFrom": "yellow"
+  },
+  {
+   "id": 104966240,
+   "parent": 104965661,
+   "word": "amber",
+   "depth": 8,
+   "hue": 60,
+   "hueFrom": "yellow"
+  },
+  {
+   "id": 104966428,
+   "parent": 104965661,
+   "word": "brownish yellow",
+   "depth": 8,
+   "hue": 60,
+   "hueFrom": "yellow"
+  },
+  {
+   "id": 104966543,
+   "parent": 104965661,
+   "word": "gamboge",
+   "depth": 8,
+   "hue": 60,
+   "hueFrom": "yellow"
+  },
+  {
+   "id": 104966649,
+   "parent": 104965661,
+   "word": "old gold",
+   "depth": 8,
+   "hue": 60,
+   "hueFrom": "yellow"
+  },
+  {
+   "id": 104966717,
+   "parent": 104965661,
+   "word": "orange yellow",
+   "depth": 8,
+   "hue": 60,
+   "hueFrom": "yellow"
+  },
+  {
+   "id": 104966941,
+   "parent": 104965661,
+   "word": "pale yellow",
+   "depth": 8,
+   "hue": 60,
+   "hueFrom": "yellow"
+  },
+  {
+   "id": 104967094,
+   "parent": 104965661,
+   "word": "greenish yellow",
+   "depth": 8,
+   "hue": 60,
+   "hueFrom": "yellow"
+  },
+  {
+   "id": 104967561,
+   "parent": 104967191,
+   "word": "greenishness",
+   "depth": 8,
+   "hue": 120,
+   "hueFrom": "green"
+  },
+  {
+   "id": 104967674,
+   "parent": 104967191,
+   "word": "sea green",
+   "depth": 8,
+   "hue": 146,
+   "hueFrom": "sea green"
+  },
+  {
+   "id": 104967801,
+   "parent": 104967191,
+   "word": "sage green",
+   "depth": 8,
+   "hue": 120,
+   "hueFrom": "green"
+  },
+  {
+   "id": 104967882,
+   "parent": 104967191,
+   "word": "bottle green",
+   "depth": 8,
+   "hue": 120,
+   "hueFrom": "green"
+  },
+  {
+   "id": 104967974,
+   "parent": 104967191,
+   "word": "chrome green",
+   "depth": 8,
+   "hue": 120,
+   "hueFrom": "green"
+  },
+  {
+   "id": 104968056,
+   "parent": 104967191,
+   "word": "emerald",
+   "depth": 8,
+   "hue": 120,
+   "hueFrom": "green"
+  },
+  {
+   "id": 104968139,
+   "parent": 104967191,
+   "word": "olive green",
+   "depth": 8,
+   "hue": 120,
+   "hueFrom": "green"
+  },
+  {
+   "id": 104968257,
+   "parent": 104967191,
+   "word": "yellow green",
+   "depth": 8,
+   "hue": 80,
+   "hueFrom": "yellow green"
+  },
+  {
+   "id": 104968426,
+   "parent": 104967191,
+   "word": "bluish green",
+   "depth": 8,
+   "hue": 120,
+   "hueFrom": "green"
+  },
+  {
+   "id": 104968749,
+   "parent": 104967191,
+   "word": "jade green",
+   "depth": 8,
+   "hue": 120,
+   "hueFrom": "green"
+  },
+  {
+   "id": 104969242,
+   "parent": 104968895,
+   "word": "azure",
+   "depth": 8,
+   "hue": 180,
+   "hueFrom": "azure"
+  },
+  {
+   "id": 104969431,
+   "parent": 104968895,
+   "word": "powder blue",
+   "depth": 8,
+   "hue": 187,
+   "hueFrom": "powder blue"
+  },
+  {
+   "id": 104969540,
+   "parent": 104968895,
+   "word": "steel blue",
+   "depth": 8,
+   "hue": 207,
+   "hueFrom": "steel blue"
+  },
+  {
+   "id": 104969617,
+   "parent": 104968895,
+   "word": "Prussian blue",
+   "depth": 8,
+   "hue": 240,
+   "hueFrom": "blue"
+  },
+  {
+   "id": 104969703,
+   "parent": 104968895,
+   "word": "dark blue",
+   "depth": 8,
+   "hue": 240,
+   "hueFrom": "dark blue"
+  },
+  {
+   "id": 104969798,
+   "parent": 104968895,
+   "word": "greenish blue",
+   "depth": 8,
+   "hue": 240,
+   "hueFrom": "blue"
+  },
+  {
+   "id": 104969952,
+   "parent": 104968895,
+   "word": "purplish blue",
+   "depth": 8,
+   "hue": 240,
+   "hueFrom": "blue"
+  },
+  {
+   "id": 104974859,
+   "parent": 104968895,
+   "word": "ultramarine",
+   "depth": 8,
+   "hue": 240,
+   "hueFrom": "blue"
+  },
+  {
+   "id": 104970470,
+   "parent": 104970059,
+   "word": "lavender",
+   "depth": 8,
+   "hue": 240,
+   "hueFrom": "lavender"
+  },
+  {
+   "id": 104970544,
+   "parent": 104970059,
+   "word": "mauve",
+   "depth": 8,
+   "hue": 300,
+   "hueFrom": "purple"
+  },
+  {
+   "id": 104970631,
+   "parent": 104970059,
+   "word": "reddish purple",
+   "depth": 8,
+   "hue": 300,
+   "hueFrom": "purple"
+  },
+  {
+   "id": 104970758,
+   "parent": 104970059,
+   "word": "violet",
+   "depth": 8,
+   "hue": 300,
+   "hueFrom": "violet"
+  },
+  {
+   "id": 104971131,
+   "parent": 104970916,
+   "word": "pinkness",
+   "depth": 8,
+   "hue": 350,
+   "hueFrom": "pink"
+  },
+  {
+   "id": 104971211,
+   "parent": 104970916,
+   "word": "carnation",
+   "depth": 8,
+   "hue": 350,
+   "hueFrom": "pink"
+  },
+  {
+   "id": 104971313,
+   "parent": 104970916,
+   "word": "rose",
+   "depth": 8,
+   "hue": 350,
+   "hueFrom": "pink"
+  },
+  {
+   "id": 104971522,
+   "parent": 104970916,
+   "word": "solferino",
+   "depth": 8,
+   "hue": 350,
+   "hueFrom": "pink"
+  },
+  {
+   "id": 104971675,
+   "parent": 104970916,
+   "word": "yellowish pink",
+   "depth": 8,
+   "hue": 350,
+   "hueFrom": "pink"
+  },
+  {
+   "id": 104971820,
+   "parent": 104970916,
+   "word": "coral",
+   "depth": 8,
+   "hue": 16,
+   "hueFrom": "coral"
+  },
+  {
+   "id": 104972268,
+   "parent": 104971928,
+   "word": "Vandyke brown",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "brown"
+  },
+  {
+   "id": 104972350,
+   "parent": 104971928,
+   "word": "chestnut",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "brown"
+  },
+  {
+   "id": 104972451,
+   "parent": 104971928,
+   "word": "chocolate",
+   "depth": 8,
+   "hue": 25,
+   "hueFrom": "chocolate"
+  },
+  {
+   "id": 104972603,
+   "parent": 104971928,
+   "word": "hazel",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "brown"
+  },
+  {
+   "id": 104972801,
+   "parent": 104971928,
+   "word": "light brown",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "brown"
+  },
+  {
+   "id": 104972950,
+   "parent": 104971928,
+   "word": "mocha",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "brown"
+  },
+  {
+   "id": 104973386,
+   "parent": 104971928,
+   "word": "reddish brown",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "brown"
+  },
+  {
+   "id": 104973957,
+   "parent": 104971928,
+   "word": "yellowish brown",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "brown"
+  },
+  {
+   "id": 104974145,
+   "parent": 104971928,
+   "word": "puce",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "brown"
+  },
+  {
+   "id": 104974248,
+   "parent": 104971928,
+   "word": "olive brown",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "brown"
+  },
+  {
+   "id": 104974774,
+   "parent": 104971928,
+   "word": "taupe",
+   "depth": 8,
+   "hue": 0,
+   "hueFrom": "brown"
+  },
+  {
+   "id": 104974463,
+   "parent": 104974340,
+   "word": "olive drab",
+   "depth": 8,
+   "hue": 80,
+   "hueFrom": "olive drab"
+  },
+  {
+   "id": 104960582,
+   "parent": 104960277,
+   "word": "coal black",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": "black"
+  },
+  {
+   "id": 104961062,
+   "parent": 104960729,
+   "word": "alabaster",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": "white"
+  },
+  {
+   "id": 104961136,
+   "parent": 104960729,
+   "word": "bleach",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": "white"
+  },
+  {
+   "id": 104961331,
+   "parent": 104960729,
+   "word": "bone",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": "white"
+  },
+  {
+   "id": 104961472,
+   "parent": 104960729,
+   "word": "chalk",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": "white"
+  },
+  {
+   "id": 104961583,
+   "parent": 104960729,
+   "word": "frostiness",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": "white"
+  },
+  {
+   "id": 104962062,
+   "parent": 104961691,
+   "word": "ash grey",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": "gray"
+  },
+  {
+   "id": 104962240,
+   "parent": 104961691,
+   "word": "charcoal",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": "gray"
+  },
+  {
+   "id": 104962395,
+   "parent": 104961691,
+   "word": "dapple-grey",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": "gray"
+  },
+  {
+   "id": 104962548,
+   "parent": 104961691,
+   "word": "iron-grey",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": "gray"
+  },
+  {
+   "id": 104962689,
+   "parent": 104961691,
+   "word": "tattletale grey",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": "gray"
+  },
+  {
+   "id": 114923060,
+   "parent": 104961691,
+   "word": "iron blue",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": "gray"
+  },
+  {
+   "id": 104976489,
+   "parent": 104976319,
+   "word": "chromatism",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104976567,
+   "parent": 104976319,
+   "word": "melanoderma",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104976870,
+   "parent": 104976687,
+   "word": "poliosis",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104979002,
+   "parent": 104978792,
+   "word": "aposematic coloration",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104979203,
+   "parent": 104978792,
+   "word": "apatetic coloration",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104979307,
+   "parent": 104978792,
+   "word": "cryptic coloration",
+   "depth": 8,
+   "hue": null,
+   "hueFrom": null
+  },
+  {
+   "id": 104963905,
+   "parent": 104963740,
+   "word": "burgundy",
+   "depth": 9,
+   "hue": 0,
+   "hueFrom": "dark red"
+  },
+  {
+   "id": 104964001,
+   "parent": 104963740,
+   "word": "claret",
+   "depth": 9,
+   "hue": 0,
+   "hueFrom": "dark red"
+  },
+  {
+   "id": 104964079,
+   "parent": 104963740,
+   "word": "oxblood red",
+   "depth": 9,
+   "hue": 0,
+   "hueFrom": "dark red"
+  },
+  {
+   "id": 104964162,
+   "parent": 104963740,
+   "word": "wine",
+   "depth": 9,
+   "hue": 0,
+   "hueFrom": "dark red"
+  },
+  {
+   "id": 104964586,
+   "parent": 104964287,
+   "word": "magenta",
+   "depth": 9,
+   "hue": 300,
+   "hueFrom": "magenta"
+  },
+  {
+   "id": 104964799,
+   "parent": 104964287,
+   "word": "fuschia",
+   "depth": 9,
+   "hue": 0,
+   "hueFrom": "red"
+  },
+  {
+   "id": 104964878,
+   "parent": 104964287,
+   "word": "maroon",
+   "depth": 9,
+   "hue": 0,
+   "hueFrom": "maroon"
+  },
+  {
+   "id": 104965574,
+   "parent": 104965451,
+   "word": "tangerine",
+   "depth": 9,
+   "hue": 39,
+   "hueFrom": "orange"
+  },
+  {
+   "id": 104966841,
+   "parent": 104966717,
+   "word": "ocher",
+   "depth": 9,
+   "hue": 60,
+   "hueFrom": "yellow"
+  },
+  {
+   "id": 104968619,
+   "parent": 104968426,
+   "word": "cyan",
+   "depth": 9,
+   "hue": 180,
+   "hueFrom": "cyan"
+  },
+  {
+   "id": 104970312,
+   "parent": 104970631,
+   "word": "Tyrian purple",
+   "depth": 9,
+   "hue": 300,
+   "hueFrom": "purple"
+  },
+  {
+   "id": 104970398,
+   "parent": 104970758,
+   "word": "indigo",
+   "depth": 9,
+   "hue": 275,
+   "hueFrom": "indigo"
+  },
+  {
+   "id": 104971447,
+   "parent": 104971313,
+   "word": "old rose",
+   "depth": 9,
+   "hue": 350,
+   "hueFrom": "pink"
+  },
+  {
+   "id": 104973020,
+   "parent": 104972801,
+   "word": "tan",
+   "depth": 9,
+   "hue": 34,
+   "hueFrom": "tan"
+  },
+  {
+   "id": 104973110,
+   "parent": 104972801,
+   "word": "dun",
+   "depth": 9,
+   "hue": 0,
+   "hueFrom": "brown"
+  },
+  {
+   "id": 104973291,
+   "parent": 104972801,
+   "word": "beige",
+   "depth": 9,
+   "hue": 60,
+   "hueFrom": "beige"
+  },
+  {
+   "id": 104973585,
+   "parent": 104973386,
+   "word": "brick red",
+   "depth": 9,
+   "hue": 0,
+   "hueFrom": "brown"
+  },
+  {
+   "id": 104973669,
+   "parent": 104973386,
+   "word": "copper",
+   "depth": 9,
+   "hue": 0,
+   "hueFrom": "brown"
+  },
+  {
+   "id": 104973816,
+   "parent": 104973386,
+   "word": "Indian red",
+   "depth": 9,
+   "hue": 0,
+   "hueFrom": "Indian red"
+  },
+  {
+   "id": 104974681,
+   "parent": 104973957,
+   "word": "snuff-color",
+   "depth": 9,
+   "hue": 0,
+   "hueFrom": "brown"
+  }
+ ]
+}

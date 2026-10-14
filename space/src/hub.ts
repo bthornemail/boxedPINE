@@ -21,6 +21,7 @@ const stations: Station[] = [
   { title: 'Agent channel', room: './agent.html', description: 'conversation, records, and XR', color: 0xef8068, position: [0, 1.05, -3.4], shape: 'orb' },
   { title: 'Examples', room: './examples.html', description: 'small browser experiments', color: 0x74c8c0, position: [0, .9, 2.9], shape: 'column' },
   { title: 'Polytron', room: './polytron.html', description: 'polyforms + GPU pipeline', color: 0xd68be8, position: [-3.2, 1.05, 2.5], shape: 'dali' },
+  { title: 'Map', room: './map.html', description: 'colour wheel · 2D and 2.5D', color: 0x9acd32, position: [-2.3, .9, -2.7], shape: 'column' },
   { title: 'Living world', room: './metaverse.html', description: 'event-sourced simulation', color: 0x80b8e8, position: [3.2, 1.05, 2.5], shape: 'orb' },
 ];
 
@@ -252,6 +253,7 @@ const links = [
   [[0, .18, -3.4], [0, .18, 0]], [[0, .18, 2.9], [0, .18, 0]],
   [[-3.2, .18, 2.5], [0, .18, 0]],
   [[3.2, .18, 2.5], [0, .18, 0]],
+  [[-2.3, .18, -2.7], [0, .18, 0]],
 ] as const;
 for (const [from, to] of links) {
   const material = new THREE.LineBasicMaterial({ color: 0x3d6770, transparent: true, opacity: .7 });
