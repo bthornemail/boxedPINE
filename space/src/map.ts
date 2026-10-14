@@ -125,6 +125,8 @@ events.onmessage = (e) => {
   let p = speakers.get(name);
   if (!p) { p = add({ id: speakerSeed(name), word: name, depth: 0, hue: null }, 0, 0, Infinity); speakers.set(name, p); draw(); }
   p.state = K(p.state);
+  // terms said on the bridge (POST //metatron.localhost:8743/P2/L6) move the scene too
+  if (m.text && !('error' in parseTerms(m.text)) && passages.length) document.querySelector('#terms-said')!.textContent = `from the bridge: ${applyTerms(m.text)}`;
   const named = m.text ? namedSynset(m.text, colors.map((c) => ({ ...c, gloss: '', geometry: '', svg: {} }) as SynsetAgent)) : undefined;
   const target = named && placed.find((q) => q.a.id === named.id);
   if (target) p.to = { x: target.x + 18, y: target.y + 18 };
@@ -199,17 +201,22 @@ document.querySelector('#witness-go')!.addEventListener('click', async () => {
 });
 
 // ── Uppercase terms: METATRON P2 L6 takes a step; CATCH n moves the reset (score.ts parseTerms) ──
-document.querySelector('#terms-form')!.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const input = document.querySelector<HTMLInputElement>('#terms')!, said = document.querySelector('#terms-said')!;
-  const cmd = parseTerms(input.value);
-  if ('error' in cmd) { said.textContent = cmd.error; return; }
-  if ('catch' in cmd) { gate.catchAt = cmd.catch; said.textContent = `the reset fires at byte ${cmd.catch}, frame ${60 ^ cmd.catch} of each half`; input.value = ''; return; }
+/** Apply uppercase terms from the box or from the bridge; returns what happened. */
+function applyTerms(text: string): string {
+  const cmd = parseTerms(text);
+  if ('error' in cmd) return cmd.error;
+  if ('catch' in cmd) { gate.catchAt = cmd.catch; return `the reset fires at byte ${cmd.catch}, frame ${60 ^ cmd.catch} of each half`; }
   if (pick.value !== cmd.agent) { pick.value = cmd.agent; startWalk(); }
   if (cmd.point && cmd.line) {
-    try { showStory(storyStep(walker, passages, { point: cmd.point, line: cmd.line })); said.textContent = `${cmd.agent} through P${cmd.point} to L${cmd.line}`; }
-    catch (err) { said.textContent = (err as Error).message; return; }
-  } else said.textContent = `${cmd.agent}`;
+    try { showStory(storyStep(walker, passages, { point: cmd.point, line: cmd.line })); return `${cmd.agent} through P${cmd.point} to L${cmd.line}`; }
+    catch (err) { return (err as Error).message; }
+  }
+  return cmd.agent;
+}
+document.querySelector('#terms-form')!.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const input = document.querySelector<HTMLInputElement>('#terms')!;
+  document.querySelector('#terms-said')!.textContent = applyTerms(input.value);
   input.value = '';
 });
 fetch(new URL('../story/passages.json', location.href)).then((r) => r.json()).then((m: { passages: Passage[] }) => { passages = m.passages; startWalk(); }).catch(() => { document.querySelector('#story-text')!.textContent = 'no story: run node scripts/story-index.mjs'; });
