@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { VRButton } from 'three/addons/webxr/VRButton.js';
+import { gnomon, hex16 } from './gnomon.ts';
 
 type Station = {
   title: string;
@@ -121,6 +122,36 @@ function stationMesh(station: Station) {
 }
 stations.forEach(stationMesh);
 
+// Polytron's gnomon (tetra-gnomon-anim.c) at the Polytron station: K(p, 0x1D) from
+// 0x4242, a dial of 8 points, one lit per step, with the state and its SID.
+const steps = gnomon(0x4242);
+const polytron = stationGroups[stations.findIndex((s) => s.title === 'Polytron')]!;
+const dialPoints = steps.map((_, i) => {
+  const a = Math.PI / 2 - (i * 2 * Math.PI) / steps.length;
+  const point = new THREE.Mesh(new THREE.SphereGeometry(.07, 16, 12), new THREE.MeshStandardMaterial({ color: 0x3a2f40, emissive: 0xd68be8, emissiveIntensity: 0 }));
+  point.position.set(Math.cos(a) * 1.25, .26, -Math.sin(a) * 1.25);
+  polytron.add(point);
+  return point;
+});
+const dialCanvas = document.createElement('canvas');
+dialCanvas.width = 512; dialCanvas.height = 96;
+const dialTexture = new THREE.CanvasTexture(dialCanvas);
+const dialLabel = new THREE.Sprite(new THREE.SpriteMaterial({ map: dialTexture, transparent: true, depthTest: false }));
+dialLabel.scale.set(1.9, .36, 1);
+dialLabel.position.y = -.12;
+polytron.add(dialLabel);
+let shown = -1;
+function showStep(n: number) {
+  if (n === shown) return;
+  shown = n;
+  dialPoints.forEach((p, i) => { (p.material as THREE.MeshStandardMaterial).emissiveIntensity = i === n ? 2.4 : 0; });
+  const ctx = dialCanvas.getContext('2d')!, s = steps[n]!;
+  ctx.clearRect(0, 0, dialCanvas.width, dialCanvas.height);
+  ctx.fillStyle = '#d68be8'; ctx.font = '30px JetBrains Mono, monospace';
+  ctx.fillText(`step ${s.step}  ${hex16(s.state)} → ${hex16(s.sid)}`, 12, 58);
+  dialTexture.needsUpdate = true;
+}
+
 const links = [
   [[-3.2, .18, -.4], [0, .18, 0]], [[3.2, .18, -.4], [0, .18, 0]],
   [[0, .18, -3.4], [0, .18, 0]], [[0, .18, 2.9], [0, .18, 0]],
@@ -170,5 +201,6 @@ renderer.setAnimationLoop((time) => {
     group.rotation.y = Math.sin(time / 2800 + i) * .12;
     group.position.y = stations[i]!.position[1] + Math.sin(time / 1800 + i * 1.4) * .035;
   });
+  showStep(Math.floor(time / 900) % steps.length);
   renderer.render(scene, camera);
 });

@@ -47,3 +47,13 @@ test('Every build lights on XOR, but each is made of NAND or NOR, and their node
   assert.equal(reach.size, 16);
   assert.ok(found.has(0b0111) && found.has(0b0001)); // NAND and NOR, each complete alone
 });
+
+test("Polytron's gnomon for the Agent Commons: 8 steps from 0x4242, as tetra-gnomon-anim prints them", async () => {
+  const { gnomon, hex16 } = await import('../../space/src/gnomon.ts');
+  const steps = gnomon(0x4242);
+  assert.deepEqual(steps.map((s) => `${hex16(s.state)} ${hex16(s.sid)}`), [
+    '0x4242 0x061B', '0x061B 0xFD75', '0xFD75 0x6E04', '0x6E04 0xB7B7',
+    '0xB7B7 0x3F22', '0x3F22 0x0880', '0x0880 0x573D', '0x573D 0x4242',
+  ]);
+  for (const seed of [0x0000, 0xdead, 0xbeef, 0xffff]) assert.equal(gnomon(seed).length, 8, hex16(seed));
+});
