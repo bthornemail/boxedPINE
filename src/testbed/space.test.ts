@@ -57,3 +57,41 @@ test("Polytron's gnomon for the Agent Commons: 8 steps from 0x4242, as tetra-gno
   ]);
   for (const seed of [0x0000, 0xdead, 0xbeef, 0xffff]) assert.equal(gnomon(seed).length, 8, hex16(seed));
 });
+
+test('The Commons polyform generator: a MaxiCode declaration and a seed give one connected polyform', async () => {
+  const { packDeclaration, unpackDeclaration, grow, daliCross, connected } = await import('../../space/src/polyform.ts');
+  for (let w = 0; w < 1 << 15; w += 2) assert.equal(packDeclaration(unpackDeclaration(w)), w & 0x7ffe, 'the 15-bit declaration round-trips (the reserved bit aside)');
+  for (const dimension of [0, 1, 2, 3] as const) for (const degree of [1, 4, 5, 8, 16]) for (const seed of [0x4242, 0xdead, 0x0000]) {
+    const cells = grow({ basis: 0, degree, dimension, group: 0 }, seed);
+    assert.equal(cells.length, dimension === 2 ? degree * 3 : degree, `${dimension} ${degree}`);
+    assert.equal(new Set(cells.map((c) => c.join())).size, cells.length, 'no cell twice');
+    assert.ok(connected(cells), `connected: dimension ${dimension}, degree ${degree}`);
+    if (dimension === 0) assert.ok(cells.every((c) => c[1] === 0 && c[2] === 0), '1D is a stick');
+    if (dimension === 1) assert.ok(cells.every((c) => c[1] === 0), '2D is flat');
+    assert.deepEqual(grow({ basis: 0, degree, dimension, group: 0 }, seed), cells, 'the same every time');
+  }
+  const dali = daliCross();
+  assert.equal(dali.length, 8);
+  assert.ok(connected(dali), 'the Dalí cross is one piece');
+  const neighbours = (c: number[]) => dali.filter((d) => Math.abs(d[0]! - c[0]!) + Math.abs(d[1]! - c[1]!) + Math.abs(d[2]! - c[2]!) === 1).length;
+  assert.deepEqual(dali.map(neighbours).sort(), [1, 1, 1, 1, 1, 1, 2, 6], 'one cube with six faces taken, its column-mate, and six ends: the tesseract net');
+});
+
+test('The Commons agents: synset agents and bridge agents step K; messages naming a synset find it', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { synsetSeed, speakerSeed, stepAgent, sectorOf, namedSynset, placeOf, WALK_RADIUS } = await import('../../space/src/commons-agents.ts');
+  const { K } = await import('../../space/src/gnomon.ts');
+  const m = JSON.parse(readFileSync(new URL('../../public/polytron/commons.json', import.meta.url), 'utf8'));
+  assert.deepEqual(m.agents.map((a: { word: string }) => a.word), ['entity', 'physical entity', 'abstraction', 'thing', 'object', 'person']);
+  assert.deepEqual(m.missing, [100017480, 100020890], 'two synsets polytron drew are not in WordNet 3.0');
+  assert.equal(speakerSeed('claude'), 0x636c, 'a speaker seed is its first two characters as a pair, not a hash');
+  for (const a of m.agents) {
+    let s = synsetSeed(a);
+    for (let i = 0; i < 8; i++) { const n = stepAgent(s, 0); assert.equal(n.state, K(s)); s = n.state; }
+    assert.equal(s, synsetSeed(a), `${a.word} comes back after 8 steps`);
+  }
+  assert.equal(sectorOf(0xe000), 7);
+  for (let s = 0; s < 0x10000; s += 0x111) assert.ok(Math.abs(Math.hypot(...placeOf(s, 0)) - WALK_RADIUS) < 1e-9, 'lane 0 walks the ring');
+  assert.equal(namedSynset('is that a Physical Entity or a thing?', m.agents)?.word, 'physical entity', 'the longer name first');
+  assert.equal(namedSynset('nothing here', m.agents), undefined);
+});

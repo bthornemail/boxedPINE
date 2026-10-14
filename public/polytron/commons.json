@@ -1,0 +1,87 @@
+{
+  "source": "omi-files/polytron/polyform + WordNet 3.0 (Prolog)",
+  "agents": [
+    {
+      "id": 100001740,
+      "word": "entity",
+      "gloss": "that which is perceived or known or inferred to have its own distinct existence (living or nonliving)",
+      "hypernym": null,
+      "depth": 0,
+      "geometry": "point",
+      "svg": {
+        "aztec": "polytron/svg/aztec-100001740.svg",
+        "maxicode": "polytron/svg/maxicode-100001740.svg",
+        "beetag": "polytron/svg/beetag-100001740.svg"
+      }
+    },
+    {
+      "id": 100001930,
+      "word": "physical entity",
+      "gloss": "an entity that has physical existence",
+      "hypernym": 100001740,
+      "depth": 1,
+      "geometry": "line",
+      "svg": {
+        "aztec": "polytron/svg/aztec-100001930.svg",
+        "maxicode": "polytron/svg/maxicode-100001930.svg",
+        "beetag": "polytron/svg/beetag-100001930.svg"
+      }
+    },
+    {
+      "id": 100002137,
+      "word": "abstraction",
+      "gloss": "a general concept formed by extracting common features from specific examples",
+      "hypernym": 100001740,
+      "depth": 1,
+      "geometry": "line",
+      "svg": {
+        "aztec": "polytron/svg/aztec-100002137.svg",
+        "maxicode": "polytron/svg/maxicode-100002137.svg",
+        "beetag": "polytron/svg/beetag-100002137.svg"
+      }
+    },
+    {
+      "id": 100002452,
+      "word": "thing",
+      "gloss": "a separate and self-contained entity",
+      "hypernym": 100001930,
+      "depth": 2,
+      "geometry": "triangle",
+      "svg": {
+        "aztec": "polytron/svg/aztec-100002452.svg",
+        "maxicode": "polytron/svg/maxicode-100002452.svg",
+        "beetag": "polytron/svg/beetag-100002452.svg"
+      }
+    },
+    {
+      "id": 100002684,
+      "word": "object",
+      "gloss": "a tangible and visible entity; an entity that can cast a shadow; \"it was full of rackets, balls and other objects\"",
+      "hypernym": 100001930,
+      "depth": 2,
+      "geometry": "triangle",
+      "svg": {
+        "aztec": "polytron/svg/aztec-100002684.svg",
+        "maxicode": "polytron/svg/maxicode-100002684.svg",
+        "beetag": "polytron/svg/beetag-100002684.svg"
+      }
+    },
+    {
+      "id": 100007846,
+      "word": "person",
+      "gloss": "a human being; \"there was too much for one person to do\"",
+      "hypernym": 100004475,
+      "depth": 6,
+      "geometry": "16-cell",
+      "svg": {
+        "aztec": "polytron/svg/aztec-100007846.svg",
+        "maxicode": "polytron/svg/maxicode-100007846.svg",
+        "beetag": "polytron/svg/beetag-100007846.svg"
+      }
+    }
+  ],
+  "missing": [
+    100017480,
+    100020890
+  ]
+}

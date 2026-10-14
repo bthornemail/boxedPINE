@@ -2,6 +2,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 import { gnomon, hex16 } from './gnomon.ts';
+import { daliCross, grow, type Cell } from './polyform.ts';
+import { namedSynset, placeOf, speakerSeed, stepAgent, synsetDeclaration, synsetSeed, type SynsetAgent } from './commons-agents.ts';
+import { BRIDGE_PORT } from '../../rosetta/src/agent.ts';
 
 type Station = {
   title: string;
@@ -9,7 +12,7 @@ type Station = {
   description: string;
   color: number;
   position: [number, number, number];
-  shape: 'ring' | 'column' | 'orb' | 'panel';
+  shape: 'ring' | 'column' | 'orb' | 'panel' | 'dali';
 };
 
 const stations: Station[] = [
@@ -17,7 +20,7 @@ const stations: Station[] = [
   { title: 'Meta', room: './meta.html', description: 'sixteen generated readings', color: 0xa999e8, position: [3.2, 1.05, -.4], shape: 'ring' },
   { title: 'Agent channel', room: './agent.html', description: 'conversation, records, and XR', color: 0xef8068, position: [0, 1.05, -3.4], shape: 'orb' },
   { title: 'Examples', room: './examples.html', description: 'small browser experiments', color: 0x74c8c0, position: [0, .9, 2.9], shape: 'column' },
-  { title: 'Polytron', room: './polytron.html', description: 'polyforms + GPU pipeline', color: 0xd68be8, position: [-3.2, 1.05, 2.5], shape: 'ring' },
+  { title: 'Polytron', room: './polytron.html', description: 'polyforms + GPU pipeline', color: 0xd68be8, position: [-3.2, 1.05, 2.5], shape: 'dali' },
   { title: 'Living world', room: './metaverse.html', description: 'event-sourced simulation', color: 0x80b8e8, position: [3.2, 1.05, 2.5], shape: 'orb' },
 ];
 
@@ -94,18 +97,33 @@ const labelCanvas = (station: Station) => {
   return sprite;
 };
 
+/** A polyform as cubes, centred over its footprint. */
+function cellsMesh(cells: Cell[], size: number, material: THREE.Material) {
+  const group = new THREE.Group(), box = new THREE.BoxGeometry(size * .94, size * .94, size * .94);
+  const mid = (i: 0 | 2) => (Math.min(...cells.map((c) => c[i])) + Math.max(...cells.map((c) => c[i]))) / 2;
+  const mx = mid(0), mz = mid(2), my = Math.max(...cells.map((c) => c[1])) / 2;
+  for (const [x, y, z] of cells) {
+    const cube = new THREE.Mesh(box, material);
+    cube.position.set((x - mx) * size, (y - my) * size, (z - mz) * size);
+    cube.castShadow = true;
+    group.add(cube);
+  }
+  return group;
+}
+
 function stationMesh(station: Station) {
   const group = new THREE.Group();
   group.position.set(...station.position);
   const color = new THREE.Color(station.color);
   const material = new THREE.MeshStandardMaterial({ color, emissive: color.clone().multiplyScalar(.18), emissiveIntensity: 1.4, roughness: .36, metalness: .25 });
-  let mesh: THREE.Mesh;
-  if (station.shape === 'ring') mesh = new THREE.Mesh(new THREE.TorusKnotGeometry(.62, .16, 96, 12), material);
+  let mesh: THREE.Object3D;
+  if (station.shape === 'dali') mesh = cellsMesh(daliCross(), .24, material);
+  else if (station.shape === 'ring') mesh = new THREE.Mesh(new THREE.TorusKnotGeometry(.62, .16, 96, 12), material);
   else if (station.shape === 'orb') mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(.72, 2), material);
   else if (station.shape === 'column') mesh = new THREE.Mesh(new THREE.CylinderGeometry(.58, .78, 1.45, 6), material);
   else mesh = new THREE.Mesh(new THREE.BoxGeometry(1.65, .8, .3), material);
   mesh.castShadow = true;
-  mesh.userData.station = station;
+  mesh.traverse((o) => { o.userData.station = station; if (o !== mesh) selectable.push(o); });
   group.add(mesh);
   selectable.push(mesh);
   const base = new THREE.Mesh(new THREE.CylinderGeometry(1.05, 1.15, .12, 32), new THREE.MeshStandardMaterial({ color: 0x202b34, emissive: color, emissiveIntensity: .22, metalness: .4, roughness: .4 }));
@@ -151,6 +169,83 @@ function showStep(n: number) {
   ctx.fillText(`step ${s.step}  ${hex16(s.state)} → ${hex16(s.sid)}`, 12, 58);
   dialTexture.needsUpdate = true;
 }
+
+// ── The autonomous agents ───────────────────────────────────
+// Synset agents (polytron's barcodes on WordNet synsets) step their own K and
+// walk; bridge agents step once per message. See commons-agents.ts.
+type Walker = { group: THREE.Group; label: THREE.Sprite; lane: number; state: number; target: THREE.Vector2; beat: number; next: number; synset?: SynsetAgent };
+const walkers: Walker[] = [];
+const speakers = new Map<string, Walker>();
+let synsets: SynsetAgent[] = [];
+
+function textSprite(lines: string[], color: string) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512; canvas.height = 40 + lines.length * 34;
+  const ctx = canvas.getContext('2d')!;
+  ctx.fillStyle = color; ctx.font = '600 30px JetBrains Mono, monospace'; ctx.fillText(lines[0]!, 10, 34);
+  ctx.fillStyle = '#9da6ad'; ctx.font = '24px JetBrains Mono, monospace';
+  lines.slice(1).forEach((l, i) => ctx.fillText(l.slice(0, 34), 10, 70 + i * 34));
+  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(canvas), transparent: true, depthTest: false }));
+  sprite.scale.set(1.6, 1.6 * canvas.height / canvas.width, 1);
+  return sprite;
+}
+
+function addWalker(cells: Cell[], color: number, lines: string[], seed: number, beat: number, synset?: SynsetAgent) {
+  const lane = walkers.length;
+  const material = new THREE.MeshStandardMaterial({ color, emissive: new THREE.Color(color).multiplyScalar(.25), roughness: .4, metalness: .2 });
+  const body = cellsMesh(cells, .16, material);
+  const group = new THREE.Group();
+  body.position.y = .5;
+  group.add(body);
+  const label = textSprite(lines, `#${color.toString(16).padStart(6, '0')}`);
+  label.position.y = 1.35;
+  group.add(label);
+  const [x, z] = placeOf(seed, lane);
+  group.position.set(x, 0, z);
+  scene.add(group);
+  const w: Walker = { group, label, lane, state: seed, target: new THREE.Vector2(x, z), beat, next: 0, synset };
+  walkers.push(w);
+  return w;
+}
+
+function step(w: Walker) {
+  const s = stepAgent(w.state, w.lane);
+  w.state = s.state;
+  w.target.set(...s.at);
+}
+
+function addBillboard(w: Walker, url: string) {
+  new THREE.TextureLoader().load(url, (texture) => {
+    const board = new THREE.Mesh(new THREE.PlaneGeometry(.55, .55), new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide }));
+    board.position.y = 2.05;
+    w.group.add(board);
+  });
+}
+
+fetch(new URL('../polytron/commons.json', location.href)).then((r) => r.json()).then((m: { agents: SynsetAgent[] }) => {
+  synsets = m.agents;
+  synsets.forEach((a, i) => {
+    const w = addWalker(grow(synsetDeclaration(a), synsetSeed(a)), 0xd68be8, [a.word, `${a.geometry} · depth ${a.depth ?? '?'}`, `${a.id}`], synsetSeed(a), 2600 + i * 370, a);
+    if (a.svg.beetag) addBillboard(w, new URL(`../${a.svg.beetag}`, location.href).href);
+  });
+}).catch(() => { /* no manifest: run node scripts/polytron-commons.mjs */ });
+
+const bridgeURL = `http://127.0.0.1:${Number(new URLSearchParams(location.search).get('bridge')) || BRIDGE_PORT}`;
+const events = new EventSource(`${bridgeURL}/events`);
+events.onmessage = (e) => {
+  const p = JSON.parse(e.data) as { kind: string; from: string; by?: string; text?: string };
+  const name = p.by ?? p.from;
+  let w = speakers.get(name);
+  if (!w) {
+    w = addWalker(grow({ basis: 0, degree: 5, dimension: 1, group: 0 }, speakerSeed(name)), name === 'author' ? 0xe2b66c : 0x74c8c0, [name, 'on the bridge'], speakerSeed(name), Infinity);
+    speakers.set(name, w);
+  }
+  step(w);
+  const to = p.text ? namedSynset(p.text, synsets) : undefined;
+  const at = to && walkers.find((x) => x.synset === to);
+  if (at) w.target.set(at.target.x + .7, at.target.y + .7);
+};
+events.onerror = () => { /* the bridge is not running; the synset agents walk on their own */ };
 
 const links = [
   [[-3.2, .18, -.4], [0, .18, 0]], [[3.2, .18, -.4], [0, .18, 0]],
@@ -202,5 +297,11 @@ renderer.setAnimationLoop((time) => {
     group.position.y = stations[i]!.position[1] + Math.sin(time / 1800 + i * 1.4) * .035;
   });
   showStep(Math.floor(time / 900) % steps.length);
+  for (const w of walkers) {
+    if (Number.isFinite(w.beat) && time >= w.next) { step(w); w.next = time + w.beat; }
+    const p = w.group.position;
+    p.x += (w.target.x - p.x) * .02; p.z += (w.target.y - p.z) * .02;
+    w.group.rotation.y = time / 4000 + w.lane;
+  }
   renderer.render(scene, camera);
 });
