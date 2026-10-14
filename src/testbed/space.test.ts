@@ -308,3 +308,38 @@ test('The story on the plane: the hints a walk can derive (every two lines meet 
   assert.equal(loop % 8, 0, `the walk by K closes in a multiple of 8 steps (${loop})`);
   assert.equal(seen.size, 6, 'and reaches six lines of seven: the seventh takes a choice from outside');
 });
+
+test('The trace: tag characters XOR into the control and lowercase columns; an intact set of 16 traces to zero; a changed margin shows at its pairs', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { pairsOfTag, newTrace, traceFile, marked, orderOf, columnOf, TAG_CHARS } = await import('../../space/src/trace.ts');
+  const { writeBorder, readBorder } = await import('../../space/src/border.ts');
+  const tagChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.match(TAG_CHARS)!.map((c) => c.charCodeAt(0));
+  const letters = tagChars.slice(0, 26), digits = tagChars.slice(26);
+  const cols = (as: number[], bs: number[], f: (x: number) => number) => [...new Set(as.flatMap((a) => bs.map((b) => columnOf(f(a ^ b)))))];
+  assert.deepEqual(cols(letters, letters, (x) => x), [0], 'letter XOR letter: the control codes');
+  assert.deepEqual(cols(digits, digits, (x) => x), [0], 'digit XOR digit: the control codes');
+  assert.deepEqual(cols(letters, digits, (x) => x), [3], 'letter XOR digit: the lowercase column');
+  assert.deepEqual(cols(letters, letters, (x) => 0x7f ^ x), [3], 'XNOR swaps: same kind to lowercase');
+  assert.deepEqual(cols(letters, digits, (x) => 0x7f ^ x), [0], 'and mixed to the control codes');
+  // the order of the indices under the replicated constant
+  const orders: Record<number, number> = {};
+  for (let i = 0; i < 65536; i++) orders[orderOf(i)] = (orders[orderOf(i)] ?? 0) + 1;
+  assert.deepEqual(orders, { 1: 8, 2: 56, 4: 4032, 8: 61440 });
+  const fixed = [...Array(65536).keys()].filter((i) => orderOf(i) === 1);
+  assert.ok(fixed.every((i) => fixed.includes(((i & 0xff) << 8) | (i >> 8))), 'the 8 fixed indices come in byte-swapped pairs');
+  // the trace of an agent's 16 files
+  assert.deepEqual(pairsOfTag('METATRON'), [0x4d45, 0x5441, 0x5452, 0x4f4e], 'ME TA TR ON');
+  const { characters } = JSON.parse(readFileSync(new URL('../../public/characters/trees.json', import.meta.url), 'utf8')) as { characters: { tag: string; set: string[] }[] };
+  const files = (tag: string) => characters.find((c) => c.tag === tag)!.set.map((p) => readFileSync(new URL(`../../public/${p}`, import.meta.url), 'utf8'));
+  const t = newTrace();
+  for (const svg of files('METATRON')) traceFile(t, svg);
+  assert.deepEqual(marked(t), [], 'an intact set of 16 traces to all zeros (0 ^ 1 ^ ... ^ 15 = 0)');
+  // change one file's margin: place 5 rewritten as 6
+  const changed = files('METATRON');
+  changed[5] = writeBorder(changed[5]!, { name: 'METATRON', cues: [6] });
+  const u = newTrace();
+  for (const svg of changed) traceFile(u, svg);
+  assert.deepEqual(marked(u), pairsOfTag('METATRON').sort((a, b) => a - b), 'the change shows at the agent\'s four pairs');
+  assert.equal(u.xor[0x4d45], 5 ^ 6, 'and its size is the change: 5 XOR 6');
+  assert.equal(readBorder(changed[5]!).cues[0], 6);
+});
