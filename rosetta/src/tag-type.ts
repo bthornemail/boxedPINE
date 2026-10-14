@@ -8,10 +8,13 @@
 // it is TypeScript's intrinsic Uppercase<S>, checked against a template
 // literal type that admits only 1 to 8 of A-Z and 0-9 (rosetta TAG). And the
 // two directions mean two things: "lower to upper to generate tag literals,
-// and upper to lower to deprecate, or degenerate". A deprecated tag keeps its
-// letters with the case bit set: it can be generated again, but it is not a
-// tag while lowered. A tag of digits alone has no case, so it cannot be
-// deprecated: numbers stay indices.
+// and upper to lower to deprecate, or degenerate", and in the triple, "the
+// conversion from lower to upper promotes a subject to an object": lowercase
+// is the subject, the word as said; uppercase the object, the literal it is
+// bound to. Letter by letter they differ by 0x20, so subject XOR object is a
+// run of spaces: the predicate between them is the space (the three nulls of
+// omi---imo, 0x20), and S ^ P ^ O = 0 as on a Steiner line (proofs I-198). A
+// tag of digits alone has no case: a number is never demoted, it stays an index.
 export type TagChar = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
 
 /** true when S is 1 to 8 tag characters. */

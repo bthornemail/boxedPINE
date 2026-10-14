@@ -500,6 +500,11 @@ test('The tag functor: XOR 0x20 toggles case and back; Uppercase<S> makes any wo
   assert.equal(isDeprecated('22'), false, 'digits have no case: a number cannot be deprecated');
   assert.equal(deprecate('22'), '22');
   assert.equal(new URL('http://METATRON/').host, deprecate('METATRON'), 'a host holds a tag deprecated');
+  // the triple: lowercase the subject, uppercase the object, and between them the space
+  const s = 'metatron', o = toTag(s)!;
+  const p = [...s].map((c, i) => c.charCodeAt(0) ^ o.charCodeAt(i));
+  assert.deepEqual(p, Array(8).fill(0x20), 'subject XOR object: a space in every letter, the predicate');
+  assert.ok([...s].every((c, i) => (c.charCodeAt(0) ^ p[i]! ^ o.charCodeAt(i)) === 0), 'S ^ P ^ O = 0');
   // and at compile time: tsc checks src/testbed/tag-type.check.ts
   const { spawnSync } = await import('node:child_process');
   const r = spawnSync('npx', ['--no-install', 'tsc', '--ignoreConfig', '--noEmit', '--strict', '--target', 'es2022', '--module', 'nodenext', '--allowImportingTsExtensions', new URL('./tag-type.check.ts', import.meta.url).pathname], { encoding: 'utf8' });
