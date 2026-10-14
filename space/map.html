@@ -30,6 +30,10 @@
     <div class="views"><select id="character" aria-label="Character"></select></div>
     <div style="display:flex;gap:10px;align-items:flex-start"><svg id="bytes" viewBox="0 0 16 8" width="128" height="64" aria-label="the 128 bytes: gold read (127), blue written (63)"></svg><img id="hasse" alt="the character's Hasse diagram" style="width:200px;background:#fff;border-radius:4px"></div>
     <div id="exchange" class="kicker" aria-live="off"></div>
+    <div class="kicker" style="margin-top:14px">the story · a line, a point, the next line</div>
+    <div id="story-where" class="kicker" style="color:var(--ink)"></div>
+    <p id="story-text" style="max-height:9em;overflow:auto;margin:6px 0"></p>
+    <div id="story-choices" class="views" style="flex-wrap:wrap"></div>
   </section>
   <script type="module" src="./src/map.ts"></script>
 </body>

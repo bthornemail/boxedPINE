@@ -282,3 +282,29 @@ test('The frame hands the index to Atomics through a Proxy; Reflect writes the f
   assert.equal(broken.last?.ok, false);
   assert.ok(broken.last && !broken.last.ok && broken.last.error instanceof RangeError, 'the Catch carries the RangeError');
 });
+
+test('The story on the plane: the hints a walk can derive (every two lines meet once; any line is one step from any other)', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { LINES, linesThrough, meet, choices, newWalker, step } = await import('../../space/src/story.ts');
+  assert.deepEqual(LINES, [[1, 2, 4], [2, 3, 5], [3, 4, 6], [4, 5, 7], [1, 5, 6], [2, 6, 7], [1, 3, 7]], 'the square\'s plane: line i = {1,2,4} + (i - 1)');
+  for (let p = 1; p <= 7; p++) assert.equal(linesThrough(p).length, 3, `point ${p} is on three lines`);
+  for (let a = 1; a <= 7; a++) for (let b = 1; b <= 7; b++) if (a !== b) assert.equal(meet(a, b).length, 1, `lines ${a} and ${b} meet in one point`);
+  // so from any line every other line is one step away: through the point they meet at
+  for (let l = 1; l <= 7; l++) assert.deepEqual(new Set(choices(l).flatMap((c) => c.lines)), new Set([1, 2, 3, 4, 5, 6, 7].filter((x) => x !== l)), `from line ${l}, all six others`);
+  const { passages } = JSON.parse(readFileSync(new URL('../../public/story/passages.json', import.meta.url), 'utf8'));
+  assert.equal(passages.length, 218, 'every passage with an angle is placed');
+  // a chosen step, and a step by K
+  const w = newWalker(0x4242);
+  const s1 = step(w, passages, { point: 2, line: 6 });
+  assert.equal(s1.character, 'SOLOMON');
+  assert.equal(s1.decision?.on, 'point');
+  assert.equal(s1.passage?.at, 6);
+  assert.throws(() => step(w, passages, { point: 1, line: 1 }), /not on line 6/);
+  // walking by K alone, the walk closes into a loop (K's period is 8) and may never reach some lines:
+  // from here, 0x4242 on line 6, it reaches six; across every seed and start, about a third reach all seven
+  const seen = new Set<number>([w.line]), at = new Map<string, number>();
+  let loop = 0;
+  for (let i = 0; i < 64; i++) { const k = `${w.line},${w.state}`; if (at.has(k)) { loop = i - at.get(k)!; break; } at.set(k, i); seen.add(step(w, passages).line); }
+  assert.equal(loop % 8, 0, `the walk by K closes in a multiple of 8 steps (${loop})`);
+  assert.equal(seen.size, 6, 'and reaches six lines of seven: the seventh takes a choice from outside');
+});

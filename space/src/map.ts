@@ -17,6 +17,7 @@ import { sectorOf, speakerSeed, namedSynset, type SynsetAgent } from './commons-
 import { BRIDGE_PORT } from '../../rosetta/src/agent.ts';
 import { newState, frameGate, written, READ } from './exchange.ts';
 import { CHARACTER_TAGS } from './border.ts';
+import { LINES, choices, linesThrough, newWalker, step as storyStep, type Passage } from './story.ts';
 
 type Color = AvatarAgent & { parent: number | null; hueFrom: string | null };
 type Placed = { a: AvatarAgent; x: number; y: number; z: number; state: number; beat: number; next: number; el: SVGGElement; to?: { x: number; y: number } };
@@ -150,6 +151,38 @@ function exchangeFrame() {
   if (src !== shown) { document.querySelector<HTMLImageElement>('#hasse')!.src = src; shown = src; }
   document.querySelector('#exchange')!.textContent = `frame ${frame - 1} · byte ${index} read ${read} · ${file} · ${written(state)}/128 written`;
 }
+
+// ── The story: the selected character walks the plane (story.ts) ──
+let passages: Passage[] = [];
+let walker = newWalker(0);
+const names = (line: number) => LINES[line - 1]!.map((p) => CHARACTER_TAGS[p]).join(' · ');
+function startWalk() {
+  const point = Number(Object.entries(CHARACTER_TAGS).find(([, t]) => t === pick.value)?.[0] ?? 8);
+  const line = point <= 7 ? linesThrough(point)[0]! : 1;
+  walker = newWalker([...pick.value].reduce((v, c) => ((v << 8) | c.charCodeAt(0)) & 0xffff, 0), line);
+  showStory(null);
+}
+function showStory(last: ReturnType<typeof storyStep> | null) {
+  const here = last?.passage ?? passages.find((p) => p.on === 'line' && p.at === walker.line);
+  document.querySelector('#story-where')!.textContent = `${pick.value} on line ${walker.line} {${LINES[walker.line - 1]!.join(',')}}: ${names(walker.line)}${last ? ` · came through ${last.character} (${last.decision?.series ?? ''})` : ''}`;
+  document.querySelector('#story-text')!.textContent = here ? `${here.series} · ${here.event ?? ''}: ${here.text}` : '(no passage on this line)';
+  const box = document.querySelector('#story-choices')!;
+  box.replaceChildren();
+  for (const c of choices(walker.line)) for (const l of c.lines) {
+    const b = document.createElement('button');
+    b.textContent = `${c.character} → line ${l}`;
+    b.title = `through ${c.character} to {${LINES[l - 1]!.join(',')}}: ${names(l)}`;
+    b.addEventListener('click', () => showStory(storyStep(walker, passages, { point: c.point, line: l })));
+    box.append(b);
+  }
+  const k = document.createElement('button');
+  k.textContent = 'by K';
+  k.title = 'let K choose (alone, a walk closes into a loop and may not reach every line)';
+  k.addEventListener('click', () => showStory(storyStep(walker, passages)));
+  box.append(k);
+}
+pick.addEventListener('change', startWalk);
+fetch(new URL('../story/passages.json', location.href)).then((r) => r.json()).then((m: { passages: Passage[] }) => { passages = m.passages; startWalk(); }).catch(() => { document.querySelector('#story-text')!.textContent = 'no story: run node scripts/story-index.mjs'; });
 
 function tick(time: number) {
   exchangeFrame();
