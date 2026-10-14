@@ -58,6 +58,7 @@ Each source has a MOC that summarizes it and links to its part notes.
 | [[SRC-11 The UI Brain Dump]] | Drafts on a user interface: the three primitives, the PannerNode as 0D readout, the kaleidoscope, BusyBox and CIDR ports; claims checked | two files, `_archive/_inbox/` |
 | [[SRC-12 The Continuation Brain Dump]] | The build carried on with another AI and then from the phone: XOR lines of addresses, walls per frame, the 404 substatus block, the three-body and UTC-ping checks; claims checked | one file, `_archive/_inbox/` (not in git) |
 | [[SRC-13 Provenance of the OMI Trees and the Metaverse Spine]] | Where the omi trees and the metaverse spine came from: /home/main/omi as the source of ~/omi--mush, omi-system.omilisp as Codex's work (2026-05-09), the spine restored and passing closure | author statements and git history, 2026-10-11 |
+| [[SRC-14 Polytron the Commons and the Cave]] | Polytron as the author's earlier stage, Light Garden's toolset, the old typed projects, the tag functor, the exchange, the story on the plane, the cave as a proof tree, and what held | author statements, 2026-10-13 and 2026-10-14 |
 
 ## The Unprocessed Sources
 

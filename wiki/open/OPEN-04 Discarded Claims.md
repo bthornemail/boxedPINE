@@ -87,3 +87,10 @@ These were filed as discarded but are just misprints with a clear intended readi
 | 33 | SRC-03 (lines 42400–44719) | The three swaps generate the permutation group of order 6 | They commute; the group has order 8. All 6 orderings give the same permutation |
 | 34 | SRC-03 (same) | The 20 `{β,β,β}` triples are "the free hexomino count minus the Fano lines" | 35 − 7 = 28 |
 | 35 | SRC-03 (same) | The 35 sedenion triples *are* the 35 free hexominoes; the 60 `{α,β,γ}` triples *are* the Klein configuration | Equal counts only. The triples are XOR lines of indices (see [[OPEN-03 Glossary]], *distinguished triples*) |
+| 36 | DeepSeek, 2026-10-13 | `rotl 3 = rotr 1`, the rotations act within a nibble | Rotations act on all 16 bits; bits cross nibble edges ([[SRC-14 Polytron the Commons and the Cave]]) |
+| 37 | DeepSeek, 2026-10-13 | The period 8 is lcm(2, 3) of swaps, or K permuting bits | lcm(2, 3) = 6. K mixes bits; the 8 is (x + x³ + x¹⁴)⁸ = 1 (I-197) |
+| 38 | the author's research, 2026-10-13 | Red 40, Yellow 6, Blue 1 as the RGB indices | FD&C dye catalogue numbers; red is 40, not 4. The plane's colour XOR (red ⊕ green = yellow) holds on its own |
+| 39 | meta-log docs | The cube's 4 of 8 is a "simple majority"; the thresholds come from the shapes | 4 of 8 is a tie. Only the octahedron's 5 of 6 matches the Byzantine quorum n − ⌊(n − 1)/3⌋; the rest are chosen |
+| 40 | autonomous-identity docs | Its verification guarantees (identity continuity, deterministic recovery) | The verification script cannot run (a missing export); the guarantees were not produced by it |
+| 41 | meta-log docs | "Replaces Raft and Paxos" with polyhedral thresholds | A threshold says how many must agree, not how to agree over lost or reordered messages |
+| 42 | AGS docs | "Hilbert's 21 axioms" validate every operation | 3 are defined and the validator always says yes. Hilbert's 1899 list was 21, later 20 (one order axiom proved redundant by E. H. Moore, 1902) |

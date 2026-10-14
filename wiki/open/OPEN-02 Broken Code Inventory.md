@@ -234,3 +234,52 @@ rotr2 (W16 (B a1 a2 a3 a4 a5 a6 a7 a8) (B b1 b2 b3 b4 b5 b6 b7 b8)) =
 **File:** `core/src/index.ts`
 **Finding:** once #5 and #20 are fixed, the constructor's six nested loops really run. Each walks the 16 bytes of the ruler, so 16⁶ ≈ 16.7 million iterations, each allocating a buffer. It did not finish within 120 seconds. Before the fixes it crashed on its first `swap32`, so this never showed.
 **Status:** recorded, not changed. The enumeration is the author's design; whether it should walk elements wider than one byte (`BYTES_PER_ELEMENT` > 1), or fewer axes, is open.
+
+## The Old Projects (2026-10-13 and 2026-10-14)
+
+Found while reading the author's earlier projects ([[SRC-14 Polytron the Commons and the Cave]]). Recorded, not changed: the author, "the misconception is we have to wire it". Each was checked by running it.
+
+### 27. Polytron: the s bit and the holonomy byte
+
+**Files:** `omi-files/polytron/tetra-node.c`, `tetra-client.c`
+**Finding:** the client sets the s bit on the top bit of both bytes; the node strips it from the first only, so 0x4242 with s = 1 arrives as 0x42C2, and 0xDEAD with s = 0 arrives as s = 1. `hash8` shifts its result left by 8 and is stored in a byte, so holonomy is always 0.
+
+### 28. Polytron: the holemap
+
+**File:** `omi-files/polytron/holemap.c`
+**Finding:** its labels (SING, 2CYC, 4CYC, HOLE) are thresholds on a byte hash, not periods; under 0x1D every state has period 8. Its rectangles are written with `w=`/`h=`, so all 262 draw at zero size.
+
+### 29. Polytron: the NRR log on the stack
+
+**Files:** `omi-files/polytron/test-nrr.c`, `test-system.c`
+**Finding:** a 65,536-entry log on the stack passes the 8 MB default and segfaults; with `ulimit -s unlimited` both pass. `test-nrr2.c` allocates it and works.
+
+### 30. Polytron: seed.c's cons cells, and the Dalí cross
+
+**Files:** `omi-files/polytron/seed.c`, `include/tetra-png.h`
+**Finding:** a cons cell holds two 16-bit pairs in 16 bits, so `t` prints as `nil` and `(1 2 3)` as `(nil nil nil)`; the kernel line holds (its constant 0x1D00 also gives period 8). `make_dali_cross` is not the tesseract net (a plus sign and a loose corner), and the PNG writer fills rows with channel bits, not cells.
+
+### 31. axiomatically-guaranteed-sovereignty: the axioms are not there
+
+**Files:** `~/devops/axiomatically-guaranteed-sovereignty/src/services/ags-service.ts`, `src/types/ulp-core.ts`
+**Finding:** `IAxiomaticSovereignty` and `IGovernanceValidator` are `{}` placeholders; 3 of the README's "21 axioms" are defined; `AxiomValidator.validate` returns `valid: true` always. The conflict engine calls 25 methods it never defines and puts `Math.random()` in each dispute's vector; every MBTI assessment returns INTJ. Of the types' 141 compile errors, 136 are names never declared.
+
+### 32. autonomous-identity: "AES-256" is base64; fingerprints collide
+
+**Files:** `~/devops/autonomous-identity/security/src/SecurityFramework.ts`, `identity/src/IdentityManager.ts`
+**Finding:** `encrypt` is base64 of the JSON (`iv: 'mock-iv'`); any password authenticates; authorisation always allows. The fingerprint is the first 12 bytes of the JSON, so names sharing their first three letters collide. Hyperbolic positions are random and can fall outside the ball (the spec's example has norm 1.18). The verification script imports an export that does not exist.
+
+### 33. h2gnn: the Möbius addition and the distance
+
+**File:** `omi-files/h2gnn-enhanced/src/math/hyperbolic-arithmetic.ts`
+**Finding:** Möbius addition divides by (1 + u·v) once too often, and the distance is `artanh` where the Poincaré distance is `2·artanh`: for (0.3, 0.1) and (−0.2, 0.4) it gives 0.6259 against the true 1.2843. `.mcp.json` points at a path that does not exist on this machine.
+
+### 34. meta-log: the content hash is an XOR fold
+
+**File:** `omi-files/meta-log/scheme/substrate/runtime.scm`
+**Finding:** `content-hash` XORs each character × 31, so order is invisible (`ab` and `ba` share an address) and doubled characters cancel. As a parity check it is the identity's nibble parity; as an address it collides. The Scheme substrate's tests pass in Guile 3.
+
+### 35. meta-log: BIP32 paths reach E8 through SHA-256
+
+**File:** `omi-files/meta-log/modules/meta-log-e8.el`
+**Finding:** a path's point is SHA-256 of its text, rounded into E8 (all 400 tested points are in E8), so a child's point is unrelated to its parent's; the doc's Weyl-orbit delegation check runs on scattered points. Without the hash, the path's indices are the identity and the shared prefix is the relation.

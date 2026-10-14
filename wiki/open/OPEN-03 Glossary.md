@@ -94,6 +94,10 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 
 **CONSTRAINT** — The function `(spectrum: TIME, space: SPACE | CONTINUUM) => BOUNDRY`.
 
+**CanvasL** — The author's JSONL / NDJSON / JSON Canvas type: `@` directive lines, `;` comments, then one node or edge a line. `rosetta/src/canvasl.ts` writes a Markdown document as a CanvasL tree after `types` OMI.Markdown, and a folder as a lattice (tree edges `v:child`, shared tags `h:tag`) ([[SRC-14 Polytron the Commons and the Cave]]).
+
+**CATCH n** — A command pair: two tags with the space between. Sets the byte where the exchange's reset fires; the default, 22, comes at frame 60 ⊕ 22 = 42.
+
 ## D
 
 **decision / delta** — The decision is the path (terminate, forward, modify-and-forward); the delta is the change a modification introduces. They are separate ([[SPEC-05 The Axiom of Propagation]]).
@@ -109,6 +113,8 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 ## E
 
 **eval** — The third primitive (slot 14, the 8T). Reads a knot as a value descriptor, extracting its materialized meaning. Categorically a Comonad.
+
+**exchange** — `Atomics.compareExchange(svg, 60 ⊕ frame, 127, 63)` on an agent's 128-byte state (as I-133): the Hasse XOR file reads 127 and writes 63, the Hasse XNOR file the reverse; handed over through a Proxy, its outcome carried by Catch (`space/src/exchange.ts`).
 
 ## F
 
@@ -127,6 +133,8 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 **G** — The regex-constrained vocabulary: the symbol table that defines the admissible tokens. Frozen in `_archive/index.ts`; mutable (a `Map`) in the self-generating kernel.
 
 **generation** — The self-generating kernel's counter of how many rules it has learned.
+
+**global mask** — The author: "the hints are the global mask". Words applied in every state, not only where a reader would think of them: the game's hint page as commands, tried in every room.
 
 ## H
 
@@ -180,6 +188,8 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 
 **pinch** — The 0-sphere: two points.
 
+**promote / deprecate** — The tag functor (`rosetta/src/tag-type.ts`): lower to upper promotes a subject to an object, upper to lower deprecates a tag. A word and its tag differ by 0x20 in every letter, so the predicate between them is the space. A tag of digits has no case and is never deprecated: numbers stay indices.
+
 ## R
 
 **regenerate** — Rebuilds a kernel from its description by replaying the learned rules. Positions are not replayed.
@@ -213,3 +223,5 @@ Updated 2026-10-07 with the terms the open-question pass settled. Where a defini
 **TIME** — The position array `[e: number, d: number]`.
 
 **tri-state buffer** — A bus driver whose output is high, low or disconnected. The source's "tri-site" was a typo for this.
+
+**trace** — A 65,536-byte buffer, one byte per 16-bit pair: each of an agent's 16 files XORs its place into the agent's name pairs. 0 ⊕ 1 ⊕ … ⊕ 15 = 0, so an intact set traces to zero and a changed margin shows at its pairs (`space/src/trace.ts`).
