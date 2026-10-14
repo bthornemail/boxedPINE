@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dome_frame.v0.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["v", "authority", "harmonic_id", "frame_index", "led_count", "leds", "audio_channels", "digest"],
+  "properties": {
+    "v": { "const": "dome_frame.v0" },
+    "authority": { "const": "advisory" },
+    "harmonic_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "frame_index": { "type": "string", "pattern": "^-?[0-9]+$" },
+    "led_count": { "type": "string", "pattern": "^[0-9]+$" },
+    "leds": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["index", "path", "h", "s", "v", "fano", "channel"],
+        "properties": {
+          "index": { "type": "string", "pattern": "^[0-9]+$" },
+          "path": { "type": "string" },
+          "h": { "type": "string", "pattern": "^-?[0-9]+$" },
+          "s": { "type": "string", "pattern": "^-?[0-9]+$" },
+          "v": { "type": "string", "pattern": "^-?[0-9]+$" },
+          "fano": { "type": "string", "pattern": "^[1-8]$" },
+          "channel": { "type": "string" }
+        }
+      }
+    },
+    "audio_channels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["note", "gain", "phase"],
+        "properties": {
+          "note": { "type": "string" },
+          "gain": { "type": "string", "pattern": "^-?[0-9]+\\.[0-9]{8}$" },
+          "phase": { "type": "string", "pattern": "^-?[0-9]+$" }
+        }
+      }
+    },
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  }
+}

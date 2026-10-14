@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://universallifeprotocol.store/schemas/receipt.verify.schema.json",
+  "title": "Lane Verify Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "lane_id",
+    "pass",
+    "attached",
+    "verified",
+    "require",
+    "issues",
+    "failures",
+    "inputs",
+    "outputs",
+    "run_id"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "kind": { "type": "string", "pattern": "^[a-z0-9_.-]+\\.verify$" },
+    "lane_id": { "type": "string", "minLength": 1 },
+    "pass": { "type": "boolean" },
+    "attached": { "type": "boolean" },
+    "verified": { "type": "boolean" },
+    "require": { "type": "boolean" },
+    "issues": { "type": "array", "items": { "type": "string" } },
+    "failures": { "type": "array", "items": { "type": "string" } },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["check"],
+      "properties": {
+        "check": {
+          "anyOf": [{ "$ref": "#/$defs/fileRef" }, { "type": "null" }]
+        }
+      }
+    },
+    "outputs": {
+      "oneOf": [
+        { "$ref": "#/$defs/outputsStandard" },
+        { "$ref": "#/$defs/outputsEmpty" }
+      ]
+    },
+    "run_id": { "$ref": "#/$defs/sha256" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "attached": { "const": true } }, "required": ["attached"] },
+      "then": {
+        "properties": {
+          "inputs": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["check"],
+            "properties": { "check": { "$ref": "#/$defs/fileRef" } }
+          },
+          "outputs": { "$ref": "#/$defs/outputsStandard" }
+        }
+      },
+      "else": {
+        "properties": {
+          "outputs": { "$ref": "#/$defs/outputsEmpty" }
+        }
+      }
+    }
+    ,
+    {
+      "if": { "properties": { "verified": { "const": true } }, "required": ["verified"] },
+      "then": { "properties": { "attached": { "const": true } } }
+    },
+    {
+      "if": { "properties": { "attached": { "const": false } }, "required": ["attached"] },
+      "then": { "properties": { "verified": { "const": false } } }
+    },
+    {
+      "if": { "properties": { "pass": { "const": true } }, "required": ["pass"] },
+      "then": {
+        "properties": {
+          "verified": { "const": true },
+          "failures": { "type": "array", "maxItems": 0 }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "verified": { "const": true } }, "required": ["verified"] },
+      "then": {
+        "properties": {
+          "outputs": {
+            "required": ["files"],
+            "properties": {
+              "verified_count": {
+                "const": { "$data": "1/files/length" }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pass": { "const": true },
+          "lane_id": { "enum": ["dashboard", "graph", "scene", "mesh", "model", "narrative"] }
+        },
+        "required": ["pass", "lane_id"]
+      },
+      "then": {
+        "properties": {
+          "outputs": {
+            "properties": {
+              "files": { "minItems": 1 },
+              "verified_count": { "minimum": 1 }
+            },
+            "required": ["files", "verified_count"]
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "pass": { "const": false } }, "required": ["pass"] },
+      "then": {
+        "anyOf": [
+          { "properties": { "failures": { "minItems": 1 } } },
+          { "properties": { "issues": { "minItems": 1 } } }
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{8,}$" },
+    "fileRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "verifiedFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "path", "sha256"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "outputsStandard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verified_count", "files"],
+      "properties": {
+        "verified_count": { "type": "integer", "minimum": 0 },
+        "files": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/verifiedFile" }
+        }
+      }
+    },
+    "outputsEmpty": {
+      "type": "object",
+      "additionalProperties": false,
+      "maxProperties": 0
+    }
+  }
+}

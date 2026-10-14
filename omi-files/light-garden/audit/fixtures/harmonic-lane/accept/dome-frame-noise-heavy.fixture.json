@@ -1,0 +1,9 @@
+{
+  "name": "dome-frame-noise-heavy",
+  "input_ndjson": "inputs/noise-heavy.ndjson",
+  "waveform_check": "inputs/waveform-noise.check.json",
+  "led_count": 241,
+  "emit_dome": true,
+  "emit_mask": true,
+  "frame_index": 21
+}

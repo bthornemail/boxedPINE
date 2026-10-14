@@ -1,0 +1,9 @@
+{
+  "name": "harmonic-id-only",
+  "input_ndjson": "inputs/sample.ndjson",
+  "waveform_check": "inputs/waveform.check.json",
+  "led_count": 7,
+  "emit_dome": false,
+  "emit_mask": false,
+  "frame_index": 0
+}

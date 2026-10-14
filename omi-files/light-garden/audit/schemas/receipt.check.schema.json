@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://universallifeprotocol.store/schemas/receipt.check.schema.json",
+  "title": "Lane Check Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "lane_id", "pass", "run_id", "generated_at", "inputs", "outputs"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "kind": { "type": "string", "pattern": "^[a-z0-9_.-]+\\.check$" },
+    "lane_id": { "type": "string", "minLength": 1 },
+    "pass": { "type": "boolean" },
+    "run_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{8,}$" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "config": { "type": "object", "additionalProperties": true },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": {
+        "anyOf": [{ "$ref": "#/$defs/fileRefWithProvenance" }, { "type": "null" }]
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/fileRef" }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "pass": { "const": true } }, "required": ["pass"] },
+      "then": {
+        "properties": {
+          "outputs": { "type": "object", "minProperties": 1 }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{8,}$" },
+    "fileRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "fileRefWithProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "copied_from": { "type": "string" }
+      }
+    }
+  }
+}

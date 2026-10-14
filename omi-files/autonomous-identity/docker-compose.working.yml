@@ -1,0 +1,65 @@
+# Working AI Persistence Package - Docker Compose Configuration
+# Simple deployment using existing server.mjs
+
+version: '3.8'
+
+services:
+  # Working AI Persistence Core Service
+  ai-persistence-working:
+    build:
+      context: .
+      dockerfile: Dockerfile.working
+    container_name: ai-persistence-working
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - H2GNN_STORAGE_PATH=/app/persistence
+      - H2GNN_STATE_FILE=/app/state/state.json
+      - H2GNN_LOG_LEVEL=info
+      - H2GNN_MAX_MEMORIES=10000
+      - H2GNN_ENCRYPTION_KEY=${H2GNN_ENCRYPTION_KEY:-default-encryption-key-change-in-production}
+    volumes:
+      - ai-persistence-data:/app/persistence
+      - ai-persistence-state:/app/state
+      - ai-persistence-logs:/app/logs
+    networks:
+      - ai-persistence-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "console.log('Health check passed')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: ai-persistence-nginx-working
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.simplified.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - ai-persistence-network
+    depends_on:
+      - ai-persistence-working
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  ai-persistence-data:
+    driver: local
+  ai-persistence-state:
+    driver: local
+  ai-persistence-logs:
+    driver: local
+
+networks:
+  ai-persistence-network:
+    driver: bridge

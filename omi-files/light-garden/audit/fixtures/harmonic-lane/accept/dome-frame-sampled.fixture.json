@@ -1,0 +1,9 @@
+{
+  "name": "dome-frame-sampled",
+  "input_ndjson": "inputs/sampled.ndjson",
+  "waveform_check": "inputs/waveform-sampled.check.json",
+  "led_count": 241,
+  "emit_dome": true,
+  "emit_mask": true,
+  "frame_index": 12
+}

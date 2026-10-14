@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "harmonic_lane.report.v0.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["v", "phase", "fixture_counts", "accept_pass", "reject_pass", "replay_hash", "status", "digest"],
+  "properties": {
+    "v": { "const": "harmonic_lane.report.v0" },
+    "phase": { "type": "string" },
+    "fixture_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accept", "reject"],
+      "properties": {
+        "accept": { "type": "string", "pattern": "^[0-9]+$" },
+        "reject": { "type": "string", "pattern": "^[0-9]+$" }
+      }
+    },
+    "accept_pass": { "type": "boolean" },
+    "reject_pass": { "type": "boolean" },
+    "replay_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "status": { "enum": ["ok", "fail"] },
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  }
+}

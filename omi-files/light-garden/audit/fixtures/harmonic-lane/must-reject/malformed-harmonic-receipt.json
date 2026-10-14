@@ -1,0 +1,12 @@
+{
+  "v": "harmonic_receipt.v0",
+  "authority": "advisory",
+  "run_id": "sha256:e5722e4d15a4d10f5ad4320d3fcaa1757288b67853b316c373b23526ed0a7c41",
+  "harmonic_id_digest": "sha256:eca6bc194f049f56701b98ff7ed0a036ca6c7b7dd52dc282bf0b42c24aa67f0f",
+  "dome_frame_digest": "sha256:c0716c8eb15a449cf25795ceac1820bd8a3b6ca5253ecec155810b3e90731793",
+  "talisman_mask_digest": "sha256:b2525fa311cecd5cc684da300476d6598fd3bca0efd3711838e0824e408a32e5",
+  "source_ndjson_sha256": "sha256:796d9900dd1f4def7edcc3d955659bbf53f6ecde46e96415f14f6d38a42d1d9e",
+  "waveform_check_sha256": "sha256:15c32e1b704500bf366b2c8a4a591119bbce33f178c10c5e6fd76da7fc47add3",
+  "gate_status": "maybe",
+  "digest": "sha256:600c8673790d5acdaedfb1f20342a010ba363ecef6c370c93e845e76cde5e005"
+}

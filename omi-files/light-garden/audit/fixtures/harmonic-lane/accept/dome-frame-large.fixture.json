@@ -1,0 +1,9 @@
+{
+  "name": "dome-frame-large",
+  "input_ndjson": "inputs/sample.ndjson",
+  "waveform_check": "inputs/waveform.check.json",
+  "led_count": 61,
+  "emit_dome": true,
+  "emit_mask": false,
+  "frame_index": 0
+}

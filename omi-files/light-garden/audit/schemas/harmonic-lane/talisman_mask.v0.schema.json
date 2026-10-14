@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "talisman_mask.v0.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["v", "authority", "harmonic_id", "mask_profile_id", "mask_mode", "mask_vector", "target_channels", "constraints", "digest"],
+  "properties": {
+    "v": { "const": "talisman_mask.v0" },
+    "authority": { "const": "advisory" },
+    "harmonic_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "mask_profile_id": { "type": "string" },
+    "mask_mode": { "enum": ["cancel", "obfuscate", "attenuate"] },
+    "mask_vector": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": { "type": "string", "pattern": "^-?[0-9]+\\.[0-9]{8}$" }
+    },
+    "target_channels": { "type": "array", "items": { "type": "string" } },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_delta", "preserve_digest_lineage", "projection_only"],
+      "properties": {
+        "max_delta": { "type": "string" },
+        "preserve_digest_lineage": { "type": "string" },
+        "projection_only": { "type": "string" }
+      }
+    },
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  }
+}

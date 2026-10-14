@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://universallifeprotocol.store/schemas/world.mesh.ir.schema.json",
+  "title": "world.mesh.ir.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "lane_id", "run_id", "generated_at", "inputs", "meta", "materials", "meshes"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "kind": { "type": "string", "const": "world.mesh.ir" },
+    "lane_id": { "type": "string", "const": "mesh" },
+    "run_id": { "$ref": "#/$defs/sha256" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["floorplan_svg"],
+      "properties": {
+        "floorplan_svg": { "$ref": "#/$defs/sourceFile" }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["units", "up", "source_space", "triangulator"],
+      "properties": {
+        "units": { "type": "string", "minLength": 1 },
+        "up": { "type": "string", "enum": ["y"] },
+        "source_space": { "type": "string", "enum": ["svg-2d", "scene-3d", "mixed"] },
+        "triangulator": { "type": "string", "minLength": 1 },
+        "notes": { "type": "string" }
+      }
+    },
+    "materials": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/material" }
+    },
+    "meshes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/mesh" }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{8,}$" },
+    "sourceFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "vec3": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "z"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "z": { "type": "number" }
+      }
+    },
+    "transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["position", "rotation_euler", "scale"],
+      "properties": {
+        "position": { "$ref": "#/$defs/vec3" },
+        "rotation_euler": { "$ref": "#/$defs/vec3" },
+        "scale": { "$ref": "#/$defs/vec3" }
+      }
+    },
+    "material": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "pbr"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "pbr": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["base_color", "metallic", "roughness"],
+          "properties": {
+            "base_color": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": { "type": "number" }
+            },
+            "metallic": { "type": "number" },
+            "roughness": { "type": "number" }
+          }
+        }
+      }
+    },
+    "bufferRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "byte_offset", "byte_length"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_offset": { "type": "integer", "minimum": 0 },
+        "byte_length": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "attr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "components"],
+      "properties": {
+        "format": { "type": "string", "enum": ["f32", "u32", "u16", "u8", "i32", "i16", "i8"] },
+        "components": { "type": "integer", "enum": [1, 2, 3, 4] },
+        "data": {
+          "type": "array",
+          "items": { "type": "number" }
+        },
+        "buffer": { "$ref": "#/$defs/bufferRef" }
+      },
+      "allOf": [
+        {
+          "oneOf": [{ "required": ["data"] }, { "required": ["buffer"] }]
+        }
+      ]
+    },
+    "indices": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format"],
+      "properties": {
+        "format": { "type": "string", "enum": ["u32", "u16", "u8"] },
+        "data": { "type": "array", "items": { "type": "integer", "minimum": 0 } },
+        "buffer": { "$ref": "#/$defs/bufferRef" }
+      },
+      "allOf": [
+        {
+          "oneOf": [{ "required": ["data"] }, { "required": ["buffer"] }]
+        }
+      ]
+    },
+    "primitive": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["material_id", "topology", "attributes", "props"],
+      "properties": {
+        "material_id": { "type": "string", "minLength": 1 },
+        "topology": { "type": "string", "enum": ["triangles"] },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "POSITION": { "$ref": "#/$defs/attr" },
+            "NORMAL": { "$ref": "#/$defs/attr" },
+            "TEXCOORD_0": { "$ref": "#/$defs/attr" },
+            "COLOR_0": { "$ref": "#/$defs/attr" }
+          },
+          "required": ["POSITION"]
+        },
+        "indices": { "$ref": "#/$defs/indices" },
+        "props": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "double_sided": { "type": "boolean" },
+            "collider_hint": { "type": "string", "enum": ["trimesh", "convex", "none"] }
+          }
+        }
+      }
+    },
+    "mesh": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "transform", "primitives"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "svg_element_id": { "type": "string" },
+            "svg_path": { "type": "string" }
+          }
+        },
+        "transform": { "$ref": "#/$defs/transform" },
+        "primitives": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/primitive" }
+        }
+      }
+    }
+  }
+}
+

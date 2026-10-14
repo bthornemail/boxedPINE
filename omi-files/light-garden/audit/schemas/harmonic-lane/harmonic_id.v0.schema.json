@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "harmonic_id.v0.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "v",
+    "authority",
+    "run_id",
+    "source_ndjson_sha256",
+    "waveform_check_sha256",
+    "channel_basis",
+    "fano_basis",
+    "harmonic_class",
+    "harmonic_vector",
+    "harmonic_id",
+    "digest"
+  ],
+  "properties": {
+    "v": { "const": "harmonic_id.v0" },
+    "authority": { "const": "advisory" },
+    "run_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "source_ndjson_sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "waveform_check_sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "channel_basis": { "type": "array", "items": { "type": "string" } },
+    "fano_basis": { "type": "array", "items": { "type": "string" } },
+    "harmonic_class": { "enum": ["sparse", "balanced", "dense"] },
+    "harmonic_vector": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": { "type": "string", "pattern": "^-?[0-9]+\\.[0-9]{8}$" }
+    },
+    "harmonic_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  }
+}

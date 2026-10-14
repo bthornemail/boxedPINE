@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://universallifeprotocol.store/schemas/world.graph.schema.json",
+  "title": "world.graph.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "lane_id", "run_id", "generated_at", "meta", "nodes", "edges"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "kind": { "type": "string", "const": "world.graph" },
+    "lane_id": { "type": "string", "const": "graph" },
+    "run_id": { "$ref": "#/$defs/sha256" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["world_id", "world_name", "units", "up"],
+      "properties": {
+        "world_id": { "type": "string", "minLength": 1 },
+        "world_name": { "type": "string", "minLength": 1 },
+        "units": { "type": "string", "minLength": 1 },
+        "up": { "type": "string", "enum": ["y"] },
+        "notes": { "type": "string" }
+      }
+    },
+    "sources": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "floorplan_svg": { "$ref": "#/$defs/sourceFile" },
+        "canvasl_ndjson": { "$ref": "#/$defs/sourceFile" },
+        "world_ndjson": { "$ref": "#/$defs/sourceFile" }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/node" }
+    },
+    "edges": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/edge" }
+    },
+    "regions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/region" }
+    },
+    "paths": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/path" }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{8,}$" },
+    "sourceFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "vec3": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "z"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "z": { "type": "number" }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "props": { "type": "object", "additionalProperties": true },
+        "spatial_hints": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "anchor": { "$ref": "#/$defs/vec3" },
+            "region_id": { "type": "string" },
+            "priority": { "type": "number" }
+          }
+        },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ref"],
+          "properties": {
+            "ref": { "type": "string", "minLength": 1 },
+            "sha256": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to", "rel"],
+      "properties": {
+        "id": { "type": "string" },
+        "from": { "type": "string", "minLength": 1 },
+        "to": { "type": "string", "minLength": 1 },
+        "rel": { "type": "string", "minLength": 1 },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "props": { "type": "object", "additionalProperties": true },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ref"],
+          "properties": {
+            "ref": { "type": "string", "minLength": 1 },
+            "sha256": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      }
+    },
+    "region": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "shape_2d"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "label": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "props": { "type": "object", "additionalProperties": true },
+        "shape_2d": {
+          "type": "object",
+          "additionalProperties": false,
+          "oneOf": [
+            {
+              "required": ["polygon"],
+              "properties": {
+                "polygon": {
+                  "type": "array",
+                  "minItems": 3,
+                  "items": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": { "type": "number" }
+                  }
+                }
+              }
+            },
+            {
+              "required": ["aabb"],
+              "properties": {
+                "aabb": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["min", "max"],
+                  "properties": {
+                    "min": {
+                      "type": "array",
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "items": { "type": "number" }
+                    },
+                    "max": {
+                      "type": "array",
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "items": { "type": "number" }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "path": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "polyline_2d"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "polyline_2d": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": { "type": "number" }
+          }
+        },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "props": { "type": "object", "additionalProperties": true }
+      }
+    }
+  }
+}
+

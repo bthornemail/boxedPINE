@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WORLDBUILDER · POLITY ENGINE</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;1,300&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&family=IBM+Plex+Serif:ital,wght@0,300;1,300&display=swap');
+
+:root {
+  --bg:       #f4f2ee;
+  --bg2:      #eae7e0;
+  --bg3:      #dedad0;
+  --ink:      #1a1a1a;
+  --ink2:     #444;
+  --ink3:     #777;
+  --border:   #c8c4bb;
+  --border2:  #a8a49a;
+  --blue:     #0055a5;
+  --blue2:    #1a6abf;
+  --blue-bg:  #e8f0fa;
+  --red:      #c0392b;
+  --red-bg:   #faeae8;
+  --green:    #217a3c;
+  --green-bg: #e8f5ec;
+  --gold:     #8a6800;
+  --gold-bg:  #faf3e0;
+  --violet:   #6b3fa0;
+  --violet-bg:#f2ecfa;
+  --teal:     #0d7a7a;
+  --teal-bg:  #e8f8f8;
+  --orange:   #b84c00;
+  --orange-bg:#faf0e8;
+
+  /* Aave/DeFi accent */
+  --aave:     #b6509e;
+  --aave-bg:  #fdf0fa;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:13px;
+  line-height:1.4;
+}
+
+/* ════════════════════════════════
+   SHELL: classic Craigslist grid
+   Header / [sidebar | main | panel]
+   ════════════════════════════════ */
+.shell{
+  display:grid;
+  grid-template-rows:auto auto 1fr auto;
+  height:100vh;
+  overflow:hidden;
+}
+
+/* ── MASTHEAD ── */
+.masthead{
+  background:var(--blue);
+  color:white;
+  padding:0 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:44px;
+  border-bottom:3px solid #003880;
+}
+.masthead-logo{
+  font-family:'IBM Plex Mono',monospace;
+  font-weight:600;font-size:16px;letter-spacing:0.05em;
+  color:white;
+  display:flex;align-items:center;gap:10px;
+}
+.masthead-logo .sub{font-weight:300;font-size:11px;color:rgba(255,255,255,0.7);letter-spacing:0.1em;}
+.masthead-right{display:flex;gap:8px;align-items:center;}
+.mast-btn{
+  padding:4px 12px;font-size:11px;cursor:pointer;
+  background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);
+  color:white;font-family:'IBM Plex Mono',monospace;letter-spacing:0.08em;
+  transition:background .12s;
+}
+.mast-btn:hover{background:rgba(255,255,255,0.25);}
+.mast-btn.accent{background:white;color:var(--blue);font-weight:600;}
+.mast-btn.accent:hover{background:#f0f0f0;}
+
+/* ── LOCATION BAR (like CL breadcrumb) ── */
+.locbar{
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  padding:6px 20px;
+  display:flex;align-items:center;gap:8px;
+  font-size:11px;color:var(--ink3);
+  flex-wrap:wrap;
+}
+.locbar a{color:var(--blue2);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+.locbar a:hover{color:var(--red);}
+.locbar .sep{color:var(--border2);}
+.world-name{
+  font-family:'IBM Plex Mono',monospace;font-weight:600;
+  color:var(--ink);font-size:12px;
+  padding:2px 8px;background:var(--blue-bg);border:1px solid var(--blue);
+  cursor:pointer;
+}
+.world-name:hover{background:#d0e0f5;}
+.seq-badge{
+  margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:10px;
+  color:var(--ink3);
+}
+.seq-badge span{color:var(--blue2);font-weight:600;}
+
+/* ── BODY ROW ── */
+.body-row{
+  display:grid;
+  grid-template-columns:200px 1fr 300px;
+  min-height:0;overflow:hidden;
+}
+
+/* ════════════════════════════════
+   LEFT: CATEGORY SIDEBAR
+   (Craigslist-style section list)
+   ════════════════════════════════ */
+.sidebar{
+  border-right:1px solid var(--border);
+  background:var(--bg);
+  overflow-y:auto;
+  padding:0;
+}
+.sb-section{margin-bottom:0;border-bottom:1px solid var(--border);}
+.sb-section-head{
+  padding:8px 12px 4px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--ink3);font-weight:600;
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  user-select:none;
+}
+.sb-links{padding:4px 0 6px;}
+.sb-link{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:3px 14px;cursor:pointer;
+  font-size:12px;color:var(--blue2);
+  transition:background .08s;
+  user-select:none;
+}
+.sb-link:hover{background:var(--blue-bg);}
+.sb-link.active{
+  background:var(--blue-bg);
+  color:var(--blue);font-weight:600;
+  border-left:3px solid var(--blue);
+  padding-left:11px;
+}
+.sb-link .count{
+  font-size:10px;color:var(--ink3);font-family:'IBM Plex Mono',monospace;
+  background:var(--bg3);padding:1px 5px;border-radius:8px;
+  min-width:20px;text-align:center;
+}
+.sb-link.active .count{background:var(--blue);color:white;}
+
+/* ── AAVE connector in sidebar ── */
+.aave-connector{
+  padding:10px 12px;background:var(--aave-bg);border:1px solid #e0b0d8;
+  margin:8px;border-radius:2px;font-size:11px;
+}
+.aave-connector .head{color:var(--aave);font-weight:600;font-size:10px;letter-spacing:0.1em;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.aave-connector select{
+  width:100%;padding:3px 5px;font-size:10px;
+  border:1px solid #d0a0c0;background:white;color:var(--ink);
+  font-family:'IBM Plex Mono',monospace;margin-top:4px;
+}
+.aave-connector button{
+  width:100%;margin-top:5px;padding:4px;font-size:10px;cursor:pointer;
+  background:var(--aave);color:white;border:none;font-family:'IBM Plex Mono',monospace;
+  letter-spacing:0.08em;
+}
+.aave-connector button:hover{background:#9a3a8a;}
+.aave-status{font-size:9px;color:var(--ink3);margin-top:4px;font-style:italic;}
+
+/* ════════════════════════════════
+   CENTER: CARD GRID
+   ════════════════════════════════ */
+.main-col{
+  display:flex;flex-direction:column;
+  min-height:0;overflow:hidden;
+  background:var(--bg);
+}
+
+/* ── TOOLBAR ── */
+.main-toolbar{
+  padding:8px 14px;border-bottom:1px solid var(--border);
+  background:var(--bg2);
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.cat-title{
+  font-family:'IBM Plex Serif',serif;
+  font-size:15px;font-style:italic;color:var(--ink);
+  min-width:160px;
+}
+.tb-search{
+  flex:1;padding:4px 8px;border:1px solid var(--border2);
+  background:white;font-family:'IBM Plex Sans',sans-serif;font-size:12px;
+  color:var(--ink);outline:none;min-width:120px;
+}
+.tb-search:focus{border-color:var(--blue);}
+.tb-btn{
+  padding:4px 10px;font-size:11px;cursor:pointer;
+  border:1px solid var(--border2);background:white;color:var(--ink2);
+  font-family:'IBM Plex Mono',monospace;letter-spacing:0.06em;
+  transition:all .1s;
+}
+.tb-btn:hover{border-color:var(--blue);color:var(--blue);}
+.tb-btn.primary{background:var(--blue);color:white;border-color:var(--blue);}
+.tb-btn.primary:hover{background:var(--blue2);}
+
+/* ── CARD GRID ── */
+.card-grid{
+  flex:1;overflow-y:auto;
+  padding:12px 14px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:10px;
+  align-content:start;
+}
+
+/* ── ENTITY CARD (like FB Marketplace listing) ── */
+.ecard{
+  border:1px solid var(--border);
+  background:white;
+  cursor:pointer;
+  transition:all .12s;
+  position:relative;
+  display:flex;flex-direction:column;
+}
+.ecard:hover{border-color:var(--blue2);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+.ecard.selected{border-color:var(--blue);border-width:2px;box-shadow:0 0 0 2px rgba(0,85,165,0.15);}
+.ecard.in-world{border-left:3px solid var(--green);}
+.ecard.in-world::after{
+  content:'✓ IN WORLD';
+  position:absolute;top:6px;right:6px;
+  font-size:8px;padding:1px 5px;background:var(--green);color:white;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:0.08em;
+}
+
+.card-icon{
+  height:72px;display:flex;align-items:center;justify-content:center;
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  font-size:36px;
+  position:relative;overflow:hidden;
+}
+.card-icon svg{width:64px;height:64px;}
+.card-icon .cat-stripe{
+  position:absolute;bottom:0;left:0;right:0;height:3px;
+}
+
+.card-body{padding:8px 10px;flex:1;}
+.card-name{font-weight:600;font-size:13px;color:var(--ink);margin-bottom:2px;}
+.card-type{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--ink3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px;}
+.card-desc{font-size:11px;color:var(--ink2);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+
+.card-footer{
+  padding:5px 10px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg);
+}
+.card-tags{display:flex;gap:3px;flex-wrap:wrap;}
+.tag{
+  font-size:8px;padding:1px 5px;border-radius:2px;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:0.05em;
+  font-weight:600;text-transform:uppercase;
+}
+.card-add-btn{
+  font-size:10px;padding:3px 8px;cursor:pointer;
+  border:1px solid var(--blue);background:var(--blue-bg);color:var(--blue);
+  font-family:'IBM Plex Mono',monospace;transition:all .1s;white-space:nowrap;
+}
+.card-add-btn:hover{background:var(--blue);color:white;}
+.card-add-btn.added{border-color:var(--green);background:var(--green-bg);color:var(--green);}
+.card-add-btn.added:hover{background:var(--red);border-color:var(--red);color:white;}
+
+/* ── EMPTY STATE ── */
+.empty-state{
+  grid-column:1/-1;text-align:center;padding:40px 20px;
+  color:var(--ink3);font-style:italic;
+  font-family:'IBM Plex Serif',serif;font-size:14px;
+}
+
+/* ════════════════════════════════
+   RIGHT: DETAIL + NDJSON PANEL
+   ════════════════════════════════ */
+.detail-panel{
+  border-left:1px solid var(--border);
+  background:white;
+  display:flex;flex-direction:column;
+  min-height:0;overflow:hidden;
+}
+.dp-tabs{
+  display:flex;border-bottom:2px solid var(--border);
+  background:var(--bg2);
+}
+.dp-tab{
+  padding:8px 14px;font-size:11px;cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:0.1em;
+  color:var(--ink3);border-bottom:2px solid transparent;margin-bottom:-2px;
+  transition:all .1s;background:none;border-top:none;border-left:none;border-right:none;
+}
+.dp-tab.active{color:var(--blue);border-bottom-color:var(--blue);background:white;}
+.dp-tab:hover{color:var(--ink);}
+
+/* WORLD VIEW */
+.world-view{flex:1;overflow-y:auto;display:none;}
+.world-view.active{display:block;}
+.world-section{border-bottom:1px solid var(--border);padding:10px 12px;}
+.ws-head{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.2em;color:var(--ink3);text-transform:uppercase;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;}
+.world-entity-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:5px 6px;border:1px solid var(--border);margin-bottom:3px;
+  background:var(--bg);cursor:pointer;transition:background .1s;
+}
+.world-entity-row:hover{background:var(--blue-bg);}
+.wer-left{display:flex;align-items:center;gap:6px;}
+.wer-icon{font-size:14px;}
+.wer-name{font-size:11px;font-weight:600;}
+.wer-type{font-size:9px;color:var(--ink3);font-family:'IBM Plex Mono',monospace;}
+.wer-rm{font-size:9px;color:var(--red);cursor:pointer;padding:2px 5px;border:1px solid var(--border);background:white;}
+.wer-rm:hover{background:var(--red);color:white;border-color:var(--red);}
+
+/* STREAM VIEW */
+.stream-view{flex:1;overflow-y:auto;display:none;font-family:'IBM Plex Mono',monospace;}
+.stream-view.active{display:block;}
+.nd-line{
+  padding:3px 10px;border-left:3px solid transparent;
+  font-size:9px;line-height:1.6;word-break:break-all;
+  transition:background .08s;border-bottom:1px solid rgba(0,0,0,0.03);
+}
+.nd-line:hover{background:rgba(0,85,165,0.03);}
+.nd-line.ev-place{border-left-color:var(--blue);}
+.nd-line.ev-link{border-left-color:var(--violet);}
+.nd-line.ev-remove{border-left-color:var(--red);}
+.nd-line.ev-aave{border-left-color:var(--aave);}
+.nd-line.ev-world{border-left-color:var(--green);}
+.nd-line.ev-gov{border-left-color:var(--gold);}
+.nd-flash{animation:flash .4s ease-out;}
+@keyframes flash{from{background:rgba(0,85,165,0.08);}to{background:transparent;}}
+.jk{color:#555577;}.js{color:#336633;}.jn{color:#224488;}.jb{color:#883344;}
+
+/* DETAIL CARD VIEW */
+.detail-view{flex:1;overflow-y:auto;display:none;padding:12px;}
+.detail-view.active{display:block;}
+.dv-hero{font-size:48px;text-align:center;margin-bottom:8px;}
+.dv-name{font-size:16px;font-weight:700;text-align:center;margin-bottom:2px;}
+.dv-type{font-size:10px;color:var(--ink3);text-align:center;font-family:'IBM Plex Mono',monospace;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px;}
+.dv-field{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border);font-size:11px;}
+.dv-field-key{color:var(--ink3);}
+.dv-field-val{color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:10px;text-align:right;max-width:160px;word-break:break-all;}
+.dv-section-head{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.2em;color:var(--ink3);text-transform:uppercase;margin:12px 0 6px;padding-bottom:3px;border-bottom:2px solid var(--border);}
+.dv-add-btn{
+  display:block;width:100%;margin-top:14px;padding:8px;
+  background:var(--blue);color:white;border:none;cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;
+  font-weight:600;text-align:center;
+}
+.dv-add-btn:hover{background:var(--blue2);}
+.dv-add-btn.added{background:var(--green);}
+.dv-add-btn.added:hover{background:var(--red);}
+
+/* LINKS view */
+.links-view{flex:1;overflow-y:auto;display:none;padding:10px;}
+.links-view.active{display:block;}
+.link-row{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--border);font-size:11px;}
+.link-type-badge{font-size:8px;padding:1px 6px;font-family:'IBM Plex Mono',monospace;letter-spacing:0.06em;font-weight:600;text-transform:uppercase;}
+.link-from,.link-to{font-size:10px;color:var(--ink2);}
+.link-arrow{color:var(--ink3);}
+
+/* ── FOOTER BAR ── */
+footer{
+  border-top:2px solid var(--border);background:var(--bg2);
+  padding:0 14px;height:32px;display:flex;align-items:center;
+  gap:20px;font-size:10px;color:var(--ink3);font-family:'IBM Plex Mono',monospace;
+}
+footer span{color:var(--blue2);font-weight:600;}
+.ft-mode{color:var(--green)!important;font-weight:700;}
+
+/* Modal / create form */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:999;
+  background:rgba(0,0,0,0.5);align-items:center;justify-content:center;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:white;border:2px solid var(--blue);
+  width:420px;max-height:80vh;overflow-y:auto;
+}
+.modal-head{
+  background:var(--blue);color:white;padding:10px 16px;
+  font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:12px;letter-spacing:0.1em;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.modal-close{cursor:pointer;font-size:16px;background:none;border:none;color:white;}
+.modal-body{padding:14px 16px;}
+.form-field{margin-bottom:10px;}
+.form-label{font-size:10px;color:var(--ink3);font-family:'IBM Plex Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px;display:block;}
+.form-input,.form-select,.form-textarea{
+  width:100%;padding:5px 8px;border:1px solid var(--border2);
+  font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:var(--ink);
+  background:white;outline:none;
+}
+.form-textarea{height:70px;resize:vertical;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--blue);}
+.form-submit{
+  display:block;width:100%;padding:8px;
+  background:var(--blue);color:white;border:none;cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;font-weight:600;
+  margin-top:12px;
+}
+.form-submit:hover{background:var(--blue2);}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ── MASTHEAD ── -->
+<div class="masthead">
+  <div class="masthead-logo">
+    ⬡ WORLDBUILDER
+    <span class="sub">POLITY ENGINE · NDJSON</span>
+  </div>
+  <div class="masthead-right">
+    <button class="mast-btn" onclick="openCreateModal()">+ CREATE ENTITY</button>
+    <button class="mast-btn" onclick="exportNDJSON()">↓ NDJSON</button>
+    <button class="mast-btn accent" onclick="openWorldModal()">⊞ NEW WORLD</button>
+  </div>
+</div>
+
+<!-- ── LOCATION BAR ── -->
+<div class="locbar">
+  <a onclick="filterCat('all')">worldbuilder</a>
+  <span class="sep">›</span>
+  <span class="world-name" id="world-name-crumb" onclick="openWorldModal()">untitled-world-1</span>
+  <span class="sep">›</span>
+  <span id="crumb-cat" style="color:var(--ink2)">all entities</span>
+  <div class="seq-badge">seq <span id="hd-seq">0</span> · events <span id="hd-events">0</span> · world <span id="hd-world-count">0</span> entities</div>
+</div>
+
+<!-- ── BODY ── -->
+<div class="body-row">
+
+  <!-- LEFT SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- POLITICAL -->
+    <div class="sb-section">
+      <div class="sb-section-head">⚑ Political</div>
+      <div class="sb-links">
+        <div class="sb-link active" data-cat="all" onclick="filterCat('all')"><span>All Entities</span><span class="count" id="cnt-all">0</span></div>
+        <div class="sb-link" data-cat="nation" onclick="filterCat('nation')"><span>Nations</span><span class="count" id="cnt-nation">0</span></div>
+        <div class="sb-link" data-cat="faction" onclick="filterCat('faction')"><span>Factions</span><span class="count" id="cnt-faction">0</span></div>
+        <div class="sb-link" data-cat="governance" onclick="filterCat('governance')"><span>Governance</span><span class="count" id="cnt-governance">0</span></div>
+        <div class="sb-link" data-cat="law" onclick="filterCat('law')"><span>Laws & Codes</span><span class="count" id="cnt-law">0</span></div>
+        <div class="sb-link" data-cat="treaty" onclick="filterCat('treaty')"><span>Treaties</span><span class="count" id="cnt-treaty">0</span></div>
+      </div>
+    </div>
+
+    <!-- SOCIAL -->
+    <div class="sb-section">
+      <div class="sb-section-head">♟ Social</div>
+      <div class="sb-links">
+        <div class="sb-link" data-cat="citizen" onclick="filterCat('citizen')"><span>Citizens</span><span class="count" id="cnt-citizen">0</span></div>
+        <div class="sb-link" data-cat="institution" onclick="filterCat('institution')"><span>Institutions</span><span class="count" id="cnt-institution">0</span></div>
+        <div class="sb-link" data-cat="culture" onclick="filterCat('culture')"><span>Cultures</span><span class="count" id="cnt-culture">0</span></div>
+        <div class="sb-link" data-cat="religion" onclick="filterCat('religion')"><span>Religions</span><span class="count" id="cnt-religion">0</span></div>
+        <div class="sb-link" data-cat="media" onclick="filterCat('media')"><span>Media</span><span class="count" id="cnt-media">0</span></div>
+      </div>
+    </div>
+
+    <!-- ECONOMIC -->
+    <div class="sb-section">
+      <div class="sb-section-head">◈ Economic</div>
+      <div class="sb-links">
+        <div class="sb-link" data-cat="market" onclick="filterCat('market')"><span>Markets</span><span class="count" id="cnt-market">0</span></div>
+        <div class="sb-link" data-cat="treasury" onclick="filterCat('treasury')"><span>Treasuries</span><span class="count" id="cnt-treasury">0</span></div>
+        <div class="sb-link" data-cat="trade" onclick="filterCat('trade')"><span>Trade Routes</span><span class="count" id="cnt-trade">0</span></div>
+        <div class="sb-link" data-cat="resource" onclick="filterCat('resource')"><span>Resources</span><span class="count" id="cnt-resource">0</span></div>
+        <div class="sb-link" data-cat="corporation" onclick="filterCat('corporation')"><span>Corporations</span><span class="count" id="cnt-corporation">0</span></div>
+      </div>
+    </div>
+
+    <!-- DEFI / AAVE -->
+    <div class="sb-section">
+      <div class="sb-section-head" style="color:var(--aave);">⬡ DeFi Protocol</div>
+      <div class="sb-links">
+        <div class="sb-link" data-cat="reserve" onclick="filterCat('reserve')"><span>Reserves</span><span class="count" id="cnt-reserve">0</span></div>
+        <div class="sb-link" data-cat="protocol" onclick="filterCat('protocol')"><span>Protocols</span><span class="count" id="cnt-protocol">0</span></div>
+        <div class="sb-link" data-cat="proposal" onclick="filterCat('proposal')"><span>Proposals</span><span class="count" id="cnt-proposal">0</span></div>
+        <div class="sb-link" data-cat="vault" onclick="filterCat('vault')"><span>Vaults</span><span class="count" id="cnt-vault">0</span></div>
+        <div class="sb-link" data-cat="liquidation" onclick="filterCat('liquidation')"><span>Liquidations</span><span class="count" id="cnt-liquidation">0</span></div>
+      </div>
+    </div>
+
+    <!-- INFRASTRUCTURE -->
+    <div class="sb-section">
+      <div class="sb-section-head">⬛ Infrastructure</div>
+      <div class="sb-links">
+        <div class="sb-link" data-cat="territory" onclick="filterCat('territory')"><span>Territories</span><span class="count" id="cnt-territory">0</span></div>
+        <div class="sb-link" data-cat="network" onclick="filterCat('network')"><span>Networks</span><span class="count" id="cnt-network">0</span></div>
+        <div class="sb-link" data-cat="technology" onclick="filterCat('technology')"><span>Technologies</span><span class="count" id="cnt-technology">0</span></div>
+        <div class="sb-link" data-cat="military" onclick="filterCat('military')"><span>Military</span><span class="count" id="cnt-military">0</span></div>
+      </div>
+    </div>
+
+    <!-- AAVE CONNECTOR -->
+    <div class="aave-connector">
+      <div class="head">⬡ Aave Subgraph</div>
+      <select id="aave-network">
+        <option value="eth-v3">ETH Mainnet V3</option>
+        <option value="polygon-v3">Polygon V3</option>
+        <option value="arbitrum-v3">Arbitrum V3</option>
+        <option value="avalanche-v3">Avalanche V3</option>
+        <option value="base-v3">Base V3</option>
+        <option value="optimism-v3">Optimism V3</option>
+      </select>
+      <button onclick="importAaveReserves()">↓ Import Reserves</button>
+      <button onclick="importAaveGovernance()" style="margin-top:3px;background:#6b3fa0;">↓ Import Proposals</button>
+      <div class="aave-status" id="aave-status">Select network · click to import</div>
+    </div>
+
+  </div><!-- /sidebar -->
+
+  <!-- CENTER MAIN -->
+  <div class="main-col">
+    <div class="main-toolbar">
+      <div class="cat-title" id="cat-title">All Entities</div>
+      <input class="tb-search" id="search-input" type="text" placeholder="search entities…" oninput="renderGrid()"/>
+      <button class="tb-btn" onclick="sortBy('name')">↑↓ Name</button>
+      <button class="tb-btn" onclick="sortBy('cat')">↑↓ Type</button>
+      <button class="tb-btn primary" onclick="openCreateModal()">+ Add</button>
+    </div>
+    <div class="card-grid" id="card-grid">
+      <div class="empty-state">Your world is empty.<br>Select a category and add entities, or import from Aave.</div>
+    </div>
+  </div>
+
+  <!-- RIGHT DETAIL PANEL -->
+  <div class="detail-panel">
+    <div class="dp-tabs">
+      <button class="dp-tab active" onclick="switchDPTab('world')">WORLD</button>
+      <button class="dp-tab" onclick="switchDPTab('detail')">ENTITY</button>
+      <button class="dp-tab" onclick="switchDPTab('links')">LINKS</button>
+      <button class="dp-tab" onclick="switchDPTab('stream')">NDJSON</button>
+    </div>
+
+    <!-- WORLD TAB -->
+    <div class="world-view active" id="dp-world">
+      <div class="world-section">
+        <div class="ws-head">World Stats</div>
+        <div class="dv-field"><span class="dv-field-key">Name</span><span class="dv-field-val" id="ws-name">untitled-world-1</span></div>
+        <div class="dv-field"><span class="dv-field-key">Entities</span><span class="dv-field-val" id="ws-entities">0</span></div>
+        <div class="dv-field"><span class="dv-field-key">Links</span><span class="dv-field-val" id="ws-links">0</span></div>
+        <div class="dv-field"><span class="dv-field-key">NDJSON seq</span><span class="dv-field-val" id="ws-seq">0</span></div>
+        <div class="dv-field"><span class="dv-field-key">run_id</span><span class="dv-field-val" id="ws-runid" style="font-size:8px;">—</span></div>
+      </div>
+      <div class="world-section">
+        <div class="ws-head">
+          Entities in World
+          <span id="world-entity-count" style="color:var(--blue2);font-weight:600;">0</span>
+        </div>
+        <div id="world-entity-list"><div style="color:var(--ink3);font-style:italic;font-size:11px;padding:4px;">Add entities to populate your world.</div></div>
+      </div>
+      <div class="world-section">
+        <div class="ws-head">Relations</div>
+        <div id="world-links-list"><div style="color:var(--ink3);font-style:italic;font-size:11px;padding:4px;">Connect entities to see relations.</div></div>
+      </div>
+    </div>
+
+    <!-- DETAIL TAB -->
+    <div class="world-view" id="dp-detail">
+      <div class="detail-view active" id="detail-content">
+        <div style="color:var(--ink3);font-style:italic;text-align:center;padding:30px 10px;font-family:'IBM Plex Serif',serif;">
+          Click an entity card to view details.
+        </div>
+      </div>
+    </div>
+
+    <!-- LINKS TAB -->
+    <div class="world-view" id="dp-links">
+      <div class="links-view active" id="links-content">
+        <div style="color:var(--ink3);font-style:italic;padding:20px 10px;font-family:'IBM Plex Serif',serif;font-size:11px;">
+          No relations yet. Use "Link To" in entity detail to connect entities.
+        </div>
+      </div>
+    </div>
+
+    <!-- STREAM TAB -->
+    <div class="world-view" id="dp-stream">
+      <div class="stream-view active" id="stream-log">
+        <div style="color:var(--ink3);font-style:italic;padding:12px;font-size:10px;text-align:center;font-family:'IBM Plex Serif',serif;">
+          Events will appear here as you build.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /detail panel -->
+
+</div><!-- /body-row -->
+
+<footer>
+  <div>world <span id="ft-world">untitled-world-1</span></div>
+  <div>entities <span id="ft-entities">0</span></div>
+  <div>links <span id="ft-links">0</span></div>
+  <div>events <span id="ft-events">0</span></div>
+  <div>cat <span id="ft-cat">all</span></div>
+  <div style="margin-left:auto;color:var(--ink3);">schema_version 1 · kind world.compose · lane world</div>
+</footer>
+
+</div><!-- /shell -->
+
+<!-- CREATE ENTITY MODAL -->
+<div class="modal-overlay" id="create-modal">
+  <div class="modal">
+    <div class="modal-head">
+      CREATE ENTITY
+      <button class="modal-close" onclick="closeModal('create-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field">
+        <label class="form-label">Name</label>
+        <input class="form-input" id="form-name" type="text" placeholder="e.g. The Merchant's Republic"/>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Category</label>
+        <select class="form-select" id="form-cat">
+          <option value="nation">Nation</option>
+          <option value="faction">Faction</option>
+          <option value="governance">Governance</option>
+          <option value="law">Law / Code</option>
+          <option value="treaty">Treaty</option>
+          <option value="citizen">Citizen</option>
+          <option value="institution">Institution</option>
+          <option value="culture">Culture</option>
+          <option value="religion">Religion</option>
+          <option value="media">Media</option>
+          <option value="market">Market</option>
+          <option value="treasury">Treasury</option>
+          <option value="trade">Trade Route</option>
+          <option value="resource">Resource</option>
+          <option value="corporation">Corporation</option>
+          <option value="reserve">Reserve</option>
+          <option value="protocol">Protocol</option>
+          <option value="proposal">Proposal</option>
+          <option value="vault">Vault</option>
+          <option value="liquidation">Liquidation</option>
+          <option value="territory">Territory</option>
+          <option value="network">Network</option>
+          <option value="technology">Technology</option>
+          <option value="military">Military</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Description</label>
+        <textarea class="form-textarea" id="form-desc" placeholder="Describe this entity…"></textarea>
+      </div>
+      <div class="form-field" id="aave-fields" style="display:none;">
+        <label class="form-label">Aave Fields (DeFi)</label>
+        <input class="form-input" id="form-symbol" type="text" placeholder="Token symbol e.g. USDC"/>
+        <input class="form-input" id="form-liquidity" type="text" placeholder="Liquidity rate (RAY)" style="margin-top:4px;"/>
+        <input class="form-input" id="form-borrow" type="text" placeholder="Borrow rate (RAY)" style="margin-top:4px;"/>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Tags (comma separated)</label>
+        <input class="form-input" id="form-tags" type="text" placeholder="e.g. sovereign, coastal, trading"/>
+      </div>
+      <button class="form-submit" onclick="submitCreate()">CREATE & ADD TO LIBRARY</button>
+    </div>
+  </div>
+</div>
+
+<!-- WORLD NAME MODAL -->
+<div class="modal-overlay" id="world-modal">
+  <div class="modal">
+    <div class="modal-head">
+      WORLD SETTINGS
+      <button class="modal-close" onclick="closeModal('world-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field">
+        <label class="form-label">World Name</label>
+        <input class="form-input" id="world-name-input" type="text" placeholder="e.g. Novaterra-2089"/>
+      </div>
+      <div class="form-field">
+        <label class="form-label">World Description</label>
+        <textarea class="form-textarea" id="world-desc-input" placeholder="Setting, era, lore…"></textarea>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Era / Epoch</label>
+        <input class="form-input" id="world-era-input" type="text" placeholder="e.g. Post-Collapse 2089"/>
+      </div>
+      <button class="form-submit" onclick="submitWorld()">SAVE WORLD</button>
+    </div>
+  </div>
+</div>
+
+<!-- LINK MODAL -->
+<div class="modal-overlay" id="link-modal">
+  <div class="modal">
+    <div class="modal-head">
+      LINK ENTITY
+      <button class="modal-close" onclick="closeModal('link-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field">
+        <label class="form-label">From</label>
+        <input class="form-input" id="link-from-name" disabled/>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Relation Type</label>
+        <select class="form-select" id="link-type">
+          <option value="controls">controls</option>
+          <option value="funds">funds</option>
+          <option value="opposes">opposes</option>
+          <option value="allies">allies with</option>
+          <option value="trades">trades with</option>
+          <option value="governs">governs</option>
+          <option value="borrows-from">borrows from</option>
+          <option value="supplies">supplies</option>
+          <option value="liquidates">liquidates</option>
+          <option value="owns">owns</option>
+          <option value="created-by">created by</option>
+          <option value="ratified-by">ratified by</option>
+          <option value="enforced-by">enforced by</option>
+          <option value="depends-on">depends on</option>
+          <option value="competes-with">competes with</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">To Entity</label>
+        <select class="form-select" id="link-to-id"></select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Notes (optional)</label>
+        <input class="form-input" id="link-notes" type="text" placeholder="e.g. since 2044"/>
+      </div>
+      <button class="form-submit" onclick="submitLink()">CREATE LINK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// ENTITY DEFINITIONS
+// ═══════════════════════════════════════════════════════════════
+
+const CAT_META = {
+  nation:      { icon:'🏛', color:'var(--blue)',    bg:'var(--blue-bg)',    tag:'#0055a5', label:'Nation' },
+  faction:     { icon:'⚑',  color:'var(--red)',     bg:'var(--red-bg)',     tag:'#c0392b', label:'Faction' },
+  governance:  { icon:'⚖',  color:'var(--gold)',    bg:'var(--gold-bg)',    tag:'#8a6800', label:'Governance' },
+  law:         { icon:'📜', color:'var(--gold)',    bg:'var(--gold-bg)',    tag:'#8a6800', label:'Law' },
+  treaty:      { icon:'🤝', color:'var(--teal)',    bg:'var(--teal-bg)',    tag:'#0d7a7a', label:'Treaty' },
+  citizen:     { icon:'👤', color:'var(--ink2)',    bg:'var(--bg2)',        tag:'#444',    label:'Citizen' },
+  institution: { icon:'🏛', color:'var(--blue)',    bg:'var(--blue-bg)',    tag:'#0055a5', label:'Institution' },
+  culture:     { icon:'🎭', color:'var(--violet)',  bg:'var(--violet-bg)', tag:'#6b3fa0', label:'Culture' },
+  religion:    { icon:'✦',  color:'var(--gold)',    bg:'var(--gold-bg)',    tag:'#8a6800', label:'Religion' },
+  media:       { icon:'📡', color:'var(--teal)',    bg:'var(--teal-bg)',    tag:'#0d7a7a', label:'Media' },
+  market:      { icon:'📈', color:'var(--green)',   bg:'var(--green-bg)',   tag:'#217a3c', label:'Market' },
+  treasury:    { icon:'🏦', color:'var(--green)',   bg:'var(--green-bg)',   tag:'#217a3c', label:'Treasury' },
+  trade:       { icon:'⟷',  color:'var(--orange)', bg:'var(--orange-bg)', tag:'#b84c00', label:'Trade Route' },
+  resource:    { icon:'⬡',  color:'var(--orange)', bg:'var(--orange-bg)', tag:'#b84c00', label:'Resource' },
+  corporation: { icon:'🏢', color:'var(--ink2)',    bg:'var(--bg2)',        tag:'#444',    label:'Corporation' },
+  reserve:     { icon:'⬡',  color:'var(--aave)',    bg:'var(--aave-bg)',   tag:'#b6509e', label:'Reserve' },
+  protocol:    { icon:'⬡',  color:'var(--aave)',    bg:'var(--aave-bg)',   tag:'#b6509e', label:'Protocol' },
+  proposal:    { icon:'📋', color:'var(--violet)',  bg:'var(--violet-bg)', tag:'#6b3fa0', label:'Proposal' },
+  vault:       { icon:'🔒', color:'var(--aave)',    bg:'var(--aave-bg)',   tag:'#b6509e', label:'Vault' },
+  liquidation: { icon:'⚡', color:'var(--red)',     bg:'var(--red-bg)',    tag:'#c0392b', label:'Liquidation' },
+  territory:   { icon:'🗺', color:'var(--teal)',    bg:'var(--teal-bg)',   tag:'#0d7a7a', label:'Territory' },
+  network:     { icon:'◈',  color:'var(--blue)',    bg:'var(--blue-bg)',   tag:'#0055a5', label:'Network' },
+  technology:  { icon:'⚙',  color:'var(--ink2)',   bg:'var(--bg2)',        tag:'#444',    label:'Technology' },
+  military:    { icon:'⚔',  color:'var(--red)',     bg:'var(--red-bg)',    tag:'#c0392b', label:'Military' },
+};
+
+// ─── SEED DATA ────────────────────────────────────────────────
+const SEED_ENTITIES = [
+  {id:'s1',cat:'nation',name:'The Merchant Republic of Aethon',desc:'A coastal trading state governed by an elected council of guild masters. Controls three major ports.',tags:['sovereign','coastal','trading','republic'],source:'seed'},
+  {id:'s2',cat:'nation',name:'Iron Dominion of Varek',desc:'An authoritarian industrial empire built on coal and steel extraction. Expansionist foreign policy.',tags:['authoritarian','industrial','militarized'],source:'seed'},
+  {id:'s3',cat:'faction',name:'The Free Lens Collective',desc:'A decentralized network of journalists and whistleblowers operating across national borders.',tags:['decentralized','press','resistance'],source:'seed'},
+  {id:'s4',cat:'faction',name:'Sovereign Debt Syndicate',desc:'Shadow group of creditors who hold significant leverage over indebted nations.',tags:['finance','shadow','creditors'],source:'seed'},
+  {id:'s5',cat:'governance',name:'World Arbitration Council',desc:'Intergovernmental body for resolving disputes between nations. Has binding authority on trade disputes.',tags:['international','arbitration','binding'],source:'seed'},
+  {id:'s6',cat:'governance',name:'Algorithmic Senate',desc:'AI-assisted legislative body that drafts laws based on citizen preference signals.',tags:['AI','legislative','digital'],source:'seed'},
+  {id:'s7',cat:'market',name:'Aethon Commodity Exchange',desc:'Primary exchange for futures on grain, oil, and rare metals. Settlement in dual-currency.',tags:['commodities','exchange','futures'],source:'seed'},
+  {id:'s8',cat:'treasury',name:'Varek National Reserve',desc:'State treasury controlling 2.4B in gold-backed reserves. Manages monetary policy.',tags:['monetary-policy','reserves','gold'],source:'seed'},
+  {id:'s9',cat:'protocol',name:'LendNet Protocol v3',desc:'Decentralized lending protocol across 14 chains. Inspired by Aave V3 architecture with cross-chain liquidity.',tags:['defi','lending','cross-chain','aave-like'],source:'seed'},
+  {id:'s10',cat:'reserve',name:'USDS Stablecoin Reserve',desc:'Overcollateralized stablecoin reserve. Backed by ETH, wBTC, and USDC collateral. Liquidation threshold 82%.',tags:['stablecoin','collateral','defi'],source:'seed'},
+  {id:'s11',cat:'citizen',name:'Yara Chen-Okafor',desc:'Lead economist at the World Arbitration Council. Former central banker. Known for crypto-skeptic views.',tags:['economist','influential','policy'],source:'seed'},
+  {id:'s12',cat:'culture',name:'The Reclamation Movement',desc:'Cultural movement advocating return to local production, anti-globalist. Dominant in rural Varek.',tags:['localism','anti-globalist','rural'],source:'seed'},
+  {id:'s13',cat:'military',name:'Aethon Merchant Marine',desc:'Armed naval force that protects trade routes. Also serves as de facto coast guard.',tags:['naval','trade-protection','maritime'],source:'seed'},
+  {id:'s14',cat:'territory',name:'The Disputed Straits of Keln',desc:'Strategic waterway contested by three nations. Key chokepoint for 40% of global grain shipments.',tags:['chokepoint','strategic','disputed'],source:'seed'},
+  {id:'s15',cat:'technology',name:'Distributed Oracle Network',desc:'Decentralized price oracle system. Provides on-chain data feeds for DeFi protocols and government contracts.',tags:['oracle','defi','infrastructure'],source:'seed'},
+  {id:'s16',cat:'law',name:'Digital Asset Sovereignty Act',desc:'Grants citizens the legal right to self-custody of digital assets. Criminalizes forced key disclosure.',tags:['crypto-rights','sovereignty','legislation'],source:'seed'},
+  {id:'s17',cat:'treaty',name:'Neutral Ports Accord',desc:'12-nation treaty designating certain ports as non-military zones accessible to all signatories.',tags:['maritime','peace','multilateral'],source:'seed'},
+  {id:'s18',cat:'institution',name:'The Polity Archive',desc:'Decentralized repository of canonical legal texts, treaties, and constitutional documents. NDJSON format.',tags:['archive','legal','decentralized','ndjson'],source:'seed'},
+  {id:'s19',cat:'religion',name:'Order of the Living Ledger',desc:'Religious order that treats economic transparency and open accounting as sacred obligations.',tags:['transparency','accounting','order'],source:'seed'},
+  {id:'s20',cat:'corporation',name:'Synthos Group',desc:'Multinational conglomerate controlling synthetic biology patents and agri-tech across 8 nations.',tags:['biotech','monopoly','multinational'],source:'seed'},
+];
+
+// ─── AAVE-INSPIRED RESERVES ───────────────────────────────────
+const AAVE_RESERVES_TEMPLATE = [
+  {symbol:'WETH',name:'Wrapped Ether Reserve',liq:'0.03',borrow:'0.045',chain:'eth-v3',tags:['collateral','eth','defi']},
+  {symbol:'USDC',name:'USD Coin Reserve',liq:'0.055',borrow:'0.07',chain:'eth-v3',tags:['stablecoin','collateral','defi']},
+  {symbol:'WBTC',name:'Wrapped Bitcoin Reserve',liq:'0.02',borrow:'0.035',chain:'eth-v3',tags:['collateral','btc','defi']},
+  {symbol:'DAI', name:'DAI Stablecoin Reserve',liq:'0.048',borrow:'0.065',chain:'eth-v3',tags:['stablecoin','collateral','defi']},
+  {symbol:'AAVE',name:'AAVE Governance Token',liq:'0.0',borrow:'0.0',chain:'eth-v3',tags:['governance','collateral','defi']},
+  {symbol:'LINK',name:'Chainlink Reserve',liq:'0.025',borrow:'0.04',chain:'eth-v3',tags:['oracle','collateral','defi']},
+  {symbol:'MATIC',name:'Polygon Reserve',liq:'0.03',borrow:'0.05',chain:'polygon-v3',tags:['l2','collateral','defi']},
+  {symbol:'OP',  name:'Optimism Reserve',liq:'0.0',borrow:'0.0',chain:'optimism-v3',tags:['l2','governance','defi']},
+  {symbol:'ARB', name:'Arbitrum Reserve',liq:'0.0',borrow:'0.0',chain:'arbitrum-v3',tags:['l2','governance','defi']},
+  {symbol:'GHO', name:'GHO Stablecoin Reserve',liq:'0.05',borrow:'0.06',chain:'eth-v3',tags:['stablecoin','native','defi']},
+];
+
+const AAVE_PROPOSALS_TEMPLATE = [
+  {id:'p-001',title:'AIP-1: Add wstETH as Collateral',status:'executed',votes_for:'802400',votes_against:'12000',tags:['collateral','staking','eth']},
+  {id:'p-002',title:'AIP-2: Raise USDC Supply Cap to 1.5B',status:'executed',votes_for:'650000',votes_against:'48000',tags:['supply-cap','stablecoin']},
+  {id:'p-003',title:'AIP-3: GHO Interest Rate Update',status:'active',votes_for:'320000',votes_against:'15000',tags:['rates','gho','stablecoin']},
+  {id:'p-004',title:'AIP-4: Enable Isolation Mode for cbETH',status:'pending',votes_for:'0',votes_against:'0',tags:['isolation','eth','collateral']},
+  {id:'p-005',title:'AIP-5: Cross-Chain Governance Update',status:'executed',votes_for:'714000',votes_against:'9000',tags:['governance','cross-chain']},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+let allEntities = [...SEED_ENTITIES];
+let worldEntities = new Set(); // ids in world
+let links = [];
+let activeCat = 'all';
+let sortMode = 'none';
+let seqN = 0;
+let worldName = 'untitled-world-1';
+let worldDesc = '';
+let worldEra = '';
+let selectedEntity = null;
+let linkFromId = null;
+let ndEvents = 0;
+
+function uid(){ return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+function hashStr(s){
+  let h=0x811c9dc5;
+  for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=(h*0x01000193)>>>0;}
+  let r=h.toString(16).padStart(8,'0');
+  for(let i=0;i<7;i++){h^=(i*0xdead+s.charCodeAt(i%s.length));h=(h*0x01000193)>>>0;r+=h.toString(16).padStart(8,'0');}
+  return r;
+}
+function runId(){ return `sha256:${hashStr(worldName+worldEntities.size+seqN)}`; }
+
+// ═══════════════════════════════════════════════════════════════
+// EMIT NDJSON
+// ═══════════════════════════════════════════════════════════════
+function emit(event, payload, cls='ev-world'){
+  seqN++;ndEvents++;
+  const rec={schema_version:1,kind:'world.event',lane:'world',seq:seqN,event,run_id:runId(),payload};
+  const log=document.getElementById('stream-log');
+  if(ndEvents===1) log.innerHTML='';
+  const d=document.createElement('div');
+  d.className=`nd-line ${cls} nd-flash`;
+  d.innerHTML=colorJSON(JSON.stringify(rec));
+  log.appendChild(d);
+  log.scrollTop=log.scrollHeight;
+  updateHeader();
+}
+function colorJSON(s){
+  return s
+    .replace(/"([^"]+)":/g,'<span class="jk">"$1":</span>')
+    .replace(/: "([^"]*)"/g,': <span class="js">"$1"</span>')
+    .replace(/: (-?\d[\d.]*)/g,': <span class="jn">$1</span>')
+    .replace(/: (true|false|null)/g,': <span class="jb">$1</span>');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FILTER + RENDER GRID
+// ═══════════════════════════════════════════════════════════════
+function filterCat(cat){
+  activeCat=cat;
+  document.querySelectorAll('.sb-link').forEach(el=>{
+    el.classList.toggle('active',el.dataset.cat===cat);
+  });
+  document.getElementById('crumb-cat').textContent = cat==='all'?'all entities':cat;
+  document.getElementById('ft-cat').textContent=cat;
+  const meta=CAT_META[cat];
+  document.getElementById('cat-title').textContent=
+    cat==='all'?'All Entities': (meta?.label||cat);
+  renderGrid();
+}
+
+function renderGrid(){
+  const search=(document.getElementById('search-input').value||'').toLowerCase();
+  let list=allEntities.filter(e=>{
+    if(activeCat!=='all'&&e.cat!==activeCat) return false;
+    if(search&&!e.name.toLowerCase().includes(search)&&!e.desc.toLowerCase().includes(search)&&!(e.tags||[]).join(' ').includes(search)) return false;
+    return true;
+  });
+
+  if(sortMode==='name') list.sort((a,b)=>a.name.localeCompare(b.name));
+  if(sortMode==='cat') list.sort((a,b)=>a.cat.localeCompare(b.cat));
+
+  const grid=document.getElementById('card-grid');
+  if(!list.length){
+    grid.innerHTML=`<div class="empty-state">No entities match "${search||activeCat}".<br><a onclick="openCreateModal()" style="color:var(--blue2);cursor:pointer;">Create one?</a></div>`;
+    return;
+  }
+  grid.innerHTML='';
+  list.forEach(e=>grid.appendChild(makeCard(e)));
+  updateCounts();
+}
+
+function makeCard(e){
+  const meta=CAT_META[e.cat]||{icon:'◈',color:'var(--ink2)',bg:'var(--bg2)',tag:'#444'};
+  const inWorld=worldEntities.has(e.id);
+  const div=document.createElement('div');
+  div.className='ecard'+(inWorld?' in-world':'')+(selectedEntity?.id===e.id?' selected':'');
+  div.onclick=()=>selectEntity(e);
+  const tags=(e.tags||[]).slice(0,3).map(t=>`<span class="tag" style="background:${meta.tag}22;color:${meta.tag};">${t}</span>`).join('');
+  div.innerHTML=`
+    <div class="card-icon" style="background:${meta.bg};">
+      <span style="font-size:32px;">${meta.icon}</span>
+      <div class="cat-stripe" style="background:${meta.color};"></div>
+    </div>
+    <div class="card-body">
+      <div class="card-name">${e.name}</div>
+      <div class="card-type">${meta.label}${e.symbol?' · '+e.symbol:''}</div>
+      <div class="card-desc">${e.desc}</div>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags">${tags}</div>
+      <button class="card-add-btn ${inWorld?'added':''}" onclick="toggleWorld(event,'${e.id}')">
+        ${inWorld?'✓ Added':'+ Add'}
+      </button>
+    </div>`;
+  return div;
+}
+
+function sortBy(m){ sortMode=sortMode===m?'none':m; renderGrid(); }
+
+// ═══════════════════════════════════════════════════════════════
+// WORLD MANAGEMENT
+// ═══════════════════════════════════════════════════════════════
+function toggleWorld(ev, id){
+  ev.stopPropagation();
+  const e=allEntities.find(x=>x.id===id);
+  if(!e) return;
+  if(worldEntities.has(id)){
+    worldEntities.delete(id);
+    emit('world.entity.remove',{entity_id:id,name:e.name,cat:e.cat},'ev-remove');
+  } else {
+    worldEntities.add(id);
+    emit('world.entity.place',{entity_id:id,name:e.name,cat:e.cat,tags:e.tags,sha256:`sha256:${hashStr(id+worldName)}`},'ev-place');
+  }
+  renderGrid();
+  renderWorldPanel();
+}
+
+function renderWorldPanel(){
+  const list=document.getElementById('world-entity-list');
+  const worldArr=[...worldEntities].map(id=>allEntities.find(e=>e.id===id)).filter(Boolean);
+  document.getElementById('world-entity-count').textContent=worldArr.length;
+  document.getElementById('ws-entities').textContent=worldArr.length;
+  document.getElementById('ws-links').textContent=links.length;
+  document.getElementById('ws-seq').textContent=seqN;
+  document.getElementById('ws-runid').textContent=runId().slice(0,30)+'…';
+  document.getElementById('hd-world-count').textContent=worldArr.length;
+
+  if(!worldArr.length){list.innerHTML='<div style="color:var(--ink3);font-style:italic;font-size:11px;padding:4px;">No entities yet.</div>';return;}
+  list.innerHTML='';
+  // Group by cat
+  const byCat={};
+  worldArr.forEach(e=>{(byCat[e.cat]||(byCat[e.cat]=[])).push(e);});
+  Object.entries(byCat).forEach(([cat,ents])=>{
+    const meta=CAT_META[cat]||{icon:'◈',label:cat};
+    const h=document.createElement('div');
+    h.style.cssText='font-size:9px;color:var(--ink3);letter-spacing:.12em;padding:5px 0 2px;font-family:IBM Plex Mono,monospace;text-transform:uppercase;';
+    h.textContent=meta.label;
+    list.appendChild(h);
+    ents.forEach(e=>{
+      const r=document.createElement('div');
+      r.className='world-entity-row';
+      r.innerHTML=`<div class="wer-left"><span class="wer-icon">${meta.icon}</span><div><div class="wer-name">${e.name}</div><div class="wer-type">${e.cat}</div></div></div><button class="wer-rm" onclick="toggleWorld(event,'${e.id}')">✕</button>`;
+      r.onclick=()=>selectEntity(e);
+      list.appendChild(r);
+    });
+  });
+
+  // Links
+  const llist=document.getElementById('world-links-list');
+  if(!links.length){llist.innerHTML='<div style="color:var(--ink3);font-style:italic;font-size:11px;padding:4px;">No relations yet.</div>';return;}
+  llist.innerHTML='';
+  links.slice(-10).forEach(l=>{
+    const from=allEntities.find(e=>e.id===l.fromId);
+    const to=allEntities.find(e=>e.id===l.toId);
+    if(!from||!to) return;
+    const r=document.createElement('div');
+    r.style.cssText='font-size:10px;padding:3px 0;border-bottom:1px solid var(--border);display:flex;gap:4px;align-items:center;flex-wrap:wrap;';
+    r.innerHTML=`<b style="color:var(--ink)">${from.name}</b><span style="color:var(--violet);font-style:italic;">${l.type}</span><b style="color:var(--ink)">${to.name}</b>`;
+    llist.appendChild(r);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ENTITY DETAIL
+// ═══════════════════════════════════════════════════════════════
+function selectEntity(e){
+  selectedEntity=e;
+  switchDPTab('detail');
+  renderDetail(e);
+  emit('world.entity.view',{entity_id:e.id,name:e.name,cat:e.cat},'ev-world');
+}
+
+function renderDetail(e){
+  const meta=CAT_META[e.cat]||{icon:'◈',label:e.cat,color:'var(--ink2)'};
+  const inWorld=worldEntities.has(e.id);
+  const dc=document.getElementById('detail-content');
+  const tags=(e.tags||[]).map(t=>`<span class="tag" style="background:${(CAT_META[e.cat]?.tag||'#444')}22;color:${CAT_META[e.cat]?.tag||'#444'};">${t}</span>`).join(' ');
+  let extra='';
+  if(e.symbol) extra+=`<div class="dv-field"><span class="dv-field-key">Symbol</span><span class="dv-field-val">${e.symbol}</span></div>`;
+  if(e.liquidityRate) extra+=`<div class="dv-field"><span class="dv-field-key">Liquidity Rate</span><span class="dv-field-val">${e.liquidityRate}</span></div>`;
+  if(e.borrowRate) extra+=`<div class="dv-field"><span class="dv-field-key">Borrow Rate</span><span class="dv-field-val">${e.borrowRate}</span></div>`;
+  if(e.chain) extra+=`<div class="dv-field"><span class="dv-field-key">Chain</span><span class="dv-field-val">${e.chain}</span></div>`;
+  if(e.status) extra+=`<div class="dv-field"><span class="dv-field-key">Status</span><span class="dv-field-val">${e.status}</span></div>`;
+  if(e.votes_for) extra+=`<div class="dv-field"><span class="dv-field-key">Votes For</span><span class="dv-field-val">${Number(e.votes_for).toLocaleString()}</span></div>`;
+  if(e.votes_against) extra+=`<div class="dv-field"><span class="dv-field-key">Votes Against</span><span class="dv-field-val">${Number(e.votes_against).toLocaleString()}</span></div>`;
+
+  const eLinks=links.filter(l=>l.fromId===e.id||l.toId===e.id);
+  const linkHtml=eLinks.length?eLinks.map(l=>{
+    const other=allEntities.find(x=>x.id===(l.fromId===e.id?l.toId:l.fromId));
+    const dir=l.fromId===e.id?'→':'←';
+    return `<div class="dv-field"><span class="dv-field-key">${dir} ${l.type}</span><span class="dv-field-val">${other?.name||'?'}</span></div>`;
+  }).join(''):'<div style="color:var(--ink3);font-size:11px;font-style:italic;">No relations yet.</div>';
+
+  dc.innerHTML=`
+    <div class="dv-hero">${meta.icon}</div>
+    <div class="dv-name">${e.name}</div>
+    <div class="dv-type">${meta.label} · ${e.source||'custom'}</div>
+    <div style="text-align:center;margin-bottom:10px;">${tags}</div>
+    <div class="dv-section-head">Description</div>
+    <div style="font-size:11px;color:var(--ink2);line-height:1.5;font-family:'IBM Plex Serif',serif;font-style:italic;padding:4px 0 10px;">${e.desc}</div>
+    ${extra?'<div class="dv-section-head">Protocol Fields</div>'+extra:''}
+    <div class="dv-section-head">ID</div>
+    <div class="dv-field"><span class="dv-field-key">entity_id</span><span class="dv-field-val" style="font-size:8px;">${e.id}</span></div>
+    <div class="dv-field"><span class="dv-field-key">sha256</span><span class="dv-field-val" style="font-size:8px;">sha256:${hashStr(e.id).slice(0,16)}…</span></div>
+    <div class="dv-section-head">Relations</div>
+    ${linkHtml}
+    <button class="dv-add-btn ${inWorld?'added':''}" onclick="toggleWorld(event,'${e.id}')">
+      ${inWorld?'✓ IN WORLD · Click to Remove':'+ ADD TO WORLD'}
+    </button>
+    <button class="dv-add-btn" style="background:var(--violet);margin-top:6px;" onclick="openLinkModal('${e.id}')">
+      ⟷ LINK TO ANOTHER ENTITY
+    </button>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LINKS
+// ═══════════════════════════════════════════════════════════════
+function openLinkModal(fromId){
+  const from=allEntities.find(e=>e.id===fromId);
+  if(!from) return;
+  linkFromId=fromId;
+  document.getElementById('link-from-name').value=from.name;
+  const sel=document.getElementById('link-to-id');
+  sel.innerHTML='';
+  allEntities.filter(e=>e.id!==fromId).forEach(e=>{
+    const opt=document.createElement('option');
+    opt.value=e.id;
+    opt.textContent=`[${e.cat}] ${e.name}`;
+    sel.appendChild(opt);
+  });
+  openModal('link-modal');
+}
+function submitLink(){
+  const toId=document.getElementById('link-to-id').value;
+  const type=document.getElementById('link-type').value;
+  const notes=document.getElementById('link-notes').value;
+  const from=allEntities.find(e=>e.id===linkFromId);
+  const to=allEntities.find(e=>e.id===toId);
+  if(!from||!to) return;
+  const link={id:'l'+Date.now().toString(36),fromId:linkFromId,toId,type,notes};
+  links.push(link);
+  emit('world.link.create',{link_id:link.id,from_id:linkFromId,from_name:from.name,to_id:toId,to_name:to.name,type,notes,sha256:`sha256:${hashStr(link.id+linkFromId+toId+type)}`},'ev-link');
+  closeModal('link-modal');
+  renderWorldPanel();
+  if(selectedEntity?.id===linkFromId) renderDetail(selectedEntity);
+  renderLinksTab();
+}
+function renderLinksTab(){
+  const lc=document.getElementById('links-content');
+  if(!links.length){lc.innerHTML='<div style="color:var(--ink3);font-style:italic;padding:20px;font-size:11px;">No relations yet.</div>';return;}
+  lc.innerHTML='';
+  links.forEach(l=>{
+    const from=allEntities.find(e=>e.id===l.fromId);
+    const to=allEntities.find(e=>e.id===l.toId);
+    if(!from||!to) return;
+    const r=document.createElement('div');
+    r.className='link-row';
+    const typeColor={'controls':'var(--red)','funds':'var(--green)','opposes':'var(--red)','allies':'var(--blue)','trades':'var(--orange)','governs':'var(--gold)','borrows-from':'var(--aave)','supplies':'var(--teal)'}[l.type]||'var(--violet)';
+    r.innerHTML=`<div><div class="link-from">${from.name}</div><div class="link-arrow">↓</div><div class="link-to">${to.name}</div></div><span class="link-type-badge" style="background:${typeColor}22;color:${typeColor};">${l.type}</span>${l.notes?`<span style="font-size:9px;color:var(--ink3);font-style:italic;">${l.notes}</span>`:''}`;
+    lc.appendChild(r);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AAVE IMPORT
+// ═══════════════════════════════════════════════════════════════
+function importAaveReserves(){
+  const net=document.getElementById('aave-network').value;
+  const status=document.getElementById('aave-status');
+  status.textContent='Importing…';
+  const filtered=AAVE_RESERVES_TEMPLATE.filter(r=>r.chain===net||net.includes(r.chain.split('-')[0])||true);
+  let added=0;
+  filtered.forEach(r=>{
+    const exists=allEntities.find(e=>e.symbol===r.symbol&&e.cat==='reserve');
+    if(exists) return;
+    const id=uid();
+    const entity={
+      id,cat:'reserve',
+      name:r.name,
+      symbol:r.symbol,
+      desc:`Aave V3 ${r.symbol} reserve on ${net}. Liquidity rate ${r.liq}, borrow rate ${r.borrow}. Imported from aave/protocol-subgraphs.`,
+      tags:[...r.tags,'aave-v3',net],
+      liquidityRate:r.liq,
+      borrowRate:r.borrow,
+      chain:net,
+      source:'aave-subgraph'
+    };
+    allEntities.push(entity);
+    emit('world.entity.import',{entity_id:id,name:entity.name,symbol:r.symbol,chain:net,cat:'reserve',source:'aave/protocol-subgraphs',subgraph_entity:'Reserve',sha256:`sha256:${hashStr(id+r.symbol+net)}`},'ev-aave');
+    added++;
+  });
+  status.textContent=`✓ Imported ${added} reserves from ${net}`;
+  renderGrid();
+  updateCounts();
+}
+
+function importAaveGovernance(){
+  const status=document.getElementById('aave-status');
+  let added=0;
+  AAVE_PROPOSALS_TEMPLATE.forEach(p=>{
+    const exists=allEntities.find(e=>e.aave_proposal_id===p.id);
+    if(exists) return;
+    const id=uid();
+    const entity={
+      id,cat:'proposal',
+      name:p.title,
+      aave_proposal_id:p.id,
+      desc:`Aave Governance V3 proposal. Status: ${p.status}. Votes for: ${p.votes_for}, against: ${p.votes_against}. Imported from aave/protocol-subgraphs governance subgraph.`,
+      tags:[...p.tags,'aave-gov','governance'],
+      status:p.status,
+      votes_for:p.votes_for,
+      votes_against:p.votes_against,
+      source:'aave-governance-subgraph'
+    };
+    allEntities.push(entity);
+    emit('world.entity.import',{entity_id:id,name:p.title,proposal_id:p.id,status:p.status,cat:'proposal',source:'aave/protocol-subgraphs',subgraph_entity:'GovernanceProposal',sha256:`sha256:${hashStr(id+p.id)}`},'ev-aave');
+    added++;
+  });
+  status.textContent=`✓ Imported ${added} governance proposals`;
+  renderGrid();
+  updateCounts();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CREATE ENTITY
+// ═══════════════════════════════════════════════════════════════
+document.getElementById('form-cat').addEventListener('change',function(){
+  const defi=['reserve','protocol','vault','liquidation'];
+  document.getElementById('aave-fields').style.display=defi.includes(this.value)?'block':'none';
+});
+function submitCreate(){
+  const name=document.getElementById('form-name').value.trim();
+  if(!name){alert('Name required');return;}
+  const cat=document.getElementById('form-cat').value;
+  const desc=document.getElementById('form-desc').value.trim();
+  const tags=document.getElementById('form-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  const symbol=document.getElementById('form-symbol').value.trim();
+  const liq=document.getElementById('form-liquidity').value.trim();
+  const borrow=document.getElementById('form-borrow').value.trim();
+  const id=uid();
+  const entity={id,cat,name,desc,tags,source:'custom'};
+  if(symbol) entity.symbol=symbol;
+  if(liq) entity.liquidityRate=liq;
+  if(borrow) entity.borrowRate=borrow;
+  allEntities.push(entity);
+  emit('world.entity.create',{entity_id:id,name,cat,tags,source:'custom',sha256:`sha256:${hashStr(id+name+cat)}`},'ev-place');
+  closeModal('create-modal');
+  document.getElementById('form-name').value='';
+  document.getElementById('form-desc').value='';
+  document.getElementById('form-tags').value='';
+  document.getElementById('form-symbol').value='';
+  renderGrid();
+  updateCounts();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// WORLD SETTINGS
+// ═══════════════════════════════════════════════════════════════
+function submitWorld(){
+  const n=document.getElementById('world-name-input').value.trim()||worldName;
+  worldName=n;
+  worldDesc=document.getElementById('world-desc-input').value;
+  worldEra=document.getElementById('world-era-input').value;
+  document.getElementById('world-name-crumb').textContent=worldName;
+  document.getElementById('ws-name').textContent=worldName;
+  document.getElementById('ft-world').textContent=worldName;
+  emit('world.meta.update',{world_name:worldName,era:worldEra,desc:worldDesc.slice(0,120)},'ev-world');
+  closeModal('world-modal');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════════════════════════════════
+function exportNDJSON(){
+  let s=0;
+  const lines=[];
+  const rid=runId();
+  lines.push(JSON.stringify({schema_version:1,kind:'world.compose',lane:'world',seq:++s,event:'world.compose.start',run_id:rid,payload:{world_name:worldName,era:worldEra,desc:worldDesc,entity_count:worldEntities.size,link_count:links.length,generated_at:new Date().toISOString()}}));
+  [...worldEntities].forEach(id=>{
+    const e=allEntities.find(x=>x.id===id);
+    if(!e) return;
+    lines.push(JSON.stringify({schema_version:1,kind:'world.entity',lane:'world',seq:++s,event:'world.entity.record',payload:{entity_id:e.id,name:e.name,cat:e.cat,desc:e.desc,tags:e.tags,source:e.source,symbol:e.symbol,liquidityRate:e.liquidityRate,borrowRate:e.borrowRate,chain:e.chain,status:e.status,sha256:`sha256:${hashStr(e.id+worldName)}`}}));
+  });
+  links.forEach(l=>{
+    lines.push(JSON.stringify({schema_version:1,kind:'world.link',lane:'world',seq:++s,event:'world.link.record',payload:{link_id:l.id,from_id:l.fromId,to_id:l.toId,type:l.type,notes:l.notes}}));
+  });
+  lines.push(JSON.stringify({schema_version:1,kind:'world.manifest',lane:'world',seq:++s,event:'world.compose.end',run_id:rid,payload:{pass:true,world_name:worldName,entity_ids:[...worldEntities],link_ids:links.map(l=>l.id),aave_subgraph_ref:'https://github.com/aave/protocol-subgraphs'}}));
+  const blob=new Blob([lines.join('\n')+'\n'],{type:'application/x-ndjson'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${worldName}-${Date.now()}.ndjson`;a.click();
+  emit('world.compose.export',{world_name:worldName,lines:lines.length},'ev-world');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UI HELPERS
+// ═══════════════════════════════════════════════════════════════
+function updateHeader(){
+  document.getElementById('hd-seq').textContent=seqN;
+  document.getElementById('hd-events').textContent=ndEvents;
+  document.getElementById('ft-entities').textContent=worldEntities.size;
+  document.getElementById('ft-links').textContent=links.length;
+  document.getElementById('ft-events').textContent=ndEvents;
+}
+function updateCounts(){
+  const cats=['all','nation','faction','governance','law','treaty','citizen','institution','culture','religion','media','market','treasury','trade','resource','corporation','reserve','protocol','proposal','vault','liquidation','territory','network','technology','military'];
+  cats.forEach(cat=>{
+    const el=document.getElementById('cnt-'+cat);
+    if(!el) return;
+    el.textContent=cat==='all'?allEntities.length:allEntities.filter(e=>e.cat===cat).length;
+  });
+}
+function switchDPTab(tab){
+  const tabs={world:'dp-world',detail:'dp-detail',links:'dp-links',stream:'dp-stream'};
+  document.querySelectorAll('.dp-tab').forEach((b,i)=>{
+    const tids=['world','detail','links','stream'];
+    b.classList.toggle('active',tids[i]===tab);
+  });
+  Object.entries(tabs).forEach(([k,id])=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display=k===tab?'flex':'none';
+  });
+  if(tab==='links') renderLinksTab();
+}
+function openCreateModal(){ document.getElementById('create-modal').classList.add('open'); }
+function openWorldModal(){
+  document.getElementById('world-name-input').value=worldName;
+  document.getElementById('world-desc-input').value=worldDesc;
+  document.getElementById('world-era-input').value=worldEra;
+  document.getElementById('world-modal').classList.add('open');
+}
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); });
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open')); });
+
+// ─── INIT ────────────────────────────────────────────────────
+renderGrid();
+updateCounts();
+renderWorldPanel();
+emit('world.compose.start',{world_name:worldName,schema_version:1,aave_subgraph_ref:'https://github.com/aave/protocol-subgraphs',generated_at:'1970-01-01T00:00:00Z'},'ev-world');
+
+// Fix dp tab display
+document.getElementById('dp-world').style.display='flex';
+document.getElementById('dp-detail').style.display='none';
+document.getElementById('dp-links').style.display='none';
+document.getElementById('dp-stream').style.display='none';
+</script>
+</body>
+</html>

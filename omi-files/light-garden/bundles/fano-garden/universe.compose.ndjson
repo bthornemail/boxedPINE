@@ -1,0 +1,7 @@
+{"schema_version":1,"kind":"universe.compose","lane":"universe","seq":1,"event":"universe.compose.start","run_id":"sha256:demo","payload":{"name":"fano-garden","generated_at":"1970-01-01T00:00:00Z","notes":"Demo bundle: base(epistemic-square) + glue(dome) + section(fano) + kernel."}}
+{"schema_version":1,"kind":"universe.section","lane":"universe","seq":2,"event":"universe.section.mount","payload":{"section_id":"base.epistemic-square","asset":"epistemic-square.svg","role":"base","anchor":"root","props":{"bundle":"epistemic-square"}}}
+{"schema_version":1,"kind":"universe.section","lane":"universe","seq":3,"event":"universe.section.mount","payload":{"section_id":"glue.dome","asset":"dome-svg.svg","role":"glue","anchor":"root","props":{"bundle":"dome-combinatrix"}}}
+{"schema_version":1,"kind":"universe.section","lane":"universe","seq":4,"event":"universe.section.mount","payload":{"section_id":"sheaf.fano-light-arrays","asset":"fano-with-light-arrays.svg","role":"sheaf","anchor":"epistemic:KK","props":{"bundle":"fano-plane"}}}
+{"schema_version":1,"kind":"universe.kernel","lane":"universe","seq":5,"event":"universe.kernel.attach","payload":{"asset":"universe.kernel.svg","role":"kernel","props":{"bundle":"fano-garden-seed-kernel"}}}
+{"schema_version":1,"kind":"universe.manifest","lane":"universe","seq":6,"event":"universe.compose.end","run_id":"sha256:demo","payload":{"pass":true,"assets":["epistemic-square.svg","dome-svg.svg","fano-with-light-arrays.svg","universe.kernel.svg"],"entry":{"mode":"bip39","derivation":"sha256(entropy)->universe_id"}}}
+

@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVATAR · NDJSON SVG COMPOSER</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne+Mono&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Syne:wght@400;700;800&display=swap');
+
+:root {
+  --ink: #080810;
+  --paper: #f0ead8;
+  --gold: #d4a843;
+  --gold2: #f0c860;
+  --gold-dim: #6a5220;
+  --ember: #c03828;
+  --cyan: #30c8c0;
+  --mist: #8090a8;
+  --panel-bg: rgba(12,12,24,0.92);
+  --border: rgba(212,168,67,0.2);
+  --border-bright: rgba(212,168,67,0.6);
+}
+
+* { box-sizing:border-box; margin:0; padding:0; }
+html,body { height:100%; overflow:hidden; }
+
+body {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'Syne Mono', monospace;
+  font-size: 12px;
+  cursor: crosshair;
+}
+
+/* ─── LAYOUT ─────────────────────────────────── */
+.shell {
+  display: grid;
+  grid-template-columns: 240px 1fr 280px;
+  grid-template-rows: 52px 1fr 44px;
+  height: 100vh;
+  gap: 0;
+}
+
+/* ─── HEADER ─────────────────────────────────── */
+header {
+  grid-column: 1/-1;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  background: linear-gradient(to right, rgba(8,6,4,0.98), rgba(12,10,24,0.98));
+}
+
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 16px;
+  letter-spacing: 0.3em; color: var(--gold);
+  display: flex; align-items: center; gap: 12px;
+}
+.logo-sub {
+  font-family: 'Syne Mono', monospace;
+  font-size: 9px; color: var(--mist);
+  letter-spacing: 0.2em; font-weight: 400;
+}
+
+.header-right {
+  display: flex; gap: 8px; align-items: center;
+}
+
+.pill-btn {
+  padding: 5px 14px;
+  border: 1px solid var(--border);
+  background: transparent; color: var(--mist);
+  font-family: 'Syne Mono', monospace; font-size: 10px;
+  letter-spacing: 0.15em; cursor: pointer; text-transform: uppercase;
+  transition: all 0.15s;
+}
+.pill-btn:hover { border-color: var(--gold); color: var(--gold); }
+.pill-btn.primary { border-color: var(--gold); color: var(--gold); }
+.pill-btn.primary:hover { background: rgba(212,168,67,0.1); }
+
+/* ─── LEFT PANEL: PART LIBRARY ───────────────── */
+.parts-panel {
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  background: rgba(8,8,16,0.8);
+}
+
+.panel-head {
+  padding: 12px 14px 8px;
+  border-bottom: 1px solid var(--border);
+  font-size: 9px; letter-spacing: 0.25em;
+  color: var(--gold-dim); text-transform: uppercase;
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.category-tabs {
+  display: flex; border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+.cat-tab {
+  padding: 7px 12px; font-size: 9px; letter-spacing: 0.1em;
+  text-transform: uppercase; cursor: pointer; white-space: nowrap;
+  color: var(--mist); border-bottom: 2px solid transparent;
+  transition: all 0.12s; background: none; border-top:none; border-left:none; border-right:none;
+  font-family: 'Syne Mono', monospace;
+}
+.cat-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.cat-tab:hover { color: var(--paper); }
+
+.parts-grid {
+  flex: 1; overflow-y: auto; padding: 10px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+}
+
+.part-card {
+  border: 1px solid var(--border);
+  border-radius: 2px; padding: 6px;
+  cursor: pointer; transition: all 0.12s;
+  background: rgba(255,255,255,0.02);
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.part-card:hover { border-color: var(--gold); background: rgba(212,168,67,0.04); }
+.part-card.selected { border-color: var(--gold); background: rgba(212,168,67,0.08); box-shadow: 0 0 12px rgba(212,168,67,0.15); }
+
+.part-preview {
+  width: 80px; height: 80px;
+}
+.part-name { font-size: 9px; color: var(--mist); text-align: center; letter-spacing: 0.05em; }
+.part-seq { font-size: 8px; color: var(--gold-dim); }
+
+/* ─── CENTER: STAGE ──────────────────────────── */
+.stage-wrap {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative;
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 50%, rgba(30,20,60,0.5) 0%, transparent 70%),
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(212,168,67,0.03) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(212,168,67,0.03) 40px);
+}
+
+.stage-label {
+  position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+  font-size: 9px; color: var(--gold-dim); letter-spacing: 0.3em; text-transform: uppercase;
+}
+
+#stage-svg {
+  width: 340px; height: 340px;
+  filter: drop-shadow(0 0 40px rgba(212,168,67,0.12));
+}
+
+.crosshair {
+  position: absolute; pointer-events: none;
+  opacity: 0.12;
+}
+.crosshair-h { top: 50%; left: 0; right: 0; height: 1px; background: var(--gold); }
+.crosshair-v { left: 50%; top: 0; bottom: 0; width: 1px; background: var(--gold); }
+
+.stream-ticker {
+  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+  font-size: 9px; color: var(--cyan);
+  letter-spacing: 0.1em; max-width: 420px; text-align: center;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-style: italic;
+}
+
+/* ─── RIGHT PANEL: NDJSON STREAM ─────────────── */
+.stream-panel {
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  background: rgba(4,4,12,0.9);
+}
+
+.stream-log {
+  flex: 1; overflow-y: auto; padding: 8px;
+  font-size: 9.5px; line-height: 1.7;
+}
+
+.ndjson-line {
+  padding: 3px 6px;
+  border-left: 2px solid transparent;
+  margin-bottom: 2px;
+  border-radius: 1px;
+  cursor: default;
+  transition: background 0.1s;
+  word-break: break-all;
+}
+.ndjson-line:hover { background: rgba(212,168,67,0.04); }
+.ndjson-line.head { border-left-color: var(--gold); }
+.ndjson-line.body-part { border-left-color: #6070c0; }
+.ndjson-line.face-part { border-left-color: var(--cyan); }
+.ndjson-line.aura-part { border-left-color: #c060a0; }
+.ndjson-line.mark-part { border-left-color: var(--ember); }
+.ndjson-line.manifest-part { border-left-color: var(--gold-dim); }
+.ndjson-line.new { animation: flashLine 0.4s ease-out; }
+
+@keyframes flashLine { from { background: rgba(212,168,67,0.15); } to { background: transparent; } }
+
+.key { color: var(--gold-dim); }
+.str { color: #90b890; }
+.num { color: #80a8d0; }
+.kw { color: #c080a0; }
+
+.stream-empty {
+  color: var(--mist); font-style: italic; text-align: center;
+  padding: 24px; font-size: 11px;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+/* ─── FOOTER ─────────────────────────────────── */
+footer {
+  grid-column: 1/-1;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px;
+  background: rgba(4,4,8,0.95);
+  font-size: 9px; color: var(--mist);
+  letter-spacing: 0.1em;
+}
+
+.footer-stat { display: flex; gap: 4px; align-items: center; }
+.footer-stat span { color: var(--gold); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); }
+
+/* Color picker inline */
+.color-row {
+  display: flex; gap: 4px; flex-wrap: wrap; padding: 8px 10px 4px;
+  border-bottom: 1px solid var(--border);
+}
+.color-swatch {
+  width: 18px; height: 18px; border-radius: 50%;
+  cursor: pointer; border: 2px solid transparent;
+  transition: border-color 0.1s;
+}
+.color-swatch.active { border-color: var(--gold); }
+.color-swatch:hover { transform: scale(1.2); }
+.color-label { font-size: 9px; color: var(--gold-dim); padding: 0 10px 4px; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header>
+    <div class="logo">
+      AVATAR
+      <div class="logo-sub">ndjson · svg · composer</div>
+    </div>
+    <div class="header-right">
+      <button class="pill-btn" onclick="randomize()">⊕ RANDOMIZE</button>
+      <button class="pill-btn" onclick="clearAvatar()">⊘ CLEAR</button>
+      <button class="pill-btn primary" onclick="exportNDJSON()">↓ EXPORT NDJSON</button>
+    </div>
+  </header>
+
+  <!-- LEFT: PART LIBRARY -->
+  <div class="parts-panel">
+    <div class="panel-head">
+      <span>Part Library</span>
+      <span id="part-count" style="color:var(--gold)">0 parts</span>
+    </div>
+    <div class="category-tabs" id="cat-tabs"></div>
+    <div class="color-label">PALETTE</div>
+    <div class="color-row" id="color-row"></div>
+    <div class="parts-grid" id="parts-grid"></div>
+  </div>
+
+  <!-- CENTER: STAGE -->
+  <div class="stage-wrap">
+    <div class="stage-label">COMPOSE · CLICK PARTS TO TOGGLE</div>
+    <div class="crosshair"><div class="crosshair-h"></div><div class="crosshair-v"></div></div>
+    <svg id="stage-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="aura-grd" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#d4a843" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="#d4a843" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="2.5" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glow-strong">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="noise">
+          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+          <feColorMatrix type="saturate" values="0"/>
+          <feBlend in="SourceGraphic" mode="overlay" result="noisy"/>
+        </filter>
+      </defs>
+      <!-- Avatar renders here -->
+      <g id="avatar-root"></g>
+    </svg>
+    <div class="stream-ticker" id="stream-ticker">← select parts from the library to compose an avatar</div>
+  </div>
+
+  <!-- RIGHT: NDJSON STREAM -->
+  <div class="stream-panel">
+    <div class="panel-head">
+      <span>NDJSON Stream</span>
+      <span id="line-count" style="color:var(--gold)">0 lines</span>
+    </div>
+    <div class="stream-log" id="stream-log">
+      <div class="stream-empty">Stream is empty.<br>Compose an avatar to generate the NDJSON record.</div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-stat">schema_version <span>1</span></div>
+    <div class="footer-stat">kind <span>avatar.compose</span></div>
+    <div class="footer-stat">lane <span>avatar</span></div>
+    <div class="footer-stat">parts <span id="ft-parts">0</span></div>
+    <div class="footer-stat">seq <span id="ft-seq">0</span></div>
+    <div class="footer-stat" style="color:var(--gold-dim)">svg · ndjson · pure elements</div>
+  </footer>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// PALETTE
+// ═══════════════════════════════════════════════════════════════════
+const PALETTES = {
+  gold:   { fill: '#d4a843', stroke: '#f0c860', dim: '#7a5a20' },
+  ember:  { fill: '#c03828', stroke: '#e05040', dim: '#601810' },
+  cyan:   { fill: '#30c8c0', stroke: '#60e8e0', dim: '#108880' },
+  violet: { fill: '#8040c0', stroke: '#b060f0', dim: '#401880' },
+  sage:   { fill: '#40a060', stroke: '#60c880', dim: '#206030' },
+  silver: { fill: '#a0b0c0', stroke: '#d0e0f0', dim: '#506070' },
+  rose:   { fill: '#c04080', stroke: '#e060a0', dim: '#601040' },
+  bone:   { fill: '#e8d8b8', stroke: '#f8f0e0', dim: '#a09060' },
+};
+let activePalette = 'gold';
+
+// ═══════════════════════════════════════════════════════════════════
+// PART DEFINITIONS
+// Each part is an NDJSON-serializable record with an svg() renderer
+// ═══════════════════════════════════════════════════════════════════
+
+function svgEl(tag, attrs, children='') {
+  const a = Object.entries(attrs).map(([k,v])=>`${k}="${v}"`).join(' ');
+  return `<${tag} ${a}>${children}</${tag}>`;
+}
+
+function P(id, category, name, tags, svgFn, zIndex=10) {
+  return { id, category, name, tags, svgFn, zIndex };
+}
+
+// ── HEADS ──────────────────────────────────────────
+const PARTS_HEAD = [
+  P('head.circle', 'head', 'Circle', ['round','classic'], (pal) => `
+    <circle cx="100" cy="90" r="48" fill="${pal.dim}" stroke="${pal.stroke}" stroke-width="1.5"/>
+    <circle cx="100" cy="90" r="46" fill="${pal.fill}" fill-opacity="0.08"/>`, 5),
+
+  P('head.hex', 'head', 'Hexagon', ['geometric','angular'], (pal) => `
+    <polygon points="100,44 140,66 140,114 100,136 60,114 60,66"
+      fill="${pal.dim}" stroke="${pal.stroke}" stroke-width="1.5"/>`, 5),
+
+  P('head.diamond', 'head', 'Diamond', ['sharp','crystal'], (pal) => `
+    <polygon points="100,42 142,90 100,138 58,90"
+      fill="${pal.dim}" stroke="${pal.stroke}" stroke-width="1.5"/>`, 5),
+
+  P('head.tetra', 'head', 'Tetra', ['sacred','triangular'], (pal) => `
+    <polygon points="100,42 148,128 52,128"
+      fill="${pal.dim}" stroke="${pal.stroke}" stroke-width="1.5"/>`, 5),
+
+  P('head.octagon', 'head', 'Octagon', ['technical','balanced'], (pal) => `
+    <polygon points="120,44 140,64 140,116 120,136 80,136 60,116 60,64 80,44"
+      fill="${pal.dim}" stroke="${pal.stroke}" stroke-width="1.5"/>`, 5),
+
+  P('head.oval', 'head', 'Oval', ['soft','organic'], (pal) => `
+    <ellipse cx="100" cy="92" rx="44" ry="52" fill="${pal.dim}" stroke="${pal.stroke}" stroke-width="1.5"/>`, 5),
+];
+
+// ── EYES ──────────────────────────────────────────
+const PARTS_EYES = [
+  P('eyes.orbs', 'eyes', 'Orbs', ['classic','glowing'], (pal) => `
+    <circle cx="84" cy="84" r="9" fill="${pal.dim}" stroke="${pal.stroke}" stroke-width="1" filter="url(#glow)"/>
+    <circle cx="84" cy="84" r="5" fill="${pal.fill}" fill-opacity="0.9"/>
+    <circle cx="116" cy="84" r="9" fill="${pal.dim}" stroke="${pal.stroke}" stroke-width="1" filter="url(#glow)"/>
+    <circle cx="116" cy="84" r="5" fill="${pal.fill}" fill-opacity="0.9"/>
+    <circle cx="86" cy="82" r="2" fill="white" fill-opacity="0.6"/>
+    <circle cx="118" cy="82" r="2" fill="white" fill-opacity="0.6"/>`, 20),
+
+  P('eyes.slits', 'eyes', 'Slits', ['serpentine','narrow'], (pal) => `
+    <ellipse cx="84" cy="86" rx="10" ry="4" fill="${pal.fill}" filter="url(#glow)"/>
+    <ellipse cx="84" cy="86" rx="3" ry="4" fill="#050508"/>
+    <ellipse cx="116" cy="86" rx="10" ry="4" fill="${pal.fill}" filter="url(#glow)"/>
+    <ellipse cx="116" cy="86" rx="3" ry="4" fill="#050508"/>`, 20),
+
+  P('eyes.diamond', 'eyes', 'Diamond', ['geometric','precise'], (pal) => `
+    <polygon points="84,78 92,86 84,94 76,86" fill="${pal.fill}" stroke="${pal.stroke}" stroke-width="0.5" filter="url(#glow)"/>
+    <polygon points="116,78 124,86 116,94 108,86" fill="${pal.fill}" stroke="${pal.stroke}" stroke-width="0.5" filter="url(#glow)"/>
+    <circle cx="84" cy="86" r="2.5" fill="#050508"/>
+    <circle cx="116" cy="86" r="2.5" fill="#050508"/>`, 20),
+
+  P('eyes.single', 'eyes', 'All-Seeing', ['mystical','single'], (pal) => `
+    <ellipse cx="100" cy="86" rx="22" ry="10" fill="${pal.dim}" stroke="${pal.stroke}" stroke-width="1"/>
+    <circle cx="100" cy="86" r="8" fill="${pal.fill}" filter="url(#glow-strong)"/>
+    <circle cx="100" cy="86" r="4" fill="#050508"/>
+    <circle cx="103" cy="83" r="2" fill="white" fill-opacity="0.5"/>`, 20),
+
+  P('eyes.cross', 'eyes', 'Cross', ['ancient','sacred'], (pal) => `
+    <line x1="80" y1="86" x2="88" y2="86" stroke="${pal.fill}" stroke-width="2.5" stroke-linecap="round" filter="url(#glow)"/>
+    <line x1="84" y1="82" x2="84" y2="90" stroke="${pal.fill}" stroke-width="2.5" stroke-linecap="round" filter="url(#glow)"/>
+    <line x1="112" y1="86" x2="120" y2="86" stroke="${pal.fill}" stroke-width="2.5" stroke-linecap="round" filter="url(#glow)"/>
+    <line x1="116" y1="82" x2="116" y2="90" stroke="${pal.fill}" stroke-width="2.5" stroke-linecap="round" filter="url(#glow)"/>`, 20),
+
+  P('eyes.arcs', 'eyes', 'Arcs', ['serene','half-open'], (pal) => `
+    <path d="M75,90 Q84,76 93,90" fill="none" stroke="${pal.fill}" stroke-width="2.5" stroke-linecap="round" filter="url(#glow)"/>
+    <path d="M107,90 Q116,76 125,90" fill="none" stroke="${pal.fill}" stroke-width="2.5" stroke-linecap="round" filter="url(#glow)"/>`, 20),
+];
+
+// ── MOUTH ──────────────────────────────────────────
+const PARTS_MOUTH = [
+  P('mouth.line', 'mouth', 'Silent', ['minimal','closed'], (pal) => `
+    <line x1="88" y1="110" x2="112" y2="110" stroke="${pal.stroke}" stroke-width="1.5" stroke-linecap="round"/>`, 25),
+
+  P('mouth.smile', 'mouth', 'Arc', ['gentle','curved'], (pal) => `
+    <path d="M88,108 Q100,118 112,108" fill="none" stroke="${pal.fill}" stroke-width="2" stroke-linecap="round"/>`, 25),
+
+  P('mouth.glyph', 'mouth', 'Glyph', ['inscribed','angular'], (pal) => `
+    <path d="M88,106 L94,114 L100,106 L106,114 L112,106" fill="none" stroke="${pal.fill}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`, 25),
+
+  P('mouth.open', 'mouth', 'Void', ['open','expressive'], (pal) => `
+    <ellipse cx="100" cy="112" rx="12" ry="6" fill="#050508" stroke="${pal.stroke}" stroke-width="1"/>
+    <path d="M90,112 Q100,106 110,112" fill="${pal.dim}" fill-opacity="0.5"/>`, 25),
+
+  P('mouth.runes', 'mouth', 'Runes', ['arcane','written'], (pal) => `
+    <text x="100" y="115" text-anchor="middle" font-size="10" fill="${pal.fill}" fill-opacity="0.8" font-family="serif">ᚨᚱᚲ</text>`, 25),
+];
+
+// ── MARKINGS ──────────────────────────────────────
+const PARTS_MARKS = [
+  P('mark.third-eye', 'markings', 'Third Eye', ['mystical','centered'], (pal) => `
+    <circle cx="100" cy="68" r="5" fill="${pal.fill}" filter="url(#glow-strong)"/>
+    <circle cx="100" cy="68" r="2" fill="white" fill-opacity="0.6"/>
+    <line x1="100" y1="58" x2="100" y2="63" stroke="${pal.fill}" stroke-width="1" stroke-linecap="round" filter="url(#glow)"/>`, 30),
+
+  P('mark.sigil', 'markings', 'Sigil', ['sacred','geometric'], (pal) => `
+    <path d="M100,58 L106,70 L118,70 L108,78 L112,90 L100,82 L88,90 L92,78 L82,70 L94,70 Z"
+      fill="none" stroke="${pal.fill}" stroke-width="1" fill-opacity="0.3" filter="url(#glow)"/>`, 30),
+
+  P('mark.cheek', 'markings', 'Cheek Marks', ['tribal','lines'], (pal) => `
+    <line x1="66" y1="90" x2="74" y2="87" stroke="${pal.fill}" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="66" y1="95" x2="74" y2="92" stroke="${pal.fill}" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="126" y1="90" x2="134" y2="87" stroke="${pal.fill}" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="126" y1="95" x2="134" y2="92" stroke="${pal.fill}" stroke-width="1.5" stroke-linecap="round"/>`, 30),
+
+  P('mark.crown', 'markings', 'Crown', ['regal','apex'], (pal) => `
+    <path d="M78,58 L84,42 L92,54 L100,40 L108,54 L116,42 L122,58"
+      fill="none" stroke="${pal.fill}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" filter="url(#glow)"/>
+    <circle cx="84" cy="42" r="2.5" fill="${pal.fill}"/>
+    <circle cx="100" cy="40" r="2.5" fill="${pal.fill}"/>
+    <circle cx="116" cy="42" r="2.5" fill="${pal.fill}"/>`, 30),
+
+  P('mark.circuit', 'markings', 'Circuit', ['technical','grid'], (pal) => `
+    <path d="M100,60 L100,68 M86,68 L114,68 M86,68 L82,72 L82,80 M114,68 L118,72 L118,80"
+      fill="none" stroke="${pal.fill}" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" fill-opacity="0"/>
+    <circle cx="100" cy="60" r="2" fill="${pal.fill}"/>
+    <circle cx="82" cy="80" r="2" fill="${pal.fill}"/>
+    <circle cx="118" cy="80" r="2" fill="${pal.fill}"/>`, 30),
+
+  P('mark.tears', 'markings', 'Tears', ['sorrow','drops'], (pal) => `
+    <path d="M84,95 Q84,102 87,104 Q90,106 87,110 Q84,106 84,104 Q81,102 84,95Z" fill="${pal.fill}" fill-opacity="0.7"/>
+    <path d="M116,95 Q116,102 119,104 Q122,106 119,110 Q116,106 116,104 Q113,102 116,95Z" fill="${pal.fill}" fill-opacity="0.7"/>`, 30),
+];
+
+// ── BODY / COLLAR ──────────────────────────────────
+const PARTS_BODY = [
+  P('body.collar', 'body', 'Collar', ['garment','layered'], (pal) => `
+    <path d="M56,136 Q72,128 100,126 Q128,128 144,136 L148,160 Q130,148 100,146 Q70,148 52,160 Z"
+      fill="${pal.dim}" stroke="${pal.stroke}" stroke-width="1"/>`, 15),
+
+  P('body.robe', 'body', 'Robe', ['flowing','full'], (pal) => `
+    <path d="M52,134 Q72,126 100,124 Q128,126 148,134 L160,200 L40,200 Z"
+      fill="${pal.dim}" fill-opacity="0.7" stroke="${pal.stroke}" stroke-width="1"/>
+    <line x1="100" y1="138" x2="100" y2="190" stroke="${pal.stroke}" stroke-width="0.5" stroke-opacity="0.4"/>`, 12),
+
+  P('body.armor', 'body', 'Armor', ['plated','geometric'], (pal) => `
+    <path d="M60,134 L80,128 L100,132 L120,128 L140,134 L144,170 L100,178 L56,170Z"
+      fill="${pal.dim}" stroke="${pal.stroke}" stroke-width="1.5"/>
+    <line x1="80" y1="132" x2="80" y2="172" stroke="${pal.stroke}" stroke-width="0.5" stroke-opacity="0.5"/>
+    <line x1="120" y1="132" x2="120" y2="172" stroke="${pal.stroke}" stroke-width="0.5" stroke-opacity="0.5"/>
+    <path d="M70,148 L100,144 L130,148" fill="none" stroke="${pal.stroke}" stroke-width="0.5" stroke-opacity="0.5"/>`, 12),
+
+  P('body.mantle', 'body', 'Mantle', ['shoulders','wide'], (pal) => `
+    <path d="M40,130 Q60,122 100,120 Q140,122 160,130 L154,150 Q130,138 100,136 Q70,138 46,150Z"
+      fill="${pal.dim}" stroke="${pal.stroke}" stroke-width="1"/>`, 12),
+
+  P('body.void', 'body', 'Void Body', ['dark','minimal'], (pal) => `
+    <path d="M60,134 Q80,128 100,130 Q120,128 140,134 L144,200 L56,200Z"
+      fill="#050508" stroke="${pal.fill}" stroke-width="0.5" stroke-opacity="0.4"/>
+    <circle cx="100" cy="158" r="8" fill="${pal.fill}" fill-opacity="0.08" filter="url(#glow)"/>`, 12),
+];
+
+// ── AURAS ──────────────────────────────────────────
+const PARTS_AURA = [
+  P('aura.radiant', 'aura', 'Radiant', ['glow','soft'], (pal) => `
+    <circle cx="100" cy="90" r="70" fill="${pal.fill}" fill-opacity="0.04" filter="url(#glow-strong)"/>
+    <circle cx="100" cy="90" r="56" fill="none" stroke="${pal.fill}" stroke-width="0.5" stroke-opacity="0.15" stroke-dasharray="4 6"/>`, 1),
+
+  P('aura.orbit', 'aura', 'Orbit', ['circling','rings'], (pal) => `
+    <ellipse cx="100" cy="90" rx="72" ry="30" fill="none" stroke="${pal.fill}" stroke-width="0.8" stroke-opacity="0.25" stroke-dasharray="3 5" transform="rotate(-15,100,90)"/>
+    <ellipse cx="100" cy="90" rx="72" ry="30" fill="none" stroke="${pal.stroke}" stroke-width="0.4" stroke-opacity="0.15" stroke-dasharray="2 8" transform="rotate(45,100,90)"/>`, 1),
+
+  P('aura.halo', 'aura', 'Halo', ['sacred','ring'], (pal) => `
+    <circle cx="100" cy="58" r="28" fill="none" stroke="${pal.fill}" stroke-width="2" stroke-opacity="0.5" filter="url(#glow)"/>
+    <circle cx="100" cy="58" r="26" fill="none" stroke="${pal.stroke}" stroke-width="0.5" stroke-opacity="0.3"/>`, 1),
+
+  P('aura.rays', 'aura', 'Rays', ['solar','burst'], (pal) => {
+    let r = '';
+    for(let i=0;i<12;i++) {
+      const a = (i/12)*Math.PI*2;
+      const x1=100+Math.cos(a)*52, y1=90+Math.sin(a)*52;
+      const x2=100+Math.cos(a)*72, y2=90+Math.sin(a)*72;
+      r += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${pal.fill}" stroke-width="0.8" stroke-opacity="0.3" filter="url(#glow)"/>`;
+    }
+    return r;
+  }, 1),
+
+  P('aura.geometry', 'aura', 'Geometry', ['sacred-geo','precise'], (pal) => `
+    <polygon points="100,20 174,65 174,115 100,160 26,115 26,65" fill="none" stroke="${pal.fill}" stroke-width="0.5" stroke-opacity="0.2"/>
+    <polygon points="100,30 162,67.5 162,112.5 100,150 38,112.5 38,67.5" fill="none" stroke="${pal.stroke}" stroke-width="0.3" stroke-opacity="0.15"/>`, 1),
+
+  P('aura.particles', 'aura', 'Particles', ['scattered','floating'], (pal) => {
+    let dots = '';
+    const positions = [[40,40],[160,38],[170,110],[150,165],[50,168],[28,108],[100,18],[60,75],[140,75],[80,158],[120,158],[30,68],[170,68]];
+    positions.forEach(([x,y]) => {
+      dots += `<circle cx="${x}" cy="${y}" r="${(Math.random()*2+0.5).toFixed(1)}" fill="${pal.fill}" fill-opacity="${(Math.random()*0.4+0.1).toFixed(2)}" filter="url(#glow)"/>`;
+    });
+    return dots;
+  }, 1),
+];
+
+// ── ACCESSORIES ────────────────────────────────────
+const PARTS_ACC = [
+  P('acc.monocle', 'accessories', 'Monocle', ['refined','optical'], (pal) => `
+    <circle cx="116" cy="84" r="13" fill="none" stroke="${pal.fill}" stroke-width="1.5" filter="url(#glow)"/>
+    <line x1="129" y1="91" x2="136" y2="100" stroke="${pal.fill}" stroke-width="1" stroke-linecap="round"/>`, 35),
+
+  P('acc.horns', 'accessories', 'Horns', ['beast','power'], (pal) => `
+    <path d="M76,55 Q68,28 72,14 Q82,28 84,50" fill="${pal.dim}" stroke="${pal.stroke}" stroke-width="1.2" stroke-linejoin="round"/>
+    <path d="M124,55 Q132,28 128,14 Q118,28 116,50" fill="${pal.dim}" stroke="${pal.stroke}" stroke-width="1.2" stroke-linejoin="round"/>`, 35),
+
+  P('acc.antenna', 'accessories', 'Antenna', ['signal','tech'], (pal) => `
+    <line x1="100" y1="42" x2="100" y2="18" stroke="${pal.fill}" stroke-width="1.5" stroke-linecap="round" filter="url(#glow)"/>
+    <circle cx="100" cy="16" r="3" fill="${pal.fill}" filter="url(#glow-strong)"/>
+    <line x1="92" y1="24" x2="108" y2="24" stroke="${pal.fill}" stroke-width="1" stroke-linecap="round" stroke-opacity="0.5"/>`, 35),
+
+  P('acc.mask', 'accessories', 'Half Mask', ['concealed','split'], (pal) => `
+    <path d="M60,70 Q60,115 100,118 L100,70Z" fill="${pal.dim}" fill-opacity="0.7" stroke="${pal.stroke}" stroke-width="1"/>
+    <path d="M60,70 L100,70 L100,118 Q96,116 92,112 Q72,105 60,90Z" fill="${pal.fill}" fill-opacity="0.2"/>`, 35),
+
+  P('acc.earrings', 'accessories', 'Earrings', ['adornment','dangling'], (pal) => `
+    <line x1="55" y1="92" x2="55" y2="108" stroke="${pal.fill}" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="55" cy="112" r="4" fill="${pal.fill}" filter="url(#glow)"/>
+    <line x1="145" y1="92" x2="145" y2="108" stroke="${pal.fill}" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="145" cy="112" r="4" fill="${pal.fill}" filter="url(#glow)"/>`, 35),
+];
+
+// ── BACKGROUND ─────────────────────────────────────
+const PARTS_BG = [
+  P('bg.void', 'background', 'Void', ['dark','empty'], (pal) => `
+    <rect x="0" y="0" width="200" height="200" fill="#030306"/>`, 0),
+
+  P('bg.garden', 'background', 'Garden', ['fano','seed'], (pal) => `
+    <rect x="0" y="0" width="200" height="200" fill="#040808"/>
+    <circle cx="100" cy="100" r="70" fill="none" stroke="${pal.fill}" stroke-width="0.3" stroke-opacity="0.15"/>
+    <circle cx="100" cy="100" r="40" fill="none" stroke="${pal.fill}" stroke-width="0.3" stroke-opacity="0.1"/>
+    <circle cx="100" cy="60" r="40" fill="none" stroke="${pal.fill}" stroke-width="0.3" stroke-opacity="0.08"/>
+    <circle cx="134.6" cy="80" r="40" fill="none" stroke="${pal.fill}" stroke-width="0.3" stroke-opacity="0.08"/>
+    <circle cx="134.6" cy="120" r="40" fill="none" stroke="${pal.fill}" stroke-width="0.3" stroke-opacity="0.08"/>
+    <circle cx="100" cy="140" r="40" fill="none" stroke="${pal.fill}" stroke-width="0.3" stroke-opacity="0.08"/>
+    <circle cx="65.4" cy="120" r="40" fill="none" stroke="${pal.fill}" stroke-width="0.3" stroke-opacity="0.08"/>
+    <circle cx="65.4" cy="80" r="40" fill="none" stroke="${pal.fill}" stroke-width="0.3" stroke-opacity="0.08"/>`, 0),
+
+  P('bg.grid', 'background', 'Grid', ['technical','circuit'], (pal) => `
+    <rect x="0" y="0" width="200" height="200" fill="#060612"/>
+    <path d="M0,40 L200,40 M0,80 L200,80 M0,120 L200,120 M0,160 L200,160 M40,0 L40,200 M80,0 L80,200 M120,0 L120,200 M160,0 L160,200"
+      stroke="${pal.fill}" stroke-width="0.3" stroke-opacity="0.08"/>
+    <circle cx="40" cy="40" r="1.5" fill="${pal.fill}" fill-opacity="0.15"/>
+    <circle cx="80" cy="40" r="1.5" fill="${pal.fill}" fill-opacity="0.15"/>
+    <circle cx="120" cy="40" r="1.5" fill="${pal.fill}" fill-opacity="0.15"/>
+    <circle cx="160" cy="40" r="1.5" fill="${pal.fill}" fill-opacity="0.15"/>
+    <circle cx="40" cy="80" r="1.5" fill="${pal.fill}" fill-opacity="0.15"/>
+    <circle cx="160" cy="80" r="1.5" fill="${pal.fill}" fill-opacity="0.15"/>
+    <circle cx="40" cy="120" r="1.5" fill="${pal.fill}" fill-opacity="0.15"/>
+    <circle cx="160" cy="120" r="1.5" fill="${pal.fill}" fill-opacity="0.15"/>
+    <circle cx="40" cy="160" r="1.5" fill="${pal.fill}" fill-opacity="0.15"/>
+    <circle cx="80" cy="160" r="1.5" fill="${pal.fill}" fill-opacity="0.15"/>
+    <circle cx="120" cy="160" r="1.5" fill="${pal.fill}" fill-opacity="0.15"/>
+    <circle cx="160" cy="160" r="1.5" fill="${pal.fill}" fill-opacity="0.15"/>`, 0),
+
+  P('bg.vellum', 'background', 'Vellum', ['warm','parchment'], (pal) => `
+    <rect x="0" y="0" width="200" height="200" fill="#1a160e"/>
+    <rect x="0" y="0" width="200" height="200" fill="url(#aura-grd)" fill-opacity="0.3"/>`, 0),
+];
+
+// All parts indexed
+const ALL_PARTS = [
+  ...PARTS_BG, ...PARTS_AURA, ...PARTS_HEAD, ...PARTS_BODY,
+  ...PARTS_EYES, ...PARTS_MOUTH, ...PARTS_MARKS, ...PARTS_ACC
+];
+const PART_MAP = Object.fromEntries(ALL_PARTS.map(p => [p.id, p]));
+
+const CATEGORIES = [
+  { id: 'all', label: 'ALL' },
+  { id: 'background', label: 'BG' },
+  { id: 'aura', label: 'AURA' },
+  { id: 'head', label: 'HEAD' },
+  { id: 'body', label: 'BODY' },
+  { id: 'eyes', label: 'EYES' },
+  { id: 'mouth', label: 'MOUTH' },
+  { id: 'markings', label: 'MARKS' },
+  { id: 'accessories', label: 'ACC' },
+];
+
+// ═══════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════
+let activeCat = 'all';
+let selectedParts = new Set(); // part ids active on avatar
+let seqCounter = 0;
+
+// ═══════════════════════════════════════════════════════════════════
+// PALETTE UI
+// ═══════════════════════════════════════════════════════════════════
+const colorRow = document.getElementById('color-row');
+Object.entries(PALETTES).forEach(([key, pal]) => {
+  const sw = document.createElement('div');
+  sw.className = 'color-swatch' + (key === activePalette ? ' active' : '');
+  sw.style.background = pal.fill;
+  sw.title = key;
+  sw.onclick = () => {
+    activePalette = key;
+    document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+    sw.classList.add('active');
+    refreshPartCards();
+    renderAvatar();
+  };
+  colorRow.appendChild(sw);
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// CATEGORY TABS
+// ═══════════════════════════════════════════════════════════════════
+const catTabs = document.getElementById('cat-tabs');
+CATEGORIES.forEach(cat => {
+  const btn = document.createElement('button');
+  btn.className = 'cat-tab' + (cat.id === activeCat ? ' active' : '');
+  btn.textContent = cat.label;
+  btn.onclick = () => {
+    activeCat = cat.id;
+    document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderPartGrid();
+  };
+  catTabs.appendChild(btn);
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// PART GRID
+// ═══════════════════════════════════════════════════════════════════
+function renderPartGrid() {
+  const grid = document.getElementById('parts-grid');
+  grid.innerHTML = '';
+  const filtered = activeCat === 'all' ? ALL_PARTS : ALL_PARTS.filter(p => p.category === activeCat);
+  document.getElementById('part-count').textContent = filtered.length + ' parts';
+  filtered.forEach(part => {
+    const card = document.createElement('div');
+    card.className = 'part-card' + (selectedParts.has(part.id) ? ' selected' : '');
+    card.dataset.id = part.id;
+    const pal = PALETTES[activePalette];
+    card.innerHTML = `
+      <svg class="part-preview" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="200" height="200" fill="#0a0a18"/>
+        ${part.svgFn(pal)}
+      </svg>
+      <div class="part-name">${part.name}</div>
+      <div class="part-seq">${part.category}</div>`;
+    card.onclick = () => togglePart(part.id);
+    grid.appendChild(card);
+  });
+}
+
+function refreshPartCards() {
+  document.querySelectorAll('.part-card').forEach(card => {
+    const id = card.dataset.id;
+    const part = PART_MAP[id];
+    if (!part) return;
+    const pal = PALETTES[activePalette];
+    const svg = card.querySelector('svg');
+    svg.innerHTML = `<rect width="200" height="200" fill="#0a0a18"/>${part.svgFn(pal)}`;
+    card.classList.toggle('selected', selectedParts.has(id));
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TOGGLE PART
+// ═══════════════════════════════════════════════════════════════════
+function togglePart(id) {
+  const was = selectedParts.has(id);
+  // For heads, bg, body — enforce single selection per category
+  const part = PART_MAP[id];
+  const singleCats = new Set(['head','background','body']);
+  if (singleCats.has(part.category) && !was) {
+    // Remove others in same category
+    ALL_PARTS.filter(p => p.category === part.category).forEach(p => selectedParts.delete(p.id));
+  }
+
+  if (was) selectedParts.delete(id);
+  else selectedParts.add(id);
+
+  refreshPartCards();
+  renderAvatar();
+  rebuildStream();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// RENDER AVATAR
+// ═══════════════════════════════════════════════════════════════════
+function renderAvatar() {
+  const root = document.getElementById('avatar-root');
+  const pal = PALETTES[activePalette];
+
+  // Sort by zIndex
+  const sorted = [...selectedParts]
+    .map(id => PART_MAP[id])
+    .filter(Boolean)
+    .sort((a,b) => a.zIndex - b.zIndex);
+
+  root.innerHTML = sorted.map(part => `<g class="part-layer" data-part="${part.id}">${part.svgFn(pal)}</g>`).join('');
+  document.getElementById('ft-parts').textContent = selectedParts.size;
+  document.getElementById('stream-ticker').textContent =
+    selectedParts.size === 0 ? '← select parts from the library to compose an avatar'
+    : `composing: ${[...selectedParts].join(' · ')}`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// NDJSON STREAM
+// ═══════════════════════════════════════════════════════════════════
+function colorizeJSON(line) {
+  return line
+    .replace(/"([^"]+)":/g, '<span class="key">"$1":</span>')
+    .replace(/: "([^"]*)"/g, ': <span class="str">"$1"</span>')
+    .replace(/: (\d+)/g, ': <span class="num">$1</span>')
+    .replace(/: (true|false|null)/g, ': <span class="kw">$1</span>');
+}
+
+function catClass(cat) {
+  return { head:'head', background:'head', body:'body-part', eyes:'face-part', mouth:'face-part', aura:'aura-part', markings:'mark-part', accessories:'face-part' }[cat] || 'manifest-part';
+}
+
+function rebuildStream() {
+  const log = document.getElementById('stream-log');
+  seqCounter = 0;
+
+  if (selectedParts.size === 0) {
+    log.innerHTML = '<div class="stream-empty">Stream is empty.<br>Compose an avatar to generate the NDJSON record.</div>';
+    document.getElementById('line-count').textContent = '0 lines';
+    document.getElementById('ft-seq').textContent = '0';
+    return;
+  }
+
+  const pal = PALETTES[activePalette];
+  const sorted = [...selectedParts]
+    .map(id => PART_MAP[id])
+    .filter(Boolean)
+    .sort((a,b) => a.zIndex - b.zIndex);
+
+  const lines = [];
+  seqCounter++;
+
+  // Header record
+  const header = {
+    schema_version: 1,
+    kind: 'avatar.compose',
+    lane: 'avatar',
+    seq: seqCounter,
+    event: 'avatar.compose.start',
+    run_id: `sha256:${hashStr(JSON.stringify([...selectedParts].sort()) + activePalette)}`,
+    payload: {
+      palette: activePalette,
+      part_count: selectedParts.size,
+      generated_at: '1970-01-01T00:00:00Z'
+    }
+  };
+  lines.push({ json: JSON.stringify(header), cls: 'manifest-part new' });
+
+  // Part records
+  sorted.forEach(part => {
+    seqCounter++;
+    const record = {
+      schema_version: 1,
+      kind: 'avatar.part',
+      lane: 'avatar',
+      seq: seqCounter,
+      event: 'avatar.part.add',
+      payload: {
+        part_id: part.id,
+        category: part.category,
+        name: part.name,
+        tags: part.tags,
+        z_index: part.zIndex,
+        palette: activePalette,
+        palette_fill: pal.fill,
+        palette_stroke: pal.stroke,
+        svg_source: 'inline',
+        sha256: `sha256:${hashStr(part.id + activePalette)}`
+      }
+    };
+    lines.push({ json: JSON.stringify(record), cls: catClass(part.category) + ' new' });
+  });
+
+  // Manifest record
+  seqCounter++;
+  const manifest = {
+    schema_version: 1,
+    kind: 'avatar.manifest',
+    lane: 'avatar',
+    seq: seqCounter,
+    event: 'avatar.compose.end',
+    payload: {
+      pass: true,
+      part_ids: sorted.map(p => p.id),
+      palette: activePalette,
+      z_order: sorted.map(p => p.zIndex),
+      sha256: `sha256:${hashStr(sorted.map(p=>p.id+activePalette).join(''))}`
+    }
+  };
+  lines.push({ json: JSON.stringify(manifest), cls: 'manifest-part new' });
+
+  log.innerHTML = lines.map(l =>
+    `<div class="ndjson-line ${l.cls}">${colorizeJSON(escapeHtml(l.json))}</div>`
+  ).join('');
+
+  document.getElementById('line-count').textContent = lines.length + ' lines';
+  document.getElementById('ft-seq').textContent = seqCounter;
+
+  // Scroll to bottom
+  setTimeout(() => { log.scrollTop = log.scrollHeight; }, 10);
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Simple deterministic hash (not crypto, just for display)
+function hashStr(str) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = (h * 0x01000193) >>> 0;
+  }
+  // expand to 64 hex chars
+  let s = h.toString(16).padStart(8,'0');
+  for (let i = 0; i < 7; i++) {
+    h ^= (i * 0xdeadbeef + str.charCodeAt(i % str.length));
+    h = (h * 0x01000193) >>> 0;
+    s += h.toString(16).padStart(8,'0');
+  }
+  return s;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════════════════════════════════════
+function exportNDJSON() {
+  if (selectedParts.size === 0) { alert('Nothing to export — compose an avatar first.'); return; }
+  const pal = PALETTES[activePalette];
+  const sorted = [...selectedParts].map(id => PART_MAP[id]).filter(Boolean).sort((a,b) => a.zIndex - b.zIndex);
+  const lines = [];
+  let seq = 0;
+
+  lines.push(JSON.stringify({ schema_version:1, kind:'avatar.compose', lane:'avatar', seq:++seq, event:'avatar.compose.start', payload:{ palette:activePalette, part_count:selectedParts.size, generated_at: new Date().toISOString() }}));
+  sorted.forEach(part => {
+    lines.push(JSON.stringify({ schema_version:1, kind:'avatar.part', lane:'avatar', seq:++seq, event:'avatar.part.add', payload:{ part_id:part.id, category:part.category, name:part.name, tags:part.tags, z_index:part.zIndex, palette:activePalette, palette_fill:pal.fill, palette_stroke:pal.stroke, svg_source:'inline', sha256:`sha256:${hashStr(part.id+activePalette)}` }}));
+  });
+  lines.push(JSON.stringify({ schema_version:1, kind:'avatar.manifest', lane:'avatar', seq:++seq, event:'avatar.compose.end', payload:{ pass:true, part_ids:sorted.map(p=>p.id), palette:activePalette, z_order:sorted.map(p=>p.zIndex) }}));
+
+  // Also export SVG inline
+  const svgEl = document.getElementById('stage-svg');
+  const svgString = new XMLSerializer().serializeToString(svgEl);
+  lines.push(JSON.stringify({ schema_version:1, kind:'avatar.svg', lane:'avatar', seq:++seq, event:'avatar.svg.export', payload:{ format:'svg', encoding:'inline', width:200, height:200, viewBox:'0 0 200 200', svg: svgString.slice(0,200)+'...[truncated]' }}));
+
+  const blob = new Blob([lines.join('\n')+'\n'], { type:'application/x-ndjson' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `avatar-${Date.now()}.ndjson`;
+  a.click();
+}
+
+function clearAvatar() {
+  selectedParts.clear();
+  refreshPartCards();
+  renderAvatar();
+  rebuildStream();
+}
+
+function randomize() {
+  selectedParts.clear();
+  const pick = (arr) => arr[Math.floor(Math.random()*arr.length)];
+  const bgParts = Object.keys(PALETTES);
+  activePalette = pick(bgParts);
+  document.querySelectorAll('.color-swatch').forEach((sw,i) => {
+    sw.classList.toggle('active', Object.keys(PALETTES)[i] === activePalette);
+  });
+
+  // Pick one from each category (except optional)
+  const required = ['background','head','eyes','mouth'];
+  const optional = ['aura','body','markings','accessories'];
+  required.forEach(cat => {
+    const available = ALL_PARTS.filter(p => p.category === cat);
+    if (available.length) selectedParts.add(pick(available).id);
+  });
+  optional.forEach(cat => {
+    if (Math.random() > 0.4) {
+      const available = ALL_PARTS.filter(p => p.category === cat);
+      if (available.length) selectedParts.add(pick(available).id);
+    }
+  });
+
+  refreshPartCards();
+  renderAvatar();
+  rebuildStream();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════
+renderPartGrid();
+rebuildStream();
+</script>
+</body>
+</html>

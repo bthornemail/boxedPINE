@@ -1,0 +1,110 @@
+{
+  "v": "dome_frame.v0",
+  "authority": "advisory",
+  "harmonic_id": "sha256:d635c79c8c91fc1a15433b46a03adc5f3355a41de0fa0eceed2aec3b5aa51664",
+  "frame_index": "0",
+  "led_count": "7",
+  "leds": [
+    {
+      "index": "0",
+      "path": "m/7'/0'/1'",
+      "h": "0",
+      "s": "255",
+      "v": "230",
+      "fano": "1",
+      "channel": "X"
+    },
+    {
+      "index": "1",
+      "path": "m/7'/1'/2'",
+      "h": "30",
+      "s": "255",
+      "v": "255",
+      "fano": "2",
+      "channel": "O"
+    },
+    {
+      "index": "2",
+      "path": "m/7'/2'/3'",
+      "h": "60",
+      "s": "255",
+      "v": "255",
+      "fano": "3",
+      "channel": "Y"
+    },
+    {
+      "index": "3",
+      "path": "m/7'/3'/4'",
+      "h": "120",
+      "s": "255",
+      "v": "255",
+      "fano": "4",
+      "channel": "G"
+    },
+    {
+      "index": "4",
+      "path": "m/7'/4'/5'",
+      "h": "240",
+      "s": "255",
+      "v": "255",
+      "fano": "5",
+      "channel": "B"
+    },
+    {
+      "index": "5",
+      "path": "m/7'/5'/6'",
+      "h": "275",
+      "s": "255",
+      "v": "255",
+      "fano": "6",
+      "channel": "I"
+    },
+    {
+      "index": "6",
+      "path": "m/7'/6'/7'",
+      "h": "300",
+      "s": "255",
+      "v": "255",
+      "fano": "7",
+      "channel": "V"
+    }
+  ],
+  "audio_channels": [
+    {
+      "note": "A",
+      "gain": "1.00000000",
+      "phase": "0"
+    },
+    {
+      "note": "B",
+      "gain": "0.08333333",
+      "phase": "51"
+    },
+    {
+      "note": "C",
+      "gain": "0.29417671",
+      "phase": "102"
+    },
+    {
+      "note": "D",
+      "gain": "1.00000000",
+      "phase": "153"
+    },
+    {
+      "note": "E",
+      "gain": "0.83483483",
+      "phase": "204"
+    },
+    {
+      "note": "F",
+      "gain": "0.72872873",
+      "phase": "255"
+    },
+    {
+      "note": "G",
+      "gain": "0.85985986",
+      "phase": "306"
+    }
+  ],
+  "digest": "sha256:44cb8799bbb95a30903c5067ab1151ebc1791824ddaa7fa26d7668d52c8b243c"
+}

@@ -1,0 +1,4 @@
+{"seq":1,"event":"sensor.sample","payload":{"channel":"R","value":12}}
+{"seq":2,"event":"sensor.sample","payload":{"channel":"G","value":19}}
+{"seq":3,"event":"space.occupancy","payload":{"occupied":true,"zone":"alpha"}}
+{"seq":4,"event":"narrative.tick","payload":{"chapter":"1","beat":"intro"}}

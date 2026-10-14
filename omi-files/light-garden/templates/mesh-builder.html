@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MESH · POLYHEDRA DIAGRAM BUILDER</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&family=Playfair+Display:ital@0;1&display=swap');
+
+:root {
+  --bg: #060810;
+  --bg2: #0a0e1a;
+  --paper: #ccd8e8;
+  --blue: #3a7bd5;
+  --blue2: #5a9bf5;
+  --cyan: #20d0c8;
+  --gold: #e8b840;
+  --gold2: #ffd060;
+  --ember: #e05030;
+  --violet: #9060e0;
+  --green: #30c870;
+  --mist: #607090;
+  --border: rgba(58,123,213,0.2);
+  --border2: rgba(58,123,213,0.5);
+  --panel: rgba(8,12,26,0.95);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{
+  background:var(--bg);
+  color:var(--paper);
+  font-family:'Share Tech Mono',monospace;
+  font-size:12px;
+  cursor:default;
+}
+
+/* ── SHELL ── */
+.shell{display:grid;grid-template-columns:200px 1fr 260px;grid-template-rows:48px 1fr 40px;height:100vh;}
+
+/* ── HEADER ── */
+header{
+  grid-column:1/-1;
+  background:linear-gradient(90deg,rgba(6,8,16,0.99),rgba(10,14,28,0.97));
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;
+  gap:16px;
+}
+.logo{
+  font-family:'Rajdhani',sans-serif;
+  font-weight:700;font-size:18px;letter-spacing:0.3em;
+  color:var(--blue2);
+  display:flex;align-items:center;gap:10px;
+}
+.logo-sub{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--mist);letter-spacing:0.2em;font-weight:400;}
+.toolbar{display:flex;gap:6px;align-items:center;flex:1;justify-content:center;}
+.tool-btn{
+  padding:4px 12px;font-size:9px;letter-spacing:0.12em;
+  border:1px solid var(--border);background:transparent;color:var(--mist);
+  font-family:'Share Tech Mono',monospace;cursor:pointer;
+  transition:all .12s;text-transform:uppercase;
+}
+.tool-btn:hover{border-color:var(--blue2);color:var(--blue2);}
+.tool-btn.active{border-color:var(--cyan);color:var(--cyan);background:rgba(32,208,200,0.06);}
+.tool-btn.danger:hover{border-color:var(--ember);color:var(--ember);}
+.tool-btn.export{border-color:var(--gold);color:var(--gold);}
+.tool-btn.export:hover{background:rgba(232,184,64,0.08);}
+.sep{width:1px;height:24px;background:var(--border);margin:0 4px;}
+.mode-label{font-size:9px;color:var(--mist);letter-spacing:0.15em;}
+
+/* ── LEFT: SHAPE LIBRARY ── */
+.lib-panel{
+  border-right:1px solid var(--border);
+  background:var(--panel);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.panel-head{
+  padding:10px 12px 8px;border-bottom:1px solid var(--border);
+  font-size:9px;letter-spacing:0.2em;color:var(--blue);text-transform:uppercase;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.cat-tabs{display:flex;flex-wrap:wrap;border-bottom:1px solid var(--border);}
+.cat-tab{
+  padding:5px 8px;font-size:8px;letter-spacing:0.08em;
+  text-transform:uppercase;cursor:pointer;color:var(--mist);
+  border:none;background:none;font-family:'Share Tech Mono',monospace;
+  border-bottom:2px solid transparent;transition:all .1s;
+}
+.cat-tab.active{color:var(--cyan);border-bottom-color:var(--cyan);}
+.cat-tab:hover{color:var(--paper);}
+.shape-grid{flex:1;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:4px;}
+.shape-item{
+  display:flex;align-items:center;gap:8px;
+  padding:6px 8px;border:1px solid var(--border);
+  cursor:grab;transition:all .12s;border-radius:2px;
+  user-select:none;
+}
+.shape-item:hover{border-color:var(--blue2);background:rgba(58,123,213,0.06);}
+.shape-item:active{cursor:grabbing;}
+.shape-thumb{width:36px;height:36px;flex-shrink:0;}
+.shape-info{}
+.shape-name{font-size:10px;color:var(--paper);font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:0.05em;}
+.shape-cat{font-size:8px;color:var(--mist);letter-spacing:0.05em;}
+.shape-verts{font-size:8px;color:var(--blue);margin-top:1px;}
+
+/* ── CENTER: CANVAS ── */
+.canvas-wrap{position:relative;overflow:hidden;background:var(--bg);}
+#canvas-bg{position:absolute;inset:0;pointer-events:none;}
+#main-svg{width:100%;height:100%;display:block;}
+.canvas-wrap.mode-connect #main-svg{cursor:crosshair;}
+.canvas-wrap.mode-select #main-svg{cursor:default;}
+.canvas-wrap.mode-pan #main-svg{cursor:grab;}
+
+/* ── RIGHT: STREAM ── */
+.stream-panel{
+  border-left:1px solid var(--border);
+  background:rgba(4,6,14,0.97);
+  display:flex;flex-direction:column;
+}
+.stream-log{flex:1;overflow-y:auto;padding:6px;}
+.nd-line{
+  padding:2px 6px;border-left:2px solid transparent;
+  margin-bottom:1px;font-size:8.5px;line-height:1.6;
+  word-break:break-all;transition:background .1s;
+  border-radius:1px;
+}
+.nd-line:hover{background:rgba(58,123,213,0.04);}
+.nd-line.ev-place{border-left-color:var(--cyan);}
+.nd-line.ev-connect{border-left-color:var(--violet);}
+.nd-line.ev-move{border-left-color:var(--blue);}
+.nd-line.ev-delete{border-left-color:var(--ember);}
+.nd-line.ev-label{border-left-color:var(--gold);}
+.nd-line.ev-manifest{border-left-color:var(--gold);background:rgba(232,184,64,0.03);}
+.nd-line.ev-start{border-left-color:var(--green);}
+.nd-flash{animation:ndflash .35s ease-out;}
+@keyframes ndflash{from{background:rgba(58,123,213,0.12);}to{background:transparent;}}
+
+.jk{color:#7090b8;}
+.js{color:#80b870;}
+.jn{color:#70a8e8;}
+.jb{color:#d070b0;}
+.je{color:#e08040;}
+
+/* ── SVG NODE STYLES ── */
+.node-shape{cursor:move;transition:filter .15s;}
+.node-shape:hover .node-body{filter:brightness(1.3);}
+.node-shape.selected .node-body{filter:brightness(1.5);}
+.node-shape.selected .node-outline{stroke-width:2.5!important;stroke-opacity:1!important;}
+.node-label-text{
+  font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;
+  fill:white;text-anchor:middle;dominant-baseline:central;
+  pointer-events:none;user-select:none;
+}
+.node-sublabel{
+  font-family:'Share Tech Mono',monospace;font-size:7px;
+  fill:rgba(180,200,220,0.6);text-anchor:middle;
+  pointer-events:none;
+}
+.edge-line{pointer-events:none;}
+.edge-arrow{pointer-events:none;}
+.edge-label-text{
+  font-family:'Share Tech Mono',monospace;font-size:8px;
+  fill:rgba(180,200,220,0.7);text-anchor:middle;pointer-events:none;
+}
+
+/* ── EDGE TYPE PANEL ── */
+.edge-panel{
+  padding:8px 10px;border-top:1px solid var(--border);
+  display:flex;gap:4px;flex-wrap:wrap;
+}
+.edge-type-btn{
+  padding:3px 8px;font-size:8px;letter-spacing:0.1em;
+  text-transform:uppercase;cursor:pointer;
+  border:1px solid var(--border);background:transparent;
+  color:var(--mist);font-family:'Share Tech Mono',monospace;
+  transition:all .1s;
+}
+.edge-type-btn.active{border-color:var(--violet);color:var(--violet);background:rgba(144,96,224,0.08);}
+.edge-type-btn:hover{border-color:var(--blue2);color:var(--blue2);}
+
+/* ── FOOTER ── */
+footer{
+  grid-column:1/-1;border-top:1px solid var(--border);
+  background:rgba(4,6,12,0.98);display:flex;align-items:center;
+  padding:0 20px;gap:24px;font-size:9px;color:var(--mist);letter-spacing:0.08em;
+}
+.ft{display:flex;gap:5px;align-items:center;}
+.ft span{color:var(--blue2);}
+.ft-mode{color:var(--cyan)!important;}
+
+/* ── CONTEXT MENU ── */
+#ctx-menu{
+  position:fixed;z-index:999;display:none;
+  background:rgba(8,12,26,0.98);border:1px solid var(--border2);
+  min-width:160px;
+}
+.ctx-item{
+  padding:7px 14px;font-size:10px;cursor:pointer;color:var(--paper);
+  letter-spacing:0.08em;transition:background .1s;
+}
+.ctx-item:hover{background:rgba(58,123,213,0.12);color:var(--blue2);}
+.ctx-item.danger:hover{background:rgba(224,80,48,0.1);color:var(--ember);}
+.ctx-sep{height:1px;background:var(--border);margin:3px 0;}
+
+/* scrollbar */
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-thumb{background:rgba(58,123,213,0.3);}
+
+/* ── LABEL EDIT ── */
+#label-input{
+  position:fixed;z-index:998;display:none;
+  background:rgba(8,12,26,0.98);border:1px solid var(--cyan);
+  padding:4px 8px;color:var(--cyan);font-family:'Share Tech Mono',monospace;
+  font-size:11px;outline:none;min-width:120px;
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header>
+  <div class="logo">
+    MESH
+    <div class="logo-sub">polyhedra · diagram · ndjson</div>
+  </div>
+  <div class="toolbar">
+    <span class="mode-label">MODE:</span>
+    <button class="tool-btn active" id="btn-select" onclick="setMode('select')">◈ SELECT</button>
+    <button class="tool-btn" id="btn-connect" onclick="setMode('connect')">⟶ CONNECT</button>
+    <button class="tool-btn" id="btn-pan" onclick="setMode('pan')">✥ PAN</button>
+    <div class="sep"></div>
+    <button class="tool-btn" onclick="autoLayout()">⊞ AUTO LAYOUT</button>
+    <button class="tool-btn danger" onclick="clearAll()">⊗ CLEAR</button>
+    <div class="sep"></div>
+    <button class="tool-btn export" onclick="exportNDJSON()">↓ NDJSON</button>
+    <button class="tool-btn export" onclick="exportSVG()">↓ SVG</button>
+  </div>
+  <div style="font-size:9px;color:var(--mist);text-align:right;line-height:1.8;">
+    <span style="color:var(--blue2)">schema_version</span> 1<br>
+    <span style="color:var(--blue2)">kind</span> mesh.compose
+  </div>
+</header>
+
+<!-- LEFT: LIBRARY -->
+<div class="lib-panel">
+  <div class="panel-head">
+    <span>Shape Library</span>
+    <span id="lib-count" style="color:var(--cyan)">0</span>
+  </div>
+  <div class="cat-tabs" id="cat-tabs"></div>
+  <div class="shape-grid" id="shape-grid"></div>
+</div>
+
+<!-- CENTER: CANVAS -->
+<div class="canvas-wrap mode-select" id="canvas-wrap">
+  <svg id="main-svg" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Grid pattern -->
+      <pattern id="grid-minor" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M20,0 L0,0 0,20" fill="none" stroke="rgba(58,123,213,0.06)" stroke-width="0.5"/>
+      </pattern>
+      <pattern id="grid-major" width="100" height="100" patternUnits="userSpaceOnUse">
+        <rect width="100" height="100" fill="url(#grid-minor)"/>
+        <path d="M100,0 L0,0 0,100" fill="none" stroke="rgba(58,123,213,0.12)" stroke-width="1"/>
+      </pattern>
+      <!-- Glow filters -->
+      <filter id="glow-s"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="glow-m"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="glow-l"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <!-- Arrow markers per edge type -->
+      <marker id="arr-flow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="rgba(90,155,245,0.8)"/>
+      </marker>
+      <marker id="arr-dep" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="rgba(144,96,224,0.8)"/>
+      </marker>
+      <marker id="arr-comp" markerWidth="10" markerHeight="8" refX="5" refY="4" orient="auto">
+        <polygon points="0 4, 5 0, 10 4, 5 8" fill="rgba(32,208,200,0.8)"/>
+      </marker>
+      <marker id="arr-inh" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto">
+        <polygon points="0 0, 10 4, 0 8" fill="none" stroke="rgba(232,184,64,0.8)" stroke-width="1.2"/>
+      </marker>
+      <marker id="arr-res" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+        <circle cx="4" cy="4" r="3" fill="none" stroke="rgba(48,200,112,0.8)" stroke-width="1"/>
+      </marker>
+    </defs>
+    <!-- Background grid -->
+    <rect id="grid-rect" width="100%" height="100%" fill="url(#grid-major)"/>
+    <!-- Groups -->
+    <g id="edges-group"></g>
+    <g id="nodes-group"></g>
+    <!-- Connect preview line -->
+    <line id="connect-preview" x1="0" y1="0" x2="0" y2="0" stroke="rgba(32,208,200,0.4)" stroke-width="1.5" stroke-dasharray="6 4" display="none"/>
+  </svg>
+</div>
+
+<!-- RIGHT: NDJSON STREAM -->
+<div class="stream-panel">
+  <div class="panel-head">
+    <span>NDJSON Stream</span>
+    <span id="nd-count" style="color:var(--cyan)">0 events</span>
+  </div>
+  <div class="edge-panel">
+    <span style="font-size:8px;color:var(--mist);letter-spacing:0.1em;align-self:center;">EDGE:</span>
+    <button class="edge-type-btn active" data-etype="flow" onclick="setEdgeType('flow')">→ flow</button>
+    <button class="edge-type-btn" data-etype="dependency" onclick="setEdgeType('dependency')">⇢ dep</button>
+    <button class="edge-type-btn" data-etype="composition" onclick="setEdgeType('composition')">◆ comp</button>
+    <button class="edge-type-btn" data-etype="inheritance" onclick="setEdgeType('inheritance')">△ inh</button>
+    <button class="edge-type-btn" data-etype="resonance" onclick="setEdgeType('resonance')">◎ res</button>
+  </div>
+  <div class="stream-log" id="stream-log">
+    <div style="color:var(--mist);font-style:italic;padding:12px;font-size:10px;text-align:center;">
+      Drag shapes onto the canvas.<br>Events emit here as NDJSON.
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="ft">mode <span class="ft-mode" id="ft-mode">select</span></div>
+  <div class="ft">nodes <span id="ft-nodes">0</span></div>
+  <div class="ft">edges <span id="ft-edges">0</span></div>
+  <div class="ft">seq <span id="ft-seq">0</span></div>
+  <div class="ft">edge-type <span id="ft-etype">flow</span></div>
+  <div class="ft" style="margin-left:auto;color:rgba(58,123,213,0.4);">
+    drag·drop · connect · double-click to label
+  </div>
+</footer>
+
+</div><!-- /shell -->
+
+<div id="ctx-menu">
+  <div class="ctx-item" onclick="ctxAction('label')">✎ Edit Label</div>
+  <div class="ctx-item" onclick="ctxAction('duplicate')">⊕ Duplicate</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item danger" onclick="ctxAction('delete')">⊗ Delete</div>
+</div>
+
+<input id="label-input" type="text" placeholder="label…" onblur="finishLabel()" onkeydown="labelKey(event)"/>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// MATH HELPERS
+// ═══════════════════════════════════════════════════════════════════════
+const TWO_PI = Math.PI * 2;
+const DEG = Math.PI / 180;
+
+function polygon(cx, cy, r, n, rot=0) {
+  const pts = [];
+  for (let i=0;i<n;i++) {
+    const a = rot + (i/n)*TWO_PI - Math.PI/2;
+    pts.push([cx+Math.cos(a)*r, cy+Math.sin(a)*r]);
+  }
+  return pts;
+}
+function pts2str(pts) { return pts.map(([x,y])=>`${x.toFixed(2)},${y.toFixed(2)}`).join(' '); }
+function polyPath(cx,cy,r,n,rot=0){ return pts2str(polygon(cx,cy,r,n,rot)); }
+
+// ═══════════════════════════════════════════════════════════════════════
+// SHAPE DEFINITIONS — each has an svgFn(cx,cy,r,color) → SVG string
+// ═══════════════════════════════════════════════════════════════════════
+
+const SHAPES = {
+
+  // ── PLATONIC SOLIDS (2D projections) ──────────────────────────────
+  'platonic.tetrahedron': {
+    name:'Tetrahedron', cat:'platonic', verts:4, faces:4,
+    color:'#3a7bd5', desc:'V4 F4 E6',
+    svg:(cx,cy,r,col)=>`
+      <polygon points="${polyPath(cx,cy,r,3)}" fill="${col}22" stroke="${col}" stroke-width="1.5"/>
+      <line x1="${cx}" y1="${cy-r}" x2="${cx}" y2="${cy+r*0.33}" stroke="${col}" stroke-width="0.7" stroke-opacity="0.4"/>
+      <line x1="${(cx-r*0.866).toFixed(2)}" y1="${(cy+r*0.5).toFixed(2)}" x2="${cx}" y2="${cy+r*0.33}" stroke="${col}" stroke-width="0.7" stroke-opacity="0.4"/>
+      <line x1="${(cx+r*0.866).toFixed(2)}" y1="${(cy+r*0.5).toFixed(2)}" x2="${cx}" y2="${cy+r*0.33}" stroke="${col}" stroke-width="0.7" stroke-opacity="0.4"/>
+    `
+  },
+  'platonic.cube': {
+    name:'Cube', cat:'platonic', verts:8, faces:6,
+    color:'#5a9bf5', desc:'V8 F6 E12',
+    svg:(cx,cy,r,col)=>{
+      const s=r*0.65, ox=s*0.4, oy=s*0.35;
+      return `
+        <rect x="${cx-s}" y="${cy-s}" width="${s*2}" height="${s*2}" fill="${col}22" stroke="${col}" stroke-width="1.5"/>
+        <polygon points="${cx-s},${cy-s} ${cx-s+ox},${cy-s-oy} ${cx+s+ox},${cy-s-oy} ${cx+s},${cy-s}" fill="${col}11" stroke="${col}" stroke-width="1" stroke-opacity="0.7"/>
+        <polygon points="${cx+s},${cy-s} ${cx+s+ox},${cy-s-oy} ${cx+s+ox},${cy+s-oy} ${cx+s},${cy+s}" fill="${col}11" stroke="${col}" stroke-width="1" stroke-opacity="0.7"/>
+        <line x1="${cx+s}" y1="${cy+s}" x2="${(cx+s+ox).toFixed(2)}" y2="${(cy+s-oy).toFixed(2)}" stroke="${col}" stroke-width="1" stroke-opacity="0.5"/>
+      `;
+    }
+  },
+  'platonic.octahedron': {
+    name:'Octahedron', cat:'platonic', verts:6, faces:8,
+    color:'#20d0c8', desc:'V6 F8 E12',
+    svg:(cx,cy,r,col)=>`
+      <polygon points="${cx},${cy-r} ${cx+r},${cy} ${cx},${cy+r} ${cx-r},${cy}" fill="${col}22" stroke="${col}" stroke-width="1.5"/>
+      <line x1="${cx-r}" y1="${cy}" x2="${cx+r}" y2="${cy}" stroke="${col}" stroke-width="0.7" stroke-opacity="0.4"/>
+      <line x1="${cx}" y1="${cy-r}" x2="${cx}" y2="${cy+r}" stroke="${col}" stroke-width="0.7" stroke-opacity="0.4"/>
+    `
+  },
+  'platonic.dodecahedron': {
+    name:'Dodecahedron', cat:'platonic', verts:20, faces:12,
+    color:'#9060e0', desc:'V20 F12 E30',
+    svg:(cx,cy,r,col)=>{
+      const o=polygon(cx,cy,r,5,-Math.PI/2);
+      const i=polygon(cx,cy,r*0.62,5,Math.PI/10-Math.PI/2);
+      let ed='';
+      for(let k=0;k<5;k++) ed+=`<line x1="${o[k][0].toFixed(2)}" y1="${o[k][1].toFixed(2)}" x2="${i[k][0].toFixed(2)}" y2="${i[k][1].toFixed(2)}" stroke="${col}" stroke-width="0.8" stroke-opacity="0.5"/>`;
+      return `
+        <polygon points="${pts2str(o)}" fill="${col}18" stroke="${col}" stroke-width="1.5"/>
+        <polygon points="${pts2str(i)}" fill="${col}10" stroke="${col}" stroke-width="1" stroke-opacity="0.7"/>
+        ${ed}
+      `;
+    }
+  },
+  'platonic.icosahedron': {
+    name:'Icosahedron', cat:'platonic', verts:12, faces:20,
+    color:'#e8b840', desc:'V12 F20 E30',
+    svg:(cx,cy,r,col)=>{
+      const o=polygon(cx,cy,r,6,-Math.PI/2);
+      const i=polygon(cx,cy,r*0.5,6,0);
+      let lines='';
+      for(let k=0;k<6;k++){
+        lines+=`<line x1="${o[k][0].toFixed(2)}" y1="${o[k][1].toFixed(2)}" x2="${i[k][0].toFixed(2)}" y2="${i[k][1].toFixed(2)}" stroke="${col}" stroke-width="0.7" stroke-opacity="0.5"/>`;
+        lines+=`<line x1="${o[k][0].toFixed(2)}" y1="${o[k][1].toFixed(2)}" x2="${i[(k+1)%6][0].toFixed(2)}" y2="${i[(k+1)%6][1].toFixed(2)}" stroke="${col}" stroke-width="0.7" stroke-opacity="0.35"/>`;
+      }
+      return `<polygon points="${pts2str(o)}" fill="${col}18" stroke="${col}" stroke-width="1.5"/><polygon points="${pts2str(i)}" fill="${col}10" stroke="${col}" stroke-width="1" stroke-opacity="0.6"/>${lines}`;
+    }
+  },
+
+  // ── ARCHIMEDEAN SOLIDS ────────────────────────────────────────────
+  'archi.cuboctahedron': {
+    name:'Cuboctahedron', cat:'archimedean', verts:12, faces:14,
+    color:'#5a9bf5', desc:'V12 F14 E24',
+    svg:(cx,cy,r,col)=>{
+      const sq=polygon(cx,cy,r,4,Math.PI/4);
+      const tri1=polygon(cx,cy,r*0.72,3,-Math.PI/2);
+      const tri2=polygon(cx,cy,r*0.72,3,Math.PI/2);
+      return `
+        <polygon points="${pts2str(sq)}" fill="${col}18" stroke="${col}" stroke-width="1.5"/>
+        <polygon points="${pts2str(tri1)}" fill="${col}0a" stroke="${col}" stroke-width="1" stroke-opacity="0.6"/>
+        <polygon points="${pts2str(tri2)}" fill="${col}0a" stroke="${col}" stroke-width="1" stroke-opacity="0.6"/>
+      `;
+    }
+  },
+  'archi.truncated-tetrahedron': {
+    name:'Trunc. Tetrahedron', cat:'archimedean', verts:12, faces:8,
+    color:'#30c870', desc:'V12 F8 E18',
+    svg:(cx,cy,r,col)=>{
+      const hex=polygon(cx,cy,r,6,0);
+      const tri=polygon(cx,cy,r*0.45,3,-Math.PI/2);
+      return `
+        <polygon points="${pts2str(hex)}" fill="${col}18" stroke="${col}" stroke-width="1.5"/>
+        <polygon points="${pts2str(tri)}" fill="${col}22" stroke="${col}" stroke-width="1.2"/>
+      `;
+    }
+  },
+  'archi.truncated-cube': {
+    name:'Trunc. Cube', cat:'archimedean', verts:24, faces:14,
+    color:'#5a9bf5', desc:'V24 F14 E36',
+    svg:(cx,cy,r,col)=>{
+      const oct=polygon(cx,cy,r,8,Math.PI/8);
+      const sq1=polygon(cx,cy,r*0.55,4,0);
+      return `
+        <polygon points="${pts2str(oct)}" fill="${col}18" stroke="${col}" stroke-width="1.5"/>
+        <polygon points="${pts2str(sq1)}" fill="${col}18" stroke="${col}" stroke-width="1.2"/>
+      `;
+    }
+  },
+  'archi.snub-cube': {
+    name:'Snub Cube', cat:'archimedean', verts:24, faces:38,
+    color:'#e05030', desc:'V24 F38 E60',
+    svg:(cx,cy,r,col)=>{
+      const p1=polygon(cx,cy,r,6,0);
+      const p2=polygon(cx,cy,r*0.7,6,Math.PI/6);
+      const p3=polygon(cx,cy,r*0.4,6,0);
+      return `
+        <polygon points="${pts2str(p1)}" fill="${col}14" stroke="${col}" stroke-width="1.5"/>
+        <polygon points="${pts2str(p2)}" fill="${col}10" stroke="${col}" stroke-width="1" stroke-opacity="0.7"/>
+        <polygon points="${pts2str(p3)}" fill="${col}18" stroke="${col}" stroke-width="1.2"/>
+      `;
+    }
+  },
+  'archi.rhombicosidodecahedron': {
+    name:'Rhombicosidodeca.', cat:'archimedean', verts:60, faces:62,
+    color:'#9060e0', desc:'V60 F62 E120',
+    svg:(cx,cy,r,col)=>{
+      const p1=polygon(cx,cy,r,10,0);
+      const p2=polygon(cx,cy,r*0.7,10,Math.PI/10);
+      const p3=polygon(cx,cy,r*0.42,5,-Math.PI/2);
+      return `
+        <polygon points="${pts2str(p1)}" fill="${col}14" stroke="${col}" stroke-width="1.5"/>
+        <polygon points="${pts2str(p2)}" fill="${col}10" stroke="${col}" stroke-width="1" stroke-opacity="0.6"/>
+        <polygon points="${pts2str(p3)}" fill="${col}1a" stroke="${col}" stroke-width="1.2"/>
+      `;
+    }
+  },
+  'archi.icosidodecahedron': {
+    name:'Icosidodecahedron', cat:'archimedean', verts:30, faces:32,
+    color:'#e8b840', desc:'V30 F32 E60',
+    svg:(cx,cy,r,col)=>{
+      const p1=polygon(cx,cy,r,5,-Math.PI/2);
+      const p2=polygon(cx,cy,r*0.65,5,Math.PI/10-Math.PI/2);
+      const p3=polygon(cx,cy,r,3,Math.PI/2);
+      return `
+        <polygon points="${pts2str(p1)}" fill="${col}14" stroke="${col}" stroke-width="1.5"/>
+        <polygon points="${pts2str(p3)}" fill="${col}10" stroke="${col}" stroke-width="1" stroke-opacity="0.5"/>
+        <polygon points="${pts2str(p2)}" fill="${col}1a" stroke="${col}" stroke-width="1.2"/>
+      `;
+    }
+  },
+
+  // ── CATALAN SOLIDS ────────────────────────────────────────────────
+  'catalan.rhombic-dodecahedron': {
+    name:'Rhombic Dodecahedron', cat:'catalan', verts:14, faces:12,
+    color:'#20d0c8', desc:'V14 F12 E24 · dual cuboctahedron',
+    svg:(cx,cy,r,col)=>{
+      const pts=[];
+      for(let i=0;i<12;i++){
+        const a=(i/12)*TWO_PI;
+        const rad=i%2===0?r:r*0.72;
+        pts.push([cx+Math.cos(a)*rad, cy+Math.sin(a)*rad]);
+      }
+      return `<polygon points="${pts2str(pts)}" fill="${col}18" stroke="${col}" stroke-width="1.5"/>
+        <circle cx="${cx}" cy="${cy}" r="${r*0.2}" fill="${col}30" stroke="${col}" stroke-width="0.8"/>`;
+    }
+  },
+  'catalan.triakis-tetrahedron': {
+    name:'Triakis Tetrahedron', cat:'catalan', verts:8, faces:12,
+    color:'#30c870', desc:'V8 F12 E18 · dual trunc.tet.',
+    svg:(cx,cy,r,col)=>{
+      const o=polygon(cx,cy,r,3,-Math.PI/2);
+      const i=polygon(cx,cy,r*0.4,3,Math.PI/2);
+      let spikes='';
+      for(let k=0;k<3;k++){
+        spikes+=`<polygon points="${o[k][0].toFixed(2)},${o[k][1].toFixed(2)} ${i[k][0].toFixed(2)},${i[k][1].toFixed(2)} ${i[(k+1)%3][0].toFixed(2)},${i[(k+1)%3][1].toFixed(2)}" fill="${col}25" stroke="${col}" stroke-width="1"/>`;
+      }
+      return `<polygon points="${pts2str(o)}" fill="${col}18" stroke="${col}" stroke-width="1.5"/>${spikes}`;
+    }
+  },
+  'catalan.pentagonal-icositetrahedron': {
+    name:'Pent. Icositetrahedron', cat:'catalan', verts:38, faces:24,
+    color:'#e05030', desc:'V38 F24 E60 · dual snub cube',
+    svg:(cx,cy,r,col)=>{
+      const p1=polygon(cx,cy,r,8,0);
+      const p2=polygon(cx,cy,r*0.8,8,Math.PI/8);
+      const p3=polygon(cx,cy,r*0.5,8,0);
+      return `
+        <polygon points="${pts2str(p1)}" fill="${col}14" stroke="${col}" stroke-width="1.5"/>
+        <polygon points="${pts2str(p2)}" fill="${col}0d" stroke="${col}" stroke-width="0.8" stroke-opacity="0.6"/>
+        <polygon points="${pts2str(p3)}" fill="${col}20" stroke="${col}" stroke-width="1"/>
+      `;
+    }
+  },
+  'catalan.disdyakis-dodecahedron': {
+    name:'Disdyakis Dodecah.', cat:'catalan', verts:26, faces:48,
+    color:'#9060e0', desc:'V26 F48 E72',
+    svg:(cx,cy,r,col)=>{
+      let s='';
+      for(let i=0;i<12;i++){
+        const a=(i/12)*TWO_PI, b=((i+0.5)/12)*TWO_PI;
+        const ro=r, ri=r*0.55, rm=r*0.78;
+        s+=`<polygon points="${(cx+Math.cos(a)*ro).toFixed(2)},${(cy+Math.sin(a)*ro).toFixed(2)} ${(cx+Math.cos(b)*rm).toFixed(2)},${(cy+Math.sin(b)*rm).toFixed(2)} ${(cx+Math.cos(b)*ri).toFixed(2)},${(cy+Math.sin(b)*ri).toFixed(2)}" fill="${col}14" stroke="${col}" stroke-width="0.8"/>`;
+      }
+      return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${col}08" stroke="${col}" stroke-width="1.5"/>${s}`;
+    }
+  },
+
+  // ── STELLATIONS ──────────────────────────────────────────────────
+  'stell.stellated-tetrahedron': {
+    name:'Stellated Tetrahedron', cat:'stellations', verts:8, faces:8,
+    color:'#e8b840', desc:'Stella octangula · compound',
+    svg:(cx,cy,r,col)=>{
+      const t1=polygon(cx,cy,r,3,-Math.PI/2);
+      const t2=polygon(cx,cy,r,3,Math.PI/2);
+      return `
+        <polygon points="${pts2str(t1)}" fill="${col}20" stroke="${col}" stroke-width="1.5" filter="url(#glow-s)"/>
+        <polygon points="${pts2str(t2)}" fill="${col}20" stroke="${col}" stroke-width="1.5" filter="url(#glow-s)"/>
+        <circle cx="${cx}" cy="${cy}" r="${r*0.22}" fill="${col}40" stroke="${col}" stroke-width="0.8"/>
+      `;
+    }
+  },
+  'stell.great-dodecahedron': {
+    name:'Great Dodecahedron', cat:'stellations', verts:12, faces:12,
+    color:'#e05030', desc:'Stellation of icosahedron',
+    svg:(cx,cy,r,col)=>{
+      let s='';
+      for(let i=0;i<5;i++){
+        const a=(i/5)*TWO_PI-Math.PI/2;
+        const b=((i+2)/5)*TWO_PI-Math.PI/2;
+        s+=`<line x1="${(cx+Math.cos(a)*r).toFixed(2)}" y1="${(cy+Math.sin(a)*r).toFixed(2)}" x2="${(cx+Math.cos(b)*r).toFixed(2)}" y2="${(cy+Math.sin(b)*r).toFixed(2)}" stroke="${col}" stroke-width="1.5"/>`;
+      }
+      const p=polygon(cx,cy,r,5,-Math.PI/2);
+      return `<polygon points="${pts2str(p)}" fill="${col}10" stroke="${col}" stroke-width="1" stroke-opacity="0.4"/>${s}`;
+    }
+  },
+  'stell.small-stellated-dodecahedron': {
+    name:'Small Stell. Dodecah.', cat:'stellations', verts:12, faces:12,
+    color:'#9060e0', desc:'First Kepler-Poinsot',
+    svg:(cx,cy,r,col)=>{
+      const inner=polygon(cx,cy,r*0.38,5,-Math.PI/2);
+      let pts_star='';
+      for(let i=0;i<5;i++){
+        const a=(i/5)*TWO_PI-Math.PI/2;
+        const b=((i+0.5)/5)*TWO_PI-Math.PI/2;
+        pts_star+=`${(cx+Math.cos(a)*r).toFixed(2)},${(cy+Math.sin(a)*r).toFixed(2)} ${inner[i][0].toFixed(2)},${inner[i][1].toFixed(2)} `;
+      }
+      return `
+        <polygon points="${pts_star}" fill="${col}20" stroke="${col}" stroke-width="1.5" fill-rule="evenodd" filter="url(#glow-s)"/>
+        <polygon points="${pts2str(inner)}" fill="${col}30" stroke="${col}" stroke-width="1"/>
+      `;
+    }
+  },
+
+  // ── TOPOLOGICAL ──────────────────────────────────────────────────
+  'topo.torus': {
+    name:'Torus', cat:'topological', verts:null, faces:null,
+    color:'#20d0c8', desc:'genus-1 surface',
+    svg:(cx,cy,r,col)=>`
+      <ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r*0.42}" fill="none" stroke="${col}" stroke-width="1.5"/>
+      <ellipse cx="${cx}" cy="${cy+r*0.1}" rx="${r*0.35}" ry="${r*0.18}" fill="${col}10" stroke="${col}" stroke-width="1" stroke-opacity="0.6"/>
+      <ellipse cx="${cx}" cy="${cy}" rx="${r*0.58}" ry="${r*0.26}" fill="none" stroke="${col}" stroke-width="0.8" stroke-opacity="0.3" stroke-dasharray="4 3"/>
+      <path d="M${cx-r},${cy} Q${cx-r*0.5},${cy+r*0.5} ${cx},${cy+r*0.42} Q${cx+r*0.5},${cy+r*0.5} ${cx+r},${cy}" fill="none" stroke="${col}" stroke-width="1.2" stroke-opacity="0.5"/>
+    `
+  },
+  'topo.sphere': {
+    name:'Sphere', cat:'topological', verts:null, faces:null,
+    color:'#5a9bf5', desc:'S² · 0-genus',
+    svg:(cx,cy,r,col)=>`
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="${col}14" stroke="${col}" stroke-width="1.5"/>
+      <ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r*0.3}" fill="none" stroke="${col}" stroke-width="1" stroke-opacity="0.4" stroke-dasharray="5 3"/>
+      <ellipse cx="${cx}" cy="${cy}" rx="${r*0.3}" ry="${r}" fill="none" stroke="${col}" stroke-width="0.8" stroke-opacity="0.3"/>
+      <circle cx="${(cx-r*0.25).toFixed(2)}" cy="${(cy-r*0.25).toFixed(2)}" r="${r*0.12}" fill="white" fill-opacity="0.12"/>
+    `
+  },
+  'topo.mobius': {
+    name:'Möbius Strip', cat:'topological', verts:null, faces:null,
+    color:'#e8b840', desc:'non-orientable surface',
+    svg:(cx,cy,r,col)=>{
+      const w=r*0.28;
+      return `
+        <path d="M${cx-r},${cy}
+          C${cx-r},${cy-r*0.5} ${cx},${cy-r*0.9} ${cx+r*0.6},${cy-r*0.5}
+          C${cx+r*1.1},${cy-r*0.1} ${cx+r},${cy+r*0.4} ${cx+r*0.2},${cy+r*0.5}
+          C${cx-r*0.5},${cy+r*0.7} ${cx-r*1.0},${cy+r*0.3} ${cx-r},${cy}Z"
+          fill="${col}14" stroke="${col}" stroke-width="1.5"/>
+        <path d="M${cx},${cy-r*0.6} C${cx+r*0.5},${cy-r*0.8} ${cx+r*0.8},${cy} ${cx+r*0.4},${cy+r*0.4}"
+          fill="none" stroke="${col}" stroke-width="1" stroke-opacity="0.5" stroke-dasharray="3 2"/>
+        <path d="M${cx-r*0.6},${cy+r*0.3} C${cx-r*0.2},${cy+r*0.6} ${cx+r*0.3},${cy+r*0.5} ${cx+r*0.5},${cy+r*0.1}"
+          fill="none" stroke="${col}" stroke-width="0.8" stroke-opacity="0.4"/>
+        <text x="${cx}" y="${cy+r*0.15}" text-anchor="middle" font-size="${r*0.22}" fill="${col}" fill-opacity="0.5" font-family="serif">∞</text>
+      `;
+    }
+  },
+  'topo.ring': {
+    name:'Ring / Annulus', cat:'topological', verts:null, faces:null,
+    color:'#30c870', desc:'flat torus projection',
+    svg:(cx,cy,r,col)=>`
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="${col}10" stroke="${col}" stroke-width="1.5"/>
+      <circle cx="${cx}" cy="${cy}" r="${r*0.55}" fill="${col}06" stroke="${col}" stroke-width="1" stroke-opacity="0.6"/>
+      <circle cx="${cx}" cy="${cy}" r="${r*0.28}" fill="rgba(6,8,16,0.8)" stroke="${col}" stroke-width="0.6" stroke-opacity="0.4"/>
+    `
+  },
+  'topo.klein': {
+    name:'Klein Bottle', cat:'topological', verts:null, faces:null,
+    color:'#9060e0', desc:'non-orientable closed surface',
+    svg:(cx,cy,r,col)=>`
+      <path d="M${cx},${cy-r} C${cx+r*1.2},${cy-r} ${cx+r*1.1},${cy+r*0.8} ${cx},${cy+r*0.7}" fill="none" stroke="${col}" stroke-width="1.5"/>
+      <path d="M${cx},${cy+r*0.7} C${cx-r*0.5},${cy+r*0.5} ${cx-r*0.4},${cy} ${cx},${cy}" fill="none" stroke="${col}" stroke-width="1.5"/>
+      <path d="M${cx},${cy} C${cx+r*0.3},${cy} ${cx+r*0.3},${cy-r*0.5} ${cx},${cy-r}" fill="none" stroke="${col}" stroke-width="1.5"/>
+      <path d="M${cx},${cy} C${cx-r*0.8},${cy-r*0.2} ${cx-r*0.9},${cy+r*0.5} ${cx},${cy+r*0.7}" fill="none" stroke="${col}" stroke-width="1" stroke-dasharray="4 2" stroke-opacity="0.5"/>
+      <circle cx="${cx}" cy="${cy}" r="${r*0.1}" fill="${col}" fill-opacity="0.5"/>
+    `
+  },
+
+  // ── GRAPH/DIAGRAM NODES ───────────────────────────────────────────
+  'graph.node': {
+    name:'Node', cat:'graph', verts:null, faces:null,
+    color:'#607090', desc:'generic entity',
+    svg:(cx,cy,r,col)=>`
+      <circle cx="${cx}" cy="${cy}" r="${r*0.75}" fill="${col}20" stroke="${col}" stroke-width="1.5"/>
+    `
+  },
+  'graph.module': {
+    name:'Module', cat:'graph', verts:null, faces:null,
+    color:'#5a9bf5', desc:'UML component',
+    svg:(cx,cy,r,col)=>{
+      const s=r*0.7;
+      return `
+        <rect x="${cx-s}" y="${cy-s}" width="${s*2}" height="${s*2}" rx="3" fill="${col}18" stroke="${col}" stroke-width="1.5"/>
+        <rect x="${cx-s-s*0.3}" y="${cy-s*0.5}" width="${s*0.3}" height="${s*0.35}" rx="2" fill="${col}40" stroke="${col}" stroke-width="1"/>
+        <rect x="${cx-s-s*0.3}" y="${cy+s*0.15}" width="${s*0.3}" height="${s*0.35}" rx="2" fill="${col}40" stroke="${col}" stroke-width="1"/>
+      `;
+    }
+  },
+  'graph.process': {
+    name:'Process', cat:'graph', verts:null, faces:null,
+    color:'#30c870', desc:'UML activity',
+    svg:(cx,cy,r,col)=>{
+      const s=r*0.7, h=s*0.55;
+      return `<rect x="${cx-s}" y="${cy-h}" width="${s*2}" height="${h*2}" rx="${h}" fill="${col}18" stroke="${col}" stroke-width="1.5"/>`;
+    }
+  },
+  'graph.decision': {
+    name:'Decision', cat:'graph', verts:null, faces:null,
+    color:'#e8b840', desc:'UML decision diamond',
+    svg:(cx,cy,r,col)=>`
+      <polygon points="${cx},${cy-r*0.8} ${cx+r},${cy} ${cx},${cy+r*0.8} ${cx-r},${cy}" fill="${col}18" stroke="${col}" stroke-width="1.5"/>
+    `
+  },
+  'graph.store': {
+    name:'Data Store', cat:'graph', verts:null, faces:null,
+    color:'#20d0c8', desc:'storage entity',
+    svg:(cx,cy,r,col)=>{
+      const rr=r*0.75, ry=r*0.18;
+      return `
+        <ellipse cx="${cx}" cy="${cy-r*0.5}" rx="${rr}" ry="${ry}" fill="${col}18" stroke="${col}" stroke-width="1.2"/>
+        <rect x="${cx-rr}" y="${cy-r*0.5}" width="${rr*2}" height="${r}" fill="${col}10"/>
+        <line x1="${cx-rr}" y1="${cy-r*0.5}" x2="${cx-rr}" y2="${cy+r*0.5}" stroke="${col}" stroke-width="1.2"/>
+        <line x1="${cx+rr}" y1="${cy-r*0.5}" x2="${cx+rr}" y2="${cy+r*0.5}" stroke="${col}" stroke-width="1.2"/>
+        <ellipse cx="${cx}" cy="${cy+r*0.5}" rx="${rr}" ry="${ry}" fill="${col}18" stroke="${col}" stroke-width="1.2"/>
+      `;
+    }
+  },
+};
+
+// Category list
+const CATS = [
+  {id:'all',label:'ALL'},
+  {id:'platonic',label:'PLATONIC'},
+  {id:'archimedean',label:'ARCHIM.'},
+  {id:'catalan',label:'CATALAN'},
+  {id:'stellations',label:'STELL.'},
+  {id:'topological',label:'TOPO.'},
+  {id:'graph',label:'GRAPH'},
+];
+
+// ═══════════════════════════════════════════════════════════════════════
+// EDGE TYPES
+// ═══════════════════════════════════════════════════════════════════════
+const EDGE_TYPES = {
+  flow:        { color:'rgba(90,155,245,0.7)', dash:'none', marker:'arr-flow', label:'flow' },
+  dependency:  { color:'rgba(144,96,224,0.7)', dash:'6 3', marker:'arr-dep', label:'depends' },
+  composition: { color:'rgba(32,208,200,0.7)', dash:'none', marker:'arr-comp', label:'composes' },
+  inheritance: { color:'rgba(232,184,64,0.7)', dash:'none', marker:'arr-inh', label:'extends' },
+  resonance:   { color:'rgba(48,200,112,0.7)', dash:'3 3', marker:'arr-res', label:'resonates' },
+};
+
+// ═══════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════
+let mode = 'select';
+let edgeType = 'flow';
+let activeCat = 'all';
+let nodes = [];
+let edges = [];
+let seq = 0;
+let selected = null;
+let connectFrom = null;
+let dragging = null, dragOffX=0, dragOffY=0;
+let panStart=null, panOrigin={x:0,y:0};
+let viewX=0, viewY=0, viewScale=1;
+let ctxTarget = null;
+let labelTarget = null;
+
+const svg = document.getElementById('main-svg');
+const nodesG = document.getElementById('nodes-group');
+const edgesG = document.getElementById('edges-group');
+const preview = document.getElementById('connect-preview');
+
+function uid() { return 'n'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function eid() { return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+function hashStr(s) {
+  let h=0x811c9dc5;
+  for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=(h*0x01000193)>>>0;}
+  let r=h.toString(16).padStart(8,'0');
+  for(let i=0;i<7;i++){h^=(i*0xdead+s.charCodeAt(i%s.length));h=(h*0x01000193)>>>0;r+=h.toString(16).padStart(8,'0');}
+  return r;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// NDJSON STREAM
+// ═══════════════════════════════════════════════════════════════════════
+function emit(event, payload, cls='ev-manifest') {
+  seq++;
+  const rec = { schema_version:1, kind:'mesh.event', lane:'mesh', seq, event, payload };
+  const log = document.getElementById('stream-log');
+  // Clear placeholder
+  if (seq===1) log.innerHTML='';
+  const line = document.createElement('div');
+  line.className = `nd-line ${cls} nd-flash`;
+  line.innerHTML = colorJSON(JSON.stringify(rec));
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
+  document.getElementById('nd-count').textContent = seq+' events';
+  document.getElementById('ft-seq').textContent = seq;
+}
+
+function colorJSON(s) {
+  return s
+    .replace(/"([^"]+)":/g,'<span class="jk">"$1":</span>')
+    .replace(/: "([^"]*)"/g,': <span class="js">"$1"</span>')
+    .replace(/: (\d+)/g,': <span class="jn">$1</span>')
+    .replace(/: (true|false|null)/g,': <span class="jb">$1</span>');
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// MODES
+// ═══════════════════════════════════════════════════════════════════════
+function setMode(m) {
+  mode = m;
+  connectFrom = null;
+  preview.setAttribute('display','none');
+  document.querySelectorAll('.tool-btn[id^=btn]').forEach(b=>b.classList.remove('active'));
+  const btn = document.getElementById('btn-'+m);
+  if(btn) btn.classList.add('active');
+  const cw = document.getElementById('canvas-wrap');
+  cw.className = 'canvas-wrap mode-'+m;
+  document.getElementById('ft-mode').textContent = m;
+}
+
+function setEdgeType(et) {
+  edgeType = et;
+  document.querySelectorAll('.edge-type-btn').forEach(b=>b.classList.toggle('active', b.dataset.etype===et));
+  document.getElementById('ft-etype').textContent = et;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CATEGORY TABS + SHAPE GRID
+// ═══════════════════════════════════════════════════════════════════════
+const catTabs = document.getElementById('cat-tabs');
+CATS.forEach(cat=>{
+  const btn=document.createElement('button');
+  btn.className='cat-tab'+(cat.id===activeCat?' active':'');
+  btn.textContent=cat.label;
+  btn.onclick=()=>{
+    activeCat=cat.id;
+    document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    buildShapeGrid();
+  };
+  catTabs.appendChild(btn);
+});
+
+function buildShapeGrid() {
+  const grid=document.getElementById('shape-grid');
+  grid.innerHTML='';
+  const items=Object.entries(SHAPES).filter(([,s])=>activeCat==='all'||s.cat===activeCat);
+  document.getElementById('lib-count').textContent=items.length;
+  items.forEach(([id,shape])=>{
+    const div=document.createElement('div');
+    div.className='shape-item';
+    div.draggable=true;
+    div.dataset.shapeId=id;
+    const thumb=`<svg class="shape-thumb" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <rect width="64" height="64" fill="#0a0e1a"/>
+      ${shape.svg(32,32,26,shape.color)}
+    </svg>`;
+    div.innerHTML=`${thumb}<div class="shape-info"><div class="shape-name">${shape.name}</div><div class="shape-cat">${shape.cat}</div><div class="shape-verts">${shape.desc}</div></div>`;
+    div.addEventListener('dragstart',e=>{
+      e.dataTransfer.setData('shapeId',id);
+    });
+    div.addEventListener('click',()=>placeShapeCenter(id));
+    grid.appendChild(div);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// SVG VIEWPORT TRANSFORM
+// ═══════════════════════════════════════════════════════════════════════
+function applyTransform() {
+  nodesG.setAttribute('transform',`translate(${viewX},${viewY}) scale(${viewScale})`);
+  edgesG.setAttribute('transform',`translate(${viewX},${viewY}) scale(${viewScale})`);
+}
+
+function svgPoint(clientX, clientY) {
+  const r=svg.getBoundingClientRect();
+  return { x:(clientX-r.left-viewX)/viewScale, y:(clientY-r.top-viewY)/viewScale };
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// PLACE NODE
+// ═══════════════════════════════════════════════════════════════════════
+function placeNode(shapeId, x, y) {
+  const shape=SHAPES[shapeId];
+  if(!shape) return;
+  const id=uid();
+  const r=38;
+  const node={id, shapeId, x, y, r, label:shape.name, color:shape.color};
+  nodes.push(node);
+  renderNode(node);
+  emit('mesh.node.place',{node_id:id,shape_id:shapeId,shape_name:shape.name,cat:shape.cat,x:Math.round(x),y:Math.round(y),label:node.label,sha256:`sha256:${hashStr(id+shapeId)}`},'ev-place');
+  updateFooter();
+}
+
+function placeShapeCenter(shapeId) {
+  const r=svg.getBoundingClientRect();
+  const cx=(r.width/2-viewX)/viewScale + (Math.random()-0.5)*80;
+  const cy=(r.height/2-viewY)/viewScale + (Math.random()-0.5)*80;
+  placeNode(shapeId, cx, cy);
+}
+
+function renderNode(node) {
+  const shape=SHAPES[node.shapeId];
+  const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+  g.setAttribute('class','node-shape');
+  g.setAttribute('id','node-'+node.id);
+  g.setAttribute('transform',`translate(${node.x},${node.y})`);
+  g.innerHTML=`
+    <g class="node-body">${shape.svg(0,0,node.r,node.color)}</g>
+    <text class="node-label-text" x="0" y="${node.r+14}" id="lbl-${node.id}">${node.label}</text>
+    <text class="node-sublabel" x="0" y="${node.r+24}" id="sub-${node.id}">${node.shapeId}</text>
+    <circle class="node-hit" cx="0" cy="0" r="${node.r+6}" fill="transparent" stroke="none"/>
+  `;
+  nodesG.appendChild(g);
+  attachNodeEvents(g, node);
+}
+
+function attachNodeEvents(g, node) {
+  g.addEventListener('mousedown',e=>{
+    e.stopPropagation();
+    if(mode==='connect') {
+      if(!connectFrom) {
+        connectFrom=node.id;
+        const p=svgPoint(e.clientX,e.clientY);
+        preview.setAttribute('x1',node.x); preview.setAttribute('y1',node.y);
+        preview.setAttribute('x2',node.x); preview.setAttribute('y2',node.y);
+        preview.setAttribute('display','');
+      } else if(connectFrom!==node.id) {
+        addEdge(connectFrom, node.id, edgeType);
+        connectFrom=null;
+        preview.setAttribute('display','none');
+      }
+      return;
+    }
+    if(mode==='select') {
+      selectNode(node);
+      dragging=node;
+      const p=svgPoint(e.clientX,e.clientY);
+      dragOffX=p.x-node.x; dragOffY=p.y-node.y;
+    }
+  });
+  g.addEventListener('dblclick',e=>{
+    e.stopPropagation();
+    startLabelEdit(node,e.clientX,e.clientY);
+  });
+  g.addEventListener('contextmenu',e=>{
+    e.preventDefault();
+    ctxTarget=node;
+    showCtxMenu(e.clientX,e.clientY);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// EDGES
+// ═══════════════════════════════════════════════════════════════════════
+function addEdge(fromId, toId, type) {
+  const from=nodes.find(n=>n.id===fromId);
+  const to=nodes.find(n=>n.id===toId);
+  if(!from||!to) return;
+  const id=eid();
+  const edge={id,fromId,toId,type,label:EDGE_TYPES[type].label};
+  edges.push(edge);
+  renderEdge(edge);
+  emit('mesh.edge.connect',{edge_id:id,from_id:fromId,to_id:toId,type,label:edge.label,sha256:`sha256:${hashStr(id+fromId+toId+type)}`},'ev-connect');
+  updateFooter();
+}
+
+function renderEdge(edge) {
+  const from=nodes.find(n=>n.id===edge.fromId);
+  const to=nodes.find(n=>n.id===edge.toId);
+  if(!from||!to) return;
+  const et=EDGE_TYPES[edge.type];
+  const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+  g.setAttribute('id','edge-'+edge.id);
+  g.innerHTML=edgeSVG(from,to,edge,et);
+  edgesG.appendChild(g);
+}
+
+function edgeSVG(from,to,edge,et) {
+  const dx=to.x-from.x, dy=to.y-from.y;
+  const len=Math.sqrt(dx*dx+dy*dy)||1;
+  const ux=dx/len, uy=dy/len;
+  const x1=from.x+ux*from.r, y1=from.y+uy*from.r;
+  const x2=to.x-ux*(to.r+8), y2=to.y-uy*(to.r+8);
+  const mx=(x1+x2)/2, my=(y1+y2)/2;
+  // Bezier control point offset
+  const perp=Math.min(len*0.2,40);
+  const px=-uy*perp, py=ux*perp;
+  const dashAttr=et.dash!=='none'?`stroke-dasharray="${et.dash}"`:'';
+  return `
+    <path d="M${x1.toFixed(1)},${y1.toFixed(1)} Q${(mx+px).toFixed(1)},${(my+py).toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}"
+      fill="none" stroke="${et.color}" stroke-width="1.5" ${dashAttr}
+      marker-end="url(#${et.marker})" class="edge-line"/>
+    <text class="edge-label-text" x="${(mx+px).toFixed(1)}" y="${(my+py-6).toFixed(1)}">${edge.label}</text>
+  `;
+}
+
+function refreshAllEdges() {
+  edges.forEach(edge=>{
+    const g=document.getElementById('edge-'+edge.id);
+    if(!g) return;
+    const from=nodes.find(n=>n.id===edge.fromId);
+    const to=nodes.find(n=>n.id===edge.toId);
+    if(!from||!to) return;
+    const et=EDGE_TYPES[edge.type];
+    g.innerHTML=edgeSVG(from,to,edge,et);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// SELECT
+// ═══════════════════════════════════════════════════════════════════════
+function selectNode(node) {
+  if(selected) {
+    const prev=document.getElementById('node-'+selected.id);
+    if(prev) prev.classList.remove('selected');
+  }
+  selected=node;
+  if(node) {
+    const el=document.getElementById('node-'+node.id);
+    if(el) el.classList.add('selected');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// LABEL EDIT
+// ═══════════════════════════════════════════════════════════════════════
+function startLabelEdit(node,cx,cy) {
+  labelTarget=node;
+  const inp=document.getElementById('label-input');
+  inp.value=node.label;
+  inp.style.display='block';
+  inp.style.left=(cx-60)+'px';
+  inp.style.top=(cy-16)+'px';
+  inp.focus(); inp.select();
+}
+function finishLabel() {
+  const inp=document.getElementById('label-input');
+  if(!labelTarget){inp.style.display='none';return;}
+  const old=labelTarget.label;
+  labelTarget.label=inp.value||old;
+  const lbl=document.getElementById('lbl-'+labelTarget.id);
+  if(lbl) lbl.textContent=labelTarget.label;
+  emit('mesh.node.label',{node_id:labelTarget.id,label:labelTarget.label,old_label:old},'ev-label');
+  inp.style.display='none';
+  labelTarget=null;
+}
+function labelKey(e){if(e.key==='Enter'||e.key==='Escape')finishLabel();}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CONTEXT MENU
+// ═══════════════════════════════════════════════════════════════════════
+function showCtxMenu(x,y){
+  const m=document.getElementById('ctx-menu');
+  m.style.display='block';
+  m.style.left=x+'px';
+  m.style.top=y+'px';
+}
+function hideCtxMenu(){document.getElementById('ctx-menu').style.display='none';}
+function ctxAction(action){
+  hideCtxMenu();
+  if(!ctxTarget) return;
+  if(action==='label') startLabelEdit(ctxTarget, parseFloat(document.getElementById('ctx-menu').style.left), parseFloat(document.getElementById('ctx-menu').style.top));
+  if(action==='duplicate') {
+    const n=ctxTarget;
+    placeNode(n.shapeId, n.x+60, n.y+60);
+  }
+  if(action==='delete') deleteNode(ctxTarget.id);
+  ctxTarget=null;
+}
+
+function deleteNode(id) {
+  const el=document.getElementById('node-'+id);
+  if(el) el.remove();
+  // Remove connected edges
+  edges=edges.filter(e=>{
+    if(e.fromId===id||e.toId===id){
+      const el2=document.getElementById('edge-'+e.id);
+      if(el2) el2.remove();
+      return false;
+    }
+    return true;
+  });
+  const node=nodes.find(n=>n.id===id);
+  nodes=nodes.filter(n=>n.id!==id);
+  if(selected&&selected.id===id) selected=null;
+  emit('mesh.node.delete',{node_id:id,shape_id:node?.shapeId},'ev-delete');
+  updateFooter();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// SVG MOUSE EVENTS
+// ═══════════════════════════════════════════════════════════════════════
+svg.addEventListener('mousedown',e=>{
+  if(e.target===svg||e.target.id==='grid-rect') {
+    hideCtxMenu();
+    selectNode(null);
+    if(mode==='pan') { panStart={x:e.clientX,y:e.clientY}; panOrigin={x:viewX,y:viewY}; }
+    if(mode==='connect') { connectFrom=null; preview.setAttribute('display','none'); }
+  }
+});
+
+svg.addEventListener('mousemove',e=>{
+  if(dragging&&mode==='select') {
+    const p=svgPoint(e.clientX,e.clientY);
+    dragging.x=p.x-dragOffX; dragging.y=p.y-dragOffY;
+    const g=document.getElementById('node-'+dragging.id);
+    if(g) g.setAttribute('transform',`translate(${dragging.x},${dragging.y})`);
+    refreshAllEdges();
+  }
+  if(panStart) {
+    viewX=panOrigin.x+(e.clientX-panStart.x);
+    viewY=panOrigin.y+(e.clientY-panStart.y);
+    applyTransform();
+  }
+  if(mode==='connect'&&connectFrom) {
+    const p=svgPoint(e.clientX,e.clientY);
+    const from=nodes.find(n=>n.id===connectFrom);
+    if(from){
+      preview.setAttribute('x1',from.x); preview.setAttribute('y1',from.y);
+      preview.setAttribute('x2',p.x); preview.setAttribute('y2',p.y);
+    }
+  }
+});
+
+svg.addEventListener('mouseup',e=>{
+  if(dragging) {
+    emit('mesh.node.move',{node_id:dragging.id,x:Math.round(dragging.x),y:Math.round(dragging.y)},'ev-move');
+    dragging=null;
+  }
+  panStart=null;
+});
+
+svg.addEventListener('wheel',e=>{
+  e.preventDefault();
+  const r=svg.getBoundingClientRect();
+  const mx=e.clientX-r.left, my=e.clientY-r.top;
+  const factor=e.deltaY<0?1.1:0.9;
+  viewX=mx-(mx-viewX)*factor;
+  viewY=my-(my-viewY)*factor;
+  viewScale=Math.max(0.2,Math.min(4,viewScale*factor));
+  applyTransform();
+},{passive:false});
+
+// Drop from library
+const cw=document.getElementById('canvas-wrap');
+cw.addEventListener('dragover',e=>e.preventDefault());
+cw.addEventListener('drop',e=>{
+  e.preventDefault();
+  const shapeId=e.dataTransfer.getData('shapeId');
+  if(!shapeId) return;
+  const p=svgPoint(e.clientX,e.clientY);
+  placeNode(shapeId,p.x,p.y);
+});
+
+// Close context menu on click
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#ctx-menu')) hideCtxMenu();
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){hideCtxMenu();connectFrom=null;preview.setAttribute('display','none');}
+  if((e.key==='Delete'||e.key==='Backspace')&&selected&&document.activeElement===document.body) {
+    e.preventDefault();
+    deleteNode(selected.id);
+  }
+  if(e.key==='s'&&!e.ctrlKey) setMode('select');
+  if(e.key==='c'&&!e.ctrlKey) setMode('connect');
+  if(e.key==='p') setMode('pan');
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+// AUTO LAYOUT
+// ═══════════════════════════════════════════════════════════════════════
+function autoLayout() {
+  if(!nodes.length) return;
+  const r=svg.getBoundingClientRect();
+  const W=(r.width-viewX)/viewScale, H=(r.height-viewY)/viewScale;
+  const cx=W/2, cy=H/2;
+  const n=nodes.length;
+  if(n===1){nodes[0].x=cx;nodes[0].y=cy;}
+  else {
+    const radius=Math.min(W,H)*0.35;
+    nodes.forEach((node,i)=>{
+      const a=(i/n)*TWO_PI-Math.PI/2;
+      node.x=cx+Math.cos(a)*radius;
+      node.y=cy+Math.sin(a)*radius;
+      const g=document.getElementById('node-'+node.id);
+      if(g) g.setAttribute('transform',`translate(${node.x},${node.y})`);
+    });
+  }
+  refreshAllEdges();
+  emit('mesh.layout.auto',{count:n,arrangement:'circle'},'ev-manifest');
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════════════════════════════════════════
+function exportNDJSON() {
+  let s=0;
+  const lines=[];
+  const run_id=`sha256:${hashStr(nodes.map(n=>n.id).join('')+edges.map(e=>e.id).join(''))}`;
+  lines.push(JSON.stringify({schema_version:1,kind:'mesh.compose',lane:'mesh',seq:++s,event:'mesh.compose.start',run_id,payload:{node_count:nodes.length,edge_count:edges.length,generated_at:new Date().toISOString()}}));
+  nodes.forEach(node=>{
+    const shape=SHAPES[node.shapeId];
+    lines.push(JSON.stringify({schema_version:1,kind:'mesh.node',lane:'mesh',seq:++s,event:'mesh.node.record',payload:{node_id:node.id,shape_id:node.shapeId,shape_name:shape?.name,cat:shape?.cat,x:Math.round(node.x),y:Math.round(node.y),r:node.r,label:node.label,color:node.color,sha256:`sha256:${hashStr(node.id+node.shapeId)}`}}));
+  });
+  edges.forEach(edge=>{
+    lines.push(JSON.stringify({schema_version:1,kind:'mesh.edge',lane:'mesh',seq:++s,event:'mesh.edge.record',payload:{edge_id:edge.id,from_id:edge.fromId,to_id:edge.toId,type:edge.type,label:edge.label,sha256:`sha256:${hashStr(edge.id+edge.fromId+edge.toId)}`}}));
+  });
+  lines.push(JSON.stringify({schema_version:1,kind:'mesh.manifest',lane:'mesh',seq:++s,event:'mesh.compose.end',run_id,payload:{pass:true,node_ids:nodes.map(n=>n.id),edge_ids:edges.map(e=>e.id)}}));
+  const blob=new Blob([lines.join('\n')+'\n'],{type:'application/x-ndjson'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`mesh-${Date.now()}.ndjson`;a.click();
+}
+
+function exportSVG() {
+  const svgEl=document.getElementById('main-svg');
+  const clone=svgEl.cloneNode(true);
+  // Embed styles
+  const style=document.createElementNS('http://www.w3.org/2000/svg','style');
+  style.textContent=`text{font-family:'Rajdhani',sans-serif;}.node-label-text{font-size:11px;fill:white;text-anchor:middle;}.node-sublabel{font-size:7px;fill:rgba(180,200,220,0.6);text-anchor:middle;}.edge-label-text{font-size:8px;fill:rgba(180,200,220,0.7);text-anchor:middle;}`;
+  clone.insertBefore(style,clone.firstChild);
+  const s=new XMLSerializer().serializeToString(clone);
+  const blob=new Blob([s],{type:'image/svg+xml'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`mesh-${Date.now()}.svg`;a.click();
+}
+
+function clearAll() {
+  nodes=[]; edges=[]; selected=null; connectFrom=null;
+  nodesG.innerHTML=''; edgesG.innerHTML='';
+  preview.setAttribute('display','none');
+  emit('mesh.compose.clear',{reason:'user'},'ev-delete');
+  updateFooter();
+}
+
+function updateFooter() {
+  document.getElementById('ft-nodes').textContent=nodes.length;
+  document.getElementById('ft-edges').textContent=edges.length;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════
+buildShapeGrid();
+emit('mesh.compose.start',{schema_version:1,kind:'mesh.compose',generated_at:'1970-01-01T00:00:00Z'},'ev-start');
+
+// Seed a small starter diagram
+setTimeout(()=>{
+  const r=svg.getBoundingClientRect();
+  const cx=r.width/2, cy=r.height/2;
+  placeNode('stell.stellated-tetrahedron',cx-180,cy-60);
+  placeNode('platonic.icosahedron',cx+30,cy-100);
+  placeNode('topo.torus',cx+200,cy+40);
+  placeNode('catalan.rhombic-dodecahedron',cx-60,cy+120);
+  placeNode('topo.mobius',cx+140,cy+140);
+  setTimeout(()=>{
+    if(nodes.length>=5){
+      addEdge(nodes[0].id,nodes[1].id,'flow');
+      addEdge(nodes[1].id,nodes[2].id,'composition');
+      addEdge(nodes[0].id,nodes[3].id,'resonance');
+      addEdge(nodes[3].id,nodes[4].id,'dependency');
+      addEdge(nodes[2].id,nodes[4].id,'inheritance');
+    }
+  },100);
+},200);
+</script>
+</body>
+</html>

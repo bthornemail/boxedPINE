@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Light-Garden Portal</title>
+    <style>
+      html, body { height: 100%; margin: 0; background: #0b1022; color: #e5e7eb; }
+      body { font-family: system-ui, sans-serif; }
+      .wrap { max-width: 1200px; margin: 18px auto; padding: 0 14px; }
+      .card { background: rgba(17,24,39,0.92); border: 1px solid rgba(148,163,184,0.22); border-radius: 14px; padding: 14px; }
+      .title { font-weight: 800; letter-spacing: 0.2px; font-size: 18px; margin: 0 0 6px; }
+      .meta { opacity: 0.8; font-size: 12px; margin-bottom: 12px; }
+      #universe { margin-top: 12px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <div class="title">Portal</div>
+        <div class="meta">
+          Verified entrypoint for a replay directory. Requires <code>portal-gate.json</code> pass=true.
+        </div>
+        <div class="meta">
+          Waveform (optional): <a href="./waveform-summary.json">summary</a> · <a href="./waveform.canvas.svg">canvas</a> · <a href="./waveform.canisa.scene.json">scene</a>
+        </div>
+        <div id="universe"></div>
+      </div>
+    </div>
+
+    <script src="./universe-loader.js"></script>
+    <script>
+      (function () {
+        const baseUrl = new URL("./", window.location.href).toString();
+        UniverseLoader.mount({ root: "#universe", baseUrl, mode: "iframe", requireGate: true });
+      })();
+    </script>
+  </body>
+</html>

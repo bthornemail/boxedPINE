@@ -1,0 +1,9 @@
+{
+  "name": "talisman-mask",
+  "input_ndjson": "inputs/sample.ndjson",
+  "waveform_check": "inputs/waveform.check.json",
+  "led_count": 7,
+  "emit_dome": true,
+  "emit_mask": true,
+  "frame_index": 0
+}

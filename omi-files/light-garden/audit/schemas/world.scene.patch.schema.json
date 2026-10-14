@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://universallifeprotocol.store/schemas/world.scene.patch.schema.json",
+  "title": "world.scene.patch.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "lane_id", "run_id", "generated_at", "inputs", "scene", "entities"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "kind": { "type": "string", "const": "world.scene.patch" },
+    "lane_id": { "type": "string", "const": "scene" },
+    "run_id": { "$ref": "#/$defs/sha256" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["world_graph"],
+      "properties": {
+        "world_graph": { "$ref": "#/$defs/sourceFile" }
+      }
+    },
+    "scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scene_id", "world_name", "units", "up", "origin"],
+      "properties": {
+        "scene_id": { "type": "string", "minLength": 1 },
+        "world_name": { "type": "string", "minLength": 1 },
+        "units": { "type": "string", "minLength": 1 },
+        "up": { "type": "string", "enum": ["y"] },
+        "origin": { "$ref": "#/$defs/vec3" }
+      }
+    },
+    "entities": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/entity" }
+    },
+    "relations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/relation" }
+    },
+    "zones": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/zone" }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{8,}$" },
+    "sourceFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "vec3": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "z"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "z": { "type": "number" }
+      }
+    },
+    "transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["position", "rotation_euler", "scale"],
+      "properties": {
+        "position": { "$ref": "#/$defs/vec3" },
+        "rotation_euler": { "$ref": "#/$defs/vec3" },
+        "scale": { "$ref": "#/$defs/vec3" }
+      }
+    },
+    "flags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["spawn", "interactable", "gate", "collider"],
+      "properties": {
+        "spawn": { "type": "boolean" },
+        "interactable": { "type": "boolean" },
+        "gate": { "type": "boolean" },
+        "collider": { "type": "boolean" }
+      }
+    },
+    "visual": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "primitive": { "type": "string", "enum": ["box", "sphere", "capsule", "sprite", "billboard", "none"] },
+        "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "label": { "type": "string" }
+      }
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "transform", "flags", "refs", "props"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "transform": { "$ref": "#/$defs/transform" },
+        "flags": { "$ref": "#/$defs/flags" },
+        "visual": { "$ref": "#/$defs/visual" },
+        "refs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["graph_node_id"],
+          "properties": {
+            "graph_node_id": { "type": "string", "minLength": 1 }
+          }
+        },
+        "props": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to", "rel"],
+      "properties": {
+        "from": { "type": "string", "minLength": 1 },
+        "to": { "type": "string", "minLength": 1 },
+        "rel": { "type": "string", "minLength": 1 },
+        "props": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "zone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "shape"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "shape": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["aabb"],
+          "properties": {
+            "aabb": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["min", "max"],
+              "properties": {
+                "min": { "$ref": "#/$defs/vec3" },
+                "max": { "$ref": "#/$defs/vec3" }
+              }
+            }
+          }
+        },
+        "props": { "type": "object", "additionalProperties": true }
+      }
+    }
+  }
+}
+

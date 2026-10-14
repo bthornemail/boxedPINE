@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "kind": "waveform.check",
+  "lane_id": "waveform",
+  "run_id": "sha256:1212121212121212121212121212121212121212121212121212121212121212",
+  "pass": true,
+  "generated_at": "1970-01-01T00:00:00Z",
+  "config": {
+    "max_points": 241,
+    "timeout_ms": 45000,
+    "allow_cabal": false
+  },
+  "inputs": {
+    "ndjson_sha256": "sha256:3434343434343434343434343434343434343434343434343434343434343434",
+    "points_sha256": "sha256:5656565656565656565656565656565656565656565656565656565656565656"
+  },
+  "outputs": {},
+  "tool": {
+    "kind": "missing"
+  },
+  "failures": []
+}

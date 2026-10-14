@@ -1,0 +1,45 @@
+{
+  "v": "harmonic_id.v0",
+  "authority": "advisory",
+  "run_id": "sha256:bf96d0c338f1a3f5a42628b0c2f19f03bb372d5c1cb3f17c99fe48812460fa62",
+  "source_ndjson_sha256": "sha256:796d9900dd1f4def7edcc3d955659bbf53f6ecde46e96415f14f6d38a42d1d9e",
+  "waveform_check_sha256": "sha256:15c32e1b704500bf366b2c8a4a591119bbce33f178c10c5e6fd76da7fc47add3",
+  "channel_basis": [
+    "R",
+    "O",
+    "Y",
+    "G",
+    "B",
+    "I",
+    "V",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G"
+  ],
+  "fano_basis": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8"
+  ],
+  "harmonic_class": "sparse",
+  "harmonic_vector": [
+    "1.00000000",
+    "0.08333333",
+    "0.29417671",
+    "1.00000000",
+    "0.83483483",
+    "0.72872873",
+    "0.85985986"
+  ],
+  "harmonic_id": "sha256:543aafb64ed4e33cf033ac19788186e4e44a5e18b0fd48c387156a42ab8e2231",
+  "digest": "sha256:ffbddb706c1adf4c954942500dd2f02940c80b8964e1d2835d1a91457537ab00"
+}

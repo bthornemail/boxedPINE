@@ -1,0 +1,31 @@
+{
+  "v": "talisman_mask.v0",
+  "authority": "advisory",
+  "harmonic_id": "sha256:792299174de5d621241b9ef4fdf955e0bae9f31b8e5ac965255b947b499a2213",
+  "mask_profile_id": "mask-profile.v0.default",
+  "mask_mode": "obfuscate",
+  "mask_vector": [
+    "0.00000000",
+    "0.31250000",
+    "0.64457831",
+    "0.00000000",
+    "0.32532535",
+    "0.68468468",
+    "0.61261260"
+  ],
+  "target_channels": [
+    "R",
+    "O",
+    "Y",
+    "G",
+    "B",
+    "I",
+    "V"
+  ],
+  "constraints": {
+    "max_delta": "0.35000000",
+    "preserve_digest_lineage": "true",
+    "projection_only": "true"
+  },
+  "digest": "sha256:36314fe4161144f66994cbe370a5b7b283876a43e220e1adaa768b7ccf4e39a2"
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "harmonic_receipt.v0.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "v",
+    "authority",
+    "run_id",
+    "harmonic_id_digest",
+    "dome_frame_digest",
+    "talisman_mask_digest",
+    "source_ndjson_sha256",
+    "waveform_check_sha256",
+    "replay_hash",
+    "gate_status",
+    "digest"
+  ],
+  "properties": {
+    "v": { "const": "harmonic_receipt.v0" },
+    "authority": { "const": "advisory" },
+    "run_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "harmonic_id_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "dome_frame_digest": {
+      "anyOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      ]
+    },
+    "talisman_mask_digest": {
+      "anyOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      ]
+    },
+    "source_ndjson_sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "waveform_check_sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "replay_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "gate_status": { "enum": ["ok", "fail"] },
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  }
+}

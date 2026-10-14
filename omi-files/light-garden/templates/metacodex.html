@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>METACODEX · NDJSON TEMPLATE ENGINE</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Martian+Mono:wght@300;400;600;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300;1,9..144,700&display=swap');
+
+:root {
+  --void:    #080808;
+  --void2:   #0f0f0f;
+  --void3:   #161616;
+  --void4:   #1e1e1e;
+  --ash:     #2a2a2a;
+  --wire:    #383838;
+  --dim:     #555;
+  --mid:     #888;
+  --paper:   #c8c0b0;
+  --bright:  #e8e0d0;
+  --amber:   #e8a020;
+  --amber2:  #ffc040;
+  --amber3:  #ffe090;
+  --ember:   #c83820;
+  --cyan:    #20c8c0;
+  --violet:  #a060e0;
+  --green:   #40c870;
+  --blue:    #4080d0;
+
+  /* field type colors */
+  --t-string:  #40c870;
+  --t-number:  #4080d0;
+  --t-bool:    #a060e0;
+  --t-enum:    #e8a020;
+  --t-ref:     #20c8c0;
+  --t-array:   #c83820;
+  --t-object:  #888;
+  --t-template:#ffc040;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;background:var(--void);}
+body{
+  color:var(--paper);
+  font-family:'Martian Mono',monospace;
+  font-size:11px;
+  cursor:default;
+}
+
+/* ══════════════════════════════════════════════
+   SCAN LINES + NOISE OVERLAY
+   ══════════════════════════════════════════════ */
+body::before{
+  content:'';position:fixed;inset:0;z-index:9999;
+  pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 3px);
+}
+
+/* ══════════════════════════════════════════════
+   SHELL
+   ══════════════════════════════════════════════ */
+.shell{
+  display:grid;
+  grid-template-rows:36px 1fr 28px;
+  height:100vh;
+}
+
+/* ── HEADER ── */
+header{
+  background:var(--void2);
+  border-bottom:1px solid var(--amber);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;
+  position:relative;overflow:hidden;
+}
+header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--amber2),var(--amber3),var(--amber2),transparent);
+  animation:scan 4s linear infinite;
+}
+@keyframes scan{from{transform:translateX(-100%);}to{transform:translateX(100%);}}
+
+.logo{
+  font-family:'Fraunces',serif;font-style:italic;
+  font-size:15px;color:var(--amber);letter-spacing:0.05em;
+  display:flex;align-items:center;gap:12px;
+}
+.logo-mono{
+  font-family:'Martian Mono',monospace;font-style:normal;
+  font-size:9px;color:var(--dim);letter-spacing:0.2em;font-weight:300;
+}
+.hdr-btns{display:flex;gap:4px;}
+.hbtn{
+  padding:3px 10px;font-size:9px;letter-spacing:0.12em;
+  background:transparent;border:1px solid var(--wire);color:var(--mid);
+  font-family:'Martian Mono',monospace;cursor:pointer;transition:all .1s;
+}
+.hbtn:hover{border-color:var(--amber);color:var(--amber);}
+.hbtn.gold{border-color:var(--amber);color:var(--amber);}
+.hbtn.gold:hover{background:rgba(232,160,32,0.1);}
+.hbtn.red{border-color:var(--ember);color:var(--ember);}
+.hbtn.red:hover{background:rgba(200,56,32,0.08);}
+
+/* ══════════════════════════════════════════════
+   BODY: 4-COLUMN LAYOUT
+   ══════════════════════════════════════════════ */
+.body{
+  display:grid;
+  grid-template-columns:220px 1fr 340px 260px;
+  min-height:0;overflow:hidden;
+}
+
+/* ══════════════════════════════════════════════
+   COL 1: TEMPLATE LIBRARY
+   ══════════════════════════════════════════════ */
+.lib{
+  border-right:1px solid var(--wire);
+  background:var(--void2);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+.col-head{
+  padding:8px 10px 6px;
+  border-bottom:1px solid var(--wire);
+  font-size:8px;letter-spacing:0.25em;color:var(--amber);text-transform:uppercase;
+  display:flex;justify-content:space-between;align-items:center;
+  background:var(--void3);
+}
+.col-head-count{color:var(--dim);font-size:8px;}
+
+/* template tree */
+.tmpl-tree{flex:1;overflow-y:auto;padding:4px 0;}
+.tmpl-group{margin-bottom:2px;}
+.tg-head{
+  padding:4px 10px;font-size:8px;letter-spacing:0.18em;
+  color:var(--dim);text-transform:uppercase;
+  display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;user-select:none;transition:color .1s;
+  border-left:2px solid transparent;
+}
+.tg-head:hover{color:var(--paper);}
+.tg-head.open{color:var(--amber);border-left-color:var(--amber);}
+.tg-items{display:none;padding:2px 0 4px 10px;}
+.tg-items.open{display:block;}
+
+.tmpl-item{
+  padding:5px 8px;cursor:pointer;
+  border:1px solid transparent;margin-bottom:2px;
+  transition:all .08s;
+  border-radius:1px;
+  position:relative;
+}
+.tmpl-item:hover{border-color:var(--wire);background:var(--void3);}
+.tmpl-item.active{border-color:var(--amber);background:rgba(232,160,32,0.06);}
+.tmpl-item.derived::before{
+  content:'↳';position:absolute;left:-10px;
+  color:var(--dim);font-size:9px;
+}
+.ti-name{color:var(--bright);font-size:10px;font-weight:600;margin-bottom:1px;}
+.ti-kind{color:var(--dim);font-size:8px;letter-spacing:0.08em;}
+.ti-badge{
+  display:inline-block;font-size:7px;padding:1px 4px;
+  border-radius:1px;margin-left:4px;font-weight:600;letter-spacing:0.06em;
+}
+.badge-core{background:rgba(232,160,32,0.2);color:var(--amber);}
+.badge-derived{background:rgba(32,200,192,0.15);color:var(--cyan);}
+.badge-composed{background:rgba(160,96,224,0.15);color:var(--violet);}
+.badge-instance{background:rgba(64,200,112,0.15);color:var(--green);}
+
+/* ══════════════════════════════════════════════
+   COL 2: COMPOSER
+   ══════════════════════════════════════════════ */
+.composer{
+  display:flex;flex-direction:column;
+  background:var(--void);
+  min-height:0;overflow:hidden;
+  border-right:1px solid var(--wire);
+}
+.composer-top{
+  border-bottom:1px solid var(--wire);
+  background:var(--void2);
+  padding:8px 12px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.mode-tabs{display:flex;gap:2px;}
+.mtab{
+  padding:4px 10px;font-size:8px;letter-spacing:0.1em;
+  background:transparent;border:1px solid var(--wire);color:var(--dim);
+  font-family:'Martian Mono',monospace;cursor:pointer;transition:all .1s;
+  text-transform:uppercase;
+}
+.mtab.active{border-color:var(--amber);color:var(--amber);background:rgba(232,160,32,0.06);}
+.mtab:hover{color:var(--paper);}
+
+.composer-name-input{
+  flex:1;padding:3px 8px;background:var(--void3);
+  border:1px solid var(--wire);color:var(--bright);
+  font-family:'Martian Mono',monospace;font-size:11px;
+  outline:none;min-width:140px;
+}
+.composer-name-input:focus{border-color:var(--amber);}
+.composer-name-input::placeholder{color:var(--dim);}
+
+.kind-select{
+  padding:3px 6px;background:var(--void3);border:1px solid var(--wire);
+  color:var(--paper);font-family:'Martian Mono',monospace;font-size:9px;outline:none;
+}
+.kind-select:focus{border-color:var(--amber);}
+
+/* FIELD EDITOR */
+.field-editor{flex:1;overflow-y:auto;padding:10px 12px;}
+
+/* inherits strip */
+.inherits-strip{
+  margin-bottom:10px;padding:6px 10px;
+  border:1px solid var(--wire);background:var(--void3);
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.inherits-label{font-size:8px;color:var(--dim);letter-spacing:0.15em;}
+.inherit-badge{
+  padding:2px 8px;font-size:9px;
+  background:rgba(32,200,192,0.1);border:1px solid var(--cyan);color:var(--cyan);
+  cursor:pointer;transition:all .1s;
+}
+.inherit-badge:hover{background:rgba(200,56,32,0.1);border-color:var(--ember);color:var(--ember);}
+.inherit-add{
+  padding:2px 8px;font-size:9px;
+  background:transparent;border:1px dashed var(--wire);color:var(--dim);
+  cursor:pointer;transition:all .1s;
+}
+.inherit-add:hover{border-color:var(--cyan);color:var(--cyan);}
+
+/* field rows */
+.field-section-head{
+  font-size:8px;letter-spacing:0.2em;color:var(--dim);
+  text-transform:uppercase;margin:10px 0 5px;padding-bottom:4px;
+  border-bottom:1px solid var(--void4);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.field-row{
+  display:grid;
+  grid-template-columns:20px 1fr 90px 80px 80px 24px;
+  gap:4px;align-items:center;
+  padding:4px 0;
+  border-bottom:1px solid var(--void4);
+  animation:fadeIn .15s ease-out;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:none;}}
+
+.field-drag{color:var(--dim);font-size:10px;cursor:grab;text-align:center;}
+.field-key-input,.field-desc-input,.field-default-input{
+  padding:3px 6px;background:var(--void3);border:1px solid var(--wire);
+  color:var(--bright);font-family:'Martian Mono',monospace;font-size:10px;
+  outline:none;width:100%;
+}
+.field-key-input:focus,.field-desc-input:focus,.field-default-input:focus{border-color:var(--amber);}
+.field-type-sel{
+  padding:3px 4px;background:var(--void3);border:1px solid var(--wire);
+  color:var(--paper);font-family:'Martian Mono',monospace;font-size:9px;outline:none;width:100%;
+}
+.field-type-sel:focus{border-color:var(--amber);}
+.field-rm{
+  background:transparent;border:none;color:var(--wire);
+  cursor:pointer;font-size:12px;text-align:center;transition:color .1s;
+}
+.field-rm:hover{color:var(--ember);}
+
+/* required toggle */
+.field-req{
+  font-size:8px;padding:2px 4px;cursor:pointer;
+  border:1px solid var(--wire);background:transparent;color:var(--dim);
+  transition:all .1s;text-align:center;font-family:'Martian Mono',monospace;
+}
+.field-req.on{border-color:var(--amber);color:var(--amber);background:rgba(232,160,32,0.08);}
+
+/* type color dots */
+.type-dot{
+  display:inline-block;width:6px;height:6px;border-radius:50%;
+  margin-right:3px;vertical-align:middle;
+}
+
+/* embed strip */
+.embed-row{
+  padding:5px 8px;margin-bottom:4px;
+  border:1px solid var(--wire);background:var(--void3);
+  display:flex;align-items:center;gap:8px;
+}
+.embed-label{font-size:9px;color:var(--cyan);}
+.embed-as{font-size:9px;color:var(--dim);}
+.embed-key{
+  padding:2px 5px;background:var(--void4);border:1px solid var(--wire);
+  color:var(--bright);font-family:'Martian Mono',monospace;font-size:9px;
+  outline:none;width:100px;
+}
+.embed-rm{
+  margin-left:auto;background:none;border:none;color:var(--dim);cursor:pointer;font-size:11px;
+}
+.embed-rm:hover{color:var(--ember);}
+
+/* add field btn */
+.add-field-row{
+  display:flex;gap:4px;margin-top:8px;
+}
+.add-field-btn{
+  padding:4px 10px;font-size:9px;letter-spacing:0.1em;
+  background:transparent;border:1px dashed var(--wire);color:var(--dim);
+  cursor:pointer;transition:all .1s;font-family:'Martian Mono',monospace;
+}
+.add-field-btn:hover{border-color:var(--amber);color:var(--amber);}
+
+/* COMPILE BUTTON */
+.compile-bar{
+  border-top:1px solid var(--wire);padding:8px 12px;
+  background:var(--void2);
+  display:flex;gap:6px;align-items:center;
+}
+.compile-btn{
+  padding:5px 16px;font-size:9px;letter-spacing:0.15em;
+  background:var(--amber);color:var(--void);border:none;cursor:pointer;
+  font-family:'Martian Mono',monospace;font-weight:800;
+  transition:all .12s;text-transform:uppercase;
+}
+.compile-btn:hover{background:var(--amber2);}
+.compile-status{font-size:9px;color:var(--dim);flex:1;}
+.compile-status.ok{color:var(--green);}
+.compile-status.err{color:var(--ember);}
+
+/* ══════════════════════════════════════════════
+   COL 3: LIVE PREVIEW / INSTANCE FORM
+   ══════════════════════════════════════════════ */
+.preview-col{
+  display:flex;flex-direction:column;
+  background:var(--void2);
+  border-right:1px solid var(--wire);
+  min-height:0;overflow:hidden;
+}
+.preview-tabs{display:flex;border-bottom:1px solid var(--wire);}
+.ptab{
+  padding:6px 12px;font-size:8px;letter-spacing:0.12em;
+  background:none;border:none;border-bottom:2px solid transparent;
+  color:var(--dim);cursor:pointer;font-family:'Martian Mono',monospace;
+  text-transform:uppercase;transition:all .1s;margin-bottom:-1px;
+}
+.ptab.active{color:var(--amber);border-bottom-color:var(--amber);}
+.ptab:hover{color:var(--paper);}
+
+/* SCHEMA PREVIEW */
+.schema-preview{
+  flex:1;overflow-y:auto;padding:10px;
+  font-family:'Martian Mono',monospace;font-size:9px;
+  line-height:1.7;display:none;
+}
+.schema-preview.active{display:block;}
+
+/* resolved field table */
+.schema-table{width:100%;border-collapse:collapse;font-size:9px;}
+.schema-table th{
+  text-align:left;padding:4px 6px;
+  border-bottom:1px solid var(--wire);
+  color:var(--dim);letter-spacing:0.1em;font-weight:400;
+  text-transform:uppercase;font-size:8px;
+}
+.schema-table td{padding:3px 6px;border-bottom:1px solid var(--void4);}
+.schema-table tr:hover td{background:var(--void3);}
+.field-name-cell{color:var(--bright);font-weight:600;}
+.field-source{font-size:7px;color:var(--dim);display:block;}
+.type-chip{
+  font-size:8px;padding:1px 5px;border-radius:1px;font-weight:600;
+}
+
+/* INSTANCE FORM */
+.instance-form{flex:1;overflow-y:auto;padding:10px;display:none;}
+.instance-form.active{display:block;}
+.inst-field{margin-bottom:8px;}
+.inst-label{
+  display:flex;align-items:center;gap:5px;
+  font-size:8px;color:var(--dim);letter-spacing:0.1em;margin-bottom:3px;
+}
+.inst-label .req-star{color:var(--amber);}
+.inst-input,.inst-select,.inst-textarea{
+  width:100%;padding:4px 7px;
+  background:var(--void3);border:1px solid var(--wire);
+  color:var(--bright);font-family:'Martian Mono',monospace;font-size:10px;outline:none;
+}
+.inst-input:focus,.inst-select:focus,.inst-textarea:focus{border-color:var(--amber);}
+.inst-textarea{height:60px;resize:vertical;}
+.inst-checkbox{accent-color:var(--amber);}
+.inst-emit-btn{
+  display:block;width:100%;padding:6px;margin-top:12px;
+  background:var(--void3);border:1px solid var(--amber);
+  color:var(--amber);font-family:'Martian Mono',monospace;
+  font-size:10px;letter-spacing:0.1em;cursor:pointer;
+  transition:all .12s;text-transform:uppercase;
+}
+.inst-emit-btn:hover{background:rgba(232,160,32,0.1);}
+
+/* LINEAGE VIEW */
+.lineage-view{flex:1;overflow-y:auto;padding:10px;display:none;}
+.lineage-view.active{display:block;}
+.lineage-tree{font-size:9px;line-height:1.8;}
+.ln-node{
+  padding:4px 8px;margin:2px 0;
+  border-left:2px solid var(--wire);
+  display:flex;align-items:center;gap:8px;cursor:pointer;
+  transition:border-color .1s;
+}
+.ln-node:hover{border-left-color:var(--amber);}
+.ln-node.root{border-left-color:var(--amber);font-weight:600;}
+.ln-arrow{color:var(--dim);}
+.ln-name{color:var(--bright);}
+.ln-fields{color:var(--dim);font-size:8px;}
+
+/* ══════════════════════════════════════════════
+   COL 4: NDJSON STREAM
+   ══════════════════════════════════════════════ */
+.stream{
+  background:var(--void);
+  display:flex;flex-direction:column;
+  min-height:0;overflow:hidden;
+}
+.stream-log{flex:1;overflow-y:auto;padding:4px;}
+.nd{
+  padding:2px 6px 2px 8px;
+  border-left:2px solid transparent;
+  font-size:8.5px;line-height:1.65;
+  word-break:break-all;
+  border-bottom:1px solid rgba(255,255,255,0.02);
+  transition:background .08s;cursor:default;
+}
+.nd:hover{background:rgba(255,255,255,0.02);}
+.nd.ev-define   {border-left-color:var(--amber);}
+.nd.ev-compose  {border-left-color:var(--cyan);}
+.nd.ev-inherit  {border-left-color:var(--violet);}
+.nd.ev-embed    {border-left-color:var(--blue);}
+.nd.ev-field    {border-left-color:var(--green);}
+.nd.ev-instance {border-left-color:var(--green);}
+.nd.ev-compile  {border-left-color:var(--amber2);}
+.nd.ev-patch    {border-left-color:var(--ember);}
+.nd.ev-start    {border-left-color:var(--mid);}
+.nd.ev-export   {border-left-color:var(--amber);}
+.nd-flash{animation:ndflash .3s ease-out;}
+@keyframes ndflash{from{background:rgba(232,160,32,0.08);}to{background:transparent;}}
+
+.sk{color:#6a6a5a;}.ss{color:#50805a;}.sn{color:#5060a0;}.sb{color:#804060;}.sa{color:var(--amber);}
+
+/* stream filter */
+.stream-filter{
+  padding:5px 8px;border-bottom:1px solid var(--wire);border-top:1px solid var(--wire);
+  display:flex;gap:4px;flex-wrap:wrap;background:var(--void2);
+}
+.sfilter-btn{
+  padding:2px 6px;font-size:7px;letter-spacing:0.08em;
+  border:1px solid var(--wire);background:transparent;color:var(--dim);
+  cursor:pointer;transition:all .08s;font-family:'Martian Mono',monospace;
+}
+.sfilter-btn.on{color:var(--amber);border-color:var(--amber);}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--wire);background:var(--void2);
+  display:flex;align-items:center;padding:0 14px;
+  font-size:8px;color:var(--dim);gap:18px;letter-spacing:0.08em;
+}
+footer span{color:var(--amber);}
+.ft-status{margin-left:auto;color:var(--dim);}
+
+/* ── MISC ── */
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-thumb{background:var(--wire);}
+::-webkit-scrollbar-track{background:transparent;}
+
+/* MODAL */
+.modal-bg{
+  display:none;position:fixed;inset:0;z-index:999;
+  background:rgba(0,0,0,0.8);align-items:center;justify-content:center;
+}
+.modal-bg.open{display:flex;}
+.modal{
+  background:var(--void2);border:1px solid var(--amber);
+  width:400px;max-height:80vh;overflow-y:auto;
+}
+.modal-hd{
+  background:var(--amber);color:var(--void);
+  padding:7px 12px;display:flex;justify-content:space-between;
+  font-size:10px;font-weight:800;letter-spacing:0.12em;font-family:'Martian Mono',monospace;
+}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--void);font-size:14px;}
+.modal-body{padding:12px;}
+.mform-field{margin-bottom:8px;}
+.mform-label{font-size:8px;color:var(--dim);letter-spacing:0.15em;margin-bottom:3px;display:block;text-transform:uppercase;}
+.mform-input,.mform-select{
+  width:100%;padding:4px 7px;
+  background:var(--void3);border:1px solid var(--wire);
+  color:var(--bright);font-family:'Martian Mono',monospace;font-size:10px;outline:none;
+}
+.mform-input:focus,.mform-select:focus{border-color:var(--amber);}
+.mform-submit{
+  display:block;width:100%;padding:6px;margin-top:10px;
+  background:var(--amber);color:var(--void);border:none;cursor:pointer;
+  font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:0.1em;font-weight:800;
+}
+.mform-submit:hover{background:var(--amber2);}
+
+/* template picker in modal */
+.tmpl-picker{
+  max-height:200px;overflow-y:auto;border:1px solid var(--wire);
+  background:var(--void3);margin-top:4px;
+}
+.tp-item{
+  padding:5px 8px;cursor:pointer;border-bottom:1px solid var(--void4);
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .08s;
+}
+.tp-item:hover{background:rgba(232,160,32,0.06);}
+.tp-item.selected{background:rgba(232,160,32,0.1);color:var(--amber);}
+.tp-name{font-size:10px;color:var(--bright);}
+.tp-kind{font-size:8px;color:var(--dim);}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="logo">
+    Metacodex
+    <span class="logo-mono">NDJSON TEMPLATE ENGINE · v1</span>
+  </div>
+  <div class="hdr-btns">
+    <button class="hbtn" onclick="newTemplate()">+ NEW</button>
+    <button class="hbtn" onclick="openInheritModal()">↳ INHERIT</button>
+    <button class="hbtn" onclick="openEmbedModal()">⊕ EMBED</button>
+    <button class="hbtn" onclick="openPatchModal()">⊘ PATCH</button>
+    <button class="hbtn gold" onclick="compile()">▶ COMPILE</button>
+    <button class="hbtn gold" onclick="exportAll()">↓ EXPORT</button>
+    <button class="hbtn red" onclick="resetAll()">⊗ RESET</button>
+  </div>
+</header>
+
+<div class="body">
+
+  <!-- COL 1: LIBRARY -->
+  <div class="lib">
+    <div class="col-head">
+      Template Library
+      <span class="col-head-count" id="lib-count">0 templates</span>
+    </div>
+    <div class="tmpl-tree" id="tmpl-tree"></div>
+  </div>
+
+  <!-- COL 2: COMPOSER -->
+  <div class="composer">
+    <div class="composer-top">
+      <div class="mode-tabs">
+        <button class="mtab active" id="mtab-define" onclick="setComposerMode('define')">DEFINE</button>
+        <button class="mtab" id="mtab-compose" onclick="setComposerMode('compose')">COMPOSE</button>
+        <button class="mtab" id="mtab-instance" onclick="setComposerMode('instance')">INSTANCE</button>
+      </div>
+      <input class="composer-name-input" id="composer-name" placeholder="template_name…" oninput="onNameChange()"/>
+      <select class="kind-select" id="composer-kind" onchange="onKindChange()">
+        <option value="template.core">core</option>
+        <option value="template.derived">derived</option>
+        <option value="template.composed">composed</option>
+        <option value="template.instance">instance</option>
+        <option value="template.patch">patch</option>
+        <option value="template.meta">meta</option>
+        <option value="world.entity">world.entity</option>
+        <option value="avatar.part">avatar.part</option>
+        <option value="mesh.node">mesh.node</option>
+        <option value="narrative.node">narrative.node</option>
+        <option value="canon.entry">canon.entry</option>
+        <option value="custom">custom…</option>
+      </select>
+    </div>
+
+    <div class="field-editor" id="field-editor">
+      <div class="inherits-strip" id="inherits-strip">
+        <span class="inherits-label">INHERITS:</span>
+        <div id="inherits-badges"></div>
+        <button class="inherit-add" onclick="openInheritModal()">+ inherit</button>
+      </div>
+      <div class="field-section-head">
+        Fields
+        <span id="field-count" style="color:var(--dim)">0 fields</span>
+      </div>
+      <div id="fields-list"></div>
+      <div class="add-field-row">
+        <button class="add-field-btn" onclick="addField('string')">+ string</button>
+        <button class="add-field-btn" onclick="addField('number')">+ number</button>
+        <button class="add-field-btn" onclick="addField('boolean')">+ bool</button>
+        <button class="add-field-btn" onclick="addField('enum')">+ enum</button>
+        <button class="add-field-btn" onclick="addField('ref')">+ ref</button>
+        <button class="add-field-btn" onclick="addField('template')">+ template</button>
+      </div>
+      <div class="field-section-head" style="margin-top:14px;">
+        Embedded Templates
+        <span id="embed-count" style="color:var(--dim)">0</span>
+      </div>
+      <div id="embeds-list"></div>
+    </div>
+
+    <div class="compile-bar">
+      <button class="compile-btn" onclick="compile()">▶ COMPILE</button>
+      <div class="compile-status" id="compile-status">— ready</div>
+      <button class="hbtn" onclick="saveTemplate()" style="font-size:9px;">SAVE</button>
+      <button class="hbtn" onclick="forkTemplate()" style="font-size:9px;">FORK</button>
+    </div>
+  </div>
+
+  <!-- COL 3: PREVIEW -->
+  <div class="preview-col">
+    <div class="preview-tabs">
+      <button class="ptab active" onclick="switchPreviewTab('schema')">SCHEMA</button>
+      <button class="ptab" onclick="switchPreviewTab('instance')">FILL</button>
+      <button class="ptab" onclick="switchPreviewTab('lineage')">LINEAGE</button>
+      <button class="ptab" onclick="switchPreviewTab('resolved')">RESOLVED</button>
+    </div>
+
+    <!-- SCHEMA -->
+    <div class="schema-preview active" id="ptab-schema">
+      <div style="color:var(--dim);font-style:italic;text-align:center;padding:20px;font-family:'Fraunces',serif;font-size:13px;">
+        Define or select a template to see its schema.
+      </div>
+    </div>
+
+    <!-- FILL / INSTANCE -->
+    <div class="instance-form" id="ptab-instance">
+      <div style="color:var(--dim);font-style:italic;padding:16px;font-family:'Fraunces',serif;font-size:12px;">
+        Compile a template first, then fill an instance here.
+      </div>
+    </div>
+
+    <!-- LINEAGE -->
+    <div class="lineage-view" id="ptab-lineage">
+      <div style="color:var(--dim);font-style:italic;padding:16px;font-family:'Fraunces',serif;font-size:12px;">
+        Select a template to view its lineage tree.
+      </div>
+    </div>
+
+    <!-- RESOLVED -->
+    <div class="schema-preview" id="ptab-resolved">
+      <div style="color:var(--dim);font-style:italic;padding:16px;font-family:'Fraunces',serif;font-size:12px;">
+        Resolved flat schema (all inherited fields merged) appears here after compile.
+      </div>
+    </div>
+  </div>
+
+  <!-- COL 4: NDJSON STREAM -->
+  <div class="stream">
+    <div class="col-head">
+      NDJSON Stream
+      <span class="col-head-count" id="stream-count">0 events</span>
+    </div>
+    <div class="stream-filter" id="stream-filter">
+      <span style="font-size:7px;color:var(--dim);letter-spacing:.1em;align-self:center;">FILTER:</span>
+      <button class="sfilter-btn on" data-ev="all" onclick="toggleFilter('all')">ALL</button>
+      <button class="sfilter-btn" data-ev="define" onclick="toggleFilter('define')">DEF</button>
+      <button class="sfilter-btn" data-ev="compose" onclick="toggleFilter('compose')">COMP</button>
+      <button class="sfilter-btn" data-ev="inherit" onclick="toggleFilter('inherit')">INH</button>
+      <button class="sfilter-btn" data-ev="embed" onclick="toggleFilter('embed')">EMB</button>
+      <button class="sfilter-btn" data-ev="field" onclick="toggleFilter('field')">FLD</button>
+      <button class="sfilter-btn" data-ev="instance" onclick="toggleFilter('instance')">INST</button>
+      <button class="sfilter-btn" data-ev="compile" onclick="toggleFilter('compile')">CMP</button>
+    </div>
+    <div class="stream-log" id="stream-log">
+      <div style="color:var(--dim);font-style:italic;padding:10px;font-size:9px;text-align:center;">
+        Events emit here as you build templates.
+      </div>
+    </div>
+  </div>
+
+</div><!-- /body -->
+
+<footer>
+  <div>templates <span id="ft-tmpl">0</span></div>
+  <div>fields <span id="ft-fields">0</span></div>
+  <div>events <span id="ft-events">0</span></div>
+  <div>seq <span id="ft-seq">0</span></div>
+  <div>editing <span id="ft-editing">—</span></div>
+  <div class="ft-status">schema_version 1 · kind template.meta · lane metacodex</div>
+</footer>
+
+</div><!-- /shell -->
+
+<!-- INHERIT MODAL -->
+<div class="modal-bg" id="inherit-modal">
+  <div class="modal">
+    <div class="modal-hd">INHERIT FROM TEMPLATE <button class="modal-close" onclick="closeModal('inherit-modal')">✕</button></div>
+    <div class="modal-body">
+      <div class="mform-field">
+        <label class="mform-label">Select parent template(s)</label>
+        <div class="tmpl-picker" id="inherit-picker"></div>
+      </div>
+      <div class="mform-field">
+        <label class="mform-label">Override mode</label>
+        <select class="mform-select" id="inherit-mode">
+          <option value="extend">extend — add fields, keep parent</option>
+          <option value="override">override — replace conflicting fields</option>
+          <option value="mixin">mixin — merge without hierarchy</option>
+        </select>
+      </div>
+      <button class="mform-submit" onclick="applyInherit()">APPLY INHERITANCE</button>
+    </div>
+  </div>
+</div>
+
+<!-- EMBED MODAL -->
+<div class="modal-bg" id="embed-modal">
+  <div class="modal">
+    <div class="modal-hd">EMBED TEMPLATE <button class="modal-close" onclick="closeModal('embed-modal')">✕</button></div>
+    <div class="modal-body">
+      <div class="mform-field">
+        <label class="mform-label">Template to embed</label>
+        <div class="tmpl-picker" id="embed-picker"></div>
+      </div>
+      <div class="mform-field">
+        <label class="mform-label">As field key</label>
+        <input class="mform-input" id="embed-key" placeholder="e.g. metadata, payload, author"/>
+      </div>
+      <div class="mform-field">
+        <label class="mform-label">Cardinality</label>
+        <select class="mform-select" id="embed-card">
+          <option value="single">single object</option>
+          <option value="array">array</option>
+          <option value="optional">optional</option>
+        </select>
+      </div>
+      <button class="mform-submit" onclick="applyEmbed()">EMBED TEMPLATE</button>
+    </div>
+  </div>
+</div>
+
+<!-- PATCH MODAL -->
+<div class="modal-bg" id="patch-modal">
+  <div class="modal">
+    <div class="modal-hd">PATCH TEMPLATE <button class="modal-close" onclick="closeModal('patch-modal')">✕</button></div>
+    <div class="modal-body">
+      <div class="mform-field">
+        <label class="mform-label">Target template to patch</label>
+        <div class="tmpl-picker" id="patch-picker"></div>
+      </div>
+      <div class="mform-field">
+        <label class="mform-label">Patch key (field to override)</label>
+        <input class="mform-input" id="patch-key" placeholder="field_name"/>
+      </div>
+      <div class="mform-field">
+        <label class="mform-label">New value / constraint</label>
+        <input class="mform-input" id="patch-value" placeholder="new_value or constraint"/>
+      </div>
+      <div class="mform-field">
+        <label class="mform-label">Patch reason</label>
+        <input class="mform-input" id="patch-reason" placeholder="why this patch exists"/>
+      </div>
+      <button class="mform-submit" onclick="applyPatch()">APPLY PATCH</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// CORE DATA MODEL
+// A Template is itself an NDJSON record. All state is templates.
+// ═══════════════════════════════════════════════════════════════════
+
+const FIELD_TYPES = ['string','number','boolean','enum','array','object','ref','template','sha256','timestamp','url','ndjson'];
+const TYPE_COLORS = {
+  string:'var(--t-string)',number:'var(--t-number)',boolean:'var(--t-bool)',
+  enum:'var(--t-enum)',ref:'var(--t-ref)',array:'var(--t-array)',
+  object:'var(--t-object)',template:'var(--t-template)',
+  sha256:'var(--amber)',timestamp:'var(--blue)',url:'var(--cyan)',ndjson:'var(--amber2)'
+};
+
+function mkField(type='string'){
+  return {
+    id:'f'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+    key:'',type,required:false,default:'',desc:'',enum_values:''
+  };
+}
+
+function mkTemplate(name='', kind='template.core'){
+  return {
+    id:'t'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+    name, kind,
+    fields:[],
+    inherits:[],  // template ids
+    embeds:[],    // [{template_id, key, cardinality}]
+    patches:[],   // [{target_id, key, value, reason}]
+    compiled:false,
+    resolved_fields:[], // flattened after compile
+    sha256: null,
+    source:'user',
+    created_at: new Date().toISOString(),
+  };
+}
+
+// ─── SEED TEMPLATES ───────────────────────────────────────────
+const SEED = (() => {
+
+  // ── meta.base — the root of all templates ──
+  const base = mkTemplate('meta.base','template.meta');
+  base.id = 'BASE';
+  base.fields = [
+    {id:'bf1',key:'schema_version',type:'number',required:true,default:'1',desc:'Schema version integer'},
+    {id:'bf2',key:'kind',type:'string',required:true,default:'',desc:'Record kind identifier'},
+    {id:'bf3',key:'lane',type:'string',required:false,default:'',desc:'Processing lane'},
+    {id:'bf4',key:'seq',type:'number',required:true,default:'',desc:'Monotonic sequence number'},
+    {id:'bf5',key:'event',type:'string',required:true,default:'',desc:'Event name'},
+    {id:'bf6',key:'run_id',type:'sha256',required:false,default:'',desc:'Run identifier hash'},
+    {id:'bf7',key:'generated_at',type:'timestamp',required:false,default:'1970-01-01T00:00:00Z',desc:'ISO timestamp'},
+  ];
+  base.compiled=true; base.source='seed';
+
+  // ── meta.payload — generic payload wrapper ──
+  const payload = mkTemplate('meta.payload','template.core');
+  payload.id = 'PAYLOAD';
+  payload.fields = [
+    {id:'pf1',key:'payload',type:'object',required:true,default:'{}',desc:'Payload object'},
+    {id:'pf2',key:'sha256',type:'sha256',required:false,default:'',desc:'Content digest'},
+  ];
+  payload.compiled=true; payload.source='seed';
+
+  // ── ndjson.event — inherits base + payload ──
+  const ndEvent = mkTemplate('ndjson.event','template.derived');
+  ndEvent.id='NDEVENT';
+  ndEvent.inherits=['BASE','PAYLOAD'];
+  ndEvent.fields = [
+    {id:'nf1',key:'version',type:'string',required:false,default:'1.0',desc:'Protocol version'},
+  ];
+  ndEvent.compiled=true; ndEvent.source='seed';
+
+  // ── entity.base — world entity base ──
+  const entity = mkTemplate('entity.base','template.core');
+  entity.id='ENTITY';
+  entity.fields=[
+    {id:'ef1',key:'entity_id',type:'string',required:true,default:'',desc:'Unique entity identifier'},
+    {id:'ef2',key:'name',type:'string',required:true,default:'',desc:'Display name'},
+    {id:'ef3',key:'cat',type:'enum',required:true,default:'',desc:'Category',enum_values:'nation,faction,market,protocol,citizen'},
+    {id:'ef4',key:'desc',type:'string',required:false,default:'',desc:'Description'},
+    {id:'ef5',key:'tags',type:'array',required:false,default:'[]',desc:'Tag list'},
+    {id:'ef6',key:'source',type:'string',required:false,default:'user',desc:'Data source'},
+  ];
+  entity.compiled=true; entity.source='seed';
+
+  // ── aave.reserve — inherits entity.base ──
+  const aaveRes = mkTemplate('aave.reserve','template.derived');
+  aaveRes.id='AAVERES';
+  aaveRes.inherits=['ENTITY'];
+  aaveRes.fields=[
+    {id:'ar1',key:'symbol',type:'string',required:true,default:'',desc:'Token symbol'},
+    {id:'ar2',key:'liquidityRate',type:'number',required:false,default:'0',desc:'APR in RAY units'},
+    {id:'ar3',key:'borrowRate',type:'number',required:false,default:'0',desc:'Variable borrow rate RAY'},
+    {id:'ar4',key:'chain',type:'string',required:true,default:'eth-v3',desc:'Network identifier'},
+    {id:'ar5',key:'totalLiquidity',type:'number',required:false,default:'0',desc:'Total liquidity snapshot'},
+    {id:'ar6',key:'usageAsCollateral',type:'boolean',required:false,default:'true',desc:'Can be used as collateral'},
+    {id:'ar7',key:'liquidationThreshold',type:'number',required:false,default:'0.82',desc:'LTV liquidation threshold'},
+  ];
+  aaveRes.compiled=true; aaveRes.source='seed';
+
+  // ── aave.proposal — governance ──
+  const aaveProp = mkTemplate('aave.proposal','template.derived');
+  aaveProp.id='AAVEPROP';
+  aaveProp.inherits=['ENTITY'];
+  aaveProp.fields=[
+    {id:'ap1',key:'proposal_id',type:'string',required:true,default:'',desc:'On-chain proposal ID'},
+    {id:'ap2',key:'status',type:'enum',required:true,default:'pending',desc:'Proposal status',enum_values:'pending,active,executed,cancelled,failed'},
+    {id:'ap3',key:'votes_for',type:'number',required:false,default:'0',desc:'Votes in favour'},
+    {id:'ap4',key:'votes_against',type:'number',required:false,default:'0',desc:'Votes against'},
+    {id:'ap5',key:'ipfs_hash',type:'sha256',required:false,default:'',desc:'IPFS content hash of AIP'},
+    {id:'ap6',key:'executor',type:'string',required:false,default:'',desc:'Executor contract address'},
+  ];
+  aaveProp.compiled=true; aaveProp.source='seed';
+
+  // ── narrative.node — canon narrative ──
+  const narr = mkTemplate('narrative.node','template.derived');
+  narr.id='NARR';
+  narr.inherits=['NDEVENT'];
+  narr.fields=[
+    {id:'nn1',key:'node_id',type:'string',required:true,default:'',desc:'Canonical node ID'},
+    {id:'nn2',key:'series_path',type:'string',required:true,default:'',desc:'Source canon file'},
+    {id:'nn3',key:'source_line',type:'number',required:true,default:'',desc:'Line number in source'},
+    {id:'nn4',key:'text',type:'string',required:false,default:'',desc:'Node text content (max 240 chars)'},
+    {id:'nn5',key:'tags',type:'array',required:false,default:'[]',desc:'Semantic tags'},
+  ];
+  narr.compiled=true; narr.source='seed';
+
+  // ── avatar.part ──
+  const avPart = mkTemplate('avatar.part','template.derived');
+  avPart.id='AVPART';
+  avPart.inherits=['NDEVENT'];
+  avPart.fields=[
+    {id:'av1',key:'part_id',type:'string',required:true,default:'',desc:'Part identifier'},
+    {id:'av2',key:'category',type:'enum',required:true,default:'head',desc:'Part category',enum_values:'head,eyes,mouth,body,aura,markings,accessories,background'},
+    {id:'av3',key:'palette',type:'string',required:false,default:'gold',desc:'Active palette name'},
+    {id:'av4',key:'z_index',type:'number',required:false,default:'10',desc:'Layer z-order'},
+    {id:'av5',key:'svg_source',type:'string',required:false,default:'inline',desc:'SVG source type'},
+  ];
+  avPart.compiled=true; avPart.source='seed';
+
+  // ── mesh.node — polyhedra ──
+  const meshNode = mkTemplate('mesh.node','template.derived');
+  meshNode.id='MESHNODE';
+  meshNode.inherits=['NDEVENT'];
+  meshNode.fields=[
+    {id:'mn1',key:'node_id',type:'string',required:true,default:'',desc:'Canvas node id'},
+    {id:'mn2',key:'shape_id',type:'string',required:true,default:'',desc:'Shape library id'},
+    {id:'mn3',key:'x',type:'number',required:true,default:'0',desc:'Canvas X position'},
+    {id:'mn4',key:'y',type:'number',required:true,default:'0',desc:'Canvas Y position'},
+    {id:'mn5',key:'label',type:'string',required:false,default:'',desc:'Node label'},
+    {id:'mn6',key:'cat',type:'enum',required:false,default:'platonic',desc:'Shape category',enum_values:'platonic,archimedean,catalan,stellations,topological,graph'},
+  ];
+  meshNode.compiled=true; meshNode.source='seed';
+
+  // ── world.compose — world builder manifest ──
+  const world = mkTemplate('world.compose','template.composed');
+  world.id='WORLD';
+  world.inherits=['NDEVENT'];
+  world.embeds=[
+    {template_id:'ENTITY',key:'entities',cardinality:'array'},
+  ];
+  world.fields=[
+    {id:'wc1',key:'world_name',type:'string',required:true,default:'',desc:'World name'},
+    {id:'wc2',key:'era',type:'string',required:false,default:'',desc:'Historical era / epoch'},
+    {id:'wc3',key:'entity_count',type:'number',required:false,default:'0',desc:'Number of entities'},
+    {id:'wc4',key:'link_count',type:'number',required:false,default:'0',desc:'Number of relations'},
+    {id:'wc5',key:'aave_subgraph_ref',type:'url',required:false,default:'https://github.com/aave/protocol-subgraphs',desc:'Aave subgraph reference'},
+  ];
+  world.compiled=true; world.source='seed';
+
+  // ── template.meta — the template of templates ──
+  const metaMeta = mkTemplate('template.meta','template.meta');
+  metaMeta.id='METAMETA';
+  metaMeta.fields=[
+    {id:'mm1',key:'template_id',type:'string',required:true,default:'',desc:'Template identifier'},
+    {id:'mm2',key:'name',type:'string',required:true,default:'',desc:'Template name'},
+    {id:'mm3',key:'kind',type:'enum',required:true,default:'template.core',desc:'Template kind',enum_values:'template.core,template.derived,template.composed,template.instance,template.patch,template.meta'},
+    {id:'mm4',key:'fields',type:'array',required:true,default:'[]',desc:'Field definitions'},
+    {id:'mm5',key:'inherits',type:'array',required:false,default:'[]',desc:'Parent template ids'},
+    {id:'mm6',key:'embeds',type:'array',required:false,default:'[]',desc:'Embedded template refs'},
+    {id:'mm7',key:'patches',type:'array',required:false,default:'[]',desc:'Patch records'},
+    {id:'mm8',key:'compiled',type:'boolean',required:false,default:'false',desc:'Whether compiled'},
+    {id:'mm9',key:'sha256',type:'sha256',required:false,default:'',desc:'Template content digest'},
+    {id:'mm10',key:'source',type:'string',required:false,default:'user',desc:'Origin of template'},
+  ];
+  metaMeta.compiled=true; metaMeta.source='seed';
+
+  // ── dashboard.render ──
+  const dash = mkTemplate('dashboard.render','template.derived');
+  dash.id='DASH';
+  dash.inherits=['NDEVENT'];
+  dash.fields=[
+    {id:'dr1',key:'out_dir',type:'string',required:true,default:'',desc:'Output directory path'},
+    {id:'dr2',key:'floorplan',type:'string',required:false,default:'world.floorplan.svg',desc:'SVG floorplan file'},
+    {id:'dr3',key:'entities',type:'number',required:false,default:'0',desc:'Entity count rendered'},
+    {id:'dr4',key:'max_markers',type:'number',required:false,default:'2000',desc:'Marker cap'},
+  ];
+  dash.compiled=true; dash.source='seed';
+
+  return [base,payload,ndEvent,entity,aaveRes,aaveProp,narr,avPart,meshNode,world,metaMeta,dash];
+})();
+
+// ═══════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════
+let templates = [...SEED];
+let activeId = null;   // currently editing template id
+let composerMode = 'define';
+let seqN = 0;
+let eventCount = 0;
+let streamFilter = new Set(['all']);
+let previewTab = 'schema';
+
+// ── get current template being edited ──
+function active(){ return templates.find(t=>t.id===activeId)||null; }
+
+// ─── hash ────────────────────────────────────────────────────────
+function hash(s){
+  let h=0x811c9dc5;
+  for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=(h*0x01000193)>>>0;}
+  let r=h.toString(16).padStart(8,'0');
+  for(let i=0;i<7;i++){h^=(i*0xdead+s.charCodeAt(i%s.length));h=(h*0x01000193)>>>0;r+=h.toString(16).padStart(8,'0');}
+  return r;
+}
+function sha(t){ return `sha256:${hash(JSON.stringify({name:t.name,fields:t.fields,inherits:t.inherits,embeds:t.embeds}))}`; }
+
+// ═══════════════════════════════════════════════════════════════════
+// NDJSON STREAM EMIT
+// ═══════════════════════════════════════════════════════════════════
+function emit(event, payload, cls='ev-define'){
+  seqN++; eventCount++;
+  const t=active();
+  const rec={
+    schema_version:1,kind:'template.event',lane:'metacodex',
+    seq:seqN,event,
+    payload:{...payload, template_name:t?.name||'—', template_id:activeId||'—'}
+  };
+  const log=document.getElementById('stream-log');
+  if(eventCount===1) log.innerHTML='';
+
+  const ev_type=event.split('.').slice(-2,-1)[0]||'define';
+  const visible=streamFilter.has('all')||streamFilter.has(ev_type);
+
+  const d=document.createElement('div');
+  d.className=`nd ev-${ev_type} nd-flash`;
+  d.dataset.evtype=ev_type;
+  d.style.display=visible?'':'none';
+  d.innerHTML=colorJSON(JSON.stringify(rec));
+  log.appendChild(d);
+  log.scrollTop=log.scrollHeight;
+  document.getElementById('stream-count').textContent=eventCount+' events';
+  updateFooter();
+}
+
+function colorJSON(s){
+  return s
+    .replace(/"([^"]+)":/g,'<span class="sk">"$1":</span>')
+    .replace(/: "([^"]*)"/g,': <span class="ss">"$1"</span>')
+    .replace(/: (-?[\d.]+)/g,': <span class="sn">$1</span>')
+    .replace(/: (true|false|null)/g,': <span class="sb">$1</span>');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TEMPLATE LIBRARY RENDER
+// ═══════════════════════════════════════════════════════════════════
+const KIND_GROUPS = [
+  {kind:'template.meta',  label:'◈ META',        badge:'badge-core'},
+  {kind:'template.core',  label:'■ CORE',         badge:'badge-core'},
+  {kind:'template.derived',label:'↳ DERIVED',     badge:'badge-derived'},
+  {kind:'template.composed',label:'⊕ COMPOSED',   badge:'badge-composed'},
+  {kind:'template.instance',label:'• INSTANCE',   badge:'badge-instance'},
+  {kind:'template.patch', label:'⊘ PATCH',        badge:'badge-derived'},
+  {kind:'other',          label:'⬡ DOMAIN',       badge:'badge-instance'},
+];
+
+function renderLibrary(){
+  const tree=document.getElementById('tmpl-tree');
+  tree.innerHTML='';
+  const counts={};
+  templates.forEach(t=>{
+    const g=['template.meta','template.core','template.derived','template.composed','template.instance','template.patch'].includes(t.kind)?t.kind:'other';
+    counts[g]=(counts[g]||0)+1;
+  });
+
+  KIND_GROUPS.forEach(grp=>{
+    const items=templates.filter(t=>{
+      const g=['template.meta','template.core','template.derived','template.composed','template.instance','template.patch'].includes(t.kind)?t.kind:'other';
+      return g===grp.kind;
+    });
+    if(!items.length) return;
+
+    const group=document.createElement('div');
+    group.className='tmpl-group';
+
+    const isOpen=items.some(t=>t.id===activeId)||grp.kind==='template.core'||grp.kind==='template.meta';
+    const head=document.createElement('div');
+    head.className='tg-head'+(isOpen?' open':'');
+    head.innerHTML=`<span>${grp.label}</span><span style="color:var(--dim);font-size:8px;">${items.length}</span>`;
+    head.onclick=()=>{
+      head.classList.toggle('open');
+      body.classList.toggle('open');
+    };
+    const body=document.createElement('div');
+    body.className='tg-items'+(isOpen?' open':'');
+
+    items.forEach(t=>{
+      const div=document.createElement('div');
+      div.className='tmpl-item'+(t.id===activeId?' active':'')+(t.inherits?.length?' derived':'');
+      const fieldC=t.fields.length+(t.embeds?.length||0)+(t.inherits?.length||0);
+      div.innerHTML=`<div class="ti-name">${t.name}<span class="ti-badge ${grp.badge}">${t.kind.split('.').pop()}</span></div><div class="ti-kind">${fieldC} fields · ${t.compiled?'✓ compiled':'○ draft'}</div>`;
+      div.onclick=()=>loadTemplate(t.id);
+      body.appendChild(div);
+    });
+
+    group.appendChild(head);
+    group.appendChild(body);
+    tree.appendChild(group);
+  });
+
+  document.getElementById('lib-count').textContent=templates.length+' templates';
+  updateFooter();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// LOAD / EDIT TEMPLATE
+// ═══════════════════════════════════════════════════════════════════
+function loadTemplate(id){
+  activeId=id;
+  const t=active();
+  if(!t) return;
+
+  document.getElementById('composer-name').value=t.name;
+  document.getElementById('composer-kind').value=
+    ['template.core','template.derived','template.composed','template.instance','template.patch','template.meta'].includes(t.kind)||['world.entity','avatar.part','mesh.node','narrative.node','canon.entry'].includes(t.kind)
+    ? t.kind : 'custom';
+
+  renderFieldEditor();
+  renderLibrary();
+  renderPreview();
+  document.getElementById('ft-editing').textContent=t.name||'—';
+  emit('template.select',{action:'load',kind:t.kind,field_count:t.fields.length},'ev-define');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FIELD EDITOR
+// ═══════════════════════════════════════════════════════════════════
+function renderFieldEditor(){
+  const t=active();
+  if(!t){document.getElementById('fields-list').innerHTML='';return;}
+
+  // Inherits badges
+  const ib=document.getElementById('inherits-badges');
+  ib.innerHTML=t.inherits.map(pid=>{
+    const p=templates.find(x=>x.id===pid);
+    return `<span class="inherit-badge" onclick="removeInherit('${pid}')" title="click to remove">${p?.name||pid} ✕</span>`;
+  }).join('');
+
+  // Fields
+  const fl=document.getElementById('fields-list');
+  fl.innerHTML='';
+  t.fields.forEach((f,i)=>{
+    const div=document.createElement('div');
+    div.className='field-row';
+    div.innerHTML=`
+      <div class="field-drag" draggable="true">⋮⋮</div>
+      <input class="field-key-input" placeholder="key" value="${escH(f.key)}" oninput="updateField('${f.id}','key',this.value)"/>
+      <select class="field-type-sel" onchange="updateField('${f.id}','type',this.value)">
+        ${FIELD_TYPES.map(ft=>`<option value="${ft}" ${f.type===ft?'selected':''}>${ft}</option>`).join('')}
+      </select>
+      <input class="field-default-input" placeholder="default" value="${escH(f.default||'')}" oninput="updateField('${f.id}','default',this.value)"/>
+      <button class="field-req ${f.required?'on':''}" onclick="toggleReq('${f.id}')">REQ${f.required?'✓':''}</button>
+      <button class="field-rm" onclick="removeField('${f.id}')">✕</button>
+    `;
+    // color type sel
+    const sel=div.querySelector('.field-type-sel');
+    sel.style.color=TYPE_COLORS[f.type]||'var(--paper)';
+    fl.appendChild(div);
+  });
+  document.getElementById('field-count').textContent=t.fields.length+' fields';
+
+  // Embeds
+  const el=document.getElementById('embeds-list');
+  el.innerHTML='';
+  (t.embeds||[]).forEach(em=>{
+    const et=templates.find(x=>x.id===em.template_id);
+    const row=document.createElement('div');
+    row.className='embed-row';
+    row.innerHTML=`
+      <span class="embed-label">⊕ ${et?.name||em.template_id}</span>
+      <span class="embed-as">as</span>
+      <input class="embed-key" value="${escH(em.key)}" oninput="updateEmbed('${em.template_id}','key',this.value)" placeholder="field key"/>
+      <span class="embed-as">[${em.cardinality}]</span>
+      <button class="embed-rm" onclick="removeEmbed('${em.template_id}')">✕</button>
+    `;
+    el.appendChild(row);
+  });
+  document.getElementById('embed-count').textContent=(t.embeds||[]).length;
+}
+
+function addField(type){
+  const t=active(); if(!t) return;
+  const f=mkField(type);
+  t.fields.push(f);
+  t.compiled=false;
+  renderFieldEditor();
+  emit('template.field.add',{field_id:f.id,type,index:t.fields.length-1},'ev-field');
+  updateFooter();
+}
+
+function updateField(fid,prop,val){
+  const t=active(); if(!t) return;
+  const f=t.fields.find(x=>x.id===fid); if(!f) return;
+  f[prop]=val; t.compiled=false;
+  // re-color type select
+  if(prop==='type'){
+    document.querySelectorAll('.field-type-sel').forEach(sel=>{
+      sel.style.color=TYPE_COLORS[sel.value]||'var(--paper)';
+    });
+  }
+}
+
+function removeField(fid){
+  const t=active(); if(!t) return;
+  t.fields=t.fields.filter(f=>f.id!==fid);
+  t.compiled=false;
+  renderFieldEditor();
+  emit('template.field.remove',{field_id:fid},'ev-field');
+}
+
+function toggleReq(fid){
+  const t=active(); if(!t) return;
+  const f=t.fields.find(x=>x.id===fid); if(!f) return;
+  f.required=!f.required;
+  renderFieldEditor();
+}
+
+function removeInherit(pid){
+  const t=active(); if(!t) return;
+  t.inherits=t.inherits.filter(x=>x!==pid);
+  t.compiled=false;
+  renderFieldEditor();
+  emit('template.inherit.remove',{parent_id:pid},'ev-inherit');
+}
+
+function removeEmbed(eid){
+  const t=active(); if(!t) return;
+  t.embeds=(t.embeds||[]).filter(e=>e.template_id!==eid);
+  t.compiled=false;
+  renderFieldEditor();
+  emit('template.embed.remove',{embed_id:eid},'ev-embed');
+}
+
+function updateEmbed(tid,prop,val){
+  const t=active(); if(!t) return;
+  const em=(t.embeds||[]).find(e=>e.template_id===tid); if(!em) return;
+  em[prop]=val; t.compiled=false;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// COMPILE — resolve inheritance chain into flat schema
+// ═══════════════════════════════════════════════════════════════════
+function resolveFields(tmpl, visited=new Set()){
+  if(visited.has(tmpl.id)) return []; // cycle guard
+  visited.add(tmpl.id);
+  const result=[];
+  // Recurse parents
+  (tmpl.inherits||[]).forEach(pid=>{
+    const parent=templates.find(t=>t.id===pid);
+    if(parent) resolveFields(parent,visited).forEach(f=>result.push({...f,source:parent.name}));
+  });
+  // Own fields
+  tmpl.fields.forEach(f=>result.push({...f,source:tmpl.name}));
+  // Embeds as synthetic fields
+  (tmpl.embeds||[]).forEach(em=>{
+    const et=templates.find(t=>t.id===em.template_id);
+    result.push({
+      id:em.template_id+'_embed',
+      key:em.key,
+      type: em.cardinality==='array'?'array':'object',
+      required:false,default:'',
+      desc:`Embedded ${et?.name||em.template_id} [${em.cardinality}]`,
+      source:`embed:${et?.name||em.template_id}`,
+      embed:true
+    });
+  });
+  return result;
+}
+
+function compile(){
+  const t=active();
+  if(!t){
+    document.getElementById('compile-status').textContent='✗ no template selected';
+    document.getElementById('compile-status').className='compile-status err';
+    return;
+  }
+  // Validate
+  const keys=t.fields.map(f=>f.key).filter(Boolean);
+  const dupes=keys.filter((k,i)=>keys.indexOf(k)!==i);
+  if(dupes.length){
+    document.getElementById('compile-status').textContent=`✗ duplicate keys: ${dupes.join(',')}`;
+    document.getElementById('compile-status').className='compile-status err';
+    return;
+  }
+  const emptyKeys=t.fields.filter(f=>!f.key.trim());
+  if(emptyKeys.length){
+    document.getElementById('compile-status').textContent='✗ fields with empty keys';
+    document.getElementById('compile-status').className='compile-status err';
+    return;
+  }
+
+  // Resolve
+  t.resolved_fields=resolveFields(t);
+  t.sha256=sha(t);
+  t.compiled=true;
+
+  document.getElementById('compile-status').textContent=`✓ compiled · ${t.resolved_fields.length} resolved fields · ${t.sha256.slice(0,16)}…`;
+  document.getElementById('compile-status').className='compile-status ok';
+
+  emit('template.compile',{
+    field_count:t.fields.length,
+    resolved_count:t.resolved_fields.length,
+    inherit_count:t.inherits.length,
+    embed_count:(t.embeds||[]).length,
+    sha256:t.sha256
+  },'ev-compile');
+
+  renderLibrary();
+  renderPreview();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PREVIEW PANEL
+// ═══════════════════════════════════════════════════════════════════
+function renderPreview(){
+  const t=active(); if(!t) return;
+  renderSchemaPreview(t);
+  renderLineage(t);
+  renderResolved(t);
+  if(previewTab==='instance') renderInstanceForm(t);
+}
+
+function renderSchemaPreview(t){
+  const el=document.getElementById('ptab-schema');
+  const kindColor=t.kind.includes('meta')?'var(--amber)':t.kind.includes('derived')?'var(--cyan)':t.kind.includes('composed')?'var(--violet)':'var(--green)';
+  const parents=t.inherits.map(pid=>{const p=templates.find(x=>x.id===pid);return p?.name||pid;});
+
+  let rows=t.fields.map(f=>`
+    <tr>
+      <td class="field-name-cell">${escH(f.key||'—')}<span class="field-source">${escH(f.desc||'')}</span></td>
+      <td><span class="type-chip" style="background:${(TYPE_COLORS[f.type]||'#888')}22;color:${TYPE_COLORS[f.type]||'#888'};">${f.type}</span></td>
+      <td style="color:var(--dim)">${f.required?'<span style="color:var(--amber)">✓ req</span>':'opt'}</td>
+      <td style="color:var(--mid)">${escH(f.default||'')}</td>
+    </tr>`).join('');
+
+  el.innerHTML=`
+    <div style="margin-bottom:10px;">
+      <div style="font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--bright);margin-bottom:4px;">${escH(t.name)}</div>
+      <div style="font-size:8px;color:${kindColor};letter-spacing:.2em;text-transform:uppercase;margin-bottom:6px;">${t.kind}</div>
+      ${parents.length?`<div style="font-size:8px;color:var(--dim);margin-bottom:4px;">inherits: <span style="color:var(--cyan);">${parents.join(' · ')}</span></div>`:''}
+      ${(t.embeds||[]).length?`<div style="font-size:8px;color:var(--dim);">embeds: <span style="color:var(--violet);">${(t.embeds||[]).map(e=>{const et=templates.find(x=>x.id===e.template_id);return `${et?.name||e.template_id}[${e.cardinality}] as .${e.key}`;}).join(' · ')}</span></div>`:''}
+    </div>
+    ${rows?`<table class="schema-table">
+      <thead><tr><th>key</th><th>type</th><th>req</th><th>default</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`:'<div style="color:var(--dim);font-style:italic;font-size:10px;">No fields defined yet.</div>'}
+    <div style="margin-top:10px;padding:6px;background:var(--void3);border:1px solid var(--wire);">
+      <div style="font-size:8px;color:var(--dim);">sha256</div>
+      <div style="font-size:8px;color:var(--amber);word-break:break-all;">${t.sha256||'— not compiled'}</div>
+    </div>`;
+}
+
+function renderResolved(t){
+  const el=document.getElementById('ptab-resolved');
+  if(!t.compiled){el.innerHTML='<div style="color:var(--dim);font-style:italic;padding:16px;font-size:10px;">Compile first to see resolved schema.</div>';return;}
+  const rows=t.resolved_fields.map(f=>`
+    <tr>
+      <td class="field-name-cell">${escH(f.key)}<span class="field-source">from: ${escH(f.source)}</span></td>
+      <td><span class="type-chip" style="background:${(TYPE_COLORS[f.type]||'#888')}22;color:${TYPE_COLORS[f.type]||'#888'};">${f.type}</span></td>
+      <td style="color:var(--dim)">${f.required?'<span style="color:var(--amber)">✓</span>':'—'}</td>
+      ${f.embed?'<td style="color:var(--violet);font-size:8px;">embed</td>':'<td style="color:var(--dim)">'+escH(f.default||'')+'</td>'}
+    </tr>`).join('');
+  el.innerHTML=`
+    <div style="margin-bottom:8px;font-size:9px;color:var(--dim);">${t.resolved_fields.length} resolved fields (all inheritance merged)</div>
+    <table class="schema-table">
+      <thead><tr><th>key</th><th>type</th><th>req</th><th>default/src</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function renderLineage(t){
+  const el=document.getElementById('ptab-lineage');
+  const lines=[];
+  function walk(tmpl,depth){
+    const indent='  '.repeat(depth);
+    lines.push(`<div class="ln-node ${depth===0?'root':''}" style="padding-left:${depth*16+8}px" onclick="loadTemplate('${tmpl.id}')">
+      <span style="color:var(--dim);font-size:9px;">${indent}${depth>0?'↳ ':''}</span>
+      <span class="ln-name">${escH(tmpl.name)}</span>
+      <span class="ln-fields">[${tmpl.fields.length}f ${(tmpl.embeds||[]).length}e]</span>
+    </div>`);
+    (tmpl.inherits||[]).forEach(pid=>{
+      const p=templates.find(x=>x.id===pid);
+      if(p) walk(p,depth+1);
+    });
+    (tmpl.embeds||[]).forEach(em=>{
+      const et=templates.find(x=>x.id===em.template_id);
+      if(et){
+        lines.push(`<div class="ln-node" style="padding-left:${(depth+1)*16+8}px;border-left-color:var(--violet);">
+          <span style="color:var(--violet);font-size:9px;">⊕ ${escH(em.key)} → </span>
+          <span class="ln-name" style="color:var(--violet);">${escH(et.name)}</span>
+          <span class="ln-fields">[${em.cardinality}]</span>
+        </div>`);
+      }
+    });
+  }
+  walk(t,0);
+  // also show who inherits from this template
+  const children=templates.filter(x=>x.id!==t.id&&(x.inherits||[]).includes(t.id));
+  if(children.length){
+    lines.push(`<div style="font-size:8px;color:var(--dim);letter-spacing:.15em;padding:8px 8px 3px;text-transform:uppercase;border-top:1px solid var(--void4);margin-top:6px;">Derived from this</div>`);
+    children.forEach(c=>lines.push(`<div class="ln-node" style="border-left-color:var(--green);" onclick="loadTemplate('${c.id}')"><span style="color:var(--green);">↳ </span><span class="ln-name">${escH(c.name)}</span><span class="ln-fields">[${c.fields.length}f]</span></div>`));
+  }
+  el.innerHTML=`<div class="lineage-tree">${lines.join('')}</div>`;
+}
+
+function renderInstanceForm(t){
+  const el=document.getElementById('ptab-instance');
+  if(!t.compiled){el.innerHTML='<div style="color:var(--dim);font-style:italic;padding:16px;font-size:10px;">Compile template first.</div>';return;}
+  const fields=t.resolved_fields.filter(f=>!f.embed);
+  el.innerHTML=`
+    <div style="font-size:9px;color:var(--dim);margin-bottom:8px;">Fill instance of <span style="color:var(--amber);">${escH(t.name)}</span></div>
+    ${fields.map(f=>{
+      const typeColor=TYPE_COLORS[f.type]||'var(--mid)';
+      let input='';
+      if(f.type==='boolean') input=`<input class="inst-checkbox" type="checkbox" id="inst_${f.id}" ${f.default==='true'?'checked':''}/>`;
+      else if(f.type==='enum'&&f.enum_values) input=`<select class="inst-select" id="inst_${f.id}">${f.enum_values.split(',').map(v=>`<option value="${v.trim()}" ${f.default===v.trim()?'selected':''}>${v.trim()}</option>`).join('')}</select>`;
+      else if(f.type==='string'&&!f.default) input=`<textarea class="inst-textarea" id="inst_${f.id}" placeholder="${escH(f.desc||'')}"></textarea>`;
+      else input=`<input class="inst-input" type="text" id="inst_${f.id}" value="${escH(f.default||'')}" placeholder="${escH(f.desc||'')}"/>`;
+      return `<div class="inst-field">
+        <div class="inst-label">
+          <span style="color:${typeColor};font-size:8px;">${f.type}</span>
+          <span>${escH(f.key)}</span>
+          ${f.required?'<span class="req-star">★</span>':''}
+          <span style="font-size:7px;color:var(--void4);">from ${escH(f.source)}</span>
+        </div>
+        ${input}
+      </div>`;
+    }).join('')}
+    <button class="inst-emit-btn" onclick="emitInstance()">⬡ EMIT AS NDJSON INSTANCE</button>
+  `;
+}
+
+function emitInstance(){
+  const t=active(); if(!t||!t.compiled) return;
+  const payload={};
+  t.resolved_fields.filter(f=>!f.embed).forEach(f=>{
+    const el=document.getElementById('inst_'+f.id);
+    if(!el) return;
+    payload[f.key]=f.type==='boolean'?el.checked:f.type==='number'?Number(el.value)||0:el.value;
+  });
+  payload.schema_version=1;
+  payload.kind=t.kind;
+  payload.instance_of=t.id;
+  payload.sha256=`sha256:${hash(JSON.stringify(payload))}`;
+  emit('template.instance.emit',payload,'ev-instance');
+  switchPreviewTab('schema');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════════════════════════════════════
+function newTemplate(){
+  const t=mkTemplate('new.template','template.core');
+  templates.push(t);
+  loadTemplate(t.id);
+  emit('template.define.start',{name:t.name,kind:t.kind},'ev-define');
+}
+
+function saveTemplate(){
+  const t=active(); if(!t) return;
+  const name=document.getElementById('composer-name').value.trim();
+  const kind=document.getElementById('composer-kind').value;
+  if(name) t.name=name;
+  t.kind=kind;
+  t.sha256=sha(t);
+  renderLibrary();
+  renderPreview();
+  emit('template.define.save',{name:t.name,kind:t.kind,field_count:t.fields.length,sha256:t.sha256},'ev-define');
+  document.getElementById('compile-status').textContent=`saved · ${t.sha256.slice(0,16)}…`;
+  document.getElementById('compile-status').className='compile-status ok';
+}
+
+function forkTemplate(){
+  const t=active(); if(!t) return;
+  const forked={...JSON.parse(JSON.stringify(t)),
+    id:'t'+Date.now().toString(36),
+    name:t.name+'.fork',
+    compiled:false,sha256:null,source:'user',
+    kind:'template.derived',
+    inherits:[t.id],
+    fields:[],embeds:[]
+  };
+  templates.push(forked);
+  loadTemplate(forked.id);
+  emit('template.fork',{source_id:t.id,source_name:t.name,fork_id:forked.id},'ev-compose');
+}
+
+function onNameChange(){
+  const t=active(); if(!t) return;
+  t.name=document.getElementById('composer-name').value;
+  t.compiled=false;
+}
+function onKindChange(){
+  const t=active(); if(!t) return;
+  t.kind=document.getElementById('composer-kind').value;
+  t.compiled=false;
+}
+function setComposerMode(m){
+  composerMode=m;
+  document.querySelectorAll('.mtab').forEach(b=>b.classList.toggle('active',b.id==='mtab-'+m));
+  if(m==='instance') switchPreviewTab('instance');
+  else if(m==='compose') switchPreviewTab('lineage');
+  else switchPreviewTab('schema');
+}
+
+// ── INHERIT ──────────────────────────────────────────────────────
+function openInheritModal(){
+  const t=active();
+  const picker=document.getElementById('inherit-picker');
+  picker.innerHTML='';
+  templates.filter(x=>x.id!==activeId).forEach(x=>{
+    const div=document.createElement('div');
+    div.className='tp-item'+(t&&t.inherits.includes(x.id)?' selected':'');
+    div.innerHTML=`<div><div class="tp-name">${escH(x.name)}</div><div class="tp-kind">${x.kind} · ${x.fields.length}f</div></div><span style="color:var(--amber);font-size:9px;">${t&&t.inherits.includes(x.id)?'✓':''}</span>`;
+    div.onclick=()=>{div.classList.toggle('selected');};
+    picker.appendChild(div);
+  });
+  openModal('inherit-modal');
+}
+function applyInherit(){
+  const t=active(); if(!t) return;
+  const mode=document.getElementById('inherit-mode').value;
+  const selected=[...document.querySelectorAll('#inherit-picker .tp-item.selected')].map((_,i)=>templates.filter(x=>x.id!==activeId)[i]?.id).filter(Boolean);
+  selected.forEach(pid=>{
+    if(!t.inherits.includes(pid)){
+      t.inherits.push(pid);
+      const p=templates.find(x=>x.id===pid);
+      emit('template.inherit.add',{parent_id:pid,parent_name:p?.name,mode},'ev-inherit');
+    }
+  });
+  t.compiled=false;
+  renderFieldEditor();
+  renderLibrary();
+  closeModal('inherit-modal');
+}
+
+// ── EMBED ────────────────────────────────────────────────────────
+function openEmbedModal(){
+  const picker=document.getElementById('embed-picker');
+  picker.innerHTML='';
+  templates.filter(x=>x.id!==activeId).forEach(x=>{
+    const div=document.createElement('div');
+    div.className='tp-item';
+    div.innerHTML=`<div><div class="tp-name">${escH(x.name)}</div><div class="tp-kind">${x.kind} · ${x.fields.length}f</div></div>`;
+    div.onclick=()=>{document.querySelectorAll('#embed-picker .tp-item').forEach(d=>d.classList.remove('selected'));div.classList.add('selected');document.getElementById('embed-key').value=x.name.split('.').pop();};
+    picker.appendChild(div);
+  });
+  openModal('embed-modal');
+}
+function applyEmbed(){
+  const t=active(); if(!t) return;
+  const selected=document.querySelector('#embed-picker .tp-item.selected');
+  if(!selected) return;
+  const idx=[...document.querySelectorAll('#embed-picker .tp-item')].indexOf(selected);
+  const et=templates.filter(x=>x.id!==activeId)[idx];
+  if(!et) return;
+  const key=document.getElementById('embed-key').value.trim()||et.name.split('.').pop();
+  const card=document.getElementById('embed-card').value;
+  if(!(t.embeds||[]).find(e=>e.template_id===et.id)){
+    t.embeds=(t.embeds||[]);
+    t.embeds.push({template_id:et.id,key,cardinality:card});
+    emit('template.embed.add',{embed_id:et.id,embed_name:et.name,key,cardinality:card},'ev-embed');
+  }
+  t.compiled=false;
+  renderFieldEditor();
+  closeModal('embed-modal');
+}
+
+// ── PATCH ────────────────────────────────────────────────────────
+function openPatchModal(){
+  const picker=document.getElementById('patch-picker');
+  picker.innerHTML='';
+  templates.filter(x=>x.id!==activeId).forEach(x=>{
+    const div=document.createElement('div');
+    div.className='tp-item';
+    div.innerHTML=`<div><div class="tp-name">${escH(x.name)}</div><div class="tp-kind">${x.kind}</div></div>`;
+    div.onclick=()=>{document.querySelectorAll('#patch-picker .tp-item').forEach(d=>d.classList.remove('selected'));div.classList.add('selected');};
+    picker.appendChild(div);
+  });
+  openModal('patch-modal');
+}
+function applyPatch(){
+  const t=active(); if(!t) return;
+  const selected=document.querySelector('#patch-picker .tp-item.selected');
+  if(!selected) return;
+  const idx=[...document.querySelectorAll('#patch-picker .tp-item')].indexOf(selected);
+  const target=templates.filter(x=>x.id!==activeId)[idx];
+  const key=document.getElementById('patch-key').value.trim();
+  const value=document.getElementById('patch-value').value.trim();
+  const reason=document.getElementById('patch-reason').value.trim();
+  if(!target||!key) return;
+  t.patches=(t.patches||[]);
+  t.patches.push({target_id:target.id,key,value,reason,sha256:`sha256:${hash(target.id+key+value)}`});
+  emit('template.patch.apply',{target_id:target.id,target_name:target.name,key,value,reason},'ev-patch');
+  closeModal('patch-modal');
+}
+
+// ── EXPORT ALL ───────────────────────────────────────────────────
+function exportAll(){
+  let s=0;
+  const lines=[];
+  const rid=`sha256:${hash(templates.map(t=>t.id).join('')+seqN)}`;
+  lines.push(JSON.stringify({schema_version:1,kind:'metacodex.export',lane:'metacodex',seq:++s,event:'metacodex.export.start',run_id:rid,payload:{template_count:templates.length,generated_at:new Date().toISOString()}}));
+  // Export the template-of-templates record first
+  lines.push(JSON.stringify({schema_version:1,kind:'template.meta',lane:'metacodex',seq:++s,event:'template.meta.record',payload:{name:'template.meta',kind:'template.meta',self_describing:true,note:'This template describes all other templates in this stream.'}}));
+  // Each template as NDJSON using its own schema
+  templates.forEach(t=>{
+    lines.push(JSON.stringify({
+      schema_version:1,kind:t.kind,lane:'metacodex',seq:++s,
+      event:'template.define.record',
+      payload:{
+        template_id:t.id,name:t.name,kind:t.kind,
+        fields:t.fields,inherits:t.inherits,
+        embeds:t.embeds||[],patches:t.patches||[],
+        compiled:t.compiled,sha256:t.sha256||sha(t),
+        source:t.source,resolved_field_count:t.resolved_fields?.length||0
+      }
+    }));
+  });
+  lines.push(JSON.stringify({schema_version:1,kind:'metacodex.export',lane:'metacodex',seq:++s,event:'metacodex.export.end',run_id:rid,payload:{pass:true,template_ids:templates.map(t=>t.id)}}));
+  const blob=new Blob([lines.join('\n')+'\n'],{type:'application/x-ndjson'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`metacodex-${Date.now()}.ndjson`;a.click();
+  emit('metacodex.export',{template_count:templates.length,lines:lines.length,run_id:rid},'ev-export');
+}
+
+function resetAll(){
+  if(!confirm('Reset to seed templates? All user templates will be lost.')) return;
+  templates=[...SEED];activeId=null;seqN=0;eventCount=0;
+  document.getElementById('composer-name').value='';
+  document.getElementById('fields-list').innerHTML='';
+  document.getElementById('embeds-list').innerHTML='';
+  document.getElementById('stream-log').innerHTML='<div style="color:var(--dim);font-style:italic;padding:10px;font-size:9px;text-align:center;">Reset.</div>';
+  renderLibrary();
+  updateFooter();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// STREAM FILTER
+// ═══════════════════════════════════════════════════════════════════
+function toggleFilter(ev){
+  if(ev==='all'){
+    streamFilter=new Set(['all']);
+  } else {
+    streamFilter.delete('all');
+    if(streamFilter.has(ev)) streamFilter.delete(ev);
+    else streamFilter.add(ev);
+    if(!streamFilter.size) streamFilter.add('all');
+  }
+  document.querySelectorAll('.sfilter-btn').forEach(b=>{
+    b.classList.toggle('on',streamFilter.has(b.dataset.ev));
+  });
+  document.querySelectorAll('.nd').forEach(d=>{
+    const et=d.dataset.evtype||'';
+    d.style.display=(streamFilter.has('all')||streamFilter.has(et))?'':'none';
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PREVIEW TABS
+// ═══════════════════════════════════════════════════════════════════
+function switchPreviewTab(tab){
+  previewTab=tab;
+  const tabs=['schema','instance','lineage','resolved'];
+  document.querySelectorAll('.ptab').forEach((b,i)=>b.classList.toggle('active',tabs[i]===tab));
+  tabs.forEach(t=>{
+    const id=t==='instance'?'ptab-instance':t==='lineage'?'ptab-lineage':t==='resolved'?'ptab-resolved':'ptab-schema';
+    const el=document.getElementById(id);
+    if(el) el.style.display=t===tab?'block':'none';
+  });
+  const t=active();
+  if(tab==='instance'&&t) renderInstanceForm(t);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════════
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function updateFooter(){
+  const t=active();
+  const totalFields=templates.reduce((s,x)=>s+x.fields.length,0);
+  document.getElementById('ft-tmpl').textContent=templates.length;
+  document.getElementById('ft-fields').textContent=totalFields;
+  document.getElementById('ft-events').textContent=eventCount;
+  document.getElementById('ft-seq').textContent=seqN;
+  document.getElementById('ft-editing').textContent=t?.name||'—';
+}
+
+document.querySelectorAll('.modal-bg').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') document.querySelectorAll('.modal-bg.open').forEach(m=>m.classList.remove('open'));
+  if(e.key==='Enter'&&e.ctrlKey) compile();
+  if(e.key==='s'&&e.ctrlKey){e.preventDefault();saveTemplate();}
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════
+renderLibrary();
+updateFooter();
+emit('metacodex.start',{schema_version:1,seed_templates:SEED.length,generated_at:'1970-01-01T00:00:00Z'},'ev-start');
+
+// Load the meta-template first so user sees the engine immediately
+loadTemplate('METAMETA');
+compile();
+</script>
+</body>
+</html>

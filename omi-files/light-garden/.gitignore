@@ -1,0 +1,11 @@
+GeneratedAssets-0.6.1
+artifacts/
+audit/node_modules/
+audit/artifacts/logs/
+audit/artifacts/reports/
+audit/results/latest/
+audit/results/
+audit/results/**
+audit/artifacts/reports/**
+audit/results/bench/
+audit/results/bench/**
