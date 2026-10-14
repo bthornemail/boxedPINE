@@ -1,0 +1,27 @@
+// The tag mask truncates every segment to 5 characters. 
+// "RED 4" as a label reads as the segment "RED" plus the number 4. 
+// The XNOR of "4" against its promoted (two-digit) form "40". 
+const forms = [["40","0"], ["4", "04"], ["4", "4 "]];
+const pad5 = s => s.padEnd(5, " ");
+for (const [a, b] of forms) {
+    const A = pad5(a), B = pad5(b);
+    let xor = "", xnor = "";
+    for (let i = 0; i < 5; i++) {
+        const x = A.charCodeAt(i) ^ B.charCodeAt(i);
+        xor += String.fromCharCode(x);
+        xnor += String.fromCharCode(0xFF ^ x);
+    }
+    const hex = s => [...s].map(c => c.charCodeAt(0).toString(16).padStart(2, "0")).join(" ");
+    console.log(`"${a}" vs "${b}": XOR = ${hex(xor)} XNOR = ${hex(xnor)}`
+    );
+} 
+console.log();
+// The RGB index reading: red is 4 in 3-bit RGB (100). 
+// The synset index reading: red is 20, ordinal 21. 
+// The label reading: red 4. 
+console.log("red as 3-bit RGB: 4 = 0b100 (the red bit alone)");
+console.log("red as synset index: 20 = 0b10100");
+console.log("red as ordinal: 21 = 0b10101");
+console.log("red on the label: 4 = 0b100");
+console.log(); console.log("4 XOR 40 (decimal):", 4 ^ 40, "= 0b" + (4 ^ 40).toString(2).padStart(6, "0"));
+console.log("4 XNOR 40 (7-bit): ", (0x7F ^ (4 ^ 40)).toString(10), "= 0b" + (0x7F ^ (4 ^ 40)).toString(2));
