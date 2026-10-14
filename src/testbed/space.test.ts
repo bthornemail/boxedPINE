@@ -395,3 +395,20 @@ test('The reset at the Catch-22 index: frame 42 (60 XOR 22) restores the literal
   gate.frame = 128 + 42;
   assert.equal(gate.last?.ok && 'restored' in gate.last.value ? gate.last.value.restored : -1, 1, 'in the XNOR half the reset comes again at frame 170, putting back what changed');
 });
+
+test('CATCH 22, with the space: a command pair, the verb and the reset\'s index; the gate takes it through the Proxy', async () => {
+  const { parseTerms } = await import('../../space/src/score.ts');
+  const { newState, frameGate, written } = await import('../../space/src/exchange.ts');
+  const { TAG } = await import('../../rosetta/src/agent.ts');
+  assert.ok(!TAG.test('CATCH 22') && TAG.test('CATCH') && TAG.test('22'), 'not one tag, but two');
+  assert.deepEqual(parseTerms('CATCH 22'), { catch: 22 });
+  assert.deepEqual(parseTerms('CATCH 128'), { error: 'CATCH takes one index, 0 to 127: CATCH 22' });
+  const state = newState(), gate = frameGate(state);
+  gate.catchAt = 60;
+  assert.equal(gate.catchAt, 60);
+  gate.frame = 0;
+  assert.deepEqual(gate.last, { ok: true, value: { index: 60, restored: 0 } }, 'CATCH 60: the reset fires at frame 0 (60 XOR 0), with nothing to put back yet');
+  gate.frame = 1;
+  assert.equal(written(state), 1);
+  assert.throws(() => { gate.catchAt = 200; }, TypeError, 'an index outside the 128 bytes is refused');
+});

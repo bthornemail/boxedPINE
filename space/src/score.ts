@@ -17,7 +17,9 @@
 //   - a walk's steps are the automation, one step a beat: the step's point
 //     and its next line rise, the rest fall, and the pan follows the state.
 // A scene is changed by uppercase terms, each an /A-Z0-9/ tag: an agent's
-// tag, then P1-P7 (a point) and L1-L7 (a line), e.g. METATRON P2 L6.
+// tag, then P1-P7 (a point) and L1-L7 (a line), e.g. METATRON P2 L6; or the
+// pair CATCH n, the index the gate's reset fires at (the author: "CATCH 22,
+// with the space between, literally, because then it becomes a command pair").
 import { LINES, linesThrough } from './story.ts';
 import { CHARACTER_TAGS } from './border.ts';
 import { TAG } from '../../rosetta/src/agent.ts';
@@ -55,13 +57,18 @@ export function scrubFrom(events: Event[], t: number): Event[] {
   return [...[...before.values()].map((e) => ({ ...e, at: 0 })), ...events.filter((e) => e.at > t).map((e) => ({ ...e, at: e.at - t }))];
 }
 
-export type Command = { agent: string; point?: number; line?: number } | { error: string };
+export type Command = { agent: string; point?: number; line?: number } | { catch: number } | { error: string };
 
 /** Parse uppercase terms: an agent's tag, then P1-P7 and L1-L7 (each term an /A-Z0-9/ tag). */
 export function parseTerms(text: string): Command {
   const terms = text.trim().split(/\s+/);
   if (!terms.every((t) => TAG.test(t))) return { error: 'every term is an /A-Z0-9/ tag: uppercase letters and digits, 1 to 8' };
   const agent = terms[0]!;
+  // "CATCH 22": with the space, two tags, a command pair: the verb and the index the reset fires at (exchange.ts)
+  if (agent === 'CATCH') {
+    const n = terms.length === 2 && /^\d{1,3}$/.test(terms[1]!) ? Number(terms[1]) : NaN;
+    return n >= 0 && n <= 127 ? { catch: n } : { error: 'CATCH takes one index, 0 to 127: CATCH 22' };
+  }
   if (!Object.values(CHARACTER_TAGS).includes(agent)) return { error: `no agent ${agent}` };
   const cmd: { agent: string; point?: number; line?: number } = { agent };
   for (const t of terms.slice(1)) {

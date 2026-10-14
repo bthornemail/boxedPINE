@@ -18,6 +18,7 @@ import { BRIDGE_PORT } from '../../rosetta/src/agent.ts';
 import { newState, frameGate, written, READ } from './exchange.ts';
 import { CHARACTER_TAGS } from './border.ts';
 import { LINES, choices, linesThrough, newWalker, step as storyStep, type Passage } from './story.ts';
+import { parseTerms } from './score.ts';
 
 type Color = AvatarAgent & { parent: number | null; hueFrom: string | null };
 type Placed = { a: AvatarAgent; x: number; y: number; z: number; state: number; beat: number; next: number; el: SVGGElement; to?: { x: number; y: number } };
@@ -182,6 +183,21 @@ function showStory(last: ReturnType<typeof storyStep> | null) {
   box.append(k);
 }
 pick.addEventListener('change', startWalk);
+
+// ── Uppercase terms: METATRON P2 L6 takes a step; CATCH n moves the reset (score.ts parseTerms) ──
+document.querySelector('#terms-form')!.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const input = document.querySelector<HTMLInputElement>('#terms')!, said = document.querySelector('#terms-said')!;
+  const cmd = parseTerms(input.value);
+  if ('error' in cmd) { said.textContent = cmd.error; return; }
+  if ('catch' in cmd) { gate.catchAt = cmd.catch; said.textContent = `the reset fires at byte ${cmd.catch}, frame ${60 ^ cmd.catch} of each half`; input.value = ''; return; }
+  if (pick.value !== cmd.agent) { pick.value = cmd.agent; startWalk(); }
+  if (cmd.point && cmd.line) {
+    try { showStory(storyStep(walker, passages, { point: cmd.point, line: cmd.line })); said.textContent = `${cmd.agent} through P${cmd.point} to L${cmd.line}`; }
+    catch (err) { said.textContent = (err as Error).message; return; }
+  } else said.textContent = `${cmd.agent}`;
+  input.value = '';
+});
 fetch(new URL('../story/passages.json', location.href)).then((r) => r.json()).then((m: { passages: Passage[] }) => { passages = m.passages; startWalk(); }).catch(() => { document.querySelector('#story-text')!.textContent = 'no story: run node scripts/story-index.mjs'; });
 
 function tick(time: number) {

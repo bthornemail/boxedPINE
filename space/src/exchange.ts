@@ -65,7 +65,7 @@ export const hasseFor = (value: number): HasseFile => (value === WRITE ? 'Hasse_
 
 export const CATCH22 = 22;
 export type Restored = { index: number; restored: number };
-export type FrameGate = { frame: number; readonly last: CatchResult<Exchanged | Restored> | null };
+export type FrameGate = { frame: number; catchAt: number; readonly last: CatchResult<Exchanged | Restored> | null };
 
 /** Put the literal back: every byte that differs from it (state XOR literal not 0), counted. */
 export function restore(state: Uint8Array, literal: Uint8Array): number {
@@ -74,16 +74,17 @@ export function restore(state: Uint8Array, literal: Uint8Array): number {
   return n;
 }
 
-/** The hand-over: gate.frame = n gives the index to Atomics (or, at index 22, restores the literal); gate.last is the Catch's outcome. */
+/** The hand-over: gate.frame = n gives the index to Atomics (or, at the reset's index, 22 unless CATCH n moved it, restores the literal); gate.last is the Catch's outcome. */
 export function frameGate(state: Uint8Array, k: KernelInterface = DEFAULT_INTERFACE, exchange: (s: Uint8Array, f: number) => Exchanged = tick): FrameGate {
   const literal = Uint8Array.from(state);
-  const target = { frame: -1, last: null as CatchResult<Exchanged | Restored> | null };
+  const target = { frame: -1, catchAt: CATCH22, last: null as CatchResult<Exchanged | Restored> | null };
   return new k.Proxy(target, {
     set(t, key, value, receiver) {
-      if (key !== 'frame') return false; // only the frame is handed over; last is the gate's to write
+      if (key === 'catchAt') return Number.isInteger(value) && value >= 0 && value < STATE_BYTES && k.Reflect.set(t, key, value, receiver); // CATCH n
+      if (key !== 'frame') return false; // only the frame and the reset's index are handed over; last is the gate's to write
       const ok = k.Reflect.set(t, key, value, receiver);
       const frame = value as number;
-      t.last = k.catch((): Exchanged | Restored => (indexOf(frame) === CATCH22 ? { index: CATCH22, restored: restore(state, literal) } : exchange(state, frame)));
+      t.last = k.catch((): Exchanged | Restored => (indexOf(frame) === t.catchAt ? { index: t.catchAt, restored: restore(state, literal) } : exchange(state, frame)));
       return ok;
     },
   }) as FrameGate;
