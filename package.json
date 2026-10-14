@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && vite build",
+    "environment:check": "node scripts/build-environment.mjs check",
+    "environment:build": "node scripts/build-environment.mjs build && vite build",
+    "environment:run": "node scripts/build-environment.mjs run",
     "preview": "vite preview",
     "test": "node --test src/testbed/*.test.ts"
   },
