@@ -15,6 +15,8 @@ import { avatarSvg, hueColor, type AvatarAgent } from './avatar.ts';
 import { K } from './gnomon.ts';
 import { sectorOf, speakerSeed, namedSynset, type SynsetAgent } from './commons-agents.ts';
 import { BRIDGE_PORT } from '../../rosetta/src/agent.ts';
+import { newState, tick as exchange, written, READ } from './exchange.ts';
+import { CHARACTER_TAGS } from './border.ts';
 
 type Color = AvatarAgent & { parent: number | null; hueFrom: string | null };
 type Placed = { a: AvatarAgent; x: number; y: number; z: number; state: number; beat: number; next: number; el: SVGGElement; to?: { x: number; y: number } };
@@ -130,7 +132,24 @@ document.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((b) => b.add
   draw();
 }));
 
+// ── A character's state: Atomics.compareExchange(svg, 60 ^ frame, 128, 64) (exchange.ts) ──
+const pick = document.querySelector<HTMLSelectElement>('#character')!;
+for (const tag of Object.values(CHARACTER_TAGS)) pick.add(new Option(tag, tag));
+const bytesSvg = document.querySelector<SVGSVGElement>('#bytes')!;
+const cells = [...Array(64).keys()].map((i) => { const r = document.createElementNS(NS, 'rect'); r.setAttribute('x', String(i % 8)); r.setAttribute('y', String(i >> 3)); r.setAttribute('width', '.92'); r.setAttribute('height', '.92'); bytesSvg.append(r); return r; });
+let state = newState(), frame = 0, shown = '';
+pick.addEventListener('change', () => { state = newState(); frame = 0; });
+function exchangeFrame() {
+  const { index, read, file } = exchange(state, frame++);
+  cells.forEach((c, i) => c.setAttribute('fill', state[i] === READ ? '#e2b66c' : '#5b8de0'));
+  cells[index]!.setAttribute('fill', '#ffffff');
+  const src = new URL(`../characters/${pick.value}/${file}.svg`, location.href).href;
+  if (src !== shown) { document.querySelector<HTMLImageElement>('#hasse')!.src = src; shown = src; }
+  document.querySelector('#exchange')!.textContent = `frame ${frame - 1} · byte ${index} read ${read} · ${file} · ${written(state)}/64 written`;
+}
+
 function tick(time: number) {
+  exchangeFrame();
   for (const p of placed) {
     if (Number.isFinite(p.beat) && time >= p.next) { p.state = K(p.state); p.next = time + p.beat; }
     if (p.to) { p.x += (p.to.x - p.x) * .05; p.y += (p.to.y - p.y) * .05; }

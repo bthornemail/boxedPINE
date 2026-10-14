@@ -184,3 +184,79 @@ test('Bridge messages may carry who (an identity tag) and sid (its chain, 16 bit
   assert.equal(check({ kind: 'say', from: 'author', text: 'hi', who: 'ABC' }), 'who and sid go together');
   assert.deepEqual(check({ kind: 'say', from: 'author', text: 'hi' }), { kind: 'say', from: 'author', text: 'hi' }, 'and both may be absent');
 });
+
+test('The border: a character\'s name and its cues in an SVG\'s margin; XOR 0x20 reads it in lowercase; the image does not change', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { writeBorder, readBorder, clearBorder, cueName, CHARACTER_TAGS } = await import('../../space/src/border.ts');
+  const square = readFileSync(new URL('../../proofs/svg/fano/Fano_full.svg', import.meta.url), 'utf8');
+  for (const [point, name] of Object.entries(CHARACTER_TAGS)) {
+    const cues = [Number(point) % 16, 11, 15];
+    const framed = writeBorder(square, { name, cues });
+    assert.deepEqual(readBorder(framed), { name, cues }, `${name} reads back`);
+    assert.equal(readBorder(framed, 0x20).name, name.toLowerCase(), `${name} XOR 0x20 is ${name.toLowerCase()}`);
+    assert.equal(clearBorder(framed), clearBorder(square), 'the image as drawn is unchanged');
+    assert.deepEqual(readBorder(writeBorder(framed, { name: 'SOLON', cues: [] })), { name: 'SOLON', cues: [] }, 'an old border is replaced');
+  }
+  assert.equal(cueName(11), 'Fano_line_1_3_2');
+  assert.throws(() => writeBorder(square, { name: 'ASABIYYAH', cues: [] }), /tag of 1 to 8/, 'nine letters is not a tag');
+  assert.equal(CHARACTER_TAGS[4], 'ASABIYAH', 'the double Y closed to one: eight letters');
+  assert.equal(CHARACTER_TAGS[4], 'ASABIYAH', 'the double Y closed to one: eight letters');
+  assert.throws(() => writeBorder(square, { name: 'METATRON', cues: [16] }), /each 0 to 15/);
+});
+
+test('Restoring an agent\'s 16 icons from the Hasse diagram: two icons leave 4 to 8 labellings; three points off one line leave 1', () => {
+  // the Fano plane's symmetries: the invertible 3 x 3 bit matrices acting on the points 1..7 (lines {a, b, a ^ b})
+  const autos: ((v: number) => number)[] = [];
+  for (let a = 1; a < 8; a++) for (let b = 1; b < 8; b++) for (let c = 1; c < 8; c++) {
+    const g = (v: number) => (v & 1 ? a : 0) ^ (v & 2 ? b : 0) ^ (v & 4 ? c : 0);
+    if (new Set([1, 2, 3, 4, 5, 6, 7].map(g)).size === 7 && ![1, 2, 3, 4, 5, 6, 7].map(g).includes(0)) autos.push(g);
+  }
+  assert.equal(autos.length, 168);
+  const fixes = (pins: number[]) => autos.filter((g) => pins.every((p) => g(p) === p)).length;
+  assert.equal(fixes([1, 2]), 4, 'two point icons: 4 labellings left');
+  assert.equal(fixes([1, 2, 3]), 4, 'three points on one line (1, 2, 3): still 4');
+  assert.equal(fixes([1, 2, 4]), 1, 'three points off one line, a basis: exactly 1');
+});
+
+test('Each character has its own set of 16: the 14 Fano planes and two Hasse diagrams, XOR (read) and XNOR (write), each bordered with the tag and its place', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { readBorder, clearBorder, CHARACTER_TAGS } = await import('../../space/src/border.ts');
+  const { INDEX16 } = await import('../../rosetta/src/agent.ts');
+  const { characters } = JSON.parse(readFileSync(new URL('../../public/characters/trees.json', import.meta.url), 'utf8')) as { characters: { tag: string; set: string[] }[] };
+  assert.deepEqual(characters.map((c) => c.tag), Object.values(CHARACTER_TAGS));
+  const pub = (p: string) => readFileSync(new URL(`../../public/${p}`, import.meta.url), 'utf8');
+  for (const c of characters) {
+    assert.equal(c.set.length, 16);
+    assert.ok(c.set[0]!.endsWith('/Hasse_XOR.svg') && c.set[15]!.endsWith('/Hasse_XNOR.svg'), 'XOR in place 0, XNOR in place 15');
+    c.set.forEach((path, i) => assert.deepEqual(readBorder(pub(path)), { name: c.tag, cues: [i] }, `${path}: whose, and which of the 16`));
+    for (let i = 1; i < 15; i++) assert.equal(clearBorder(pub(c.set[i]!)), clearBorder(readFileSync(new URL(`../../proofs/svg/fano/${INDEX16[i]}.svg`, import.meta.url), 'utf8')), `${c.set[i]}: the plane as drawn`);
+    const [xor, xnor] = [pub(c.set[0]!), pub(c.set[15]!)];
+    assert.ok(xor.includes('class="ring" cx="490"') && !xor.includes('class="ring2"'), 'the XOR diagram marks XOR');
+    assert.ok(xnor.includes('class="ring2" cx="630"') && !xnor.includes('class="ring" cx="490"'), 'the XNOR diagram marks XNOR');
+    for (const d of [xor, xnor]) {
+      assert.ok(!d.includes('../fano/') && !/href="\.\/Fano_(empty|full)/.test(d) && !d.includes('Hasse_'), 'every node is one of the 16 or drawn inline; nothing points at itself');
+      assert.ok(!/\s(sodipodi|inkscape):/.test(d), 'no editor namespaces left inline');
+    }
+  }
+});
+
+test('Atomics.compareExchange(svg, 60 ^ frame, 128, 64): in 64 frames every byte reads XOR and writes XNOR; the next 64, the other way', async () => {
+  const { newState, tick, indexOf, written, hasseFor, EXCHANGES, READ, WRITE } = await import('../../space/src/exchange.ts');
+  assert.deepEqual(EXCHANGES, { Hasse_XOR: [128, 64], Hasse_XNOR: [64, 128] }, 'XOR: 128 then 64; the other: 64 then 128');
+  assert.equal(indexOf(0), 60, 'frame 0 works on byte 60');
+  assert.equal(indexOf(60), 0, 'frame 60 on byte 0');
+  assert.equal(new Set([...Array(64).keys()].map(indexOf)).size, 64, '60 XOR f is one-to-one: 64 frames, 64 bytes, each once');
+  const state = newState();
+  assert.equal(state.length, 64);
+  for (let f = 0; f < 64; f++) assert.deepEqual(tick(state, f), { index: 60 ^ f, read: READ, file: 'Hasse_XOR' });
+  assert.equal(written(state), 64, 'after 64 frames every byte is written');
+  for (let f = 64; f < 128; f++) assert.deepEqual(tick(state, f), { index: 60 ^ (f & 63), read: WRITE, file: 'Hasse_XNOR' });
+  assert.equal(written(state), 0, 'and after 128, every byte is read again');
+  assert.equal(READ ^ WRITE, 0xc0, 'the complement: the two bits that trade places');
+  // the compare: a byte something else wrote first is read and left
+  const other = newState();
+  Atomics.store(other, 60, 7);
+  assert.deepEqual(tick(other, 0), { index: 60, read: 7, file: 'Hasse_XOR' });
+  assert.equal(Atomics.load(other, 60), 7, 'not finding 128, it writes nothing');
+  assert.equal(hasseFor(64), 'Hasse_XNOR');
+});

@@ -1,0 +1,181 @@
+{
+ "source": "proofs/svg/fano (the 14 planes) + proofs/svg/hasse/pair-6.svg (XOR read, XNOR write), with each character's border (space/src/border.ts)",
+ "characters": [
+  {
+   "point": 1,
+   "tag": "METATRON",
+   "set": [
+    "characters/METATRON/Hasse_XOR.svg",
+    "characters/METATRON/Fano_point_1.svg",
+    "characters/METATRON/Fano_point_2.svg",
+    "characters/METATRON/Fano_point_3.svg",
+    "characters/METATRON/Fano_point_4.svg",
+    "characters/METATRON/Fano_point_5.svg",
+    "characters/METATRON/Fano_point_6.svg",
+    "characters/METATRON/Fano_point_7.svg",
+    "characters/METATRON/Fano_line_3_5_6.svg",
+    "characters/METATRON/Fano_line_1_7_6.svg",
+    "characters/METATRON/Fano_line_2_7_5.svg",
+    "characters/METATRON/Fano_line_1_3_2.svg",
+    "characters/METATRON/Fano_line_4_7_3.svg",
+    "characters/METATRON/Fano_line_1_5_4.svg",
+    "characters/METATRON/Fano_line_2_6_4.svg",
+    "characters/METATRON/Hasse_XNOR.svg"
+   ]
+  },
+  {
+   "point": 2,
+   "tag": "SOLOMON",
+   "set": [
+    "characters/SOLOMON/Hasse_XOR.svg",
+    "characters/SOLOMON/Fano_point_1.svg",
+    "characters/SOLOMON/Fano_point_2.svg",
+    "characters/SOLOMON/Fano_point_3.svg",
+    "characters/SOLOMON/Fano_point_4.svg",
+    "characters/SOLOMON/Fano_point_5.svg",
+    "characters/SOLOMON/Fano_point_6.svg",
+    "characters/SOLOMON/Fano_point_7.svg",
+    "characters/SOLOMON/Fano_line_3_5_6.svg",
+    "characters/SOLOMON/Fano_line_1_7_6.svg",
+    "characters/SOLOMON/Fano_line_2_7_5.svg",
+    "characters/SOLOMON/Fano_line_1_3_2.svg",
+    "characters/SOLOMON/Fano_line_4_7_3.svg",
+    "characters/SOLOMON/Fano_line_1_5_4.svg",
+    "characters/SOLOMON/Fano_line_2_6_4.svg",
+    "characters/SOLOMON/Hasse_XNOR.svg"
+   ]
+  },
+  {
+   "point": 3,
+   "tag": "SOLON",
+   "set": [
+    "characters/SOLON/Hasse_XOR.svg",
+    "characters/SOLON/Fano_point_1.svg",
+    "characters/SOLON/Fano_point_2.svg",
+    "characters/SOLON/Fano_point_3.svg",
+    "characters/SOLON/Fano_point_4.svg",
+    "characters/SOLON/Fano_point_5.svg",
+    "characters/SOLON/Fano_point_6.svg",
+    "characters/SOLON/Fano_point_7.svg",
+    "characters/SOLON/Fano_line_3_5_6.svg",
+    "characters/SOLON/Fano_line_1_7_6.svg",
+    "characters/SOLON/Fano_line_2_7_5.svg",
+    "characters/SOLON/Fano_line_1_3_2.svg",
+    "characters/SOLON/Fano_line_4_7_3.svg",
+    "characters/SOLON/Fano_line_1_5_4.svg",
+    "characters/SOLON/Fano_line_2_6_4.svg",
+    "characters/SOLON/Hasse_XNOR.svg"
+   ]
+  },
+  {
+   "point": 4,
+   "tag": "ASABIYAH",
+   "set": [
+    "characters/ASABIYAH/Hasse_XOR.svg",
+    "characters/ASABIYAH/Fano_point_1.svg",
+    "characters/ASABIYAH/Fano_point_2.svg",
+    "characters/ASABIYAH/Fano_point_3.svg",
+    "characters/ASABIYAH/Fano_point_4.svg",
+    "characters/ASABIYAH/Fano_point_5.svg",
+    "characters/ASABIYAH/Fano_point_6.svg",
+    "characters/ASABIYAH/Fano_point_7.svg",
+    "characters/ASABIYAH/Fano_line_3_5_6.svg",
+    "characters/ASABIYAH/Fano_line_1_7_6.svg",
+    "characters/ASABIYAH/Fano_line_2_7_5.svg",
+    "characters/ASABIYAH/Fano_line_1_3_2.svg",
+    "characters/ASABIYAH/Fano_line_4_7_3.svg",
+    "characters/ASABIYAH/Fano_line_1_5_4.svg",
+    "characters/ASABIYAH/Fano_line_2_6_4.svg",
+    "characters/ASABIYAH/Hasse_XNOR.svg"
+   ]
+  },
+  {
+   "point": 5,
+   "tag": "ENOCH",
+   "set": [
+    "characters/ENOCH/Hasse_XOR.svg",
+    "characters/ENOCH/Fano_point_1.svg",
+    "characters/ENOCH/Fano_point_2.svg",
+    "characters/ENOCH/Fano_point_3.svg",
+    "characters/ENOCH/Fano_point_4.svg",
+    "characters/ENOCH/Fano_point_5.svg",
+    "characters/ENOCH/Fano_point_6.svg",
+    "characters/ENOCH/Fano_point_7.svg",
+    "characters/ENOCH/Fano_line_3_5_6.svg",
+    "characters/ENOCH/Fano_line_1_7_6.svg",
+    "characters/ENOCH/Fano_line_2_7_5.svg",
+    "characters/ENOCH/Fano_line_1_3_2.svg",
+    "characters/ENOCH/Fano_line_4_7_3.svg",
+    "characters/ENOCH/Fano_line_1_5_4.svg",
+    "characters/ENOCH/Fano_line_2_6_4.svg",
+    "characters/ENOCH/Hasse_XNOR.svg"
+   ]
+  },
+  {
+   "point": 6,
+   "tag": "SPEAKER",
+   "set": [
+    "characters/SPEAKER/Hasse_XOR.svg",
+    "characters/SPEAKER/Fano_point_1.svg",
+    "characters/SPEAKER/Fano_point_2.svg",
+    "characters/SPEAKER/Fano_point_3.svg",
+    "characters/SPEAKER/Fano_point_4.svg",
+    "characters/SPEAKER/Fano_point_5.svg",
+    "characters/SPEAKER/Fano_point_6.svg",
+    "characters/SPEAKER/Fano_point_7.svg",
+    "characters/SPEAKER/Fano_line_3_5_6.svg",
+    "characters/SPEAKER/Fano_line_1_7_6.svg",
+    "characters/SPEAKER/Fano_line_2_7_5.svg",
+    "characters/SPEAKER/Fano_line_1_3_2.svg",
+    "characters/SPEAKER/Fano_line_4_7_3.svg",
+    "characters/SPEAKER/Fano_line_1_5_4.svg",
+    "characters/SPEAKER/Fano_line_2_6_4.svg",
+    "characters/SPEAKER/Hasse_XNOR.svg"
+   ]
+  },
+  {
+   "point": 7,
+   "tag": "GENESIS",
+   "set": [
+    "characters/GENESIS/Hasse_XOR.svg",
+    "characters/GENESIS/Fano_point_1.svg",
+    "characters/GENESIS/Fano_point_2.svg",
+    "characters/GENESIS/Fano_point_3.svg",
+    "characters/GENESIS/Fano_point_4.svg",
+    "characters/GENESIS/Fano_point_5.svg",
+    "characters/GENESIS/Fano_point_6.svg",
+    "characters/GENESIS/Fano_point_7.svg",
+    "characters/GENESIS/Fano_line_3_5_6.svg",
+    "characters/GENESIS/Fano_line_1_7_6.svg",
+    "characters/GENESIS/Fano_line_2_7_5.svg",
+    "characters/GENESIS/Fano_line_1_3_2.svg",
+    "characters/GENESIS/Fano_line_4_7_3.svg",
+    "characters/GENESIS/Fano_line_1_5_4.svg",
+    "characters/GENESIS/Fano_line_2_6_4.svg",
+    "characters/GENESIS/Hasse_XNOR.svg"
+   ]
+  },
+  {
+   "point": 8,
+   "tag": "OBSERVER",
+   "set": [
+    "characters/OBSERVER/Hasse_XOR.svg",
+    "characters/OBSERVER/Fano_point_1.svg",
+    "characters/OBSERVER/Fano_point_2.svg",
+    "characters/OBSERVER/Fano_point_3.svg",
+    "characters/OBSERVER/Fano_point_4.svg",
+    "characters/OBSERVER/Fano_point_5.svg",
+    "characters/OBSERVER/Fano_point_6.svg",
+    "characters/OBSERVER/Fano_point_7.svg",
+    "characters/OBSERVER/Fano_line_3_5_6.svg",
+    "characters/OBSERVER/Fano_line_1_7_6.svg",
+    "characters/OBSERVER/Fano_line_2_7_5.svg",
+    "characters/OBSERVER/Fano_line_1_3_2.svg",
+    "characters/OBSERVER/Fano_line_4_7_3.svg",
+    "characters/OBSERVER/Fano_line_1_5_4.svg",
+    "characters/OBSERVER/Fano_line_2_6_4.svg",
+    "characters/OBSERVER/Hasse_XNOR.svg"
+   ]
+  }
+ ]
+}
