@@ -19,7 +19,7 @@
 // Run by hand to try the page without the agent: node repl/src/agent-bridge.ts
 import { createServer, type ServerResponse } from 'node:http';
 import { createInterface } from 'node:readline';
-import { AGENT_TOOLS, BRIDGE_PORT, TAG, check, line, idOf, tagRoute, type Message, type Posted } from '../../rosetta/src/agent.ts';
+import { AGENT_TOOLS, BRIDGE_PORT, TAG, check, line, idOf, tagRoute, tagParity, portParity, type Message, type Posted } from '../../rosetta/src/agent.ts';
 
 const port = Number(process.env.AGENT_BRIDGE_PORT ?? BRIDGE_PORT);
 const agent = process.env.AGENT_NAME ?? 'claude-code';
@@ -93,6 +93,12 @@ const http = createServer((req, res) => {
   }
   // an agent by its tag: //metatron.localhost:8743/P2/L6 or /METATRON/P2/L6 (rosetta tagRoute)
   const route = tagRoute(req.headers.host, new URL(req.url ?? '/', 'http://bridge').pathname);
+  // an agent named in the Host comes in on the port whose parity is its tag's (rosetta portFor)
+  const at = req.socket.localPort ?? port;
+  if (route?.via === 'host' && portParity(at) !== tagParity(route.agent)) {
+    res.writeHead(421, { 'content-type': 'application/json' }).end(JSON.stringify({ refused: 'Misdirected Request', agent: route.agent, port: at, portParity: portParity(at), tagParity: tagParity(route.agent), use: (at & ~0xf) | (tagParity(route.agent) ^ portParity(at & ~0xf)) }));
+    return;
+  }
   if (route && req.method === 'GET') {
     const said = posted.filter((p) => p.who === route.agent || p.by === route.agent.toLowerCase());
     res.writeHead(200, { 'content-type': 'application/json' }).end(JSON.stringify({ ...route, said }));
@@ -116,7 +122,16 @@ http.on('error', (e) => {
     if (stay) setTimeout(() => http.listen(port, '127.0.0.1'), 5000);
   } else log(`the page's side is not up: ${(e as Error).message}`);
 });
-http.on('listening', () => { relay = false; log(`page side on http://127.0.0.1:${port}`); });
+// and the other 15 ports of its block of 16, so each parity has its port (rosetta portFor)
+const handler = http.listeners('request')[0] as Parameters<typeof createServer>[1];
+let block = false;
+http.on('listening', () => {
+  relay = false;
+  log(`page side on http://127.0.0.1:${port}`);
+  if (block) return;
+  block = true;
+  for (let p = port & ~0xf; p <= (port | 0xf); p++) if (p !== port) createServer(handler).on('error', () => { /* held elsewhere: that parity is not served here */ }).listen(p, '127.0.0.1');
+});
 http.listen(port, '127.0.0.1');
 
 // ---- the agent's side: MCP over stdio ----

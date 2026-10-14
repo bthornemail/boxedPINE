@@ -49,6 +49,15 @@ export function tagRoute(host: string | undefined, pathname: string): { agent: s
   return { agent, terms, via: fromHost ? 'host' : 'path', text: [agent, ...terms].join(' ') };
 }
 
+/** The nibble parity: every nibble of the bytes XORed together, 4 bits (the identity's check, space/src/identity.ts). */
+export const nibbleParity = (bytes: number[]) => bytes.reduce((x, b) => x ^ (b >> 4) ^ (b & 15), 0);
+/** A tag's parity: the nibble parity of its ASCII letters. */
+export const tagParity = (tag: string) => nibbleParity([...tag].map((c) => c.charCodeAt(0)));
+/** A port's parity: its four nibbles XORed (the author: "the port can be the 4-bit parity header"). */
+export const portParity = (port: number) => nibbleParity([port >> 8, port & 0xff]);
+/** The port of a block of 16 (base & ~0xF up to +15) whose parity is the tag's: the last nibble alone sets it. */
+export const portFor = (tag: string, base: number) => (base & ~0xf) | (tagParity(tag) ^ portParity(base & ~0xf));
+
 /** Check a message arriving from outside; return it, or the reason it is refused. */
 export const AGENT_NAME = /^[a-z0-9-]{1,32}$/;
 export function check(x: unknown): Message | string {

@@ -447,8 +447,41 @@ test('The bridge answers an agent by its tag, and a POST says its terms', { time
     assert.equal(said.text, 'METATRON P2 L6');
     const { request } = await import('node:http');
     const viaHost = await new Promise<{ agent: string; via: string }>((ok, fail) => request({ host: '127.0.0.1', port, path: '/P2/L6', headers: { host: `metatron.localhost:${port}` } }, (res) => { let b = ''; res.on('data', (d) => (b += d)).on('end', () => ok(JSON.parse(b))); }).on('error', fail).end());
-    assert.equal(viaHost.agent, 'METATRON');
-    assert.equal(viaHost.via, 'host');
+    assert.ok(viaHost.agent === 'METATRON' || (viaHost as { refused?: string }).refused === 'Misdirected Request', 'on the bridge\'s own port, METATRON by Host is answered only if the parities match');
     assert.equal((await fetch(`http://127.0.0.1:${port}/nothing`)).status, 404);
+    // the port as the 4-bit parity header: METATRON by Host on its own port, and refused on another
+    const { portFor, portParity, tagParity } = await import('../../rosetta/src/agent.ts');
+    const own = portFor('METATRON', port), wrong = (port & ~0xf) | ((own & 0xf) ^ 1);
+    assert.equal(portParity(own), tagParity('METATRON'));
+    const viaPort = (p: number) => new Promise<{ status: number; body: { agent?: string; refused?: string; use?: number } }>((ok, fail) => request({ host: '127.0.0.1', port: p, path: '/P2/L6', headers: { host: `metatron.localhost:${p}` } }, (res) => { let b = ''; res.on('data', (d) => (b += d)).on('end', () => ok({ status: res.statusCode!, body: JSON.parse(b) })); }).on('error', fail).end());
+    const right = await viaPort(own);
+    assert.equal(right.status, 200, `METATRON on ${own}, parity ${tagParity('METATRON')}`);
+    const miss = await viaPort(wrong);
+    assert.equal(miss.status, 421, 'on a port of another parity: Misdirected Request');
+    assert.equal(miss.body.use, own, 'and the refusal names the right port');
   } finally { bridge.kill(); }
+});
+
+test('The port as the 4-bit parity: a block of 16 ports holds each parity once; the hub\'s 8743 is parity 5; METATRON 8745, SOLOMON 8740', async () => {
+  const { portParity, tagParity, portFor, nibbleParity } = await import('../../rosetta/src/agent.ts');
+  assert.equal(8743, 0x2227);
+  assert.equal(portParity(8743), 2 ^ 2 ^ 2 ^ 7, 'the hub: 5');
+  assert.deepEqual([...Array(16).keys()].map((i) => portParity(0x2220 + i)).sort((a, b) => a - b), [...Array(16).keys()], 'in 0x2220-0x222F every parity once');
+  assert.deepEqual(['METATRON', 'SOLOMON', 'SOLON', 'ASABIYAH', 'ENOCH', 'SPEAKER', 'GENESIS', 'OBSERVER', 'CATCH'].map(tagParity), [11, 6, 4, 8, 11, 14, 4, 8, 8]);
+  assert.equal(portFor('METATRON', 8743), 8745);
+  assert.equal(portFor('SOLOMON', 8743), 8740);
+  assert.equal(nibbleParity([0x4d, 0x45]), 4 ^ 0xd ^ 4 ^ 5, 'M E: the nibbles XORed');
+});
+
+test('The colour agents\' natural language: Unicode glyphs inherited like hues, and homographs where the letters name a letter', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { colors } = JSON.parse(readFileSync(new URL('../../public/polytron/colors.json', import.meta.url), 'utf8')) as { colors: { word: string; glyph?: string; glyphName?: string; glyphFrom?: string; homographs?: string[] }[] };
+  const by = (w: string) => colors.find((c) => c.word === w)!;
+  assert.equal(by('red').glyph, '\u{1F7E5}');
+  assert.equal(by('red').glyphName, 'LARGE RED SQUARE');
+  assert.deepEqual([by('scarlet').glyph, by('scarlet').glyphFrom], ['\u{1F7E5}', 'red'], 'scarlet takes red\'s');
+  assert.equal(by('tan').glyphFrom, 'brown');
+  assert.ok(by('tan').homographs!.includes('GEORGIAN CAPITAL LETTER TAN'), 'the letters TAN also name a Georgian letter');
+  assert.ok(by('black').glyphName === 'BLACK LARGE SQUARE');
+  assert.equal(by('entity').glyph, undefined, 'the route above color has none');
 });

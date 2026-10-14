@@ -1,5 +1,5 @@
 {
- "source": "WordNet 3.0 (Prolog): color, the synsets below it, its route to entity (proofs I-199); hues from CSS Color 4 names",
+ "source": "WordNet 3.0 (Prolog): color, the synsets below it, its route to entity (proofs I-199); hues from CSS Color 4 names; glyphs from Unicode names",
  "colors": [
   {
    "id": 100001740,
@@ -167,7 +167,13 @@
    "word": "red",
    "depth": 7,
    "hue": 0,
-   "hueFrom": "red"
+   "hueFrom": "red",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red",
+   "homographs": [
+    "HANGUL SYLLABLE RED"
+   ]
   },
   {
    "id": 104965179,
@@ -175,7 +181,10 @@
    "word": "orange",
    "depth": 7,
    "hue": 39,
-   "hueFrom": "orange"
+   "hueFrom": "orange",
+   "glyph": "🟧",
+   "glyphName": "LARGE ORANGE SQUARE",
+   "glyphFrom": "orange"
   },
   {
    "id": 104965371,
@@ -191,7 +200,10 @@
    "word": "yellow",
    "depth": 7,
    "hue": 60,
-   "hueFrom": "yellow"
+   "hueFrom": "yellow",
+   "glyph": "🟨",
+   "glyphName": "LARGE YELLOW SQUARE",
+   "glyphFrom": "yellow"
   },
   {
    "id": 104966017,
@@ -207,7 +219,10 @@
    "word": "green",
    "depth": 7,
    "hue": 120,
-   "hueFrom": "green"
+   "hueFrom": "green",
+   "glyph": "🟩",
+   "glyphName": "LARGE GREEN SQUARE",
+   "glyphFrom": "green"
   },
   {
    "id": 104968895,
@@ -215,7 +230,10 @@
    "word": "blue",
    "depth": 7,
    "hue": 240,
-   "hueFrom": "blue"
+   "hueFrom": "blue",
+   "glyph": "🟦",
+   "glyphName": "LARGE BLUE SQUARE",
+   "glyphFrom": "blue"
   },
   {
    "id": 104970059,
@@ -223,7 +241,10 @@
    "word": "purple",
    "depth": 7,
    "hue": 300,
-   "hueFrom": "purple"
+   "hueFrom": "purple",
+   "glyph": "🟪",
+   "glyphName": "LARGE PURPLE SQUARE",
+   "glyphFrom": "purple"
   },
   {
    "id": 104970916,
@@ -239,7 +260,10 @@
    "word": "brown",
    "depth": 7,
    "hue": 0,
-   "hueFrom": "brown"
+   "hueFrom": "brown",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   },
   {
    "id": 104974340,
@@ -247,7 +271,10 @@
    "word": "olive",
    "depth": 7,
    "hue": 60,
-   "hueFrom": "olive"
+   "hueFrom": "olive",
+   "homographs": [
+    "LINEAR B IDEOGRAM B122 OLIVE"
+   ]
   },
   {
    "id": 104974575,
@@ -271,7 +298,10 @@
    "word": "black",
    "depth": 7,
    "hue": null,
-   "hueFrom": "black"
+   "hueFrom": "black",
+   "glyph": "⬛",
+   "glyphName": "BLACK LARGE SQUARE",
+   "glyphFrom": "black"
   },
   {
    "id": 104960729,
@@ -279,7 +309,10 @@
    "word": "white",
    "depth": 7,
    "hue": null,
-   "hueFrom": "white"
+   "hueFrom": "white",
+   "glyph": "⬜",
+   "glyphName": "WHITE LARGE SQUARE",
+   "glyphFrom": "white"
   },
   {
    "id": 104961691,
@@ -391,7 +424,10 @@
    "word": "sanguine",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "red"
+   "hueFrom": "red",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red"
   },
   {
    "id": 104963201,
@@ -399,7 +435,10 @@
    "word": "chrome red",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "red"
+   "hueFrom": "red",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red"
   },
   {
    "id": 104963307,
@@ -407,7 +446,10 @@
    "word": "Turkey red",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "red"
+   "hueFrom": "red",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red"
   },
   {
    "id": 104963449,
@@ -415,7 +457,10 @@
    "word": "cardinal",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "red"
+   "hueFrom": "red",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red"
   },
   {
    "id": 104963588,
@@ -423,7 +468,10 @@
    "word": "crimson",
    "depth": 8,
    "hue": 348,
-   "hueFrom": "crimson"
+   "hueFrom": "crimson",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red"
   },
   {
    "id": 104963740,
@@ -431,7 +479,10 @@
    "word": "dark red",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "dark red"
+   "hueFrom": "dark red",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red"
   },
   {
    "id": 104964287,
@@ -439,7 +490,10 @@
    "word": "purplish red",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "red"
+   "hueFrom": "red",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red"
   },
   {
    "id": 104964443,
@@ -447,7 +501,10 @@
    "word": "cerise",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "red"
+   "hueFrom": "red",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red"
   },
   {
    "id": 104964977,
@@ -455,7 +512,10 @@
    "word": "scarlet",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "red"
+   "hueFrom": "red",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red"
   },
   {
    "id": 104965451,
@@ -463,7 +523,10 @@
    "word": "reddish orange",
    "depth": 8,
    "hue": 39,
-   "hueFrom": "orange"
+   "hueFrom": "orange",
+   "glyph": "🟧",
+   "glyphName": "LARGE ORANGE SQUARE",
+   "glyphFrom": "orange"
   },
   {
    "id": 104966114,
@@ -471,7 +534,10 @@
    "word": "canary yellow",
    "depth": 8,
    "hue": 60,
-   "hueFrom": "yellow"
+   "hueFrom": "yellow",
+   "glyph": "🟨",
+   "glyphName": "LARGE YELLOW SQUARE",
+   "glyphFrom": "yellow"
   },
   {
    "id": 104966240,
@@ -479,7 +545,10 @@
    "word": "amber",
    "depth": 8,
    "hue": 60,
-   "hueFrom": "yellow"
+   "hueFrom": "yellow",
+   "glyph": "🟨",
+   "glyphName": "LARGE YELLOW SQUARE",
+   "glyphFrom": "yellow"
   },
   {
    "id": 104966428,
@@ -487,7 +556,10 @@
    "word": "brownish yellow",
    "depth": 8,
    "hue": 60,
-   "hueFrom": "yellow"
+   "hueFrom": "yellow",
+   "glyph": "🟨",
+   "glyphName": "LARGE YELLOW SQUARE",
+   "glyphFrom": "yellow"
   },
   {
    "id": 104966543,
@@ -495,7 +567,10 @@
    "word": "gamboge",
    "depth": 8,
    "hue": 60,
-   "hueFrom": "yellow"
+   "hueFrom": "yellow",
+   "glyph": "🟨",
+   "glyphName": "LARGE YELLOW SQUARE",
+   "glyphFrom": "yellow"
   },
   {
    "id": 104966649,
@@ -503,7 +578,10 @@
    "word": "old gold",
    "depth": 8,
    "hue": 60,
-   "hueFrom": "yellow"
+   "hueFrom": "yellow",
+   "glyph": "🟨",
+   "glyphName": "LARGE YELLOW SQUARE",
+   "glyphFrom": "yellow"
   },
   {
    "id": 104966717,
@@ -511,7 +589,10 @@
    "word": "orange yellow",
    "depth": 8,
    "hue": 60,
-   "hueFrom": "yellow"
+   "hueFrom": "yellow",
+   "glyph": "🟨",
+   "glyphName": "LARGE YELLOW SQUARE",
+   "glyphFrom": "yellow"
   },
   {
    "id": 104966941,
@@ -519,7 +600,10 @@
    "word": "pale yellow",
    "depth": 8,
    "hue": 60,
-   "hueFrom": "yellow"
+   "hueFrom": "yellow",
+   "glyph": "🟨",
+   "glyphName": "LARGE YELLOW SQUARE",
+   "glyphFrom": "yellow"
   },
   {
    "id": 104967094,
@@ -527,7 +611,10 @@
    "word": "greenish yellow",
    "depth": 8,
    "hue": 60,
-   "hueFrom": "yellow"
+   "hueFrom": "yellow",
+   "glyph": "🟨",
+   "glyphName": "LARGE YELLOW SQUARE",
+   "glyphFrom": "yellow"
   },
   {
    "id": 104967561,
@@ -535,7 +622,10 @@
    "word": "greenishness",
    "depth": 8,
    "hue": 120,
-   "hueFrom": "green"
+   "hueFrom": "green",
+   "glyph": "🟩",
+   "glyphName": "LARGE GREEN SQUARE",
+   "glyphFrom": "green"
   },
   {
    "id": 104967674,
@@ -543,7 +633,10 @@
    "word": "sea green",
    "depth": 8,
    "hue": 146,
-   "hueFrom": "sea green"
+   "hueFrom": "sea green",
+   "glyph": "🟩",
+   "glyphName": "LARGE GREEN SQUARE",
+   "glyphFrom": "green"
   },
   {
    "id": 104967801,
@@ -551,7 +644,10 @@
    "word": "sage green",
    "depth": 8,
    "hue": 120,
-   "hueFrom": "green"
+   "hueFrom": "green",
+   "glyph": "🟩",
+   "glyphName": "LARGE GREEN SQUARE",
+   "glyphFrom": "green"
   },
   {
    "id": 104967882,
@@ -559,7 +655,10 @@
    "word": "bottle green",
    "depth": 8,
    "hue": 120,
-   "hueFrom": "green"
+   "hueFrom": "green",
+   "glyph": "🟩",
+   "glyphName": "LARGE GREEN SQUARE",
+   "glyphFrom": "green"
   },
   {
    "id": 104967974,
@@ -567,7 +666,10 @@
    "word": "chrome green",
    "depth": 8,
    "hue": 120,
-   "hueFrom": "green"
+   "hueFrom": "green",
+   "glyph": "🟩",
+   "glyphName": "LARGE GREEN SQUARE",
+   "glyphFrom": "green"
   },
   {
    "id": 104968056,
@@ -575,7 +677,10 @@
    "word": "emerald",
    "depth": 8,
    "hue": 120,
-   "hueFrom": "green"
+   "hueFrom": "green",
+   "glyph": "🟩",
+   "glyphName": "LARGE GREEN SQUARE",
+   "glyphFrom": "green"
   },
   {
    "id": 104968139,
@@ -583,7 +688,10 @@
    "word": "olive green",
    "depth": 8,
    "hue": 120,
-   "hueFrom": "green"
+   "hueFrom": "green",
+   "glyph": "🟩",
+   "glyphName": "LARGE GREEN SQUARE",
+   "glyphFrom": "green"
   },
   {
    "id": 104968257,
@@ -591,7 +699,10 @@
    "word": "yellow green",
    "depth": 8,
    "hue": 80,
-   "hueFrom": "yellow green"
+   "hueFrom": "yellow green",
+   "glyph": "🟩",
+   "glyphName": "LARGE GREEN SQUARE",
+   "glyphFrom": "green"
   },
   {
    "id": 104968426,
@@ -599,7 +710,10 @@
    "word": "bluish green",
    "depth": 8,
    "hue": 120,
-   "hueFrom": "green"
+   "hueFrom": "green",
+   "glyph": "🟩",
+   "glyphName": "LARGE GREEN SQUARE",
+   "glyphFrom": "green"
   },
   {
    "id": 104968749,
@@ -607,7 +721,10 @@
    "word": "jade green",
    "depth": 8,
    "hue": 120,
-   "hueFrom": "green"
+   "hueFrom": "green",
+   "glyph": "🟩",
+   "glyphName": "LARGE GREEN SQUARE",
+   "glyphFrom": "green"
   },
   {
    "id": 104969242,
@@ -615,7 +732,10 @@
    "word": "azure",
    "depth": 8,
    "hue": 180,
-   "hueFrom": "azure"
+   "hueFrom": "azure",
+   "glyph": "🟦",
+   "glyphName": "LARGE BLUE SQUARE",
+   "glyphFrom": "blue"
   },
   {
    "id": 104969431,
@@ -623,7 +743,10 @@
    "word": "powder blue",
    "depth": 8,
    "hue": 187,
-   "hueFrom": "powder blue"
+   "hueFrom": "powder blue",
+   "glyph": "🟦",
+   "glyphName": "LARGE BLUE SQUARE",
+   "glyphFrom": "blue"
   },
   {
    "id": 104969540,
@@ -631,7 +754,10 @@
    "word": "steel blue",
    "depth": 8,
    "hue": 207,
-   "hueFrom": "steel blue"
+   "hueFrom": "steel blue",
+   "glyph": "🟦",
+   "glyphName": "LARGE BLUE SQUARE",
+   "glyphFrom": "blue"
   },
   {
    "id": 104969617,
@@ -639,7 +765,10 @@
    "word": "Prussian blue",
    "depth": 8,
    "hue": 240,
-   "hueFrom": "blue"
+   "hueFrom": "blue",
+   "glyph": "🟦",
+   "glyphName": "LARGE BLUE SQUARE",
+   "glyphFrom": "blue"
   },
   {
    "id": 104969703,
@@ -647,7 +776,10 @@
    "word": "dark blue",
    "depth": 8,
    "hue": 240,
-   "hueFrom": "dark blue"
+   "hueFrom": "dark blue",
+   "glyph": "🟦",
+   "glyphName": "LARGE BLUE SQUARE",
+   "glyphFrom": "blue"
   },
   {
    "id": 104969798,
@@ -655,7 +787,10 @@
    "word": "greenish blue",
    "depth": 8,
    "hue": 240,
-   "hueFrom": "blue"
+   "hueFrom": "blue",
+   "glyph": "🟦",
+   "glyphName": "LARGE BLUE SQUARE",
+   "glyphFrom": "blue"
   },
   {
    "id": 104969952,
@@ -663,7 +798,10 @@
    "word": "purplish blue",
    "depth": 8,
    "hue": 240,
-   "hueFrom": "blue"
+   "hueFrom": "blue",
+   "glyph": "🟦",
+   "glyphName": "LARGE BLUE SQUARE",
+   "glyphFrom": "blue"
   },
   {
    "id": 104974859,
@@ -671,7 +809,10 @@
    "word": "ultramarine",
    "depth": 8,
    "hue": 240,
-   "hueFrom": "blue"
+   "hueFrom": "blue",
+   "glyph": "🟦",
+   "glyphName": "LARGE BLUE SQUARE",
+   "glyphFrom": "blue"
   },
   {
    "id": 104970470,
@@ -679,7 +820,10 @@
    "word": "lavender",
    "depth": 8,
    "hue": 240,
-   "hueFrom": "lavender"
+   "hueFrom": "lavender",
+   "glyph": "🟪",
+   "glyphName": "LARGE PURPLE SQUARE",
+   "glyphFrom": "purple"
   },
   {
    "id": 104970544,
@@ -687,7 +831,10 @@
    "word": "mauve",
    "depth": 8,
    "hue": 300,
-   "hueFrom": "purple"
+   "hueFrom": "purple",
+   "glyph": "🟪",
+   "glyphName": "LARGE PURPLE SQUARE",
+   "glyphFrom": "purple"
   },
   {
    "id": 104970631,
@@ -695,7 +842,10 @@
    "word": "reddish purple",
    "depth": 8,
    "hue": 300,
-   "hueFrom": "purple"
+   "hueFrom": "purple",
+   "glyph": "🟪",
+   "glyphName": "LARGE PURPLE SQUARE",
+   "glyphFrom": "purple"
   },
   {
    "id": 104970758,
@@ -703,7 +853,10 @@
    "word": "violet",
    "depth": 8,
    "hue": 300,
-   "hueFrom": "violet"
+   "hueFrom": "violet",
+   "glyph": "🟪",
+   "glyphName": "LARGE PURPLE SQUARE",
+   "glyphFrom": "purple"
   },
   {
    "id": 104971131,
@@ -759,7 +912,10 @@
    "word": "Vandyke brown",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "brown"
+   "hueFrom": "brown",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   },
   {
    "id": 104972350,
@@ -767,7 +923,10 @@
    "word": "chestnut",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "brown"
+   "hueFrom": "brown",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   },
   {
    "id": 104972451,
@@ -775,7 +934,10 @@
    "word": "chocolate",
    "depth": 8,
    "hue": 25,
-   "hueFrom": "chocolate"
+   "hueFrom": "chocolate",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   },
   {
    "id": 104972603,
@@ -783,7 +945,10 @@
    "word": "hazel",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "brown"
+   "hueFrom": "brown",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   },
   {
    "id": 104972801,
@@ -791,7 +956,10 @@
    "word": "light brown",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "brown"
+   "hueFrom": "brown",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   },
   {
    "id": 104972950,
@@ -799,7 +967,10 @@
    "word": "mocha",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "brown"
+   "hueFrom": "brown",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   },
   {
    "id": 104973386,
@@ -807,7 +978,10 @@
    "word": "reddish brown",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "brown"
+   "hueFrom": "brown",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   },
   {
    "id": 104973957,
@@ -815,7 +989,10 @@
    "word": "yellowish brown",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "brown"
+   "hueFrom": "brown",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   },
   {
    "id": 104974145,
@@ -823,7 +1000,10 @@
    "word": "puce",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "brown"
+   "hueFrom": "brown",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   },
   {
    "id": 104974248,
@@ -831,7 +1011,10 @@
    "word": "olive brown",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "brown"
+   "hueFrom": "brown",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   },
   {
    "id": 104974774,
@@ -839,7 +1022,10 @@
    "word": "taupe",
    "depth": 8,
    "hue": 0,
-   "hueFrom": "brown"
+   "hueFrom": "brown",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   },
   {
    "id": 104974463,
@@ -855,7 +1041,10 @@
    "word": "coal black",
    "depth": 8,
    "hue": null,
-   "hueFrom": "black"
+   "hueFrom": "black",
+   "glyph": "⬛",
+   "glyphName": "BLACK LARGE SQUARE",
+   "glyphFrom": "black"
   },
   {
    "id": 104961062,
@@ -863,7 +1052,10 @@
    "word": "alabaster",
    "depth": 8,
    "hue": null,
-   "hueFrom": "white"
+   "hueFrom": "white",
+   "glyph": "⬜",
+   "glyphName": "WHITE LARGE SQUARE",
+   "glyphFrom": "white"
   },
   {
    "id": 104961136,
@@ -871,7 +1063,10 @@
    "word": "bleach",
    "depth": 8,
    "hue": null,
-   "hueFrom": "white"
+   "hueFrom": "white",
+   "glyph": "⬜",
+   "glyphName": "WHITE LARGE SQUARE",
+   "glyphFrom": "white"
   },
   {
    "id": 104961331,
@@ -879,7 +1074,10 @@
    "word": "bone",
    "depth": 8,
    "hue": null,
-   "hueFrom": "white"
+   "hueFrom": "white",
+   "glyph": "⬜",
+   "glyphName": "WHITE LARGE SQUARE",
+   "glyphFrom": "white"
   },
   {
    "id": 104961472,
@@ -887,7 +1085,10 @@
    "word": "chalk",
    "depth": 8,
    "hue": null,
-   "hueFrom": "white"
+   "hueFrom": "white",
+   "glyph": "⬜",
+   "glyphName": "WHITE LARGE SQUARE",
+   "glyphFrom": "white"
   },
   {
    "id": 104961583,
@@ -895,7 +1096,10 @@
    "word": "frostiness",
    "depth": 8,
    "hue": null,
-   "hueFrom": "white"
+   "hueFrom": "white",
+   "glyph": "⬜",
+   "glyphName": "WHITE LARGE SQUARE",
+   "glyphFrom": "white"
   },
   {
    "id": 104962062,
@@ -999,7 +1203,10 @@
    "word": "burgundy",
    "depth": 9,
    "hue": 0,
-   "hueFrom": "dark red"
+   "hueFrom": "dark red",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red"
   },
   {
    "id": 104964001,
@@ -1007,7 +1214,10 @@
    "word": "claret",
    "depth": 9,
    "hue": 0,
-   "hueFrom": "dark red"
+   "hueFrom": "dark red",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red"
   },
   {
    "id": 104964079,
@@ -1015,7 +1225,10 @@
    "word": "oxblood red",
    "depth": 9,
    "hue": 0,
-   "hueFrom": "dark red"
+   "hueFrom": "dark red",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red"
   },
   {
    "id": 104964162,
@@ -1023,7 +1236,13 @@
    "word": "wine",
    "depth": 9,
    "hue": 0,
-   "hueFrom": "dark red"
+   "hueFrom": "dark red",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red",
+   "homographs": [
+    "LINEAR B IDEOGRAM B131 WINE"
+   ]
   },
   {
    "id": 104964586,
@@ -1031,7 +1250,10 @@
    "word": "magenta",
    "depth": 9,
    "hue": 300,
-   "hueFrom": "magenta"
+   "hueFrom": "magenta",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red"
   },
   {
    "id": 104964799,
@@ -1039,7 +1261,10 @@
    "word": "fuschia",
    "depth": 9,
    "hue": 0,
-   "hueFrom": "red"
+   "hueFrom": "red",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red"
   },
   {
    "id": 104964878,
@@ -1047,7 +1272,10 @@
    "word": "maroon",
    "depth": 9,
    "hue": 0,
-   "hueFrom": "maroon"
+   "hueFrom": "maroon",
+   "glyph": "🟥",
+   "glyphName": "LARGE RED SQUARE",
+   "glyphFrom": "red"
   },
   {
    "id": 104965574,
@@ -1055,7 +1283,10 @@
    "word": "tangerine",
    "depth": 9,
    "hue": 39,
-   "hueFrom": "orange"
+   "hueFrom": "orange",
+   "glyph": "🟧",
+   "glyphName": "LARGE ORANGE SQUARE",
+   "glyphFrom": "orange"
   },
   {
    "id": 104966841,
@@ -1063,7 +1294,10 @@
    "word": "ocher",
    "depth": 9,
    "hue": 60,
-   "hueFrom": "yellow"
+   "hueFrom": "yellow",
+   "glyph": "🟨",
+   "glyphName": "LARGE YELLOW SQUARE",
+   "glyphFrom": "yellow"
   },
   {
    "id": 104968619,
@@ -1071,7 +1305,13 @@
    "word": "cyan",
    "depth": 9,
    "hue": 180,
-   "hueFrom": "cyan"
+   "hueFrom": "cyan",
+   "glyph": "🟩",
+   "glyphName": "LARGE GREEN SQUARE",
+   "glyphFrom": "green",
+   "homographs": [
+    "HANGUL SYLLABLE CYAN"
+   ]
   },
   {
    "id": 104970312,
@@ -1079,7 +1319,10 @@
    "word": "Tyrian purple",
    "depth": 9,
    "hue": 300,
-   "hueFrom": "purple"
+   "hueFrom": "purple",
+   "glyph": "🟪",
+   "glyphName": "LARGE PURPLE SQUARE",
+   "glyphFrom": "purple"
   },
   {
    "id": 104970398,
@@ -1087,7 +1330,10 @@
    "word": "indigo",
    "depth": 9,
    "hue": 275,
-   "hueFrom": "indigo"
+   "hueFrom": "indigo",
+   "glyph": "🟪",
+   "glyphName": "LARGE PURPLE SQUARE",
+   "glyphFrom": "purple"
   },
   {
    "id": 104971447,
@@ -1103,7 +1349,17 @@
    "word": "tan",
    "depth": 9,
    "hue": 34,
-   "hueFrom": "tan"
+   "hueFrom": "tan",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown",
+   "homographs": [
+    "GEORGIAN CAPITAL LETTER TAN",
+    "GEORGIAN LETTER TAN",
+    "GEORGIAN MTAVRULI CAPITAL LETTER TAN",
+    "GEORGIAN SMALL LETTER TAN",
+    "HANGUL SYLLABLE TAN"
+   ]
   },
   {
    "id": 104973110,
@@ -1111,7 +1367,16 @@
    "word": "dun",
    "depth": 9,
    "hue": 0,
-   "hueFrom": "brown"
+   "hueFrom": "brown",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown",
+   "homographs": [
+    "HANGUL SYLLABLE DUN",
+    "CUNEIFORM SIGN DUN",
+    "CUNEIFORM SIGN URU TIMES DUN",
+    "CUNEIFORM SIGN DUG TIMES DUN"
+   ]
   },
   {
    "id": 104973291,
@@ -1119,7 +1384,10 @@
    "word": "beige",
    "depth": 9,
    "hue": 60,
-   "hueFrom": "beige"
+   "hueFrom": "beige",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   },
   {
    "id": 104973585,
@@ -1127,7 +1395,10 @@
    "word": "brick red",
    "depth": 9,
    "hue": 0,
-   "hueFrom": "brown"
+   "hueFrom": "brown",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   },
   {
    "id": 104973669,
@@ -1135,7 +1406,10 @@
    "word": "copper",
    "depth": 9,
    "hue": 0,
-   "hueFrom": "brown"
+   "hueFrom": "brown",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   },
   {
    "id": 104973816,
@@ -1143,7 +1417,10 @@
    "word": "Indian red",
    "depth": 9,
    "hue": 0,
-   "hueFrom": "Indian red"
+   "hueFrom": "Indian red",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   },
   {
    "id": 104974681,
@@ -1151,7 +1428,10 @@
    "word": "snuff-color",
    "depth": 9,
    "hue": 0,
-   "hueFrom": "brown"
+   "hueFrom": "brown",
+   "glyph": "🟫",
+   "glyphName": "LARGE BROWN SQUARE",
+   "glyphFrom": "brown"
   }
  ]
 }

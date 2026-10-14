@@ -1,0 +1,256 @@
+{
+ "source": "Unicode character names (Python unicodedata 15.0.0)",
+ "named": 143041,
+ "words": {
+  "property": {
+   "glyph": null,
+   "names": 1,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "color": {
+   "glyph": null,
+   "names": 1,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "shade": {
+   "glyph": null,
+   "names": 15,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "red": {
+   "glyph": {
+    "cp": 128997,
+    "char": "🟥",
+    "name": "LARGE RED SQUARE"
+   },
+   "names": 20,
+   "homographs": [
+    {
+     "cp": 47119,
+     "name": "HANGUL SYLLABLE RED"
+    }
+   ],
+   "homographCount": 1
+  },
+  "orange": {
+   "glyph": {
+    "cp": 128999,
+    "char": "🟧",
+    "name": "LARGE ORANGE SQUARE"
+   },
+   "names": 6,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "yellow": {
+   "glyph": {
+    "cp": 129000,
+    "char": "🟨",
+    "name": "LARGE YELLOW SQUARE"
+   },
+   "names": 5,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "blond": {
+   "glyph": null,
+   "names": 1,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "green": {
+   "glyph": {
+    "cp": 129001,
+    "char": "🟩",
+    "name": "LARGE GREEN SQUARE"
+   },
+   "names": 8,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "blue": {
+   "glyph": {
+    "cp": 128998,
+    "char": "🟦",
+    "name": "LARGE BLUE SQUARE"
+   },
+   "names": 9,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "purple": {
+   "glyph": {
+    "cp": 129002,
+    "char": "🟪",
+    "name": "LARGE PURPLE SQUARE"
+   },
+   "names": 3,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "pink": {
+   "glyph": null,
+   "names": 1,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "brown": {
+   "glyph": {
+    "cp": 129003,
+    "char": "🟫",
+    "name": "LARGE BROWN SQUARE"
+   },
+   "names": 3,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "olive": {
+   "glyph": null,
+   "names": 2,
+   "homographs": [
+    {
+     "cp": 65680,
+     "name": "LINEAR B IDEOGRAM B122 OLIVE"
+    }
+   ],
+   "homographCount": 1
+  },
+  "black": {
+   "glyph": {
+    "cp": 11035,
+    "char": "⬛",
+    "name": "BLACK LARGE SQUARE"
+   },
+   "names": 322,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "white": {
+   "glyph": {
+    "cp": 11036,
+    "char": "⬜",
+    "name": "WHITE LARGE SQUARE"
+   },
+   "names": 289,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "rose": {
+   "glyph": null,
+   "names": 1,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "coral": {
+   "glyph": null,
+   "names": 1,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "chestnut": {
+   "glyph": null,
+   "names": 1,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "chocolate": {
+   "glyph": null,
+   "names": 1,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "bone": {
+   "glyph": null,
+   "names": 4,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "wine": {
+   "glyph": null,
+   "names": 4,
+   "homographs": [
+    {
+     "cp": 65686,
+     "name": "LINEAR B IDEOGRAM B131 WINE"
+    }
+   ],
+   "homographCount": 1
+  },
+  "tangerine": {
+   "glyph": null,
+   "names": 1,
+   "homographs": [],
+   "homographCount": 0
+  },
+  "cyan": {
+   "glyph": null,
+   "names": 1,
+   "homographs": [
+    {
+     "cp": 52324,
+     "name": "HANGUL SYLLABLE CYAN"
+    }
+   ],
+   "homographCount": 1
+  },
+  "tan": {
+   "glyph": null,
+   "names": 5,
+   "homographs": [
+    {
+     "cp": 4263,
+     "name": "GEORGIAN CAPITAL LETTER TAN"
+    },
+    {
+     "cp": 4311,
+     "name": "GEORGIAN LETTER TAN"
+    },
+    {
+     "cp": 7319,
+     "name": "GEORGIAN MTAVRULI CAPITAL LETTER TAN"
+    },
+    {
+     "cp": 11527,
+     "name": "GEORGIAN SMALL LETTER TAN"
+    },
+    {
+     "cp": 53444,
+     "name": "HANGUL SYLLABLE TAN"
+    }
+   ],
+   "homographCount": 5
+  },
+  "dun": {
+   "glyph": null,
+   "names": 4,
+   "homographs": [
+    {
+     "cp": 46164,
+     "name": "HANGUL SYLLABLE DUN"
+    },
+    {
+     "cp": 73860,
+     "name": "CUNEIFORM SIGN DUN"
+    },
+    {
+     "cp": 74555,
+     "name": "CUNEIFORM SIGN URU TIMES DUN"
+    },
+    {
+     "cp": 74897,
+     "name": "CUNEIFORM SIGN DUG TIMES DUN"
+    }
+   ],
+   "homographCount": 4
+  },
+  "copper": {
+   "glyph": null,
+   "names": 6,
+   "homographs": [],
+   "homographCount": 0
+  }
+ }
+}

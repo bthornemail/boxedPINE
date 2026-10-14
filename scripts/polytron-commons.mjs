@@ -61,7 +61,18 @@ const colors = colorIds.map((id) => {
   let depth = 0; for (let h = id; h !== ROOT; h = parentOf.get(h)) depth++;
   return { id, parent: parentOf.get(id) ?? null, word: allS.get(id), depth, hue, hueFrom: from };
 });
-writeFileSync(join(out, 'colors.json'), JSON.stringify({ source: 'WordNet 3.0 (Prolog): color, the synsets below it, its route to entity (proofs I-199); hues from CSS Color 4 names', colors }, null, 1) + '\n');
+// The Unicode glyph and name (public/polytron/unicode-colors.json, from scripts/unicode-colors.py, which
+// reads this file's words: run this, then that, then this again): each colour takes its own word's glyph,
+// otherwise its nearest ancestor's, as with the hue; homographs (the word naming a letter) are listed.
+let uni = {};
+try { uni = JSON.parse(readFileSync(join(out, 'unicode-colors.json'), 'utf8')).words; } catch { /* not made yet */ }
+for (const c of colors) {
+  for (let h = c.id; h; h = parentOf.get(h)) { const g = uni[allS.get(h)]?.glyph; if (g) { c.glyph = g.char; c.glyphName = g.name; c.glyphFrom = allS.get(h); break; } }
+  const u = uni[c.word];
+  if (u?.homographCount) c.homographs = u.homographs.map((x) => x.name);
+}
+writeFileSync(join(out, 'colors.json'), JSON.stringify({ source: 'WordNet 3.0 (Prolog): color, the synsets below it, its route to entity (proofs I-199); hues from CSS Color 4 names; glyphs from Unicode names', colors }, null, 1) + '\n');
+console.log(`polytron-commons: ${colors.filter((c) => c.glyph).length} colour synsets with a Unicode glyph (${colors.filter((c) => c.glyph && c.glyphFrom === c.word).length} their own)`);
 console.log(`polytron-commons: ${colors.length} colour synsets, ${colors.filter((c) => c.hue !== null).length} with a hue (${colors.filter((c) => c.hue !== null && c.hueFrom === c.word).length} their own)`);
 
 writeFileSync(join(out, 'commons.json'), JSON.stringify({ source: 'omi-files/polytron/polyform + WordNet 3.0 (Prolog)', agents, missing }, null, 2) + '\n');

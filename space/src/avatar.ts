@@ -9,7 +9,7 @@
 // the label. The records carry no hash: an avatar is named by its parts' ids.
 import { grow, type Declaration } from './polyform.ts';
 
-export type AvatarAgent = { id: number; word: string; depth: number; hue: number | null };
+export type AvatarAgent = { id: number; word: string; depth: number; hue: number | null; glyph?: string };
 export type Part = { id: string; category: 'ring' | 'head' | 'body' | 'label'; zIndex: number; svg: string };
 
 const HEADS = [
@@ -41,7 +41,7 @@ export function avatarParts(a: AvatarAgent): Part[] {
     { id: `ring.${a.hue === null ? 'none' : a.hue}`, category: 'ring', zIndex: 0, svg: ring },
     { id: `head.${HEAD_NAMES[a.depth % 5]}`, category: 'head', zIndex: 5, svg: HEADS[a.depth % 5]!(fill, stroke) },
     { id: `body.${cells.length}`, category: 'body', zIndex: 10, svg: body },
-    { id: `label.${a.id}`, category: 'label', zIndex: 20, svg: `<text x="100" y="188" text-anchor="middle" font-family="monospace" font-size="18" fill="${stroke}">${esc(a.word.slice(0, 16))}</text>` },
+    { id: `label.${a.id}`, category: 'label', zIndex: 20, svg: `<text x="100" y="188" text-anchor="middle" font-family="monospace" font-size="18" fill="${stroke}">${esc(((a.glyph ? `${a.glyph} ` : '') + a.word).slice(0, 18))}</text>` },
   ];
 }
 

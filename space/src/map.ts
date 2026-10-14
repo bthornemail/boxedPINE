@@ -22,7 +22,7 @@ import { parseTerms, BEAT } from './score.ts';
 import { recordWitness } from './witness.ts';
 import { fileOf } from './exchange.ts';
 
-type Color = AvatarAgent & { parent: number | null; hueFrom: string | null };
+type Color = AvatarAgent & { parent: number | null; hueFrom: string | null; glyphName?: string; glyphFrom?: string; homographs?: string[] };
 type Placed = { a: AvatarAgent; x: number; y: number; z: number; state: number; beat: number; next: number; el: SVGGElement; to?: { x: number; y: number } };
 
 const NS = 'http://www.w3.org/2000/svg';
@@ -50,7 +50,8 @@ function icon(a: AvatarAgent, size: number) {
   img.setAttribute('width', String(size)); img.setAttribute('height', String(size));
   img.setAttribute('x', String(-size / 2)); img.setAttribute('y', String(-size / 2));
   const title = document.createElementNS(NS, 'title');
-  title.textContent = `${a.word} · depth ${a.depth} · ${a.hue === null ? 'no hue' : `hue ${a.hue}`}`;
+  const c = a as Color;
+  title.textContent = `${a.word} · depth ${a.depth} · ${a.hue === null ? 'no hue' : `hue ${a.hue}`}${c.glyphName ? ` · ${a.glyph} ${c.glyphName}${c.glyphFrom !== a.word ? ` (from ${c.glyphFrom})` : ''}` : ''}${c.homographs?.length ? ` · the same letters name: ${c.homographs.join('; ')}` : ''}`;
   g.append(title, img);
   return g;
 }
