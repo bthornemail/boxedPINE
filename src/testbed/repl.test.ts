@@ -464,3 +464,53 @@ test('The proof tree on the eMMC, without hashing: the scrub XORs against the li
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+// ---- The proof gate: the proof tree on request, the Sabbath as the stop ----
+import { ProofGate, serveGate, contract } from '../../repl/src/proof-gate.ts';
+
+test('The gate keeps the Sabbath contract of OMI.Sabbath (request = attestation)', () => {
+  assert.deepEqual(contract('Normal', 'request'), { next: 'Normal' });
+  assert.deepEqual(contract('Normal', 'suspend'), { next: 'Sabbath' });
+  assert.deepEqual(contract('Normal', 'resume'), { refused: 'InvalidModeTransition' });
+  assert.deepEqual(contract('Sabbath', 'request'), { refused: 'SabbathViolation' });
+  assert.deepEqual(contract('Sabbath', 'suspend'), { refused: 'InvalidModeTransition' });
+  assert.deepEqual(contract('Sabbath', 'resume'), { next: 'Normal' });
+});
+
+test('The proof gate: served on request; the stop aborts what is in flight; the restart comes from the tree', { skip: !hasQemu && 'QEMU tools not installed' }, async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'pg-'));
+  const entries = makeProofImage(join(dir, 'emmc.img'));
+  const nbd = await serveNbd(join(dir, 'emmc.img'), join(dir, 'n.sock'));
+  const vm = await bootVirt(join(dir, 'n.sock'), join(dir, 'q.sock'));
+  const gate = new ProofGate(join(dir, 'n.sock'), join(dir, 'q.sock'), dir);
+  const server = await serveGate(gate, 0);
+  const base = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
+  try {
+    const one = entries[3]!;
+    // on request, a record is read from the drive and replayed
+    let r = await (await fetch(`${base}/proof/${one.tag}`)).json();
+    assert.deepEqual([r.status, r.tag, r.holds], [200, one.tag, true], 'Normal: served and holds');
+    assert.equal((await fetch(`${base}/proof/ZZZZ`)).status, 404, 'no record by that tag');
+    // a request in flight when the stop comes is aborted, never attested
+    const pending = gate.request(one.tag);
+    const stop = gate.suspend();
+    assert.deepEqual([stop.status, (stop as { aborted: number }).aborted, gate.mode], [200, 1, 'Sabbath'], 'the stop aborts the one in flight');
+    assert.deepEqual([(await pending).status, (await pending as { refused: string }).refused], [409, 'aborted by a stop']);
+    // during the Sabbath: requests refused (423), a second suspend refused (409)
+    assert.equal((await fetch(`${base}/proof/${one.tag}`)).status, 423, 'Sabbath: 423 Locked');
+    assert.equal((await fetch(`${base}/suspend`, { method: 'POST' })).status, 409, 'suspending twice');
+    // damage during the stop; the restart does not start from it
+    const victim = entries[40]!;
+    writeNbd(join(dir, 'n.sock'), victim.offset + 100, 0x00, 64);
+    r = await (await fetch(`${base}/resume`, { method: 'POST' })).json();
+    assert.deepEqual([r.status, r.mode, r.restored, r.clean, r.signal.event], [200, 'Normal', 1, true, 'RESET'], 'resume: reset, restored from the tree, clean');
+    r = await (await fetch(`${base}/proof/${victim.tag}`)).json();
+    assert.deepEqual([r.status, r.holds], [200, true], 'the damaged record, restored, holds');
+    assert.equal((await fetch(`${base}/resume`, { method: 'POST' })).status, 409, 'resuming with nothing suspended');
+  } finally {
+    server.close();
+    vm.kill();
+    nbd.kill();
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
