@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Sound Check</title></head>
+<body style="background:#0c1015;color:#edf0e9;font:13px monospace">
+<pre id="result">running</pre>
+<script type="module">
+// Renders a walk offline and checks it: read is left and write right, and each
+// step's loudest note is its point. And it measures replay: two renders of the
+// same score agree to about one part in a million but are not bit-identical
+// (Chrome does not sum in the same order every time), and even as 16-bit PCM a
+// few samples on a rounding boundary differ. So the score is the literal and a
+// rendered buffer the witness: replay and scrub read the stored buffer. Run headless:
+// node scripts/sound-check.mjs (prints the result written here).
+import { scoreOf, noteOf, NOTES, BEAT } from './src/score.ts';
+import { renderOffline } from './src/sound.ts';
+const out = document.getElementById('result');
+try {
+  const steps = [{ point: 2, line: 6, state: 'read' }, { point: 6, line: 3, state: 'write' }, { point: 3, line: 2, state: 'read' }, { point: 5, line: 4, state: 'write' }];
+  const events = scoreOf(steps), seconds = steps.length * BEAT;
+  const a = await renderOffline(events, seconds), b = await renderOffline(events, seconds);
+  const L = a.getChannelData(0), R = a.getChannelData(1);
+  let maxDiff = 0, differing = 0, firstDiff = -1;
+  for (const c of [0, 1]) { const x = a.getChannelData(c), y = b.getChannelData(c); for (let i = 0; i < x.length; i++) { const d = Math.abs(x[i] - y[i]); if (d > 0) { differing++; if (firstDiff < 0) firstDiff = i; } if (d > maxDiff) maxDiff = d; } }
+  const same = differing === 0;
+  const pcm = (buf, c) => Int16Array.from(buf.getChannelData(c), (v) => Math.round(Math.max(-1, Math.min(1, v)) * 32767));
+  let pcmDiffer = 0;
+  for (const c of [0, 1]) { const x = pcm(a, c), y = pcm(b, c); for (let i = 0; i < x.length; i++) if ((x[i] ^ y[i]) !== 0) pcmDiffer++; }
+  const seg = (i) => [Math.floor((i * BEAT + 0.05) * a.sampleRate), Math.floor(((i + 1) * BEAT - 0.02) * a.sampleRate)];
+  const energy = (ch, [s, e]) => { let t = 0; for (let k = s; k < e; k++) t += ch[k] * ch[k]; return t; };
+  const tone = (ch, [s, e], f) => { let re = 0, im = 0; for (let k = s; k < e; k++) { const w = 2 * Math.PI * f * k / a.sampleRate; re += ch[k] * Math.cos(w); im += ch[k] * Math.sin(w); } return Math.hypot(re, im); };
+  const rows = steps.map((st, i) => {
+    const r = seg(i), left = energy(L, r), right = energy(R, r);
+    const loud = NOTES.map((f) => tone(L, r, f) + tone(R, r, f));
+    const top = loud.indexOf(Math.max(...loud)) + 1;
+    return { step: i, state: st.state, side: left > right ? 'left' : 'right', point: st.point, loudest: top };
+  });
+  const stored = a.getChannelData(0).slice(), replayed = a.getChannelData(0);
+  const storedReplayExact = stored.every((v, i) => (v === replayed[i]));
+  const pass = rows.every((r) => r.side === (r.state === 'read' ? 'left' : 'right') && r.loudest === r.point) && maxDiff < 1e-5 && storedReplayExact;
+  out.textContent = JSON.stringify({ ok: pass, storedReplayExact, replayExact: same, pcm16Differing: pcmDiffer, maxDiff, differing, firstDiff, peak: Math.max(...L.map(Math.abs)), samples: L.length, rows });
+} catch (e) { out.textContent = JSON.stringify({ ok: false, error: String(e) }); }
+</script>
+</body>
+</html>

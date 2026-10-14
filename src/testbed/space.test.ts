@@ -343,3 +343,38 @@ test('The trace: tag characters XOR into the control and lowercase columns; an i
   assert.equal(u.xor[0x4d45], 5 ^ 6, 'and its size is the change: 5 XOR 6');
   assert.equal(readBorder(changed[5]!).cues[0], 6);
 });
+
+test('The score: the 7 points as voices and gains, the 7 lines as filters, the Hasse pair as the panner; a walk as automation; scrub; uppercase terms', async () => {
+  const { NOTES, noteOf, lineFrequency, WIRES, scoreOf, scrubFrom, parseTerms, BEAT, HIGH, LOW } = await import('../../space/src/score.ts');
+  assert.equal(noteOf(1), 440, 'point 1 is A 440');
+  assert.deepEqual(NOTES.map((f) => Math.round(f)), [440, 494, 523, 587, 659, 698, 784], 'A B C D E F G');
+  assert.equal(WIRES.length, 21, 'the 21 point-line incidences: each of 7 points into 3 lines');
+  assert.ok(lineFrequency(1) > 440 && lineFrequency(1) < 784);
+  const steps = [{ point: 2, line: 6, state: 'read' as const }, { point: 6, line: 3, state: 'write' as const }];
+  const score = scoreOf(steps);
+  assert.equal(score.length, 2 * 15, 'per step: 7 point gains, 7 line gains, the pan');
+  assert.deepEqual(score.filter((e) => e.value === HIGH).map((e) => `${e.at}:${e.node}`), ['0:P2', '0:L6', `${BEAT}:P6`, `${BEAT}:L3`]);
+  assert.deepEqual(score.filter((e) => e.param === 'pan').map((e) => e.value), [-1, 1], 'read left, write right');
+  assert.ok(score.filter((e) => e.param === 'gain' && e.value !== HIGH).every((e) => e.value === LOW));
+  // a scrub from the middle carries each node's last value in at time 0
+  const s = scrubFrom(score, 0.25);
+  assert.equal(s.filter((e) => e.at === 0).length, 15, 'every node starts where it stood');
+  assert.deepEqual(s.find((e) => e.node === 'HASSE' && e.at === 0)?.value, -1);
+  assert.deepEqual(s.filter((e) => e.at > 0).map((e) => e.at), Array(15).fill(BEAT - 0.25));
+  // uppercase terms
+  assert.deepEqual(parseTerms('METATRON P2 L6'), { agent: 'METATRON', point: 2, line: 6 });
+  assert.deepEqual(parseTerms('metatron P2'), { error: 'every term is an /A-Z0-9/ tag: uppercase letters and digits, 1 to 8' });
+  assert.deepEqual(parseTerms('NOBODY'), { error: 'no agent NOBODY' });
+  assert.deepEqual(parseTerms('SOLON P1 L3'), { error: 'P1 is not on L3' });
+});
+
+const chrome = (await import('node:child_process')).spawnSync('google-chrome', ['--version']).status === 0;
+test('The sound, in a browser: the graph renders offline; read is left, write right; each step sounds its point; re-renders agree to one part in a million', { skip: !chrome && 'google-chrome not installed', timeout: 120000 }, async () => {
+  const { spawnSync } = await import('node:child_process');
+  const r = spawnSync(process.execPath, [new URL('../../scripts/sound-check.mjs', import.meta.url).pathname], { encoding: 'utf8', timeout: 110000 });
+  const result = JSON.parse(r.stdout.trim().split('\n').at(-1)!);
+  assert.equal(result.ok, true, r.stdout);
+  assert.equal(result.storedReplayExact, true, 'a stored render replays exactly');
+  assert.ok(result.maxDiff < 1e-5, 'two renders of one score agree closely');
+  assert.deepEqual(result.rows.map((x: { side: string; loudest: number }) => [x.side, x.loudest]), [['left', 2], ['right', 6], ['left', 3], ['right', 5]]);
+});
