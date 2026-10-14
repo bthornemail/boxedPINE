@@ -26,9 +26,9 @@
     <p>The 144 synsets of WordNet's <i>color</i> (proofs I-199) as agents: hue is the angle, depth in WordNet the distance out. Light Garden's eight characters stand on their hues. In 2D deeper synsets lie on top; in 2.5D depth lifts them. Each steps K on its own beat; speakers on the agent bridge join and walk to a colour they name.</p>
     <div class="views"><button data-view="2d">2D</button><button data-view="2.5d">2.5D</button></div>
     <div id="status" aria-live="polite"></div>
-    <div class="kicker" style="margin-top:14px">a character's state · compareExchange(svg, 60 ^ frame, 128, 64)</div>
+    <div class="kicker" style="margin-top:14px">a character's state · compareExchange(svg, 60 ^ frame, 127, 63)</div>
     <div class="views"><select id="character" aria-label="Character"></select></div>
-    <div style="display:flex;gap:10px;align-items:flex-start"><svg id="bytes" viewBox="0 0 8 8" width="96" height="96" aria-label="the 64 bytes: gold read (128), blue written (64)"></svg><img id="hasse" alt="the character's Hasse diagram" style="width:200px;background:#fff;border-radius:4px"></div>
+    <div style="display:flex;gap:10px;align-items:flex-start"><svg id="bytes" viewBox="0 0 16 8" width="128" height="64" aria-label="the 128 bytes: gold read (127), blue written (63)"></svg><img id="hasse" alt="the character's Hasse diagram" style="width:200px;background:#fff;border-radius:4px"></div>
     <div id="exchange" class="kicker" aria-live="off"></div>
   </section>
   <script type="module" src="./src/map.ts"></script>

@@ -240,23 +240,45 @@ test('Each character has its own set of 16: the 14 Fano planes and two Hasse dia
   }
 });
 
-test('Atomics.compareExchange(svg, 60 ^ frame, 128, 64): in 64 frames every byte reads XOR and writes XNOR; the next 64, the other way', async () => {
-  const { newState, tick, indexOf, written, hasseFor, EXCHANGES, READ, WRITE } = await import('../../space/src/exchange.ts');
-  assert.deepEqual(EXCHANGES, { Hasse_XOR: [128, 64], Hasse_XNOR: [64, 128] }, 'XOR: 128 then 64; the other: 64 then 128');
+test('Atomics.compareExchange(svg, 60 ^ frame, 127, 63): as I-133, 128 bytes of 127; in 128 frames every byte reads XOR and writes XNOR; the next 128, the other way', async () => {
+  const { newState, tick, indexOf, fileOf, written, hasseFor, EXCHANGES, READ, WRITE } = await import('../../space/src/exchange.ts');
+  assert.deepEqual(EXCHANGES, { Hasse_XOR: [127, 63], Hasse_XNOR: [63, 127] }, 'the proofs\' values: 127 then 63; the other, 63 then 127');
+  assert.equal(READ ^ WRITE, 0x40, 'one bit trades');
   assert.equal(indexOf(0), 60, 'frame 0 works on byte 60');
   assert.equal(indexOf(60), 0, 'frame 60 on byte 0');
-  assert.equal(new Set([...Array(64).keys()].map(indexOf)).size, 64, '60 XOR f is one-to-one: 64 frames, 64 bytes, each once');
+  assert.equal(new Set([...Array(128).keys()].map(indexOf)).size, 128, '60 XOR f is one-to-one on 0-127: 128 frames, 128 bytes, each once');
   const state = newState();
-  assert.equal(state.length, 64);
-  for (let f = 0; f < 64; f++) assert.deepEqual(tick(state, f), { index: 60 ^ f, read: READ, file: 'Hasse_XOR' });
-  assert.equal(written(state), 64, 'after 64 frames every byte is written');
-  for (let f = 64; f < 128; f++) assert.deepEqual(tick(state, f), { index: 60 ^ (f & 63), read: WRITE, file: 'Hasse_XNOR' });
-  assert.equal(written(state), 0, 'and after 128, every byte is read again');
-  assert.equal(READ ^ WRITE, 0xc0, 'the complement: the two bits that trade places');
+  assert.equal(state.length, 128);
+  assert.ok(state.every((b) => b === 127), 'filled with DEL, as I-133');
+  for (let f = 0; f < 128; f++) assert.deepEqual(tick(state, f), { index: 60 ^ f, read: READ, file: 'Hasse_XOR' });
+  assert.equal(written(state), 128, 'after 128 frames every byte is written');
+  for (let f = 128; f < 256; f++) assert.deepEqual(tick(state, f), { index: 60 ^ (f & 127), read: WRITE, file: 'Hasse_XNOR' });
+  assert.equal(written(state), 0, 'and after 256, every byte is read again');
+  assert.equal(fileOf(255), 'Hasse_XNOR');
+  assert.equal(fileOf(256), 'Hasse_XOR', 'and the cycle begins again');
   // the compare: a byte something else wrote first is read and left
   const other = newState();
   Atomics.store(other, 60, 7);
   assert.deepEqual(tick(other, 0), { index: 60, read: 7, file: 'Hasse_XOR' });
-  assert.equal(Atomics.load(other, 60), 7, 'not finding 128, it writes nothing');
-  assert.equal(hasseFor(64), 'Hasse_XNOR');
+  assert.equal(Atomics.load(other, 60), 7, 'not finding 127, it writes nothing');
+  assert.equal(hasseFor(63), 'Hasse_XNOR');
+});
+
+test('The frame hands the index to Atomics through a Proxy; Reflect writes the frame; Catch carries the outcome', async () => {
+  const { newState, frameGate, READ, WRITE } = await import('../../space/src/exchange.ts');
+  const state = newState();
+  const gate = frameGate(state);
+  assert.equal(gate.last, null, 'nothing exchanged before a frame is handed over');
+  gate.frame = 0;
+  assert.equal(gate.frame, 0, 'Reflect wrote the frame');
+  assert.deepEqual(gate.last, { ok: true, value: { index: 60, read: READ, file: 'Hasse_XOR' } });
+  assert.equal(state[60], WRITE, 'and the exchange happened at 60 ^ 0');
+  gate.frame = 60;
+  assert.deepEqual(gate.last, { ok: true, value: { index: 0, read: READ, file: 'Hasse_XOR' } }, 'frame 60 at byte 0');
+  assert.throws(() => { (gate as { last: unknown }).last = null; }, TypeError, 'only the frame is handed over');
+  // a failing exchange comes back as a value, not a throw (I-127: an index out of range is a RangeError)
+  const broken = frameGate(new Uint8Array(4), undefined, (s, f) => ({ index: f, read: Atomics.compareExchange(s, f, 0, 1), file: 'Hasse_XOR' as const }));
+  broken.frame = 99;
+  assert.equal(broken.last?.ok, false);
+  assert.ok(broken.last && !broken.last.ok && broken.last.error instanceof RangeError, 'the Catch carries the RangeError');
 });

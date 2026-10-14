@@ -1,24 +1,35 @@
-// THE EXCHANGE: Atomics.compareExchange(svg, 60 ^ frame, 128, 64)
+// THE EXCHANGE: Atomics.compareExchange(svg, 60 ^ frame, 127, 63)
 //
 // The author, 2026-10-13, of a character's two Hasse diagrams, XOR the read
 // state and XNOR the write state, "one is XOR, one is XNOR, so complement";
-// then "do the Atomics.compareExchange(svg, 60 animation frame, 128, 64)",
-// "and the other do 64 then 128", and "make it 60 XOR animation frame". So the
-// SVG's state is 64 bytes (0-63), each 128 (0x80, XOR, read) or 64 (0x40,
-// XNOR, write), and on animation frame f the exchange works at index 60 ^ f.
-// XOR with 60 is one-to-one on 0-63, so in 64 frames every byte is exchanged
-// once (frame 0 at byte 60, frame 60 at byte 0). Frames 0-63 are the XOR
-// file's: compareExchange(svg, 60 ^ f, 128, 64), read then write; frames
-// 64-127 the XNOR file's, the other way: compareExchange(svg, 60 ^ f, 64, 128).
-// Reading is the compare, writing the exchange: a byte something else wrote
-// first is read and left. A cycle is 128 frames (128 XOR 64 is 0xC0, the two
-// bits that trade places).
-export const STATE_BYTES = 64, BASE = 60, READ = 128, WRITE = 64;
+// "do the Atomics.compareExchange(svg, 60 animation frame, ...)", "and the
+// other do [it the other way]", "make it 60 XOR animation frame", and "the
+// proofs say 63 and 127": as proofs I-133 and I-141, the SVG's state is 128
+// bytes (0-127) filled with 127 (0x7F, DEL), and the exchange is 127 for 63
+// (0x3F). 127 XOR 63 is 0x40: one bit trades. On animation frame f the
+// exchange works at index 60 ^ f; XOR with 60 is one-to-one on 0-127, so in
+// 128 frames every byte is exchanged once (frame 0 at byte 60, frame 60 at
+// byte 0). Frames 0-127 are the XOR file's, compareExchange(svg, 60 ^ f, 127,
+// 63), read then write; frames 128-255 the XNOR file's, the other way,
+// compareExchange(svg, 60 ^ f, 63, 127). Reading is the compare, writing the
+// exchange: a byte something else wrote first is read and left.
+//
+// And "we should be able to Proxy or Reflect a Catch for an animation frame to
+// transfer control of the index to Atomics": frameGate wraps the state in a
+// Proxy (rosetta/src/grammar/interface.ts, the interface carrier). Assigning
+// gate.frame = n is the hand-over: the set trap performs the write with
+// Reflect, then runs the exchange at 60 ^ n inside Catch, so the outcome comes
+// back as a value, { ok, value } or { ok: false, error }, never as a throw.
+import { DEFAULT_INTERFACE, type CatchResult, type KernelInterface } from '../../rosetta/src/grammar/interface.ts';
+
+export const STATE_BYTES = 128, BASE = 60, READ = 127, WRITE = 63;
 
 /** Each file's exchange: [expected, replacement]. */
 export const EXCHANGES = { Hasse_XOR: [READ, WRITE], Hasse_XNOR: [WRITE, READ] } as const;
+export type HasseFile = keyof typeof EXCHANGES;
+export type Exchanged = { index: number; read: number; file: HasseFile };
 
-/** The SVG's state, every byte read (128): shared when the page may share memory, otherwise plain (compareExchange works on both). */
+/** The SVG's state, 128 bytes of 127 (I-133): shared when the page may share memory, otherwise plain (compareExchange works on both). */
 export function newState(): Uint8Array {
   const buffer = typeof SharedArrayBuffer === 'function' ? new SharedArrayBuffer(STATE_BYTES) : new ArrayBuffer(STATE_BYTES);
   const state = new Uint8Array(buffer);
@@ -26,18 +37,35 @@ export function newState(): Uint8Array {
   return state;
 }
 
-/** The byte frame f works on: 60 XOR f, within 0-63. */
-export const indexOf = (frame: number) => BASE ^ (frame & 63);
+/** The byte frame f works on: 60 XOR f, within 0-127. */
+export const indexOf = (frame: number) => BASE ^ (frame & 127);
 
-/** One animation frame's exchange: the XOR file's in the first 64 frames of each 128, the XNOR file's in the second. Returns the index and what was read. */
-export function tick(state: Uint8Array, frame: number): { index: number; read: number; file: keyof typeof EXCHANGES } {
-  const file = (frame & 64) === 0 ? 'Hasse_XOR' : 'Hasse_XNOR';
-  const index = indexOf(frame);
+/** Whose exchange frame f is: the XOR file's in the first 128 frames of each 256, the XNOR file's in the second. */
+export const fileOf = (frame: number): HasseFile => ((frame & 128) === 0 ? 'Hasse_XOR' : 'Hasse_XNOR');
+
+/** One animation frame's exchange. */
+export function tick(state: Uint8Array, frame: number): Exchanged {
+  const file = fileOf(frame), index = indexOf(frame);
   return { index, read: Atomics.compareExchange(state, index, ...EXCHANGES[file]), file };
 }
 
-/** How far the state has turned: the bytes now written (64). */
+/** The bytes now written (63). */
 export const written = (state: Uint8Array) => state.reduce((n, b) => n + (b === WRITE ? 1 : 0), 0);
 
 /** Which Hasse file a byte shows. */
-export const hasseFor = (value: number) => (value === WRITE ? 'Hasse_XNOR' : 'Hasse_XOR');
+export const hasseFor = (value: number): HasseFile => (value === WRITE ? 'Hasse_XNOR' : 'Hasse_XOR');
+
+export type FrameGate = { frame: number; readonly last: CatchResult<Exchanged> | null };
+
+/** The hand-over: gate.frame = n gives the index to Atomics; gate.last is the Catch's outcome. */
+export function frameGate(state: Uint8Array, k: KernelInterface = DEFAULT_INTERFACE, exchange: (s: Uint8Array, f: number) => Exchanged = tick): FrameGate {
+  const target = { frame: -1, last: null as CatchResult<Exchanged> | null };
+  return new k.Proxy(target, {
+    set(t, key, value, receiver) {
+      if (key !== 'frame') return false; // only the frame is handed over; last is the gate's to write
+      const ok = k.Reflect.set(t, key, value, receiver);
+      t.last = k.catch(() => exchange(state, value as number));
+      return ok;
+    },
+  }) as FrameGate;
+}
