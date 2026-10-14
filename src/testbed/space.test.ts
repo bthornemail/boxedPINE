@@ -510,3 +510,38 @@ test('The tag functor: XOR 0x20 toggles case and back; Uppercase<S> makes any wo
   const r = spawnSync('npx', ['--no-install', 'tsc', '--ignoreConfig', '--noEmit', '--strict', '--target', 'es2022', '--module', 'nodenext', '--allowImportingTsExtensions', new URL('./tag-type.check.ts', import.meta.url).pathname], { encoding: 'utf8' });
   assert.equal(r.status, 0, r.stdout + r.stderr);
 });
+
+test('CanvasL: a Markdown document as a tree (front matter, headings, fenced blocks with evidence, as OMI.Markdown), written as CanvasL and read back', async () => {
+  const { markdownTree, toCanvasL, parseCanvasL, toJsonCanvas, verifyEvidence, checksumOf } = await import('../../rosetta/src/canvasl.ts');
+  const md = ['---', 'title: Light Garden', 'tag: OBSERVER', '---', '# The Garden', 'text', '## Metatron the observer', '```omi fs=1 gs=2', '(point 1)', '```', '## Solon and law', '```decision-table', '| a | b |', '```', '# Coda', '```js', 'x', '```'].join('\n');
+  const tree = markdownTree(md);
+  assert.deepEqual(tree.directives, { version: '1.0', schema: 'jsoncanvas-1.0+canvasl-min', title: 'Light Garden', tag: 'OBSERVER' }, 'the front matter as directives');
+  const kinds = tree.nodes.map((n) => (n.kind === 'heading' ? `h${n.level}` : n.block));
+  assert.deepEqual(kinds, ['front-matter', 'h1', 'h2', 'omi-lisp', 'h2', 'decision-table', 'h1', 'evidence']);
+  const heading = tree.nodes.find((n) => n.kind === 'heading' && n.level === 2)!;
+  assert.deepEqual(heading.kind === 'heading' && heading.tags, ['METATRON', 'THE', 'OBSERVER'], 'the heading\'s words promoted to tags');
+  const omi = tree.nodes.find((n) => n.kind === 'block' && n.block === 'omi-lisp')!;
+  assert.deepEqual(omi.kind === 'block' && omi.scope, { fs: '1', gs: '2' }, 'the fence line\'s scope');
+  assert.equal(omi.kind === 'block' && omi.body, '(point 1)');
+  for (const n of tree.nodes) assert.ok(verifyEvidence(md, n.evidence), `${n.id}: its span checks`);
+  assert.equal(checksumOf([...'(point 1)']), [...'(point 1)'].reduce((s, c) => s + c.charCodeAt(0), 0) % 256, 'the sum of the characters mod 256, as Haskell');
+  // the tree: each heading the parent of what follows, until a heading at its level or above
+  const parentOf = (id: string) => tree.edges.find((e) => e.toNode === id)?.fromNode;
+  const [h1, h2a, , h2b, , coda, js] = tree.nodes.slice(1).map((n) => n.id);
+  assert.equal(parentOf(h2a!), h1);
+  assert.equal(parentOf(h2b!), h1, 'the second h2 is the first h1\'s, not the first h2\'s');
+  assert.equal(parentOf(coda!), undefined, 'a new h1 starts a new tree');
+  assert.equal(parentOf(js!), coda);
+  // CanvasL out and back, and its JSON Canvas projection
+  const src = toCanvasL(tree);
+  assert.ok(src.startsWith('@version: "1.0"\n@schema: "jsoncanvas-1.0+canvasl-min"'));
+  const back = parseCanvasL(src);
+  assert.equal(back.directives.title, 'Light Garden');
+  assert.equal(back.items.filter((x) => x.kind === 'edge').length, tree.edges.length);
+  const canvas = toJsonCanvas(src);
+  assert.equal(canvas.nodes.length, 8);
+  assert.ok(canvas.edges.every((e) => canvas.nodes.some((n) => n.id === e.fromNode) && canvas.nodes.some((n) => n.id === e.toNode)), 'every edge joins two nodes');
+  // a changed character is caught by its span
+  const changed = md.replace('(point 1)', '(point 2)');
+  assert.equal(verifyEvidence(changed, omi.evidence), false);
+});
