@@ -6,7 +6,9 @@
 // (its notes: the seed command and -l). So: from a fixed seed, with the lamp lit, an explorer tries
 // each movement word from each room it has reached, then LOOK to see where it is; every move that
 // lands somewhere is a triple (room, WORD, room). Breadth first, so each room's route is a shortest
-// one. Then every route is validated: replayed from the seed, it reaches its room again.
+// one. Then every route is validated: replayed from the seed, it reaches its room again. A state where
+// the game is waiting on a yes or no ("Please answer the question.") is not a room: it holds between
+// none and some until it is answered.
 //   node scripts/adventure-map.mjs [--limit N] [--out file.json]
 import { spawnSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
@@ -30,7 +32,7 @@ function play(words) {
   const lines = look.split('\n').map((l) => l.trim()).filter(Boolean);
   const after = lines.findIndex((l) => /long description of your location/.test(l)); // LOOK apologises first, then repeats the room
   const first = (after >= 0 ? lines.slice(after + 1) : lines.slice(1)).join(' ').split(/(?<=[.!?])\s/)[0] ?? '';
-  if (!first || /know the word|pitch dark|Do you really want|reincarnat/i.test(first)) return null;
+  if (!first || /know the word|pitch dark|Do you really want|reincarnat|Please answer the question/i.test(first)) return null;
   return `${first.replace(/\s+/g, ' ')} [${carried}]`; // a state: the room and what is carried
 }
 
