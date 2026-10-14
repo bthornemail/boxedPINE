@@ -26,7 +26,7 @@ export type Scope = { fs?: string; gs?: string; rs?: string; us?: string };
 export type DocNode =
   | { kind: 'heading'; id: string; level: number; text: string; tags: string[]; evidence: Evidence }
   | { kind: 'block'; id: string; block: BlockKind; scope: Scope; body: string; evidence: Evidence };
-export type DocEdge = { kind: 'edge'; id: string; fromNode: string; toNode: string };
+export type DocEdge = { kind: 'edge'; id: string; type: 'v:child' | 'h:tag'; fromNode: string; toNode: string };
 export type DocTree = { directives: Record<string, string>; nodes: DocNode[]; edges: DocEdge[] };
 
 /** Haskell's checksumBytesFromString: the sum of the characters mod 256. */
@@ -51,7 +51,7 @@ export function markdownTree(text: string): DocTree {
   const attach = (id: string, level: number) => {
     while (parents.length && parents.at(-1)!.level >= level) parents.pop();
     const parent = parents.at(-1);
-    if (parent) tree.edges.push({ kind: 'edge', id: `${parent.id}>${id}`, fromNode: parent.id, toNode: id });
+    if (parent) tree.edges.push({ kind: 'edge', id: `${parent.id}>${id}`, type: 'v:child', fromNode: parent.id, toNode: id });
   };
   let i = 0;
   // front matter: "---" on the first line, up to the next "---"
@@ -126,6 +126,20 @@ export function toJsonCanvas(src: string) {
   const { items } = parseCanvasL(src);
   return {
     nodes: items.filter((x) => x.kind !== 'edge').map((x) => ({ id: x.id, type: 'text', x: x.x, y: x.y, width: x.width, height: x.height, text: x.text })),
-    edges: items.filter((x) => x.kind === 'edge').map((x) => ({ id: x.id, fromNode: x.fromNode, toNode: x.toNode })),
+    edges: items.filter((x) => x.kind === 'edge').map((x) => ({ id: x.id, type: x.type, fromNode: x.fromNode, toNode: x.toNode })),
   };
+}
+
+/** A folder's lattice: a node per document, a node per tag that two or more documents' headings share (a join),
+ *  and an h:tag edge from each document to each join it holds. meta-log-db reads v: edges as vertical facts and
+ *  h: edges as horizontal ones (omi-files/meta-log-db src/jsonl/parser.ts); the trees carry the v: edges. */
+export function latticeOf(docs: { name: string; tree: DocTree }[]): string {
+  const holders = new Map<string, string[]>();
+  for (const d of docs) for (const t of new Set(d.tree.nodes.flatMap((n) => (n.kind === 'heading' ? n.tags : [])))) holders.set(t, [...(holders.get(t) ?? []), d.name]);
+  const joins = [...holders].filter(([, ds]) => ds.length >= 2).sort((a, b) => b[1].length - a[1].length || (a[0] < b[0] ? -1 : 1));
+  const out = ['@version: "1.0"', '@schema: "jsoncanvas-1.0+canvasl-min"', '@lattice: "documents and the tags they join"'];
+  docs.forEach((d, i) => out.push(JSON.stringify({ kind: 'node', id: `doc:${d.name}`, type: 'file', file: `${d.name}.canvasl`, x: 0, y: i * 120, width: 320, height: 100, text: d.name })));
+  joins.forEach(([t, ds], i) => out.push(JSON.stringify({ kind: 'node', id: `tag:${t}`, type: 'text', x: 720, y: i * 60, width: 200, height: 50, text: t, held: ds.length })));
+  for (const [t, ds] of joins) for (const name of ds) out.push(JSON.stringify({ kind: 'edge', id: `doc:${name}~tag:${t}`, type: 'h:tag', fromNode: `doc:${name}`, toNode: `tag:${t}` }));
+  return out.join('\n') + '\n';
 }

@@ -545,3 +545,15 @@ test('CanvasL: a Markdown document as a tree (front matter, headings, fenced blo
   const changed = md.replace('(point 1)', '(point 2)');
   assert.equal(verifyEvidence(changed, omi.evidence), false);
 });
+
+test('A folder as a lattice that meta-log-db reads: tree edges vertical (v:child), shared tags horizontal (h:tag)', async () => {
+  const { markdownTree, toCanvasL, toJsonCanvas, latticeOf } = await import('../../rosetta/src/canvasl.ts');
+  const a = markdownTree('# Metatron\n## Law of the garden\n'), b = markdownTree('# Solon\n## Law\n### Metatron again\n'), c = markdownTree('# Elsewhere\n');
+  // meta-log-db's extractFacts (src/jsonl/parser.ts), its rule for edges: v: vertical, h: horizontal
+  const facts = (canvas: { edges: { id: string; type?: string; fromNode: string; toNode: string }[] }) => canvas.edges.map((e) => (e.type?.startsWith('v:') ? 'vertical' : e.type?.startsWith('h:') ? 'horizontal' : 'edge'));
+  assert.deepEqual(facts(toJsonCanvas(toCanvasL(b))), ['vertical', 'vertical'], 'a tree\'s edges are vertical facts');
+  const lattice = toJsonCanvas(latticeOf([{ name: 'a', tree: a }, { name: 'b', tree: b }, { name: 'c', tree: c }]));
+  assert.deepEqual(lattice.nodes.filter((n) => String(n.id).startsWith('tag:')).map((n) => n.id).sort(), ['tag:LAW', 'tag:METATRON'], 'the joins: tags two documents share');
+  assert.ok(facts(lattice).every((f) => f === 'horizontal'), 'the lattice\'s edges are horizontal facts');
+  assert.equal(lattice.edges.length, 4, 'a and b each join LAW and METATRON; c joins nothing');
+});
