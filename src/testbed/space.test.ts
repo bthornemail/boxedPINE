@@ -136,3 +136,51 @@ test('Light Garden\'s characters stand on whole sectors of 30', () => {
   assert.deepEqual(ratios.map((r) => Math.round(r * 360)), [0, 30, 60, 120, 240, 270, 300]);
   assert.ok(ratios.every((r) => Number.isInteger(Math.round(r * 360 * 1e9) / 1e9 / 30)), 'each a whole number of 30-degree sectors');
 });
+
+test('Identity without hashing: words are indices, the check is the nibble parity, the identity is the entropy as tags', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { wordsOf, entropyOf, foldCheck, tagsOf, Chain, verifyChain, pairsOf } = await import('../../space/src/identity.ts');
+  const { K } = await import('../../space/src/gnomon.ts');
+  const list = readFileSync(new URL('../../public/identity/bip39_english.txt', import.meta.url), 'utf8').trim().split('\n');
+  assert.equal(list.length, 2048, '2048 words: an 11-bit index each');
+  // 12 words: 128 bits of entropy and a 4-bit check, the XOR of its 32 nibbles
+  const e = Uint8Array.from({ length: 16 }, (_, i) => (i * 37 + 11) & 0xff);
+  let nibbles = 0; for (const b of e) nibbles ^= (b >> 4) ^ (b & 15);
+  assert.equal(foldCheck(e), nibbles, 'the check of 128 bits is the nibble parity');
+  const words = wordsOf(e, list);
+  assert.equal(words.length, 12);
+  const back = entropyOf(words, list);
+  assert.ok('entropy' in back && Buffer.from(back.entropy).equals(Buffer.from(e)), 'the words give the entropy back');
+  // one word changed: the check catches it (when the change is not in the check's own 4 bits' blind spot)
+  const changed = [...words]; changed[0] = list[(list.indexOf(words[0]!) + 1) % 2048]!;
+  assert.deepEqual(entropyOf(changed, list), { error: 'the check does not hold' });
+  assert.deepEqual(entropyOf(words.slice(0, 11), list), { error: 'the word count is 12, 15, 18, 21 or 24' });
+  // 24 words: 256 bits and an 8-bit check, the XOR of its bytes
+  const e32 = Uint8Array.from({ length: 32 }, (_, i) => (i * 91 + 7) & 0xff);
+  assert.equal(foldCheck(e32), e32.reduce((x, b) => x ^ b, 0), 'the check of 256 bits is the byte parity');
+  assert.equal(wordsOf(e32, list).length, 24);
+  // the identity: the entropy as /A-Z0-9/ tags
+  const tags = tagsOf(e);
+  assert.equal(tags.length, 4);
+  for (const t of tags) assert.match(t, /^[A-Z0-9]{1,8}$/);
+  assert.deepEqual(tagsOf(new Uint8Array(16).fill(255)), Array(4).fill('1Z141Z3'), '2^32 - 1 is 1Z141Z3: seven characters at most');
+  // the chain: polytron's sid = K(sid, pair), every pair of every record
+  const c = new Chain(e);
+  assert.equal(c.root, K((e[0]! << 8) | e[1]!));
+  const l1 = c.add('hello, world'), l2 = c.add('he');
+  let sid = c.root; for (const p of pairsOf('hello, world')) sid = K(sid, p);
+  assert.equal(l1.sid, sid);
+  assert.notEqual(c.add('hello, there').sid, l1.sid, 'records that start alike step apart (polytron used only the first two bytes)');
+  assert.equal(verifyChain(c.root, c.links), null, 'the chain replays');
+  assert.equal(verifyChain(c.root, [l1, { ...l2, text: 'hf' }, ...c.links.slice(2)]), 2, 'a changed record is found by its place');
+  assert.equal(l1.by, tags[0]);
+});
+
+test('Bridge messages may carry who (an identity tag) and sid (its chain, 16 bits), together and checked', async () => {
+  const { check } = await import('../../rosetta/src/agent.ts');
+  assert.deepEqual(check({ kind: 'say', from: 'author', text: 'hi', who: '1Z141Z3', sid: 0x4242 }), { kind: 'say', from: 'author', text: 'hi', who: '1Z141Z3', sid: 0x4242 });
+  assert.equal(check({ kind: 'say', from: 'author', text: 'hi', who: 'abc', sid: 1 }), 'who is an /A-Z0-9/ tag');
+  assert.equal(check({ kind: 'say', from: 'author', text: 'hi', who: 'ABC', sid: 0x10000 }), 'sid is 16 bits');
+  assert.equal(check({ kind: 'say', from: 'author', text: 'hi', who: 'ABC' }), 'who and sid go together');
+  assert.deepEqual(check({ kind: 'say', from: 'author', text: 'hi' }), { kind: 'say', from: 'author', text: 'hi' }, 'and both may be absent');
+});

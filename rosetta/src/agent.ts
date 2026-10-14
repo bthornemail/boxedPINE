@@ -11,10 +11,13 @@
 
 export type From = 'author' | 'agent';
 // `by` names which coding agent spoke (claude-code, opencode), when more than one shares the bridge
+// `who` and `sid` carry the sender's identity and its chain (space/src/identity.ts): `who` is the
+// identity's first /A-Z0-9/ tag, `sid` where its chain stands after this message (16 bits)
+export type Chained = { who?: string; sid?: number };
 export type Message =
-  | { kind: 'say'; from: From; text: string; by?: string }
-  | { kind: 'point'; from: From; tag: string; how: 'xr' | 'pointer' | 'tool'; by?: string }
-  | { kind: 'show'; from: 'agent'; tag: string; by?: string };
+  | ({ kind: 'say'; from: From; text: string; by?: string } & Chained)
+  | ({ kind: 'point'; from: From; tag: string; how: 'xr' | 'pointer' | 'tool'; by?: string } & Chained)
+  | ({ kind: 'show'; from: 'agent'; tag: string; by?: string } & Chained);
 export type Posted = Message & { id: number; at: number };
 
 export const BRIDGE_PORT = 8743;
@@ -36,7 +39,10 @@ export function check(x: unknown): Message | string {
   if (!m || typeof m !== 'object') return 'not an object';
   if (m.from !== 'author' && m.from !== 'agent') return 'from is author or agent';
   if (m.by !== undefined && (m.from !== 'agent' || typeof m.by !== 'string' || !AGENT_NAME.test(m.by))) return 'by names an agent: a-z, 0-9 and -';
-  const by = m.by === undefined ? {} : { by: m.by as string };
+  if (m.who !== undefined && (typeof m.who !== 'string' || !TAG.test(m.who))) return 'who is an /A-Z0-9/ tag';
+  if (m.sid !== undefined && (!Number.isInteger(m.sid) || (m.sid as number) < 0 || (m.sid as number) > 0xffff)) return 'sid is 16 bits';
+  if ((m.who === undefined) !== (m.sid === undefined)) return 'who and sid go together';
+  const by = { ...(m.by === undefined ? {} : { by: m.by as string }), ...(m.who === undefined ? {} : { who: m.who as string, sid: m.sid as number }) };
   if (m.kind === 'say') return typeof m.text === 'string' && m.text.trim() && m.text.length <= 4000 ? { kind: 'say', from: m.from, text: m.text.trim(), ...by } : 'say needs text (1 to 4000 characters)';
   if (m.kind === 'point') return typeof m.tag === 'string' && TAG.test(m.tag) && ['xr', 'pointer', 'tool'].includes(m.how as string) ? { kind: 'point', from: m.from, tag: m.tag, how: m.how as 'xr', ...by } : 'point needs an /A-Z0-9/ tag and how (xr, pointer, tool)';
   if (m.kind === 'show') return m.from === 'agent' && typeof m.tag === 'string' && TAG.test(m.tag) ? { kind: 'show', from: 'agent', tag: m.tag, ...by } : 'show is the agent\'s, with an /A-Z0-9/ tag';

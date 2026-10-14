@@ -13,6 +13,7 @@
 import * as THREE from 'three';
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 import catalog from '../../proofs/js/catalog.json';
+import { Chain, newEntropy, tagsOf, wordsOf } from './identity.ts';
 import { BRIDGE_PORT, PAGE_TOOLS, INDEX16, HASSE16, slotOf, track, idOf, type Message, type Posted, type From } from '../../rosetta/src/agent.ts';
 
 // ?bridge=8799 talks to a bridge on another port (for trying it out beside the agent's own)
@@ -24,13 +25,34 @@ const records = (catalog as { id: string; tag: string; title: string }[]).map((r
 const messages: Posted[] = [];
 const caps: string[] = [];
 
+// ---- the identity and its chain (identity.ts): made on first visit, kept in this browser ----
+// The identity is a name, not a secret: its tag is its entropy, so its words are public too.
+const store = { get: (k: string) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* not kept */ } } };
+const kept = store.get('omi-identity');
+const entropy = kept && /^[0-9a-f]{32}$/.test(kept) ? Uint8Array.from(kept.match(/../g)!, (h) => parseInt(h, 16)) : newEntropy();
+store.set('omi-identity', [...entropy].map((b) => b.toString(16).padStart(2, '0')).join(''));
+const chain = new Chain(entropy);
+for (const t of JSON.parse(store.get('omi-chain') ?? '[]') as string[]) chain.add(t);
+const showIdentity = () => { $('identity').textContent = `identity ${tagsOf(entropy).join('-')} · chain 0x${chain.sid.toString(16).padStart(4, '0')} after ${chain.links.length}`; };
+showIdentity();
+$('identity').title = 'words: ' + 'loading';
+fetch(new URL('../identity/bip39_english.txt', location.href)).then((r) => r.text()).then((t) => { $('identity').title = 'words (a name, not a secret): ' + wordsOf(entropy, t.trim().split('\n')).join(' '); }).catch(() => {});
+
 // ---- the bridge ----
 async function send(m: Message) {
+  const record = m.kind === 'say' ? m.text : `${m.kind} ${m.tag}`;
+  const sid = chain.sid, length = chain.links.length;
+  const link = chain.add(record);
   try {
-    const r = await fetch(`${bridge}/message`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(m) });
+    const r = await fetch(`${bridge}/message`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...m, who: link.by, sid: link.sid }) });
     if (!r.ok) throw new Error(await r.text());
+    store.set('omi-chain', JSON.stringify(chain.links.map((l) => l.text)));
+    showIdentity();
     receive((await r.json()) as Posted);
-  } catch (e) { $('status').textContent = `not sent: ${(e as Error).message}. Is the bridge running?`; }
+  } catch (e) {
+    chain.sid = sid; chain.links.length = length; // not sent: the chain does not move
+    $('status').textContent = `not sent: ${(e as Error).message}. Is the bridge running?`;
+  }
 }
 function receive(p: Posted) {
   if (messages.some((m) => m.id === p.id)) return;
