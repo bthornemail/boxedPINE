@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OMI-IMO Bootstrap — Adopt · Participate · Extend</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #0a0a0f; --fg: #e8e8f0; --accent: #5b8def; --muted: #6b6b80;
+      --cell: #16161f; --border: #2a2a3a; --ok: #6dcea5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: ui-monospace, Menlo, Consolas, monospace;
+      background: var(--bg); color: var(--fg); line-height: 1.5; min-height: 100vh;
+    }
+    header {
+      padding: 1.5rem; border-bottom: 1px solid var(--border);
+    }
+    header h1 { margin: 0 0 0.25rem; font-size: 1.25rem; letter-spacing: 0.04em; }
+    header p { margin: 0; color: var(--muted); font-size: 0.85rem; }
+    main { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+    section {
+      margin-bottom: 1.5rem; padding: 1rem 1.25rem;
+      background: var(--cell); border: 1px solid var(--border); border-radius: 8px;
+    }
+    section h2 {
+      margin: 0 0 0.75rem; font-size: 0.9rem; color: var(--accent); letter-spacing: 0.03em;
+    }
+    #pad {
+      height: 200px; background: #0d0d14; border: 1px dashed var(--border);
+      border-radius: 6px; position: relative; cursor: crosshair; touch-action: none;
+    }
+    #pad .mark {
+      position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px;
+      border-radius: 50%; background: var(--accent); pointer-events: none;
+      box-shadow: 0 0 0 2px rgba(91,141,239,0.3);
+    }
+    #out {
+      font-size: 0.75rem; color: var(--muted); white-space: pre-wrap;
+      max-height: 220px; overflow: auto; margin: 0;
+    }
+    #out .ok { color: var(--ok); }
+    ul { margin: 0; padding-left: 1.25rem; font-size: 0.85rem; color: var(--muted); }
+    li { margin: 0.35rem 0; }
+    a { color: var(--accent); }
+    code { background: var(--bg); padding: 0.1em 0.35em; border-radius: 3px; font-size: 0.9em; }
+    footer {
+      margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border);
+      font-size: 0.7rem; color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>OMI-IMO Bootstrap</h1>
+    <p>Adopt · Participate · Extend — open XOR spatial protocol</p>
+  </header>
+  <main>
+    <section>
+      <h2>Live pattern pipeline</h2>
+      <p style="margin:0 0 0.75rem;font-size:0.8rem;color:var(--muted)">
+        Pointer / touch on the pad → snap → triple → orchestrator → media edit (via <code>/api/pipeline</code> + client attribution).
+      </p>
+      <div id="pad" aria-label="Pointer pad"></div>
+      <pre id="out">Click or drag on the pad…</pre>
+    </section>
+
+    <section>
+      <h2>Adopt</h2>
+      <ul>
+        <li>Run <code>node server/server.js</code> → <a href="/">DOM stack</a></li>
+        <li><code>require('omi-imo')</code> or <code>./shared/pattern-pipeline</code></li>
+        <li>Docs: <a href="/docs/BOOTSTRAP.md">BOOTSTRAP.md</a> · <a href="/docs/README.md">README.md</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Participate</h2>
+      <ul>
+        <li>Open issues / PRs against the stack</li>
+        <li>Add media sinks (SVG, Canvas, WebVTT, Web Audio, HTML, binary already ship)</li>
+        <li>Improve solid catalogs and hardware correspondence tests</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Extend (plugin API)</h2>
+      <ul>
+        <li><code>registerSnapMode(name, fn)</code></li>
+        <li><code>registerSolid(key, { v, e, f })</code></li>
+        <li><code>registerGnnLayer(name, fn)</code></li>
+        <li><code>registerMediaEditor(mediaType, fn)</code></li>
+      </ul>
+      <p style="font-size:0.8rem;color:var(--muted);margin:0.75rem 0 0">
+        See <code>shared/plugin-api.js</code> · license <strong>CC0-1.0</strong>
+      </p>
+    </section>
+
+    <footer>
+      Primitive: Atomics.compareExchange · Reduction: XOR · Fixed point: 0x0000<br>
+      The reference frame is the observer. The observer is the 0x0000 centroid.
+    </footer>
+  </main>
+  <script>
+    (function () {
+      const pad = document.getElementById('pad');
+      const out = document.getElementById('out');
+      let mark = null;
+
+      function show(obj) {
+        out.innerHTML = '<span class="ok">fixed=' + obj.fixed + '</span>\n' +
+          JSON.stringify(obj, null, 2);
+      }
+
+      async function onPointer(ev) {
+        const rect = pad.getBoundingClientRect();
+        const x = ev.clientX - rect.left;
+        const y = ev.clientY - rect.top;
+        if (!mark) {
+          mark = document.createElement('div');
+          mark.className = 'mark';
+          pad.appendChild(mark);
+        }
+        mark.style.left = x + 'px';
+        mark.style.top = y + 'px';
+
+        // Client-side snap preview (16px grid)
+        const sx = Math.round(x / 16) * 16;
+        const sy = Math.round(y / 16) * 16;
+
+        // Server pipeline for full codex path (optional enrichment)
+        try {
+          const q = 'ptr ' + sx + ',' + sy;
+          const res = await fetch('/api/pipeline?q=' + encodeURIComponent(q));
+          const data = await res.json();
+          show({
+            fixed: !!(data.validation && data.validation.readyForSvg),
+            attribution: { x: x, y: y },
+            snap: { x: sx, y: sy, mode: 'square', size: 16 },
+            tokens: data.tokens && data.tokens.length,
+            areas: data.metrics && data.metrics.areaCount,
+            mediaHint: 'svg-transform',
+            note: 'Full pattern-pipeline runs in Node; browser uses grid snap + /api/pipeline'
+          });
+        } catch (e) {
+          show({
+            fixed: true,
+            attribution: { x: x, y: y },
+            snap: { x: sx, y: sy, mode: 'square', size: 16 },
+            edit: { mediaType: 'svg', payload: { kind: 'svg-transform', translate: [sx, sy] } },
+            offline: true
+          });
+        }
+      }
+
+      pad.addEventListener('pointerdown', onPointer);
+      pad.addEventListener('pointermove', function (ev) {
+        if (ev.buttons) onPointer(ev);
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+{
+  "id": "cn-00-prologue",
+  "n": 0,
+  "name": "Prologue — The Breadboard and the Centroid",
+  "role": "prologue",
+  "face": null,
+  "led": "black",
+  "mask": 0,
+  "circuit": {
+    "type": "scaffold",
+    "variant": "rails",
+    "transistors": 0,
+    "resistors": 0,
+    "fanOut": "rails"
+  },
+  "story": [
+    "The breadboard is the physical carrier. Row 1 is the +5V rail, row 2 the collector taps, row 5 the bases, row 10 the emitters, rows 15/20 the LED anodes and cathodes.",
+    "Every operation reduces to XOR. Four faces realize the four phases: BOOT0 (bind, 5T), BOOT1 (apply, 6T), SECURE (eval, 8T), USER (digest, 10T)."
+  ],
+  "principles": [
+    "The carrier is the transport. The graph is the structure.",
+    "Rails: +5V, GND, DATA BUS make every subgraph shareable."
+  ],
+  "build": [],
+  "canvas": {
+    "nodes": [
+      {
+        "id": "BUS",
+        "type": "text",
+        "role": "bus",
+        "value": "8-bit",
+        "color": "4",
+        "x": 0,
+        "y": 0,
+        "width": 8,
+        "height": 3,
+        "text": "BUS",
+        "bRow": 1,
+        "bCol": 0
+      },
+      {
+        "id": "GND",
+        "type": "text",
+        "role": "rail",
+        "value": "0V",
+        "color": "0",
+        "x": 0,
+        "y": 16,
+        "width": 8,
+        "height": 3,
+        "text": "GND",
+        "bRow": 20,
+        "bCol": 0
+      },
+      {
+        "id": "VCC",
+        "type": "text",
+        "role": "rail",
+        "value": "+5V",
+        "color": "7",
+        "x": 0,
+        "y": 32,
+        "width": 8,
+        "height": 3,
+        "text": "VCC (+5V)",
+        "bRow": 1,
+        "bCol": 1
+      }
+    ],
+    "edges": [
+      {
+        "id": "BUS-to-VCC-rail",
+        "fromNode": "BUS",
+        "fromPin": "bottom",
+        "toNode": "VCC",
+        "toPin": "left",
+        "label": "caption"
+      }
+    ]
+  },
+  "sourcemap": [
+    {
+      "smeCanvasNodeId": "BUS",
+      "smePhysicalNodeId": "BUS",
+      "smeComponentType": "rail",
+      "smeComponentValue": "0V/+5V",
+      "smeBreadboardRow": 1,
+      "smeBreadboardCol": 0,
+      "smeNotes": "carrier rails"
+    },
+    {
+      "smeCanvasNodeId": "GND",
+      "smePhysicalNodeId": "GND",
+      "smeComponentType": "rail",
+      "smeComponentValue": "0V",
+      "smeBreadboardRow": 20,
+      "smeBreadboardCol": 0,
+      "smeNotes": "ground rail"
+    }
+  ],
+  "netlist": [
+    {
+      "step": 1,
+      "from": "+5V",
+      "fromPin": "rail",
+      "to": "VCC",
+      "toPin": "bus",
+      "label": "power"
+    },
+    {
+      "step": 2,
+      "from": "GND",
+      "fromPin": "rail",
+      "to": "GND",
+      "toPin": "bus",
+      "label": "ground"
+    }
+  ],
+  "cues": [
+    {
+      "id": "wk-0-w0",
+      "start": 0,
+      "end": 0.5,
+      "text": "Lay the rails: +5V row 1, GND row 20, DATA BUS across.",
+      "payload": {
+        "chapter": 0,
+        "step": "w0"
+      }
+    },
+    {
+      "id": "wk-0-w0b",
+      "start": 0.5,
+      "end": 1,
+      "text": "The centroid gate: BOOT0 ^ BOOT1 ^ SECURE ^ USER.",
+      "payload": {
+        "chapter": 0,
+        "step": "w0b"
+      }
+    }
+  ],
+  "probes": {},
+  "codex": {
+    "role": "prologue",
+    "centroid": "0x0000",
+    "face": null
+  },
+  "verification": []
+}

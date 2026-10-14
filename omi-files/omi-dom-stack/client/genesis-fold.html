@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OMI-IMO Genesis — Torus ↔ Dali Cross</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg:#0e0c0a; --fg:#e8e4dc; --accent:#c9b99a; --muted:#6b6560;
+      --cell:#141210; --border:#3a3530; --ok:#6dcea5; --blue:#5b8def;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--bg);color:var(--fg);min-height:100vh}
+    #app{display:grid;grid-template-columns:220px 1fr 240px;min-height:100vh}
+    @media(max-width:900px){#app{grid-template-columns:1fr}aside{max-height:140px;overflow:auto}}
+    aside{background:var(--cell);padding:1rem;border-right:1px solid var(--border);overflow-y:auto}
+    aside:last-of-type{border-right:none;border-left:1px solid var(--border)}
+    h2,h3{margin:0 0 .75rem;font-size:.85rem;color:var(--accent);letter-spacing:.03em}
+    .chapter{padding:.35rem .5rem;cursor:pointer;border-left:2px solid transparent;font-size:.72rem;color:var(--muted)}
+    .chapter:hover{color:var(--fg)}
+    .chapter.active{border-left-color:var(--accent);color:var(--accent)}
+    .chapter.done{opacity:.55}
+    #stage{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;gap:.75rem}
+    #knot-stage{width:min(420px,90vw);height:min(420px,90vw);background:#0a0908;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+    .row{display:flex;gap:.4rem;flex-wrap:wrap}
+    button{
+      padding:.4rem .7rem;background:var(--cell);color:var(--accent);border:1px solid var(--border);
+      cursor:pointer;font:inherit;font-size:.72rem;border-radius:4px;
+    }
+    button.active{background:var(--accent);color:var(--bg)}
+    button:hover{filter:brightness(1.1)}
+    #status{font-size:.7rem;color:var(--muted);margin-top:.5rem}
+    #vtt-preview{font-size:.65rem;color:var(--muted);white-space:pre-wrap;max-height:180px;overflow:auto;margin-top:.75rem}
+    a{color:var(--blue);font-size:.7rem}
+  </style>
+</head>
+<body>
+  <div id="app">
+    <aside>
+      <h2>Genesis 1–23</h2>
+      <div id="chapters"></div>
+      <p style="margin-top:1rem"><a href="/genesis">Text walkthrough</a><br><a href="/adopt">Adopt</a><br><a href="/api/bundle">Bundle</a></p>
+    </aside>
+    <div id="stage">
+      <div id="knot-stage"
+           data-omi-knot="ruler"
+           data-omi-fold="torus"
+           data-omi-unfold="dali-cross"
+           data-omi-proto="svg"></div>
+      <div class="row" id="fold-btns">
+        <button type="button" data-fold="torus" class="active">Torus fold</button>
+        <button type="button" data-fold="dali-cross">Dali Cross</button>
+      </div>
+      <div class="row" id="proto-btns">
+        <button type="button" data-proto="svg" class="active">SVG 2D</button>
+        <button type="button" data-proto="canvas">Canvas 2.5D</button>
+        <button type="button" data-proto="webgl">WebGL 3D</button>
+        <button type="button" data-proto="audio">Web Audio</button>
+      </div>
+      <div class="row">
+        <button type="button" id="btn-play">Play VTT timeline</button>
+        <button type="button" id="btn-stop">Stop</button>
+      </div>
+      <div id="status">Proto: svg · Fold: torus</div>
+    </div>
+    <aside>
+      <h3>Proto-attributes</h3>
+      <p style="font-size:.7rem;color:var(--muted)">
+        <code>data-omi-fold</code> · <code>data-omi-unfold</code><br>
+        <code>data-omi-proto</code> · VTT cues drive render
+      </p>
+      <h3>VTT sample</h3>
+      <pre id="vtt-preview"></pre>
+    </aside>
+  </div>
+  <script src="/client/genesis-interactive.js"></script>
+  <script>
+    (function () {
+      const stage = document.getElementById('knot-stage');
+      const chaptersEl = document.getElementById('chapters');
+      const status = document.getElementById('status');
+      const vttEl = document.getElementById('vtt-preview');
+      const titles = [
+        'Primitive','Reduction','Invariant','Factorial','Algebras','Configurations','Forms',
+        'Dimensions','Observer','Centroid','Carriers','Extension','Polyforms','Platonic',
+        'Archimedean','Catalan','Johnson','Kepler–Poinsot','Uniform stars','4D polychora',
+        'Trigintaduonion','Edge n-grams','Orchestrator'
+      ];
+      titles.forEach((t, i) => {
+        const d = document.createElement('div');
+        d.className = 'chapter' + (i === 0 ? ' active' : '');
+        d.dataset.chapter = String(i + 1);
+        d.textContent = (i + 1) + '. ' + t;
+        d.onclick = () => {
+          document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
+          d.classList.add('active');
+          d.classList.add('done');
+          // odd chapters prefer dali-cross
+          const fold = (i % 2 === 0) ? 'torus' : 'dali-cross';
+          setFold(fold);
+          const proto = ['svg', 'canvas', 'webgl'][i % 3];
+          setProto(proto);
+          rerender();
+        };
+        chaptersEl.appendChild(d);
+      });
+
+      const gen = window.OMIGenesis.createInteractiveGenesis(stage);
+      let currentProto = 'svg';
+      let currentFold = 'torus';
+
+      function setFold(f) {
+        currentFold = f;
+        stage.setAttribute('data-omi-fold', f === 'torus' ? 'torus' : 'none');
+        stage.setAttribute('data-omi-unfold', f === 'dali-cross' ? 'dali-cross' : 'none');
+        document.querySelectorAll('[data-fold]').forEach(b => {
+          b.classList.toggle('active', b.dataset.fold === f);
+        });
+      }
+      function setProto(p) {
+        currentProto = p;
+        stage.setAttribute('data-omi-proto', p);
+        document.querySelectorAll('[data-proto]').forEach(b => {
+          b.classList.toggle('active', b.dataset.proto === p);
+        });
+      }
+      function rerender() {
+        gen.render(currentFold, currentProto);
+        status.textContent = 'Proto: ' + currentProto + ' · Fold: ' + currentFold +
+          ' · diagonal=' + gen.knot.diagonal() + ' · daliMask=' + gen.knot.daliCross();
+      }
+
+      document.querySelectorAll('[data-fold]').forEach(btn => {
+        btn.onclick = () => { setFold(btn.dataset.fold); rerender(); };
+      });
+      document.querySelectorAll('[data-proto]').forEach(btn => {
+        btn.onclick = () => { setProto(btn.dataset.proto); rerender(); };
+      });
+
+      gen.scheduler.onCue = (cue, i) => {
+        setFold(cue.fold);
+        setProto(cue.proto);
+        document.querySelectorAll('.chapter').forEach((c, idx) => {
+          c.classList.toggle('active', idx === i);
+          if (idx === i) c.classList.add('done');
+        });
+        status.textContent = 'VTT cue ch' + cue.chapter + ' · ' + cue.fold + ' · ' + cue.proto;
+      };
+
+      document.getElementById('btn-play').onclick = () => gen.scheduler.play();
+      document.getElementById('btn-stop').onclick = () => gen.scheduler.stop();
+
+      vttEl.textContent = gen.vtt.split('\n').slice(0, 18).join('\n') + '\n…';
+      rerender();
+    })();
+  </script>
+</body>
+</html>

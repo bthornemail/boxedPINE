@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMI Canvas — XOR Transistor Walkthrough</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --panel-bg: rgba(22, 27, 34, 0.85);
+            --panel-border: #30363d;
+            --text-color: #c9d1d9;
+            --accent-color: #58a6ff;
+            --wire-active: #3fb950;
+            --wire-inactive: #484f58;
+            --wire-high-v: #f85149;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace; background: var(--bg-color); color: var(--text-color); }
+
+        #viewport { width: 100vw; height: 100vh; cursor: grab; }
+        #viewport:active { cursor: grabbing; }
+
+        /* UI Overlay */
+        .hud-panel {
+            position: absolute;
+            background: var(--panel-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 14px;
+            z-index: 10;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+
+        #controls { top: 20px; left: 20px; width: 320px; }
+        #inspector { top: 20px; right: 20px; width: 340px; display: none; }
+        #legend { bottom: 20px; left: 20px; }
+
+        h1, h2, h3 { font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; color: #8b949e; margin-bottom: 8px; }
+        .circuit-selector { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
+        
+        button {
+            background: #21262d;
+            border: 1px solid var(--panel-border);
+            color: var(--text-color);
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        button:hover { background: #30363d; border-color: #8b949e; }
+        button.active { background: var(--accent-color); color: #000; border-color: var(--accent-color); }
+
+        .logic-inputs { display: flex; gap: 12px; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--panel-border); }
+        .toggle-btn { flex: 1; padding: 8px; font-family: monospace; }
+        .toggle-btn.on { background: #238636; color: #fff; }
+
+        .meta-row { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px; }
+        .meta-label { color: #8b949e; }
+        .meta-val { font-family: monospace; font-weight: bold; }
+
+        .code-block {
+            background: #010409;
+            border: 1px solid var(--panel-border);
+            border-radius: 4px;
+            padding: 8px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #7ee787;
+            max-height: 120px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="viewport"></canvas>
+
+    <!-- Navigation & Control HUD -->
+    <div id="controls" class="hud-panel">
+        <h1>OMI-Canvas Navigation</h1>
+        <div class="circuit-selector">
+            <button class="active" onclick="loadCircuit('5T')">5T</button>
+            <button onclick="loadCircuit('6T')">6T</button>
+            <button onclick="loadCircuit('8T')">8T</button>
+            <button onclick="loadCircuit('10T')">10T</button>
+        </div>
+
+        <h2>Simulated Inputs</h2>
+        <div class="logic-inputs">
+            <button id="btnA" class="toggle-btn" onclick="toggleInput('A')">IN_A: 0</button>
+            <button id="btnB" class="toggle-btn" onclick="toggleInput('B')">IN_B: 0</button>
+        </div>
+
+        <div style="margin-top:12px; display:flex; gap:6px;">
+            <button style="flex:1" onclick="resetView()">Reset View</button>
+            <button style="flex:1" onclick="fitToView()">Fit Graph</button>
+        </div>
+    </div>
+
+    <!-- Inspector Panel (Dynamic for Active Component) -->
+    <div id="inspector" class="hud-panel">
+        <h2>Component Sourcemap</h2>
+        <div id="inspector-content">
+            <div class="meta-row"><span class="meta-label">Node ID:</span><span id="inspect-id" class="meta-val">-</span></div>
+            <div class="meta-row"><span class="meta-label">Role:</span><span id="inspect-role" class="meta-val">-</span></div>
+            <div class="meta-row"><span class="meta-label">Model/Value:</span><span id="inspect-value" class="meta-val">-</span></div>
+            <div class="meta-row"><span class="meta-label">Breadboard Loc:</span><span id="inspect-breadboard" class="meta-val">-</span></div>
+            <div class="meta-row"><span class="meta-label">State:</span><span id="inspect-state" class="meta-val">-</span></div>
+            <h3>Notes</h3>
+            <div id="inspect-notes" style="font-size:0.8rem; color:#8b949e;">Select a node...</div>
+            <h3>OMI Canvas Spec</h3>
+            <div id="inspect-json" class="code-block">{}</div>
+        </div>
+    </div>
+
+    <!-- Legend -->
+    <div id="legend" class="hud-panel">
+        <div style="display:flex; gap:12px; font-size:0.75rem;">
+            <span><span style="color:#f85149">■</span> High VCC/Signal</span>
+            <span><span style="color:#3fb950">■</span> Logic True</span>
+            <span><span style="color:#484f58">■</span> Ground / Inactive</span>
+        </div>
+    </div>
+
+<script>
+/**
+ * OMI Canvas Core Engine & Walkthrough
+ */
+
+// Global State
+const state = {
+    currentCircuit: '6T',
+    inputs: { A: false, B: false },
+    pan: { x: 0, y: 0 },
+    zoom: 1,
+    selectedNode: null,
+    isDragging: false,
+    dragStart: { x: 0, y: 0 }
+};
+
+// Canvas Reference
+const canvas = document.getElementById('viewport');
+const ctx = canvas.getContext('2d');
+
+// Circuit Topologies (Sourced from Catalog & Sourcemap Documents)
+const CIRCUITS = {
+    '5T': {
+        name: "5T XOR (bind)",
+        nodes: [
+            { id: "IN_A", type: "input", x: -200, y: -50, label: "IN_A", role: "Input A" },
+            { id: "IN_B", type: "input", x: -200, y: 50, label: "IN_B", role: "Input B" },
+            { id: "Q1", type: "transistor", x: -50, y: -80, model: "2N2222", role: "Input Phase A", row: 5, col: 1 },
+            { id: "Q2", type: "transistor", x: -50, y: 80, model: "2N2222", role: "Input Phase B", row: 5, col: 6 },
+            { id: "Q3", type: "transistor", x: 100, y: 0, model: "2N2222", role: "Switching Gate", row: 5, col: 11 },
+            { id: "Q4", type: "transistor", x: 250, y: -60, model: "2N2222", role: "OR Branch L", row: 5, col: 21 },
+            { id: "Q5", type: "transistor", x: 250, y: 60, model: "2N2222", role: "OR Branch R", row: 5, col: 26 },
+            { id: "LED", type: "led", x: 400, y: 0, color: "#f85149", label: "RED LED", role: "Indicator", row: 24, col: 48 }
+        ],
+        edges: [
+            { from: "IN_A", to: "Q1", label: "A" }, { from: "IN_B", to: "Q2", label: "B" },
+            { from: "Q1", to: "Q3", label: "NAND" }, { from: "Q2", to: "Q3", label: "NAND" },
+            { from: "Q3", to: "Q4", label: "PULSE" }, { from: "Q3", to: "Q5", label: "PULSE" },
+            { from: "Q4", to: "LED", label: "OUT" }, { from: "Q5", to: "LED", label: "OUT" }
+        ]
+    },
+    '6T': {
+        name: "6T XOR (apply / full fan-out)",
+        nodes: [
+            { id: "BUS", type: "bus", x: -250, y: -100, label: "DATA BUS", role: "Data Bus", row: 24, col: 0 },
+            { id: "Q1", type: "transistor", x: -100, y: -120, model: "2N2222", role: "NAND Gate L", row: 5, col: 1, notes: "NAND gate left" },
+            { id: "Q2", type: "transistor", x: -100, y: -40, model: "2N2222", role: "NAND Gate R", row: 5, col: 6, notes: "NAND gate right" },
+            { id: "Q3", type: "transistor", x: 50, y: -80, model: "2N2222", role: "Switch Stage", row: 5, col: 11, notes: "switch" },
+            { id: "Q4", type: "transistor", x: 200, y: -120, model: "2N2222", role: "OR-Like L", row: 5, col: 21, notes: "OR-like left" },
+            { id: "Q5", type: "transistor", x: 200, y: -40, model: "2N2222", role: "OR-Like R", row: 5, col: 26, notes: "OR-like right" },
+            { id: "Q6", type: "transistor", x: 350, y: -80, model: "2N2222", role: "Inverter Stage", row: 5, col: 31, notes: "Full Fan-Out Driver" },
+            { id: "LED", type: "led", x: 500, y: -80, color: "#e3b341", label: "YELLOW LED", role: "Apply Indicator", row: 24, col: 48 }
+        ],
+        edges: [
+            { from: "BUS", to: "Q1", label: "A" }, { from: "BUS", to: "Q2", label: "B" },
+            { from: "Q1", to: "Q2", label: "NAND" }, { from: "Q2", to: "Q3", label: "switch" },
+            { from: "Q3", to: "Q4", label: "OR-like" }, { from: "Q3", to: "Q5", label: "OR-like" },
+            { from: "Q4", to: "Q6", label: "drive" }, { from: "Q5", to: "Q6", label: "drive" },
+            { from: "Q6", to: "LED", label: "OUT" }
+        ]
+    },
+    '8T': {
+        name: "8T XOR (eval / SECURE)",
+        nodes: [
+            { id: "NAND1", type: "gate", x: -150, y: -80, label: "NAND 1", role: "Input Gate (2T)", row: 5, col: 1 },
+            { id: "NAND2", type: "gate", x: 50, y: -150, label: "NAND 2", role: "Upper Gate (2T)", row: 5, col: 11 },
+            { id: "NAND3", type: "gate", x: 50, y: 0, label: "NAND 3", role: "Lower Gate (2T)", row: 5, col: 21 },
+            { id: "NAND4", type: "gate", x: 250, y: -80, label: "NAND 4", role: "Output Gate (2T)", row: 5, col: 31 },
+            { id: "LED", type: "led", x: 420, y: -80, color: "#3fb950", label: "GREEN LED", role: "Eval Indicator", row: 24, col: 48 }
+        ],
+        edges: [
+            { from: "NAND1", to: "NAND2", label: "N1_OUT" }, { from: "NAND1", to: "NAND3", label: "N1_OUT" },
+            { from: "NAND2", to: "NAND4", label: "N2_OUT" }, { from: "NAND3", to: "NAND4", label: "N3_OUT" },
+            { from: "NAND4", to: "LED", label: "OUT" }
+        ]
+    },
+    '10T': {
+        name: "10T XOR (digest / USER)",
+        nodes: [
+            { id: "NOR1", type: "gate", x: -200, y: -120, label: "NOR 1", role: "Input NOR", row: 5, col: 1 },
+            { id: "NOR2", type: "gate", x: -200, y: 40, label: "NOR 2", role: "Input NOR", row: 5, col: 8 },
+            { id: "NOR3", type: "gate", x: 0, y: -40, label: "NOR 3", role: "Mid Stage", row: 5, col: 16 },
+            { id: "NOR4", type: "gate", x: 200, y: -120, label: "NOR 4", role: "Upper Drive", row: 5, col: 24 },
+            { id: "NOR5", type: "gate", x: 200, y: 40, label: "NOR 5", role: "Lower Drive", row: 5, col: 32 },
+            { id: "LED", type: "led", x: 400, y: -40, color: "#58a6ff", label: "BLUE LED", role: "Digest Indicator", row: 24, col: 48 }
+        ],
+        edges: [
+            { from: "NOR1", to: "NOR3", label: "N1" }, { from: "NOR2", to: "NOR3", label: "N2" },
+            { from: "NOR3", to: "NOR4", label: "N3" }, { from: "NOR3", to: "NOR5", label: "N3" },
+            { from: "NOR4", to: "LED", label: "OUT" }, { from: "NOR5", to: "LED", label: "OUT" }
+        ]
+    }
+};
+
+// Core Logic Engine: Evaluates XOR behavior for visualization
+function evaluateLogic(circuitKey, inputs) {
+    const active = inputs.A ^ inputs.B; // Fundamental XOR truth
+    const nodeStates = {};
+
+    const graph = CIRCUITS[circuitKey];
+    graph.nodes.forEach(n => {
+        if (n.type === 'input') {
+            nodeStates[n.id] = n.id === 'IN_A' ? inputs.A : inputs.B;
+        } else if (n.type === 'bus') {
+            nodeStates[n.id] = inputs.A || inputs.B;
+        } else if (n.type === 'led') {
+            nodeStates[n.id] = active;
+        } else {
+            // Intermediate state simulation
+            nodeStates[n.id] = active ? (Math.random() > 0.2) : false;
+        }
+    });
+
+    return { active, nodeStates };
+}
+
+// Render Loop
+function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.save();
+    ctx.translate(state.pan.x, state.pan.y);
+    ctx.scale(state.zoom, state.zoom);
+
+    drawGrid();
+
+    const circuit = CIRCUITS[state.currentCircuit];
+    const { active, nodeStates } = evaluateLogic(state.currentCircuit, state.inputs);
+
+    // Draw Edges
+    circuit.edges.forEach(edge => {
+        const fromNode = circuit.nodes.find(n => n.id === edge.from);
+        const toNode = circuit.nodes.find(n => n.id === edge.to);
+
+        if (fromNode && toNode) {
+            const isHigh = nodeStates[fromNode.id];
+            ctx.beginPath();
+            ctx.moveTo(fromNode.x, fromNode.y);
+            ctx.lineTo(toNode.x, toNode.y);
+            ctx.strokeStyle = isHigh ? 'var(--wire-active)' : 'var(--wire-inactive)';
+            ctx.lineWidth = isHigh ? 3 : 1.5;
+            ctx.setLineDash(isHigh ? [8, 4] : []);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Edge Label
+            const midX = (fromNode.x + toNode.x) / 2;
+            const midY = (fromNode.y + toNode.y) / 2;
+            ctx.fillStyle = '#8b949e';
+            ctx.font = '10px monospace';
+            ctx.fillText(edge.label, midX, midY - 4);
+        }
+    });
+
+    // Draw Nodes
+    circuit.nodes.forEach(node => {
+        const isSelected = state.selectedNode && state.selectedNode.id === node.id;
+        const isActive = nodeStates[node.id];
+
+        ctx.fillStyle = isSelected ? '#58a6ff' : '#21262d';
+        ctx.strokeStyle = isActive ? (node.color || '#3fb950') : '#30363d';
+        ctx.lineWidth = isSelected ? 3 : 2;
+
+        const w = 100, h = 40;
+        ctx.beginPath();
+        ctx.roundRect(node.x - w/2, node.y - h/2, w, h, 6);
+        ctx.fill();
+        ctx.stroke();
+
+        // Node Label
+        ctx.fillStyle = '#c9d1d9';
+        ctx.font = 'bold 12px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(node.label || node.id, node.x, node.y - 4);
+
+        // Subtext / Role
+        ctx.fillStyle = '#8b949e';
+        ctx.font = '9px monospace';
+        ctx.fillText(node.role || node.type, node.x, node.y + 10);
+    });
+
+    ctx.restore();
+    requestAnimationFrame(render);
+}
+
+// Background Grid Generator
+function drawGrid() {
+    const gridSize = 40;
+    const left = (-state.pan.x) / state.zoom - canvas.width;
+    const top = (-state.pan.y) / state.zoom - canvas.height;
+    const right = left + (canvas.width * 2) / state.zoom;
+    const bottom = top + (canvas.height * 2) / state.zoom;
+
+    ctx.strokeStyle = '#161b22';
+    ctx.lineWidth = 1;
+
+    for (let x = Math.floor(left / gridSize) * gridSize; x < right; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, top);
+        ctx.lineTo(x, bottom);
+        ctx.stroke();
+    }
+    for (let y = Math.floor(top / gridSize) * gridSize; y < bottom; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(left, y);
+        ctx.lineTo(right, y);
+        ctx.stroke();
+    }
+}
+
+// Viewport Setup & Responsive Sizing
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// Infinite Canvas Interaction Controls
+canvas.addEventListener('mousedown', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    // Transform mouse into world space
+    const worldX = (mouseX - state.pan.x) / state.zoom;
+    const worldY = (mouseY - state.pan.y) / state.zoom;
+
+    // Check hit test for node selection
+    const circuit = CIRCUITS[state.currentCircuit];
+    const hitNode = circuit.nodes.find(n => 
+        Math.abs(n.x - worldX) < 50 && Math.abs(n.y - worldY) < 20
+    );
+
+    if (hitNode) {
+        selectNode(hitNode);
+    } else {
+        state.isDragging = true;
+        state.dragStart = { x: e.clientX - state.pan.x, y: e.clientY - state.pan.y };
+    }
+});
+
+window.addEventListener('mousemove', e => {
+    if (state.isDragging) {
+        state.pan.x = e.clientX - state.dragStart.x;
+        state.pan.y = e.clientY - state.dragStart.y;
+    }
+});
+
+window.addEventListener('mouseup', () => state.isDragging = false);
+
+canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    const zoomFactor = 1.1;
+    if (e.deltaY < 0) {
+        state.zoom *= zoomFactor;
+    } else {
+        state.zoom /= zoomFactor;
+    }
+}, { passive: false });
+
+// Interactive State Toggles & Routing
+function loadCircuit(key) {
+    state.currentCircuit = key;
+    document.querySelectorAll('.circuit-selector button').forEach(b => {
+        b.classList.toggle('active', b.innerText === key);
+    });
+    state.selectedNode = null;
+    document.getElementById('inspector').style.display = 'none';
+    fitToView();
+}
+
+function toggleInput(inputKey) {
+    state.inputs[inputKey] = !state.inputs[inputKey];
+    const btn = document.getElementById(`btn${inputKey}`);
+    btn.innerText = `IN_${inputKey}: ${state.inputs[inputKey] ? 1 : 0}`;
+    btn.classList.toggle('on', state.inputs[inputKey]);
+}
+
+function selectNode(node) {
+    state.selectedNode = node;
+    const inspector = document.getElementById('inspector');
+    inspector.style.display = 'block';
+
+    document.getElementById('inspect-id').innerText = node.id;
+    document.getElementById('inspect-role').innerText = node.role || node.type;
+    document.getElementById('inspect-value').innerText = node.model || node.color || 'Standard';
+    document.getElementById('inspect-breadboard').innerText = node.row ? `Row ${node.row}, Col ${node.col}` : 'N/A';
+    document.getElementById('inspect-notes').innerText = node.notes || 'No specialized sourcemap notes attached.';
+    
+    document.getElementById('inspect-json').innerText = JSON.stringify({
+        id: node.id,
+        type: node.type,
+        x: node.x,
+        y: node.y,
+        sourcemap: { row: node.row, col: node.col }
+    }, null, 2);
+}
+
+function resetView() {
+    state.pan = { x: canvas.width / 2, y: canvas.height / 2 };
+    state.zoom = 1;
+}
+
+function fitToView() {
+    resetView();
+}
+
+// Initial Kickoff
+resetView();
+requestAnimationFrame(render);
+</script>
+</body>
+</html>

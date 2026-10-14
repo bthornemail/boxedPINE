@@ -1,0 +1,244 @@
+---
+codex: OMI-IMO
+title: "The OMI-IMO Protocol Codex"
+subtitle: "A Deterministic Atomic Protocol for Spatial Coordination"
+version: "1.0.0"
+status: canonical
+language: en
+encoding: utf-8
+created: "2026-09-20T00:00:00Z"
+updated: "2026-09-20T00:00:00Z"
+license: "CC0-1.0"
+keywords:
+  - XOR
+  - Atomics
+  - compareExchange
+  - spatial coordination
+  - deterministic protocol
+  - binary quadratic form
+  - regex constraint mapping
+  - isomorphism
+abstract: |
+  The OMI-IMO protocol is a deterministic atomic protocol
+  where every operation reduces to XOR. The primitive is
+  Atomics.compareExchange. This Complete Codex serializes
+  the glossary, index, isomorphism, and the full REGEX
+  constraint mapping used by the bootstrap and DOM stack.
+---
+
+# The Isomorphism Proof
+# Automata ≅ Algorithmic ≅ Axiomatic
+isomorphism:
+  reframings:
+    - name: Automata
+      origin: "initial state q_0"
+      process: "transition δ"
+      result: "accepting state F"
+    - name: Algorithmic
+      origin: "base case"
+      process: "step"
+      result: "output"
+    - name: Axiomatic
+      origin: "axiom"
+      process: "rule"
+      result: "theorem"
+  mapping:
+    origin:   ["q_0", "base case", "axiom"]
+    process:  ["δ", "step", "rule"]
+    result:   ["F", "output", "theorem"]
+  statement: "Automata ≅ Algorithmic ≅ Axiomatic"
+
+# Glossary (bootstrap tokens)
+glossary:
+  - term: "0x0000"
+    definition: "The zero constant centroid"
+    reframing: origin
+    dimension: 0
+    value: 0
+  - term: "Omicron"
+    definition: "The ruler / the moving point"
+    reframing: process
+    dimension: 1
+  - term: "Imago Dei"
+    definition: "The receipt / the read point"
+    reframing: result
+    dimension: 2
+  - term: "3!"
+    definition: "The six orderings / interference"
+    reframing: interference
+    value: 6
+  - term: "76"
+    definition: "The kernel size (60 + 12 + 4)"
+    value: 76
+  - term: "155"
+    definition: "The trigintaduonion triples (32D algebra)"
+    value: 155
+  - term: "651"
+    definition: "The 64nion triples (64D algebra)"
+    value: 651
+
+# Factorial index
+index:
+  - { n: 0, value: 1,        name: "void" }
+  - { n: 1, value: 1,        name: "collapse" }
+  - { n: 2, value: 2,        name: "binary" }
+  - { n: 3, value: 6,        name: "ternary" }
+  - { n: 4, value: 24,       name: "quaternary" }
+  - { n: 5, value: 120,      name: "quinary" }
+  - { n: 6, value: 720,      name: "sexinary" }
+  - { n: 7, value: 5040,     name: "septinary" }
+  - { n: 8, value: 40320,    name: "octonary" }
+  - { n: 9, value: 362880,   name: "nonary" }
+  - { n: 10, value: 3628800, name: "denary" }
+
+# Canonical REGEX constraint mapping (serialized for bootstrap)
+# Source: OMI-IMO Specification §21 + Untitled 70 YAML Codex
+regex_constraints:
+  - name: FRONT
+    pattern: "^[A-Za-z0-9:+]$"
+    meaning: "the front boundary"
+    dimension: -1
+    correlation: "0x0000"
+  - name: BACK
+    pattern: "^[A-Za-z0-9.\\-]$"
+    meaning: "the back boundary"
+    dimension: -1
+    correlation: "Omicron"
+  - name: INSIDE
+    pattern: "^[A-Za-z0-9_]$"
+    meaning: "interior token"
+    dimension: -1
+    correlation: "Imago Dei"
+  - name: OUTSIDE
+    pattern: "^[^A-Za-z0-9_]$"
+    meaning: "exterior token"
+    dimension: -1
+    correlation: "3!"
+  - name: UP
+    pattern: "^[A-Z_]$"
+    meaning: "the up boundary"
+    dimension: -1
+    correlation: "Imago Dei"
+  - name: DOWN
+    pattern: "^[a-z_]$"
+    meaning: "the down boundary"
+    dimension: -1
+    correlation: "3!"
+  - name: LEFT
+    pattern: "^[0-9+\\-]\\.[^0-9+\\-]$"
+    meaning: "the left boundary"
+    dimension: -1
+    correlation: "76"
+  - name: RIGHT
+    pattern: "^[^0-9+\\-]\\.[0-9+\\-]$"
+    meaning: "the right boundary"
+    dimension: -1
+    correlation: "155"
+  - name: CENTER
+    pattern: "^[0-9]\\.[0-9]$"
+    meaning: "the center boundary"
+    dimension: -1
+    correlation: "651"
+  - name: CONSTRAINT
+    pattern: "^[^\"]+$"
+    meaning: "unquoted constraint body"
+    dimension: -1
+  - name: BOUNDARY
+    pattern: "^\"([^\"]+)\"$"
+    meaning: "quoted boundary"
+    dimension: -1
+  - name: DEFLECT
+    pattern: "^([^\".]+):\\1$"
+    meaning: "deflection symmetry"
+    dimension: -1
+  - name: REFLECT
+    pattern: "^([\"\\.]+):\\1$"
+    meaning: "reflection symmetry"
+    dimension: -1
+  - name: INFLECT
+    pattern: "^([\"\\.]+):([\"\\.]+):\\2:\\1$"
+    meaning: "inflection symmetry"
+    dimension: -1
+  - name: AXIS
+    pattern: "^(\\d\\d)[A-Za-z_](\\d\\d):\\2[0-9+\\-]\\1$"
+    meaning: "axis mnemonic"
+    dimension: -1
+  - name: MNEMONIC
+    pattern: "^(\\d\\d)([A-Z_]?[a-z_]+)(\\d\\d):\\3\\2\\1$"
+    meaning: "full mnemonic form"
+    dimension: -1
+  - name: PALINDROME
+    pattern: "^(\\d\\d)[A-Za-z_\\-](\\d\\d):\\2[0-9_\\-]\\1$"
+    meaning: "palindromic form"
+    dimension: -1
+
+# Practical attribute validators used by the DOM stack (derived)
+omi_attributes:
+  - name: OMI_MNEMONIC
+    pattern: "^[A-Za-z0-9]{2,8}$"
+    used_on: "data-omi-mnemonic"
+  - name: OMI_BAND
+    pattern: "^[0-9]{1,2}$"
+    used_on: "data-omi-band"
+  - name: OMI_OFFSET
+    pattern: "^[0-9]+$"
+    used_on: "data-omi-offset"
+  - name: OMI_BPE
+    pattern: "^[1248]$"
+    used_on: "data-omi-bpe-constraint"
+  - name: OMI_HIT_LIST
+    pattern: "^[0-9]+(,[0-9]+)*$"
+    used_on: "data-omi-hit-list"
+  - name: OMI_ID
+    pattern: "^[a-z][a-z0-9\\-]*$"
+    used_on: "id"
+
+# Constraint mechanism layers (from YAML Codex)
+# Native dual-mode: text (UTF-8 string) and binary (Uint8Array / Buffer / ArrayBuffer)
+constraint_mechanism:
+  description: >
+    The −5D → −1D regex constraint pipeline defines what can be parsed.
+    It accepts text or binary natively; the same layer sequence is applied
+    to both representations.
+  input_modes:
+    - text: "string / decoded UTF-8"
+    - binary: "Uint8Array | Buffer | ArrayBuffer | byte array"
+  layers:
+    - dimension: -5
+      pattern: "//g"
+      constraint: global
+      correlation: "0x0000"
+      binary: "whole buffer as single unit"
+    - dimension: -4
+      pattern: "/color/g"
+      constraint: color
+      correlation: "Omicron"
+      binary: "skipped (text-oriented)"
+    - dimension: -3
+      pattern: "\\r\\n"
+      constraint: delimiter
+      correlation: "Imago Dei"
+      binary: "CRLF (0x0D 0x0A) / LF / CR byte sequences"
+    - dimension: -2
+      pattern: "[^a-zA-Z0-9]"
+      constraint: non-alphanumeric
+      correlation: "3!"
+      binary: "runs of bytes outside 0-9A-Za-z"
+    - dimension: -1
+      pattern: "[a-zA-Z0-9]"
+      constraint: alphanumeric
+      correlation: "76"
+      binary: "runs of bytes in 0-9A-Za-z"
+    - dimension: 0
+      pattern: "//g"
+      constraint: compareExchange
+      correlation: "155"
+      note: "higher layer — not part of the −5D…−1D pipeline"
+  implementation: "shared/constraint-pipeline.js"
+
+# Primitive (for reference)
+primitive:
+  name: "Atomics.compareExchange"
+  signature: "Atomics.compareExchange(array, index, expected, replacement)"
+  phases: [bind, apply, eval, digest]
+  reduction: XOR

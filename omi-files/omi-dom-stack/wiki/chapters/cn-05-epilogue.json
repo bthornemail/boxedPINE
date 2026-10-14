@@ -1,0 +1,287 @@
+{
+  "id": "cn-05-epilogue",
+  "n": 5,
+  "name": "Epilogue — The Centroid and the Meta-Compile",
+  "role": "epilogue",
+  "face": null,
+  "led": "gray",
+  "mask": 0,
+  "circuit": {
+    "type": "centroid",
+    "variant": "tetrahedral",
+    "transistors": 0,
+    "resistors": 0,
+    "fanOut": "gate"
+  },
+  "story": [
+    "The tetrahedral centroid is the XOR of the four faces: Centroid = BOOT0 ^ BOOT1 ^ SECURE ^ USER.",
+    "The transistor count increases monotonically 5 → 6 → 8 → 10 because each face adds capability: BOOT0 constructs, BOOT1 drives, SECURE composes, USER carries.",
+    "When the walkthrough is complete, the meta-compilation is complete: every canvas node traces back to its physical realization, every vertex and every edge is one line of the JSONL/NDJSON stream."
+  ],
+  "principles": [],
+  "build": [],
+  "canvas": {
+    "nodes": [
+      {
+        "id": "BUS",
+        "type": "text",
+        "role": "bus",
+        "value": "8-bit",
+        "color": "4",
+        "x": 0,
+        "y": 0,
+        "width": 8,
+        "height": 3,
+        "text": "DATA BUS",
+        "bRow": 1,
+        "bCol": 0
+      },
+      {
+        "id": "VCC",
+        "type": "text",
+        "role": "rail",
+        "value": "+5V",
+        "color": "7",
+        "x": 0,
+        "y": 16,
+        "width": 8,
+        "height": 3,
+        "text": "VCC (+5V)",
+        "bRow": 1,
+        "bCol": 110
+      },
+      {
+        "id": "GND",
+        "type": "text",
+        "role": "rail",
+        "value": "0V",
+        "color": "0",
+        "x": 0,
+        "y": 32,
+        "width": 8,
+        "height": 3,
+        "text": "GND",
+        "bRow": 20,
+        "bCol": 0
+      },
+      {
+        "id": "CENTROID",
+        "type": "text",
+        "role": "gate",
+        "value": "XOR",
+        "color": "6",
+        "x": 24,
+        "y": 8,
+        "width": 8,
+        "height": 3,
+        "text": "CENTROID (XOR)",
+        "bRow": 2,
+        "bCol": 110
+      },
+      {
+        "id": "LED",
+        "type": "text",
+        "role": "LED",
+        "value": "GRAY",
+        "color": "2",
+        "x": 24,
+        "y": 24,
+        "width": 8,
+        "height": 3,
+        "text": "CENTROID LED",
+        "bRow": 15,
+        "bCol": 110
+      }
+    ],
+    "edges": [
+      {
+        "id": "BOOT0-into-centroid",
+        "fromNode": "BUS",
+        "fromSide": "left",
+        "toNode": "CENTROID",
+        "toSide": "left",
+        "toEnd": "arrow",
+        "label": "BOOT0"
+      },
+      {
+        "id": "BOOT1-into-centroid",
+        "fromNode": "VCC",
+        "fromSide": "left",
+        "toNode": "CENTROID",
+        "toSide": "top",
+        "toEnd": "arrow",
+        "label": "BOOT1"
+      },
+      {
+        "id": "SECURE-into-centroid",
+        "fromNode": "GND",
+        "fromSide": "left",
+        "toNode": "CENTROID",
+        "toSide": "right",
+        "toEnd": "arrow",
+        "label": "SECURE"
+      },
+      {
+        "id": "USER-into-centroid",
+        "fromNode": "VCC",
+        "fromSide": "right",
+        "toNode": "CENTROID",
+        "toSide": "bottom",
+        "toEnd": "arrow",
+        "label": "USER"
+      },
+      {
+        "id": "probe-0x00",
+        "fromNode": "CENTROID",
+        "fromSide": "bottom",
+        "toNode": "LED",
+        "toSide": "top",
+        "toEnd": "arrow",
+        "label": "0x00"
+      },
+      {
+        "id": "gnd-return",
+        "fromNode": "LED",
+        "fromSide": "bottom",
+        "toNode": "GND",
+        "toSide": "right",
+        "toEnd": "arrow",
+        "label": "return"
+      }
+    ]
+  },
+  "sourcemap": [
+    {
+      "smeCanvasNodeId": "BUS",
+      "smePhysicalNodeId": "BUS",
+      "smeComponentType": "bus",
+      "smeComponentValue": "8-bit",
+      "smeBreadboardRow": 1,
+      "smeBreadboardCol": 0,
+      "smeNotes": "bus BUS"
+    },
+    {
+      "smeCanvasNodeId": "VCC",
+      "smePhysicalNodeId": "VCC",
+      "smeComponentType": "rail",
+      "smeComponentValue": "+5V",
+      "smeBreadboardRow": 1,
+      "smeBreadboardCol": 110,
+      "smeNotes": "rail VCC"
+    },
+    {
+      "smeCanvasNodeId": "GND",
+      "smePhysicalNodeId": "GND",
+      "smeComponentType": "rail",
+      "smeComponentValue": "0V",
+      "smeBreadboardRow": 20,
+      "smeBreadboardCol": 0,
+      "smeNotes": "rail GND"
+    },
+    {
+      "smeCanvasNodeId": "CENTROID",
+      "smePhysicalNodeId": "CENTROID",
+      "smeComponentType": "gate",
+      "smeComponentValue": "XOR",
+      "smeBreadboardRow": 2,
+      "smeBreadboardCol": 110,
+      "smeNotes": "gate CENTROID"
+    },
+    {
+      "smeCanvasNodeId": "LED",
+      "smePhysicalNodeId": "LED",
+      "smeComponentType": "LED",
+      "smeComponentValue": "GRAY",
+      "smeBreadboardRow": 15,
+      "smeBreadboardCol": 110,
+      "smeNotes": "LED LED"
+    }
+  ],
+  "netlist": [
+    {
+      "step": 1,
+      "from": "BUS",
+      "fromPin": "left",
+      "to": "CENTROID",
+      "toPin": "left",
+      "label": "BOOT0"
+    },
+    {
+      "step": 2,
+      "from": "VCC",
+      "fromPin": "left",
+      "to": "CENTROID",
+      "toPin": "top",
+      "label": "BOOT1"
+    },
+    {
+      "step": 3,
+      "from": "GND",
+      "fromPin": "left",
+      "to": "CENTROID",
+      "toPin": "right",
+      "label": "SECURE"
+    },
+    {
+      "step": 4,
+      "from": "VCC",
+      "fromPin": "right",
+      "to": "CENTROID",
+      "toPin": "bottom",
+      "label": "USER"
+    },
+    {
+      "step": 5,
+      "from": "CENTROID",
+      "fromPin": "bottom",
+      "to": "LED",
+      "toPin": "top",
+      "label": "0x00"
+    },
+    {
+      "step": 6,
+      "from": "LED",
+      "fromPin": "bottom",
+      "to": "GND",
+      "toPin": "right",
+      "label": "return"
+    }
+  ],
+  "cues": [
+    {
+      "id": "wk-cn-05-epilogue-e1",
+      "start": 0,
+      "end": 0.5,
+      "text": "Wire the centroid gate: BOOT0 ^ BOOT1 ^ SECURE ^ USER.",
+      "payload": {
+        "chapter": 5,
+        "step": "e1"
+      }
+    },
+    {
+      "id": "wk-cn-05-epilogue-e2",
+      "start": 0.5,
+      "end": 1,
+      "text": "Green centroid LED illuminates at the terminal. Meta-compilation complete.",
+      "payload": {
+        "chapter": 5,
+        "step": "e2"
+      }
+    }
+  ],
+  "probes": {
+    "CENTROID": {
+      "row": 2,
+      "col": 110
+    },
+    "CENTROID_XOR": {
+      "value": 0
+    }
+  },
+  "codex": {
+    "role": "epilogue",
+    "centroid": "0x00",
+    "face": null
+  },
+  "verification": []
+}

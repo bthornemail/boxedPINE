@@ -1,0 +1,39 @@
+{
+  "name": "omi-imo",
+  "version": "1.0.0",
+  "description": "OMI-IMO — deterministic atomic protocol (XOR). Full DOM stack, pattern pipeline, solid toolkit, hardware reference.",
+  "main": "shared/pattern-pipeline.js",
+  "exports": {
+    ".": "./shared/pattern-pipeline.js",
+    "./pipeline": "./shared/pattern-pipeline.js",
+    "./plugin-api": "./shared/plugin-api.js",
+    "./ruler": "./shared/ruler.js",
+    "./solid-toolkit": "./shared/solid-toolkit.js",
+    "./dimension-pipeline": "./shared/dimension-pipeline.js",
+    "./algorithmic-core": "./shared/algorithmic-core.js",
+    "./path-protocol": "./shared/path-protocol.js",
+    "./space": "./shared/space.js",
+    "./peers": "./shared/peers.js",
+    "./declare": "./shared/declare.js"
+  },
+  "scripts": {
+    "start": "node server/server.js",
+    "serve": "node server/server.js",
+    "test": "node -e \"const m=['ruler','clock-sliderule','hit-zones-cues','dimension-pipeline','parallel-engine','busybox','ascii-table','solid-toolkit','solid-toolkit-extended','solid-to-triple','edge-ngram','spatial-gnn','contrasting-orchestrator','pattern-pipeline','plugin-api','blob-substrate','prolog-resolve','fano-lottery','algorithmic-core','path-protocol','space','peers','declare']; let ok=true; for (const n of m){ try{ const r=require('./shared/'+n).selfTest(); const p=r.then?null:r; if(p&&!p.passed){ok=false; console.log('FAIL',n);} else if(!r.then) console.log('PASS',n,p.total);} catch(e){ console.log('ERR',n,e.message); ok=false;} } process.exit(ok?0:1)\""
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "license": "CC0-1.0",
+  "keywords": [
+    "omi-imo",
+    "xor",
+    "spatial",
+    "snap-to-grid",
+    "sse",
+    "dom"
+  ],
+  "dependencies": {
+    "ws": "^8.21.3"
+  }
+}

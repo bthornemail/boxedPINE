@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OMI-IMO Walkthrough Wiki</title>
+  <style>
+    :root {
+      --ink: #222; --paper: #f8f6f0; --rail: #d5d1c7;
+      --accent-red: #c0392b; --accent-yellow: #b8860b; --accent-green: #27713c;
+      --accent-blue: #1f5fa8; --accent-gray: #6a6a66;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: var(--paper); color: var(--ink); line-height: 1.5;
+    }
+    header {
+      background: #1d1d1b; color: #eee; padding: 0.8rem 1.2rem;
+      display: flex; gap: 1rem; align-items: baseline; flex-wrap: wrap;
+    }
+    header .brand { font-weight: 700; letter-spacing: 0.05em; }
+    header .crumb { color: #9a9; font-size: 0.85rem; }
+    .wrap { display: grid; grid-template-columns: 240px 1fr; gap: 1rem; padding: 1rem; max-width: 1200px; margin: 0 auto; }
+    nav.chapters { font-size: 0.9rem; }
+    nav.chapters button {
+      display: block; width: 100%; text-align: left; margin: 0.2rem 0; padding: 0.45rem 0.6rem;
+      background: #fff; border: 1px solid var(--rail); border-radius: 4px; cursor: pointer;
+      font: inherit;
+    }
+    nav.chapters button.done { border-left: 3px solid var(--accent-green); }
+    nav.chapters button.active { background: #1d1d1b; color: #fff; }
+    nav.chapters .tag { float: right; font-size: 0.7rem; opacity: 0.7; }
+    main h1 { font-size: 1.25rem; margin: 0 0 0.4rem; }
+    .meta { color: #666; font-size: 0.85rem; margin-bottom: 0.8rem; display: flex; gap: 1.2rem; flex-wrap: wrap; }
+    .meta b { color: var(--ink); }
+    .story p { margin: 0.4rem 0; }
+    .principles { background: #efe; border-left: 3px solid var(--accent-green); padding: 0.5rem 0.8rem; margin: 0.8rem 0; }
+    .principles li { margin: 0.2rem 0; }
+    .panel { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+    .card { background: #fff; border: 1px solid var(--rail); border-radius: 6px; padding: 0.8rem; }
+    .card h2 { font-size: 0.95rem; margin: 0 0 0.6rem; }
+    svg.canvas { width: 100%; height: auto; background: #fdfcf8; }
+    .node { fill: #fff; stroke-width: 1.2; }
+    .node text { font: 8px ui-monospace, Menlo, monospace; pointer-events: none; fill: #111; stroke: #fff; stroke-width: 2px; paint-order: stroke; }
+    .edge { stroke: #555; stroke-width: 1.2; fill: none; }
+    .edge-label { font: 8px ui-monospace, Menlo, monospace; fill: #555; }
+    .edge.hot, .node.hot { stroke: var(--accent-3, #d35400); stroke-width: 2.4; }
+    .build .step {
+      display: flex; gap: 0.5rem; padding: 0.35rem 0.4rem; border-bottom: 1px dashed var(--rail);
+      cursor: pointer; border-radius: 4px;
+    }
+    .build .step.on { background: #ffedcf; }
+    .build .step .num { color: #999; }
+    .progress { display: flex; gap: 0.6rem; align-items: center; margin: 0.8rem 0 0; }
+    .bar { flex: 1; height: 10px; background: var(--rail); border-radius: 5px; overflow: hidden; }
+    .bar > div { height: 100%; width: 0%; background: var(--accent-green); transition: width 0.3s; }
+    .controls { display: flex; gap: 0.6rem; margin-top: 1rem; }
+    .controls button {
+      font: inherit; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;
+      border: 1px solid #333; background: #fff;
+    }
+    .controls button.primary { background: #1d1d1b; color: #fff; }
+    .controls button:disabled { opacity: 0.4; cursor: default; }
+    table.verify { border-collapse: collapse; font-size: 0.85rem; }
+    table.verify td, table.verify th { border: 1px solid var(--rail); padding: 0.25rem 0.6rem; }
+    .gate { margin-top: 0.8rem; font-size: 0.9rem; }
+    .gate.ok { color: var(--accent-green); font-weight: 700; }
+    .probes { font-size: 0.85rem; }
+    .probes .p { display: flex; gap: 0.5rem; justify-content: space-between; border-bottom: 1px dashed var(--rail); padding: 0.2rem 0; }
+    code, .kbd { background: #f2efe7; border-radius: 3px; padding: 0 0.3rem; }
+    footer { text-align: center; color: #999; font-size: 0.8rem; padding: 1rem; }
+    .download { text-align: center; margin-top: 1rem; }
+    .download a.dl {
+      display: inline-block; background: var(--accent-green); color: #fff; text-decoration: none;
+      padding: 0.6rem 1.2rem; border-radius: 6px; font-size: 0.95rem;
+    }
+    .download .locked a.dl { background: #999; pointer-events: none; }
+    @media (max-width: 860px) {
+      .wrap { grid-template-columns: 1fr; }
+      .panel { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body data-omi-chapter="" data-omi-mask="" data-omi-state="">
+  <header>
+    <span class="brand">OMI-IMO Walkthrough Wiki</span>
+    <span class="crumb">deterministic XOR protocol · data-driven build · <span id="head-progress"></span></span>
+  </header>
+  <div class="wrap">
+    <aside>
+      <nav class="chapters" id="chapters-nav"><em>loading…</em></nav>
+      <div class="progress">
+        <span id="progress-label">0t / 29t</span>
+        <div class="bar"><div id="progress-fill"></div></div>
+      </div>
+    </aside>
+    <main id="main"><em>loading walkthrough…</em></main>
+  </div>
+  <footer>ce… finish every chapter of the breadboard, then download the meta-compiled bundle.</footer>
+  <script src="/client/wiki.js"></script>
+</body>
+</html>

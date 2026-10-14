@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OMI-IMO — DevTools for Media</title>
+  <style>
+    :root {
+      --ink: #dfe6f0;
+      --dim: #79879b;
+      --bg: #06070b;
+      --panel: #0d141f;
+      --panel2: #0a0f18;
+      --edge: #1c2c44;
+      --accent: #5c8cff;
+      --accent2: #ffd166;
+      --green: #9fd356;
+      --red: #ff5c8a;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font: 13px/1.4 "Iosevka", "JetBrains Mono", ui-monospace, monospace;
+      overflow: hidden;
+    }
+    #app {
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      grid-template-columns: 380px 1fr 300px;
+      gap: 10px;
+      padding: 10px;
+    }
+    header {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    header h1 { font-size: 15px; letter-spacing: 1px; margin: 0; }
+    header h1 b { color: var(--accent2); }
+    #epoch, #fold { color: var(--dim); font-size: 12px; }
+    #fold { color: var(--accent2); }
+    .spacer { flex: 1; }
+    input[type=file], select, button {
+      background: var(--panel2);
+      color: var(--ink);
+      border: 1px solid var(--edge);
+      border-radius: 4px;
+      padding: 6px 10px;
+      font: inherit;
+      font-size: 12px;
+    }
+    button { cursor: pointer; }
+    button:active { background: #152034; }
+    button.primary { background: var(--accent); color: #04060a; font-weight: 700; }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--edge);
+      border-radius: 8px;
+      padding: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--dim);
+      border-bottom: 1px solid var(--edge);
+      padding-bottom: 6px;
+    }
+    #observer {
+      grid-column: 1 / -1;
+      max-height: 120px;
+    }
+    #observer .row { display: flex; gap: 18px; align-items: center; font-size: 12px; flex-wrap: wrap; }
+    #observer .tag { color: var(--dim); }
+    #ports { grid-column: 1; }
+    #ascii { grid-column: 2; }
+    #layers { grid-column: 3; }
+    #timeline { grid-column: 1 / -1; max-height: 180px; }
+    .scroll { overflow: auto; flex: 1; min-height: 0; }
+    #ports-grid {
+      display: grid;
+      grid-template-columns: repeat(16, 1fr);
+      gap: 3px;
+    }
+    .port {
+      aspect-ratio: 1;
+      border-radius: 3px;
+      border: 1px solid #223;
+      font-size: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #cfe0ff;
+      min-width: 0;
+    }
+    .port .chr { display: none; }
+    .port.show-chr .chr { display: inline; }
+    .port.show-chr .hex { display: none; }
+    .port:hover { border-color: var(--accent); }
+    .port.empty { opacity: 0.25; }
+    #ascii-art {
+      white-space: pre;
+      line-height: 1.15;
+      font-size: 12px;
+      color: #bfd0e8;
+    }
+    #layers-list { display: flex; flex-direction: column; gap: 6px; }
+    .layer-row {
+      display: grid;
+      grid-template-columns: 46px 1fr auto auto;
+      gap: 8px;
+      font-size: 12px;
+      align-items: center;
+      padding: 4px 6px;
+      border-radius: 4px;
+      background: var(--panel2);
+    }
+    .layer-row .lname { color: var(--dim); font-size: 11px; }
+    .layer-row .lval { color: var(--accent2); }
+    .layer-row .lfold { color: var(--dim); }
+    .layer-row .lbar { height: 6px; border-radius: 3px; background: #1c2c44; overflow: hidden; }
+    .layer-row .lbar i { display: block; height: 100%; }
+    textarea {
+      width: 100%;
+      height: 100%;
+      background: var(--panel2);
+      color: #bfd0e8;
+      border: 0;
+      font: inherit;
+      font-size: 12px;
+      resize: none;
+    }
+    .bar-wrap { position: relative; }
+    .bar-wrap span { position: absolute; right: 4px; top: 2px; font-size: 10px; color: var(--dim); }
+    #controls .hint { color: var(--dim); font-size: 11px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>OMI&nbsp;·&nbsp;IMO <b>DevTools for Media</b></h1>
+      <span id="epoch">epoch 0</span>
+      <span id="fold">fold 0x0000</span>
+      <span class="spacer"></span>
+      <span id="lossless" class="hint"></span>
+      <span id="sealed"></span>
+    </header>
+
+    <section class="panel" id="observer">
+      <h2>observer — 0D (PannerNode)</h2>
+      <div class="row">
+        <input type="file" id="media" accept="audio/*,video/*">
+        <select id="mode">
+          <option value="audio">audio → spectrum</option>
+          <option value="video">video → pixels</option>
+        </select>
+        <button id="play" onclick="OMIDevTools.play()">play source</button>
+        <button id="decompose" class="primary" onclick="OMIDevTools.decompose()">decompose &#x2295; frame-scale</button>
+        <span class="tag">pos <span id="pos">0,0,0</span></span>
+        <span class="tag">digest <span id="digest">0x0000</span></span>
+        <span class="tag">scaled <span id="scaled">0</span> frames</span>
+      </div>
+    </section>
+
+    <section class="panel" id="ports">
+      <h2>worklet ports — 128 channels (8 layers × 16)</h2>
+      <div class="scroll">
+        <div id="ports-grid"></div>
+      </div>
+      <div class="hint" style="color:var(--dim);font-size:11px;margin-top:6px">
+        click a cell to fuzz its value (modify → recompose).
+      </div>
+    </section>
+
+    <section class="panel" id="ascii">
+      <h2>ascii-table canvas — the spectrum</h2>
+      <div class="scroll"><pre id="ascii-art"></pre></div>
+    </section>
+
+    <section class="panel" id="layers">
+      <h2>layer assignments — the codex (-4D → 3D)</h2>
+      <div class="scroll" id="layers-list"></div>
+    </section>
+
+    <section class="panel" id="timeline">
+      <h2>timeline — vtt cues (each active port / capture is a cue)</h2>
+      <textarea id="vtt" readonly spellcheck="false"></textarea>
+    </section>
+  </div>
+
+  <script src="/client/texttrack-attach.js"></script>
+  <script src="/client/webaudio-renderer.js"></script>
+  <script src="/client/devtools.js"></script>
+</body>
+</html>

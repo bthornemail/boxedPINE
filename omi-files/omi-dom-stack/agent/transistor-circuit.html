@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OMI-IMO — Transistor Circuit in Web Audio</title>
+  <style>
+    :root {
+      --ink: #dfe6f0;
+      --dim: #79879b;
+      --bg: #06070b;
+      --panel: #0d141f;
+      --panel2: #0a0f18;
+      --edge: #1c2c44;
+      --accent: #5c8cff;
+      --accent2: #ffd166;
+      --green: #9fd356;
+      --red: #ff5c8a;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font: 13px/1.45 "Iosevka", "JetBrains Mono", ui-monospace, monospace;
+      overflow: hidden;
+    }
+    #app {
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 10px;
+      padding: 12px;
+    }
+    header { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    header h1 { font-size: 15px; margin: 0; letter-spacing: 1px; }
+    header h1 b { color: var(--accent2); }
+    .tag { color: var(--dim); font-size: 12px; }
+    .spacer { flex: 1; }
+    button {
+      background: var(--panel2); color: var(--ink); border: 1px solid var(--edge);
+      border-radius: 4px; padding: 8px 14px; font: inherit; font-weight: 700; cursor: pointer;
+    }
+    button.primary { background: var(--accent); color: #04060a; }
+    button.bit.on { background: var(--green); color: #04060a; border-color: var(--green); }
+    #bits { display: flex; gap: 10px; align-items: center; }
+    #bits .pair { display: flex; gap: 6px; align-items: center; }
+    #bits .kv { color: var(--accent2); font-size: 16px; min-width: 22px; text-align: center; }
+    #ml {
+      border: 1px solid var(--edge); border-radius: 6px; padding: 5px 12px;
+      font-size: 12px; color: var(--dim);
+    }
+    #ml.ready { color: var(--green); border-color: var(--green); }
+    #led {
+      width: 13px; height: 13px; border-radius: 50%; background: #1c2c44; border: 1px solid var(--edge);
+      box-shadow: 0 0 0 transparent;
+    }
+    #led.on { background: var(--accent2); border-color: var(--accent2); box-shadow: 0 0 10px var(--accent2); }
+    #circuits {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      min-height: 0;
+    }
+    .vc {
+      background: var(--panel); border: 1px solid var(--edge); border-radius: 8px;
+      padding: 10px; display: flex; flex-direction: column; gap: 6px; min-width: 0;
+    }
+    .vc h2 { margin: 0; font-size: 11px; letter-spacing: 1px; color: var(--dim); text-transform: uppercase; }
+    .vc .variant { font-size: 19px; font-weight: 700; }
+    .vc .variant span { color: var(--dim); font-weight: 400; font-size: 12px; margin-left: 6px; }
+    .vc .meter { height: 6px; border-radius: 3px; background: #1c2c44; overflow: hidden; }
+    .vc .meter i { display: block; height: 100%; background: var(--accent); width: 0%; }
+    .vc .tr { font-size: 11px; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .vc .q { font-size: 10px; color: var(--dim); }
+    .vc .io { margin-top: auto; font-size: 11px; color: var(--dim); }
+    .vc .io b { color: var(--accent2); }
+    #scope {
+      background: var(--panel); border: 1px solid var(--edge); border-radius: 8px;
+      padding: 8px; display: grid; grid-template-columns: 1fr auto; gap: 10px; min-height: 0;
+    }
+    canvas#spec { width: 100%; height: 100%; display: block; }
+    #spectro {
+      width: 150px; display: flex; flex-direction: column; gap: 5px; justify-content: center;
+      font-size: 11px; color: var(--dim);
+    }
+    #spectro .row { display: flex; justify-content: space-between; }
+    #spectro .row b { color: var(--accent2); }
+    footer { color: var(--dim); font-size: 11px; }
+    footer a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>OMI&nbsp;·&nbsp;IMO <b>Transistor Circuit × Web Audio</b></h1>
+      <span class="tag">gain = transistor · oscillator = carrier · stereo-panner = field · analyser = spectrometer</span>
+      <span class="spacer"></span>
+      <div id="ml">MLContext: <span id="mlv">detecting…</span></div>
+    </header>
+
+    <section id="bits">
+      <div class="pair">
+        <button id="bitA" class="bit">A = 0</button>
+        <button id="bitB" class="bit">B = 0</button>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="tag">A&#x2295;B</span><span id="kv" class="kv">0</span>
+        <span id="led" title="LED — the sealed / fold state"></span>
+      </div>
+      <div class="spacer"></div>
+      <button id="tog" class="primary">start circuit</button>
+    </section>
+
+    <section id="circuits">
+      <div class="vc" data-v="bind">
+        <h2>XOR #1 · Bind</h2>
+        <div class="variant">5T<span>Q1..Q5</span></div>
+        <div class="meter"><i></i></div>
+        <div class="tr">transistors 5 · resistors 6</div>
+        <div class="q">fan-out: None (drives LED only)</div>
+        <div class="io">in: A/B carriers &middot; out: <b id="b-out">0</b></div>
+      </div>
+      <div class="vc" data-v="apply">
+        <h2>XOR #2 · Apply</h2>
+        <div class="variant">6T<span>Q1..Q6</span></div>
+        <div class="meter"><i></i></div>
+        <div class="tr">transistors 6 · resistors 7</div>
+        <div class="q">fan-out: Full (+output inverter)</div>
+        <div class="io">in: A/B carriers &middot; out: <b id="a-out">0</b></div>
+      </div>
+      <div class="vc" data-v="eval">
+        <h2>XOR #3 · Eval</h2>
+        <div class="variant">8T<span>Q7..Q14</span></div>
+        <div class="meter"><i></i></div>
+        <div class="tr">transistors 8 · resistors 9</div>
+        <div class="q">fan-out: Composable (standard gates)</div>
+        <div class="io">in: A/B carriers &middot; out: <b id="e-out">0</b></div>
+      </div>
+      <div class="vc" data-v="digest">
+        <h2>XOR #4 · Digest</h2>
+        <div class="variant">10T<span>Q15..Q24</span></div>
+        <div class="meter"><i></i></div>
+        <div class="tr">transistors 10 · resistors 11</div>
+        <div class="q">fan-out: Full (max reliability)</div>
+        <div class="io">in: A/B carriers &middot; out: <b id="d-out">0</b></div>
+      </div>
+    </section>
+
+    <section id="scope">
+      <canvas id="spec"></canvas>
+      <div id="spectro">
+        <div class="row"><span>input A</span><b id="fA">60 Hz</b></div>
+        <div class="row"><span>input B</span><b id="fB">240 Hz</b></div>
+        <div class="row"><span>master sync</span><b>44,100 Hz</b></div>
+        <div class="row"><span>derived</span><b>33,600 Hz</b></div>
+        <div class="row"><span>sealed / fold</span><b id="fold">0x0000</b></div>
+        <div class="row"><span>observer</span><b id="obs">0,0,0</b></div>
+      </div>
+    </section>
+
+    <footer>
+      circuits from <a href="/wiki/chapters/cn-01-bind-5t.json" target="_blank">cn-01-bind-5t</a> ·
+      <a href="/wiki/chapters/cn-02-apply-6t.json" target="_blank">cn-02-apply-6t</a> ·
+      <a href="/wiki/chapters/cn-03-eval-8t.json" target="_blank">cn-03-eval-8t</a> ·
+      <a href="/wiki/chapters/cn-04-digest-10t.json" target="_blank">cn-04-digest-10t</a>.
+      each input carrier gates the circuit; XOR = one tone present (01/10), silence (00), carrier-cancelling beat (11) — the fold stays 0x0000.
+    </footer>
+  </div>
+
+  <script src="/agent/transistor-circuit.js"></script>
+</body>
+</html>

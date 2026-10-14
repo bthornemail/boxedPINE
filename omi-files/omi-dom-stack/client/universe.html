@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OMI-IMO — Living Universe (popup book)</title>
+  <style>
+    :root {
+      --ink: #dfe6f0;
+      --dim: #79879b;
+      --bg: #06070b;
+      --accent: #5c8cff;
+      --accent2: #ffd166;
+      --accent3: #ff5c8a;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font: 15px/1.45 "Iosevka", "JetBrains Mono", ui-monospace, monospace;
+      overflow: hidden;
+    }
+    #universe {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    #hud {
+      position: fixed;
+      top: 14px;
+      left: 16px;
+      z-index: 5;
+      pointer-events: none;
+    }
+    #hud .epoch {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    #hud .fold {
+      color: var(--accent2);
+      background: #10151f;
+      border: 1px solid #223;
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 13px;
+    }
+    #hud .day {
+      color: var(--dim);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    #instructions {
+      position: fixed;
+      bottom: 14px;
+      right: 16px;
+      z-index: 5;
+      color: var(--dim);
+      font-size: 12px;
+      max-width: 260px;
+      text-align: right;
+      pointer-events: none;
+    }
+    #book {
+      position: fixed;
+      right: 16px;
+      top: 84px;
+      width: 300px;
+      z-index: 8;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+    .page {
+      position: relative;
+      background: #0d141f;
+      border: 1px solid #1c2c44;
+      border-radius: 8px;
+      padding: 12px 14px;
+      transform-origin: right center;
+      transform: perspective(600px) rotateY(0deg);
+      transition: transform 450ms cubic-bezier(.2,.8,.2,1), opacity 450ms;
+      opacity: 0.25;
+      pointer-events: auto;
+      box-shadow: 0 8px 24px rgba(0,0,0,.45);
+    }
+    .page.pop {
+      transform: perspective(600px) rotateY(-7deg);
+      opacity: 1;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 12px 32px rgba(0,0,0,.6);
+    }
+    .page .name {
+      font-weight: 700;
+      color: var(--accent2);
+      font-size: 13px;
+      margin-bottom: 4px;
+      letter-spacing: .5px;
+    }
+    .page .media {
+      color: var(--dim);
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+    .page .text {
+      color: var(--ink);
+      font-size: 13px;
+      white-space: pre-wrap;
+    }
+    #composer {
+      position: fixed;
+      left: 16px;
+      bottom: 16px;
+      width: 300px;
+      z-index: 9;
+      background: #0d141f;
+      border: 1px solid #1c2c44;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    #composer h3 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      color: var(--dim);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    #composer input, #composer textarea {
+      width: 100%;
+      background: #0a0f18;
+      color: var(--ink);
+      border: 1px solid #1c2c44;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font: inherit;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    #composer textarea { resize: vertical; height: 52px; }
+    #composer button {
+      width: 100%;
+      background: var(--accent);
+      color: #04060a;
+      border: 0;
+      border-radius: 4px;
+      padding: 8px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    #composer button:active { background: var(--accent2); }
+    #composer .hint { color: var(--dim); font-size: 11px; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <canvas id="universe"></canvas>
+
+  <div id="hud">
+    <div class="epoch">epoch <span id="epoch">0</span></div>
+    <div class="fold"><span id="fold">0x0000</span></div>
+    <div class="day">day <span id="day">0</span> · triples <span id="triples">0</span> · vertices <span id="vertices">4</span></div>
+  </div>
+
+  <div id="book"></div>
+
+  <div id="composer">
+    <h3>add a fact — attach cue to vtt track via media query</h3>
+    <input id="c-name" placeholder="name (lexeme) e.g. day.01"></input>
+    <input id="c-media" placeholder="media query e.g. (min-width: 800px)"></input>
+    <textarea id="c-text" placeholder="cue payload">everything is an XOR — one function for everything</textarea>
+    <button id="c-add">bind &#x2295; add cue + advance delta</button>
+    <div class="hint">each bound fact advances the epoch by one delta — the lattice grows a steiner triple per day (16 deltas = 2⁴), golden-ratio spiral.</div>
+  </div>
+
+  <div id="instructions">
+    popup book — each cue is a page.<br>
+    the page pops when its media query matches and its delta slot arrives. nothing moves except by compareExchange.
+  </div>
+
+  <script src="/client/universe.js"></script>
+</body>
+</html>

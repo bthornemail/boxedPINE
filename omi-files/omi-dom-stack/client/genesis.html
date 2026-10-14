@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OMI-IMO Genesis — 23-Chapter Walkthrough</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg:#0a0a0f;--fg:#e8e8f0;--accent:#5b8def;--muted:#6b6b80;
+      --cell:#16161f;--border:#2a2a3a;--ok:#6dcea5;--dim:#3a3a4a;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--bg);color:var(--fg);line-height:1.5;min-height:100vh}
+    header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:.75rem;align-items:baseline}
+    header h1{margin:0;font-size:1.05rem;letter-spacing:.04em}
+    header a{color:var(--accent);font-size:.75rem;text-decoration:none}
+    .layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 52px)}
+    @media(max-width:800px){.layout{grid-template-columns:1fr}nav{max-height:160px;border-right:none!important;border-bottom:1px solid var(--border)}}
+    nav{border-right:1px solid var(--border);padding:.75rem .5rem;overflow-y:auto;max-height:calc(100vh - 52px)}
+    nav button{display:block;width:100%;text-align:left;background:0;border:0;color:var(--muted);font:inherit;font-size:.7rem;padding:.35rem .45rem;border-radius:4px;cursor:pointer}
+    nav button:hover{color:var(--fg);background:var(--cell)}
+    nav button.active{color:var(--accent);background:var(--cell)}
+    nav button.done{color:var(--ok)}
+    main{padding:1.25rem;overflow-y:auto;max-height:calc(100vh - 52px)}
+    .chapter h2{margin:0 0 .6rem;font-size:1rem;color:var(--accent)}
+    .chapter p,.chapter li{font-size:.85rem}
+    .meta{font-size:.7rem;color:var(--muted);margin:.75rem 0}
+    #live{margin-top:.75rem;padding:.65rem .85rem;background:#0d0d14;border:1px solid var(--border);border-radius:6px;font-size:.7rem;color:var(--muted);white-space:pre-wrap;min-height:2.5rem}
+    #live .ok{color:var(--ok)}
+    .actions{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:1rem}
+    .actions button{background:var(--cell);border:1px solid var(--border);color:var(--fg);font:inherit;font-size:.75rem;padding:.4rem .75rem;border-radius:6px;cursor:pointer}
+    .actions button.primary{border-color:var(--accent);color:var(--accent)}
+    footer{margin-top:1.5rem;font-size:.65rem;color:var(--muted)}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Genesis · 23 Chapters</h1>
+  <a href="/">Stack</a>
+  <a href="/adopt">Adopt</a>
+  <a href="/api/bundle">Download bundle</a>
+  <a href="/docs/GENESIS.md">GENESIS.md</a>
+</header>
+<div class="layout">
+  <nav id="nav"></nav>
+  <main>
+    <article class="chapter" id="chapter"></article>
+    <div id="live"></div>
+    <div class="actions">
+      <button type="button" id="btn-prev">← Prev</button>
+      <button type="button" class="primary" id="btn-run">Run step</button>
+      <button type="button" id="btn-next">Next →</button>
+      <button type="button" id="btn-mark">Mark done</button>
+    </div>
+    <footer>CC0-1.0 · Fixed point 0x0000 · The observer is you.</footer>
+  </main>
+</div>
+<script>
+const C = [
+  {n:1,t:'Primitive',b:'<p><strong>Atomics.compareExchange</strong> — bind · apply · eval · digest.</p>',r:'primitive'},
+  {n:2,t:'Reduction',b:'<p>Every gate reduces to <strong>XOR</strong>.</p>',r:'xor'},
+  {n:3,t:'Invariant',b:'<p><strong>3! = 6</strong> — BL · BO · BPE. DOM ≅ BusyBox.</p>',r:'3f'},
+  {n:4,t:'Factorial ladder',b:'<p>0!…7! → ruler · 24 colors · 240-clock · 5040 slide-rule.</p>',r:'fact'},
+  {n:5,t:'Algebras',b:'<p>Octonion · Sedenion · <strong>Trigintaduonion 155</strong> · 64nion.</p>',r:'alg'},
+  {n:6,t:'Configurations',b:'<p>Miquel · Möbius · Klein · Perles · Fano · Schläfli · Gray.</p>',r:'cfg'},
+  {n:7,t:'Forms',b:'<p>BQF · affine (4x+2y)² · projective · R⁴.</p>',r:'forms'},
+  {n:8,t:'Dimensions',b:'<p><strong>−5D → 10D</strong>. SVG at <strong>6D</strong>.</p>',r:'dims'},
+  {n:9,t:'Observer',b:'<p><strong>0D</strong> PannerNode — transparent translator.</p>',r:'obs'},
+  {n:10,t:'Centroid',b:'<p><strong>0x0000</strong> fixed point. <code>diff === 0</code>.</p>',r:'cent'},
+  {n:11,t:'Carriers',b:'<p>HTTP/1.1 · SSE · WebVTT · data-omi-* · workers.</p>',r:'car'},
+  {n:12,t:'Extension',b:'<p>Plugin API: snap · solids · GNN · media editors.</p>',r:'ext'},
+  {n:13,t:'Polyforms',b:'<p>2D: polyominoes · polyiamonds · polyhexes · polycubes.</p>',r:'poly'},
+  {n:14,t:'Platonic',b:'<p>Tetra · Cube · Octa · Dodeca · Icosa.</p>',r:'plat'},
+  {n:15,t:'Archimedean',b:'<p>13 uniform solids (truncated tetra … snub dodeca).</p>',r:'arch'},
+  {n:16,t:'Catalan',b:'<p>13 duals of Archimedean.</p>',r:'cat'},
+  {n:17,t:'Johnson',b:'<p><strong>92</strong> irregular convex; χ = 2.</p>',r:'john'},
+  {n:18,t:'Kepler–Poinsot',b:'<p>4 regular stars {5/2,5} … {3,5/2}.</p>',r:'kp'},
+  {n:19,t:'Uniform stars',b:'<p>Nonconvex uniform (U-series subset).</p>',r:'ustar'},
+  {n:20,t:'4D polychora',b:'<p>5-cell … 600-cell.</p>',r:'4d'},
+  {n:21,t:'Trigintaduonion',b:'<p>Solid → triple <strong>0..154</strong> (155 slots).</p>',r:'tri'},
+  {n:22,t:'Edge n-grams',b:'<p>Graph walks → XOR-fold spectral address.</p>',r:'ng'},
+  {n:23,t:'Orchestrator',b:'<p>GNN ⊕ target → entrain → <strong>0x0000</strong>.</p>',r:'orch'}
+];
+let idx=0; const done=new Set();
+const nav=document.getElementById('nav'), ch=document.getElementById('chapter'), live=document.getElementById('live');
+function log(m){live.innerHTML='<span class="ok">ch '+C[idx].n+'</span>\n'+m}
+function renderNav(){nav.innerHTML='';C.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.textContent=c.n+'. '+c.t;if(i===idx)b.classList.add('active');if(done.has(i))b.classList.add('done');b.onclick=()=>{idx=i;render()};nav.appendChild(b)})}
+function render(){const c=C[idx];ch.innerHTML='<h2>Chapter '+c.n+': '+c.t+'</h2>'+c.b+'<div class="meta">Run step exercises this layer.</div>';renderNav();live.textContent='Ready.'}
+async function run(){
+  live.textContent='Running…';
+  const c=C[idx];
+  try{
+    if(c.r==='dims'||c.r==='primitive'||c.r==='car'){
+      const res=await fetch('/api/pipeline?q=genesis+ch'+c.n);
+      const j=await res.json();
+      log('pipeline ok='+!!j.ok+' tokens='+(j.tokens&&j.tokens.length)+' svg='+!!(j.svg&&j.svg.includes('<svg')));
+    } else if(c.r==='ext'){
+      log('registerSnapMode · registerSolid · registerMediaEditor\nGET /api/bundle for shareable meta-compile');
+    } else if(c.r==='orch'||c.r==='cent'){
+      log('diff = digest ⊕ target\nfixed when diff === 0 (0x0000)');
+    } else if(c.r==='tri'){
+      log('155 triples: ααβ45 · βββ₁20 · βββ₂15 · αβγ60 · βγγ15');
+    } else if(c.r==='john'){
+      log('Johnson solids J1–J92 · Euler χ=2');
+    } else {
+      log('Layer "'+c.t+'" acknowledged in codex.');
+    }
+    done.add(idx);renderNav();
+  }catch(e){live.textContent='Error: '+e.message}
+}
+document.getElementById('btn-prev').onclick=()=>{idx=Math.max(0,idx-1);render()};
+document.getElementById('btn-next').onclick=()=>{idx=Math.min(C.length-1,idx+1);render()};
+document.getElementById('btn-mark').onclick=()=>{done.add(idx);renderNav();log('Marked done.')};
+document.getElementById('btn-run').onclick=run;
+render();
+</script>
+</body>
+</html>

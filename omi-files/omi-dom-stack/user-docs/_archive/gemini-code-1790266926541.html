@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMI 3D Spatial Walkthrough — 2D to 3D Extrusion Engine</title>
+    <style>
+        :root {
+            --bg-color: #080b10;
+            --panel-bg: rgba(15, 20, 28, 0.88);
+            --panel-border: #262c36;
+            --text-color: #d1d7e0;
+            --accent-color: #388bfd;
+            --wire-active: #3fb950;
+            --wire-inactive: #30363d;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html { width: 100vw; height: 100vh; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace; background: var(--bg-color); color: var(--text-color); }
+
+        #webgl-container { width: 100vw; height: 100vh; display: block; }
+
+        /* UI HUD Overlay */
+        .hud-panel {
+            position: absolute;
+            background: var(--panel-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 16px;
+            z-index: 10;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        }
+
+        #controls { top: 20px; left: 20px; width: 320px; }
+        #inspector { top: 20px; right: 20px; width: 340px; display: none; }
+        #extrusion-slider { bottom: 20px; left: 50%; transform: translateX(-50%); width: 420px; text-align: center; }
+
+        h1, h2, h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.2px; color: #8b949e; margin-bottom: 10px; }
+        
+        .circuit-selector { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
+        
+        button {
+            background: #161b22;
+            border: 1px solid var(--panel-border);
+            color: var(--text-color);
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        button:hover { background: #21262d; border-color: #8b949e; }
+        button.active { background: var(--accent-color); color: #000; border-color: var(--accent-color); }
+
+        .logic-inputs { display: flex; gap: 10px; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--panel-border); }
+        .toggle-btn { flex: 1; padding: 8px; font-family: monospace; }
+        .toggle-btn.on { background: #238636; color: #fff; }
+
+        .slider-container { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
+        input[type=range] { flex: 1; cursor: pointer; }
+
+        .meta-row { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 6px; }
+        .meta-label { color: #8b949e; }
+        .meta-val { font-family: monospace; font-weight: bold; color: #7ee787; }
+
+        .code-block {
+            background: #010409;
+            border: 1px solid var(--panel-border);
+            border-radius: 4px;
+            padding: 8px;
+            font-family: monospace;
+            font-size: 0.72rem;
+            color: #7ee787;
+            max-height: 120px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-top: 8px;
+        }
+    </style>
+    <!-- Three.js & OrbitControls via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+
+    <div id="webgl-container"></div>
+
+    <!-- Top Left Controls -->
+    <div id="controls" class="hud-panel">
+        <h1>OMI 3D Topology</h1>
+        <div class="circuit-selector">
+            <button class="active" onclick="switchTopology('5T')">5T</button>
+            <button onclick="switchTopology('6T')">6T</button>
+            <button onclick="switchTopology('8T')">8T</button>
+            <button onclick="switchTopology('10T')">10T</button>
+        </div>
+
+        <h2>Logic Vector Inputs</h2>
+        <div class="logic-inputs">
+            <button id="btnA" class="toggle-btn" onclick="toggleInput('A')">IN_A: 0</button>
+            <button id="btnB" class="toggle-btn" onclick="toggleInput('B')">IN_B: 0</button>
+        </div>
+    </div>
+
+    <!-- Bottom Slider: 2D Plane to 3D Stage Extrusion -->
+    <div id="extrusion-slider" class="hud-panel">
+        <h2>Spatial Morph Engine: 2D Plane → 3D Pipeline Depth</h2>
+        <div class="slider-container">
+            <span style="font-size: 0.75rem;">2D Flat</span>
+            <input type="range" id="depthMorph" min="0" max="1" step="0.001" value="0.5" oninput="updateExtrusion(this.value)">
+            <span style="font-size: 0.75rem;">3D Spatial</span>
+        </div>
+    </div>
+
+    <!-- Inspector Panel -->
+    <div id="inspector" class="hud-panel">
+        <h2>Spatial Sourcemap Inspector</h2>
+        <div id="inspector-content">
+            <div class="meta-row"><span class="meta-label">Node ID:</span><span id="inspect-id" class="meta-val">-</span></div>
+            <div class="meta-row"><span class="meta-label">Stage Layer:</span><span id="inspect-stage" class="meta-val">-</span></div>
+            <div class="meta-row"><span class="meta-label">3D Vector:</span><span id="inspect-pos" class="meta-val">-</span></div>
+            <div class="meta-row"><span class="meta-label">Breadboard Row/Col:</span><span id="inspect-bb" class="meta-val">-</span></div>
+            <div class="meta-row"><span class="meta-label">Signal State:</span><span id="inspect-state" class="meta-val">-</span></div>
+            <h3>Metadata & Rosetta Mapping</h3>
+            <div id="inspect-json" class="code-block">{}</div>
+        </div>
+    </div>
+
+<script>
+/**
+ * 2D JSON Canvas Rosetta Stone Data & 3D WebGL Pipeline Integration
+ */
+
+// JSON Canvas Rosetta Stone Data (Extrusion coordinates mapped across pipeline stages)
+const ROSETTA_CANVAS = {
+    '5T': {
+        nodes: [
+            { id: "IN_A", type: "input", x: -8, y: 2, stage: "Bind", depthStage: -6, row: 5, col: 1 },
+            { id: "IN_B", type: "input", x: -8, y: -2, stage: "Bind", depthStage: -6, row: 5, col: 4 },
+            { id: "Q1", type: "transistor", x: -4, y: 3, stage: "Apply", depthStage: -2, row: 8, col: 1 },
+            { id: "Q2", type: "transistor", x: -4, y: -3, stage: "Apply", depthStage: -2, row: 8, col: 6 },
+            { id: "Q3", type: "transistor", x: 0, y: 0, stage: "Eval", depthStage: 2, row: 12, col: 11 },
+            { id: "Q4", type: "transistor", x: 4, y: 2, stage: "Eval", depthStage: 2, row: 12, col: 21 },
+            { id: "Q5", type: "transistor", x: 4, y: -2, stage: "Eval", depthStage: 2, row: 12, col: 26 },
+            { id: "LED", type: "led", x: 8, y: 0, stage: "Digest", depthStage: 6, row: 24, col: 48, color: 0xf85149 }
+        ],
+        edges: [
+            { from: "IN_A", to: "Q1" }, { from: "IN_B", to: "Q2" },
+            { from: "Q1", to: "Q3" }, { from: "Q2", to: "Q3" },
+            { from: "Q3", to: "Q4" }, { from: "Q3", to: "Q5" },
+            { from: "Q4", to: "LED" }, { from: "Q5", to: "LED" }
+        ]
+    },
+    '6T': {
+        nodes: [
+            { id: "BUS", type: "bus", x: -8, y: 0, stage: "Bind", depthStage: -6, row: 24, col: 0 },
+            { id: "Q1", type: "transistor", x: -4, y: 3, stage: "Apply", depthStage: -2, row: 5, col: 1 },
+            { id: "Q2", type: "transistor", x: -4, y: -3, stage: "Apply", depthStage: -2, row: 5, col: 6 },
+            { id: "Q3", type: "transistor", x: 0, y: 0, stage: "Eval", depthStage: 2, row: 5, col: 11 },
+            { id: "Q4", type: "transistor", x: 4, y: 3, stage: "Eval", depthStage: 2, row: 5, col: 21 },
+            { id: "Q5", type: "transistor", x: 4, y: -3, stage: "Eval", depthStage: 2, row: 5, col: 26 },
+            { id: "Q6", type: "transistor", x: 6, y: 0, stage: "Eval", depthStage: 2, row: 5, col: 31 },
+            { id: "LED", type: "led", x: 9, y: 0, stage: "Digest", depthStage: 6, row: 24, col: 48, color: 0xe3b341 }
+        ],
+        edges: [
+            { from: "BUS", to: "Q1" }, { from: "BUS", to: "Q2" },
+            { from: "Q1", to: "Q2" }, { from: "Q2", to: "Q3" },
+            { from: "Q3", to: "Q4" }, { from: "Q3", to: "Q5" },
+            { from: "Q4", to: "Q6" }, { from: "Q5", to: "Q6" },
+            { from: "Q6", to: "LED" }
+        ]
+    },
+    '8T': {
+        nodes: [
+            { id: "NAND1", type: "gate", x: -6, y: 0, stage: "Bind", depthStage: -6, row: 5, col: 1 },
+            { id: "NAND2", type: "gate", x: -1, y: 3, stage: "Apply", depthStage: -2, row: 5, col: 11 },
+            { id: "NAND3", type: "gate", x: -1, y: -3, stage: "Apply", depthStage: -2, row: 5, col: 21 },
+            { id: "NAND4", type: "gate", x: 4, y: 0, stage: "Eval", depthStage: 2, row: 5, col: 31 },
+            { id: "LED", type: "led", x: 8, y: 0, stage: "Digest", depthStage: 6, row: 24, col: 48, color: 0x3fb950 }
+        ],
+        edges: [
+            { from: "NAND1", to: "NAND2" }, { from: "NAND1", to: "NAND3" },
+            { from: "NAND2", to: "NAND4" }, { from: "NAND3", to: "NAND4" },
+            { from: "NAND4", to: "LED" }
+        ]
+    },
+    '10T': {
+        nodes: [
+            { id: "NOR1", type: "gate", x: -7, y: 3, stage: "Bind", depthStage: -6, row: 5, col: 1 },
+            { id: "NOR2", type: "gate", x: -7, y: -3, stage: "Bind", depthStage: -6, row: 5, col: 8 },
+            { id: "NOR3", type: "gate", x: -2, y: 0, stage: "Apply", depthStage: -2, row: 5, col: 16 },
+            { id: "NOR4", type: "gate", x: 3, y: 3, stage: "Eval", depthStage: 2, row: 5, col: 24 },
+            { id: "NOR5", type: "gate", x: 3, y: -3, stage: "Eval", depthStage: 2, row: 5, col: 32 },
+            { id: "LED", type: "led", x: 8, y: 0, stage: "Digest", depthStage: 6, row: 24, col: 48, color: 0x58a6ff }
+        ],
+        edges: [
+            { from: "NOR1", to: "NOR3" }, { from: "NOR2", to: "NOR3" },
+            { from: "NOR3", to: "NOR4" }, { from: "NOR3", to: "NOR5" },
+            { from: "NOR4", to: "LED" }, { from: "NOR5", to: "LED" }
+        ]
+    }
+};
+
+// Global State
+const state = {
+    currentCircuit: '6T',
+    inputs: { A: false, B: false },
+    extrusionFactor: 0.5, // 0.0 = Pure 2D Flat Canvas, 1.0 = Fully Extruded 3D Pipeline
+    selectedMesh: null
+};
+
+// Three.js Engine Variables
+let scene, camera, renderer, controls;
+let nodeMeshes = [], wireLines = [];
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+// Initialize Three.js Scene
+function init3D() {
+    const container = document.getElementById('webgl-container');
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x080b10);
+
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 0, 22);
+
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+
+    const dirLight = new THREE.DirectionalLight(0x58a6ff, 0.8);
+    dirLight.position.set(10, 20, 15);
+    scene.add(dirLight);
+
+    // Event Listeners
+    window.addEventListener('resize', onWindowResize);
+    renderer.domElement.addEventListener('pointerdown', onPointerDown);
+
+    buildScene();
+    animate();
+}
+
+// Build 3D Extruded Scene from JSON Canvas
+function buildScene() {
+    // Clear Existing
+    nodeMeshes.forEach(m => scene.remove(m));
+    wireLines.forEach(w => scene.remove(w));
+    nodeMeshes = [];
+    wireLines = [];
+
+    const circuit = ROSETTA_CANVAS[state.currentCircuit];
+    const isXorActive = state.inputs.A ^ state.inputs.B;
+
+    // Create Stage Reference Grid Planes (Bind, Apply, Eval, Digest)
+    createStagePlanes();
+
+    // Build Node Meshes (Extruded Geometry)
+    circuit.nodes.forEach(node => {
+        const extrudedZ = node.depthStage * state.extrusionFactor;
+
+        // Shape Definition
+        let geometry;
+        if (node.type === 'led') {
+            geometry = new THREE.CylinderGeometry(0.6, 0.6, 0.8, 16);
+        } else if (node.type === 'gate') {
+            geometry = new THREE.BoxGeometry(1.6, 1.0, 0.6);
+        } else {
+            geometry = new THREE.BoxGeometry(1.4, 0.8, 0.5);
+        }
+
+        const isHigh = node.type === 'led' ? isXorActive : (node.type === 'input' ? (node.id === 'IN_A' ? state.inputs.A : state.inputs.B) : isXorActive);
+
+        const material = new THREE.MeshStandardMaterial({
+            color: isHigh ? (node.color || 0x3fb950) : 0x21262d,
+            roughness: 0.3,
+            metalness: 0.2,
+            wireframe: false
+        });
+
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(node.x, node.y, extrudedZ);
+        mesh.userData = { ...node, isHigh };
+
+        scene.add(mesh);
+        nodeMeshes.push(mesh);
+    });
+
+    // Build 3D Wiring (3D Extruded Bezier Curves)
+    circuit.edges.forEach(edge => {
+        const fromNode = nodeMeshes.find(m => m.userData.id === edge.from);
+        const toNode = nodeMeshes.find(m => m.userData.id === edge.to);
+
+        if (fromNode && toNode) {
+            const startPos = fromNode.position.clone();
+            const endPos = toNode.position.clone();
+
+            // Calculate Bezier Curve Points in 3D Space
+            const midX = (startPos.x + endPos.x) / 2;
+            const midY = (startPos.y + endPos.y) / 2;
+            const midZ = (startPos.z + endPos.z) / 2 + 1.5; // Arch out in Z
+
+            const curve = new THREE.QuadraticBezierCurve3(
+                startPos,
+                new THREE.Vector3(midX, midY, midZ),
+                endPos
+            );
+
+            const points = curve.getPoints(20);
+            const tubeGeo = new THREE.TubeGeometry(curve, 20, 0.06, 8, false);
+
+            const isActive = fromNode.userData.isHigh;
+            const wireMat = new THREE.MeshBasicMaterial({
+                color: isActive ? 0x3fb950 : 0x30363d,
+                wireframe: !isActive
+            });
+
+            const wireMesh = new THREE.Mesh(tubeGeo, wireMat);
+            scene.add(wireMesh);
+            wireLines.push(wireMesh);
+        }
+    });
+}
+
+// Stage Reference Guides along Z-Axis
+function createStagePlanes() {
+    const stages = [
+        { name: "Bind", z: -6 },
+        { name: "Apply", z: -2 },
+        { name: "Eval", z: 2 },
+        { name: "Digest", z: 6 }
+    ];
+
+    stages.forEach(st => {
+        const grid = new THREE.GridHelper(18, 12, 0x30363d, 0x161b22);
+        grid.rotation.x = Math.PI / 2;
+        grid.position.z = st.z * state.extrusionFactor;
+        grid.material.opacity = 0.25;
+        grid.material.transparent = true;
+        scene.add(grid);
+        wireLines.push(grid);
+    });
+}
+
+// Smooth Morph Transition (2D Flat to 3D Extruded Depth)
+function updateExtrusion(val) {
+    state.extrusionFactor = parseFloat(val);
+    buildScene();
+}
+
+// Raycasting / Node Inspection
+function onPointerDown(event) {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(nodeMeshes);
+
+    if (intersects.length > 0) {
+        const selected = intersects[0].object;
+        state.selectedMesh = selected;
+        showInspector(selected.userData, selected.position);
+    }
+}
+
+function showInspector(data, position) {
+    const inspector = document.getElementById('inspector');
+    inspector.style.display = 'block';
+
+    document.getElementById('inspect-id').innerText = data.id;
+    document.getElementById('inspect-stage').innerText = `${data.stage} Stage`;
+    document.getElementById('inspect-pos').innerText = `(${position.x.toFixed(1)}, ${position.y.toFixed(1)}, ${position.z.toFixed(1)})`;
+    document.getElementById('inspect-bb').innerText = `Row ${data.row}, Col ${data.col}`;
+    document.getElementById('inspect-state').innerText = data.isHigh ? "HIGH (1)" : "LOW (0)";
+
+    document.getElementById('inspect-json').innerText = JSON.stringify({
+        id: data.id,
+        type: data.type,
+        stage: data.stage,
+        rosettaCoordinates: { row: data.row, col: data.col },
+        vector3: { x: position.x, y: position.y, z: position.z }
+    }, null, 2);
+}
+
+// Input / Switch Handlers
+function switchTopology(key) {
+    state.currentCircuit = key;
+    document.querySelectorAll('.circuit-selector button').forEach(b => {
+        b.classList.toggle('active', b.innerText === key);
+    });
+    buildScene();
+}
+
+function toggleInput(key) {
+    state.inputs[key] = !state.inputs[key];
+    const btn = document.getElementById(`btn${key}`);
+    btn.innerText = `IN_${key}: ${state.inputs[key] ? 1 : 0}`;
+    btn.classList.toggle('on', state.inputs[key]);
+    buildScene();
+}
+
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+// Render Loop
+function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+
+    // Pulse Active LED/Node Meshes
+    nodeMeshes.forEach(mesh => {
+        if (mesh.userData.isHigh) {
+            mesh.rotation.y += 0.01;
+        }
+    });
+
+    renderer.render(scene, camera);
+}
+
+window.onload = init3D;
+</script>
+</body>
+</html>

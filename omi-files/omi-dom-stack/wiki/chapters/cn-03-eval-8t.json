@@ -1,0 +1,1061 @@
+{
+  "id": "cn-03-eval-8t",
+  "n": 3,
+  "name": "XOR #3 — Eval (8T)",
+  "role": "eval",
+  "face": "SECURE",
+  "led": "green",
+  "mask": 30,
+  "circuit": {
+    "type": "xor",
+    "variant": "8t",
+    "transistors": 8,
+    "resistors": 9,
+    "fanOut": "Composable"
+  },
+  "story": [
+    "XOR #3 is built from 4 NAND gates, each requiring 2 transistors: 8 transistors total.",
+    "NAND1 = ~(A & B); NAND2 = ~(A & NAND1); NAND3 = ~(B & NAND1); NAND4 = ~(NAND2 & NAND3).",
+    "The 4-NAND structure is gate-level composable. SECURE stores receipts and each receipt must be independently addressable — the composable topology gives that."
+  ],
+  "principles": [
+    "Eval is composed of identical subgates.",
+    "SECURE must be composable to keep receipts independently verifiable."
+  ],
+  "build": [
+    {
+      "step": "s11",
+      "text": "A → 2K → B(Q7) [NAND1]",
+      "place": [
+        "Q7"
+      ]
+    },
+    {
+      "step": "s12",
+      "text": "B → 2K → B(Q8) [NAND1]",
+      "place": [
+        "Q8"
+      ]
+    },
+    {
+      "step": "s13",
+      "text": "NAND1 wire-AND: E(Q8) → C(Q7); NAND1 = C(Q8)",
+      "place": [
+        "Q8",
+        "Q7"
+      ]
+    },
+    {
+      "step": "s14",
+      "text": "A → Q9; NAND1 → B(Q10)",
+      "place": [
+        "Q8",
+        "Q10"
+      ]
+    },
+    {
+      "step": "s15",
+      "text": "NAND2 wire-AND: E(Q10) → C(Q9); NAND2 = C(Q10)",
+      "place": [
+        "Q10",
+        "Q9"
+      ]
+    },
+    {
+      "step": "s16",
+      "text": "B → Q11; NAND1 → B(Q12); NAND3 = C(Q12)",
+      "place": [
+        "Q12",
+        "Q11"
+      ]
+    },
+    {
+      "step": "s17",
+      "text": "NAND2 → B(Q13)",
+      "place": [
+        "Q10",
+        "Q13"
+      ]
+    },
+    {
+      "step": "s18",
+      "text": "NAND3 → B(Q14)",
+      "place": [
+        "Q12",
+        "Q14"
+      ]
+    },
+    {
+      "step": "s19",
+      "text": "NAND4 wire-AND: E(Q14) → C(Q13); NAND4 = C(Q14)",
+      "place": [
+        "Q14",
+        "Q13"
+      ]
+    }
+  ],
+  "canvas": {
+    "nodes": [
+      {
+        "id": "Q7",
+        "type": "text",
+        "role": "transistor",
+        "value": "2N2222",
+        "color": "1",
+        "x": 0,
+        "y": 0,
+        "width": 8,
+        "height": 3,
+        "text": "Q7 (NAND1)",
+        "bRow": 5,
+        "bCol": 1
+      },
+      {
+        "id": "R7",
+        "type": "text",
+        "role": "resistor",
+        "value": "2K",
+        "color": "2",
+        "x": 12,
+        "y": 0,
+        "width": 8,
+        "height": 3,
+        "text": "R7",
+        "bRow": 1,
+        "bCol": 1
+      },
+      {
+        "id": "Q8",
+        "type": "text",
+        "role": "transistor",
+        "value": "2N2222",
+        "color": "1",
+        "x": 0,
+        "y": 10,
+        "width": 8,
+        "height": 3,
+        "text": "Q8 (NAND1)",
+        "bRow": 5,
+        "bCol": 6
+      },
+      {
+        "id": "R8",
+        "type": "text",
+        "role": "resistor",
+        "value": "2K",
+        "color": "2",
+        "x": 12,
+        "y": 10,
+        "width": 8,
+        "height": 3,
+        "text": "R8",
+        "bRow": 1,
+        "bCol": 6
+      },
+      {
+        "id": "Q9",
+        "type": "text",
+        "role": "transistor",
+        "value": "2N2222",
+        "color": "1",
+        "x": 0,
+        "y": 20,
+        "width": 8,
+        "height": 3,
+        "text": "Q9 (NAND2)",
+        "bRow": 5,
+        "bCol": 11
+      },
+      {
+        "id": "R9",
+        "type": "text",
+        "role": "resistor",
+        "value": "2K",
+        "color": "2",
+        "x": 12,
+        "y": 20,
+        "width": 8,
+        "height": 3,
+        "text": "R9",
+        "bRow": 1,
+        "bCol": 11
+      },
+      {
+        "id": "Q10",
+        "type": "text",
+        "role": "transistor",
+        "value": "2N2222",
+        "color": "1",
+        "x": 0,
+        "y": 30,
+        "width": 8,
+        "height": 3,
+        "text": "Q10 (NAND2)",
+        "bRow": 5,
+        "bCol": 16
+      },
+      {
+        "id": "R10",
+        "type": "text",
+        "role": "resistor",
+        "value": "2K",
+        "color": "2",
+        "x": 12,
+        "y": 30,
+        "width": 8,
+        "height": 3,
+        "text": "R10",
+        "bRow": 1,
+        "bCol": 16
+      },
+      {
+        "id": "Q11",
+        "type": "text",
+        "role": "transistor",
+        "value": "2N2222",
+        "color": "1",
+        "x": 0,
+        "y": 40,
+        "width": 8,
+        "height": 3,
+        "text": "Q11 (NAND3)",
+        "bRow": 5,
+        "bCol": 21
+      },
+      {
+        "id": "R11",
+        "type": "text",
+        "role": "resistor",
+        "value": "2K",
+        "color": "2",
+        "x": 12,
+        "y": 40,
+        "width": 8,
+        "height": 3,
+        "text": "R11",
+        "bRow": 1,
+        "bCol": 21
+      },
+      {
+        "id": "Q12",
+        "type": "text",
+        "role": "transistor",
+        "value": "2N2222",
+        "color": "1",
+        "x": 0,
+        "y": 50,
+        "width": 8,
+        "height": 3,
+        "text": "Q12 (NAND3)",
+        "bRow": 5,
+        "bCol": 26
+      },
+      {
+        "id": "R12",
+        "type": "text",
+        "role": "resistor",
+        "value": "2K",
+        "color": "2",
+        "x": 12,
+        "y": 50,
+        "width": 8,
+        "height": 3,
+        "text": "R12",
+        "bRow": 1,
+        "bCol": 26
+      },
+      {
+        "id": "Q13",
+        "type": "text",
+        "role": "transistor",
+        "value": "2N2222",
+        "color": "1",
+        "x": 0,
+        "y": 60,
+        "width": 8,
+        "height": 3,
+        "text": "Q13 (NAND4)",
+        "bRow": 5,
+        "bCol": 31
+      },
+      {
+        "id": "R13",
+        "type": "text",
+        "role": "resistor",
+        "value": "2K",
+        "color": "2",
+        "x": 12,
+        "y": 60,
+        "width": 8,
+        "height": 3,
+        "text": "R13",
+        "bRow": 1,
+        "bCol": 31
+      },
+      {
+        "id": "Q14",
+        "type": "text",
+        "role": "transistor",
+        "value": "2N2222",
+        "color": "1",
+        "x": 0,
+        "y": 70,
+        "width": 8,
+        "height": 3,
+        "text": "Q14 (NAND4)",
+        "bRow": 5,
+        "bCol": 36
+      },
+      {
+        "id": "R14",
+        "type": "text",
+        "role": "resistor",
+        "value": "2K",
+        "color": "2",
+        "x": 12,
+        "y": 70,
+        "width": 8,
+        "height": 3,
+        "text": "R14",
+        "bRow": 1,
+        "bCol": 36
+      },
+      {
+        "id": "BUS",
+        "type": "text",
+        "role": "bus",
+        "value": "8-bit",
+        "color": "4",
+        "x": 24,
+        "y": 0,
+        "width": 8,
+        "height": 3,
+        "text": "DATA BUS",
+        "bRow": 1,
+        "bCol": 0
+      },
+      {
+        "id": "GND",
+        "type": "text",
+        "role": "rail",
+        "value": "0V",
+        "color": "0",
+        "x": 24,
+        "y": 80,
+        "width": 8,
+        "height": 3,
+        "text": "GND",
+        "bRow": 20,
+        "bCol": 0
+      },
+      {
+        "id": "VCC",
+        "type": "text",
+        "role": "rail",
+        "value": "+5V",
+        "color": "7",
+        "x": 24,
+        "y": 16,
+        "width": 8,
+        "height": 3,
+        "text": "VCC (+5V)",
+        "bRow": 1,
+        "bCol": 80
+      },
+      {
+        "id": "RLED",
+        "type": "text",
+        "role": "resistor",
+        "value": "330",
+        "color": "2",
+        "x": 12,
+        "y": 88,
+        "width": 8,
+        "height": 3,
+        "text": "RLED (330)",
+        "bRow": 15,
+        "bCol": 39
+      },
+      {
+        "id": "LED",
+        "type": "text",
+        "role": "LED",
+        "value": "GREEN",
+        "color": "2",
+        "x": 24,
+        "y": 88,
+        "width": 8,
+        "height": 3,
+        "text": "GREEN LED",
+        "bRow": 15,
+        "bCol": 41
+      }
+    ],
+    "edges": [
+      {
+        "id": "R7-C-to-VCC",
+        "fromNode": "R7",
+        "fromPin": "right",
+        "toNode": "VCC",
+        "toPin": "left",
+        "label": "pull-up"
+      },
+      {
+        "id": "R8-C-to-VCC",
+        "fromNode": "R8",
+        "fromPin": "right",
+        "toNode": "VCC",
+        "toPin": "left",
+        "label": "pull-up"
+      },
+      {
+        "id": "R9-C-to-VCC",
+        "fromNode": "R9",
+        "fromPin": "right",
+        "toNode": "VCC",
+        "toPin": "left",
+        "label": "pull-up"
+      },
+      {
+        "id": "R10-C-to-VCC",
+        "fromNode": "R10",
+        "fromPin": "right",
+        "toNode": "VCC",
+        "toPin": "left",
+        "label": "pull-up"
+      },
+      {
+        "id": "R11-C-to-VCC",
+        "fromNode": "R11",
+        "fromPin": "right",
+        "toNode": "VCC",
+        "toPin": "left",
+        "label": "pull-up"
+      },
+      {
+        "id": "R12-C-to-VCC",
+        "fromNode": "R12",
+        "fromPin": "right",
+        "toNode": "VCC",
+        "toPin": "left",
+        "label": "pull-up"
+      },
+      {
+        "id": "R13-C-to-VCC",
+        "fromNode": "R13",
+        "fromPin": "right",
+        "toNode": "VCC",
+        "toPin": "left",
+        "label": "pull-up"
+      },
+      {
+        "id": "R14-C-to-VCC",
+        "fromNode": "R14",
+        "fromPin": "right",
+        "toNode": "VCC",
+        "toPin": "left",
+        "label": "pull-up"
+      },
+      {
+        "id": "A-to-Q7-B",
+        "fromNode": "BUS",
+        "fromPin": "left",
+        "toNode": "Q7",
+        "toPin": "top",
+        "label": "A"
+      },
+      {
+        "id": "B-to-Q8-B",
+        "fromNode": "BUS",
+        "fromPin": "left",
+        "toNode": "Q8",
+        "toPin": "top",
+        "label": "B"
+      },
+      {
+        "id": "Q8-E-to-Q7-C",
+        "fromNode": "Q8",
+        "fromPin": "E",
+        "toNode": "Q7",
+        "toPin": "C",
+        "label": "NAND"
+      },
+      {
+        "id": "Q8-C-to-Q10-B",
+        "fromNode": "Q8",
+        "fromPin": "C",
+        "toNode": "Q10",
+        "toPin": "B",
+        "label": "NAND2-in"
+      },
+      {
+        "id": "Q10-E-to-Q9-C",
+        "fromNode": "Q10",
+        "fromPin": "E",
+        "toNode": "Q9",
+        "toPin": "C",
+        "label": "NAND"
+      },
+      {
+        "id": "Q12-E-to-Q11-C",
+        "fromNode": "Q12",
+        "fromPin": "E",
+        "toNode": "Q11",
+        "toPin": "C",
+        "label": "NAND"
+      },
+      {
+        "id": "Q10-C-to-Q13-B",
+        "fromNode": "Q10",
+        "fromPin": "C",
+        "toNode": "Q13",
+        "toPin": "B",
+        "label": "NAND4-in"
+      },
+      {
+        "id": "Q12-C-to-Q14-B",
+        "fromNode": "Q12",
+        "fromPin": "C",
+        "toNode": "Q14",
+        "toPin": "B",
+        "label": "NAND4-in"
+      },
+      {
+        "id": "Q14-E-to-Q13-C",
+        "fromNode": "Q14",
+        "fromPin": "E",
+        "toNode": "Q13",
+        "toPin": "C",
+        "label": "NAND"
+      },
+      {
+        "id": "Q7-E-to-GND",
+        "fromNode": "Q7",
+        "fromPin": "E",
+        "toNode": "GND",
+        "toPin": "top",
+        "label": "emitter"
+      },
+      {
+        "id": "Q9-E-to-GND",
+        "fromNode": "Q9",
+        "fromPin": "E",
+        "toNode": "GND",
+        "toPin": "top",
+        "label": "emitter"
+      },
+      {
+        "id": "Q11-E-to-GND",
+        "fromNode": "Q11",
+        "fromPin": "E",
+        "toNode": "GND",
+        "toPin": "top",
+        "label": "emitter"
+      },
+      {
+        "id": "Q13-E-to-GND",
+        "fromNode": "Q13",
+        "fromPin": "E",
+        "toNode": "GND",
+        "toPin": "top",
+        "label": "emitter"
+      },
+      {
+        "id": "Q14-C-to-LED",
+        "fromNode": "Q14",
+        "fromPin": "C",
+        "toNode": "LED",
+        "toPin": "left",
+        "label": "OUT"
+      },
+      {
+        "id": "LED-to-RLED",
+        "fromNode": "LED",
+        "fromPin": "right",
+        "toNode": "RLED",
+        "toPin": "left",
+        "label": "current limit"
+      },
+      {
+        "id": "RLED-to-GND",
+        "fromNode": "RLED",
+        "fromPin": "bottom",
+        "toNode": "GND",
+        "toPin": "right",
+        "label": "return"
+      }
+    ]
+  },
+  "sourcemap": [
+    {
+      "smeCanvasNodeId": "Q7",
+      "smePhysicalNodeId": "Q7",
+      "smeComponentType": "NPN",
+      "smeComponentValue": "2N2222",
+      "smeBreadboardRow": 5,
+      "smeBreadboardCol": 1,
+      "smeNotes": "transistor Q7"
+    },
+    {
+      "smeCanvasNodeId": "R7",
+      "smePhysicalNodeId": "R7",
+      "smeComponentType": "resistor",
+      "smeComponentValue": "2K",
+      "smeBreadboardRow": 1,
+      "smeBreadboardCol": 1,
+      "smeNotes": "resistor R7"
+    },
+    {
+      "smeCanvasNodeId": "Q8",
+      "smePhysicalNodeId": "Q8",
+      "smeComponentType": "NPN",
+      "smeComponentValue": "2N2222",
+      "smeBreadboardRow": 5,
+      "smeBreadboardCol": 6,
+      "smeNotes": "transistor Q8"
+    },
+    {
+      "smeCanvasNodeId": "R8",
+      "smePhysicalNodeId": "R8",
+      "smeComponentType": "resistor",
+      "smeComponentValue": "2K",
+      "smeBreadboardRow": 1,
+      "smeBreadboardCol": 6,
+      "smeNotes": "resistor R8"
+    },
+    {
+      "smeCanvasNodeId": "Q9",
+      "smePhysicalNodeId": "Q9",
+      "smeComponentType": "NPN",
+      "smeComponentValue": "2N2222",
+      "smeBreadboardRow": 5,
+      "smeBreadboardCol": 11,
+      "smeNotes": "transistor Q9"
+    },
+    {
+      "smeCanvasNodeId": "R9",
+      "smePhysicalNodeId": "R9",
+      "smeComponentType": "resistor",
+      "smeComponentValue": "2K",
+      "smeBreadboardRow": 1,
+      "smeBreadboardCol": 11,
+      "smeNotes": "resistor R9"
+    },
+    {
+      "smeCanvasNodeId": "Q10",
+      "smePhysicalNodeId": "Q10",
+      "smeComponentType": "NPN",
+      "smeComponentValue": "2N2222",
+      "smeBreadboardRow": 5,
+      "smeBreadboardCol": 16,
+      "smeNotes": "transistor Q10"
+    },
+    {
+      "smeCanvasNodeId": "R10",
+      "smePhysicalNodeId": "R10",
+      "smeComponentType": "resistor",
+      "smeComponentValue": "2K",
+      "smeBreadboardRow": 1,
+      "smeBreadboardCol": 16,
+      "smeNotes": "resistor R10"
+    },
+    {
+      "smeCanvasNodeId": "Q11",
+      "smePhysicalNodeId": "Q11",
+      "smeComponentType": "NPN",
+      "smeComponentValue": "2N2222",
+      "smeBreadboardRow": 5,
+      "smeBreadboardCol": 21,
+      "smeNotes": "transistor Q11"
+    },
+    {
+      "smeCanvasNodeId": "R11",
+      "smePhysicalNodeId": "R11",
+      "smeComponentType": "resistor",
+      "smeComponentValue": "2K",
+      "smeBreadboardRow": 1,
+      "smeBreadboardCol": 21,
+      "smeNotes": "resistor R11"
+    },
+    {
+      "smeCanvasNodeId": "Q12",
+      "smePhysicalNodeId": "Q12",
+      "smeComponentType": "NPN",
+      "smeComponentValue": "2N2222",
+      "smeBreadboardRow": 5,
+      "smeBreadboardCol": 26,
+      "smeNotes": "transistor Q12"
+    },
+    {
+      "smeCanvasNodeId": "R12",
+      "smePhysicalNodeId": "R12",
+      "smeComponentType": "resistor",
+      "smeComponentValue": "2K",
+      "smeBreadboardRow": 1,
+      "smeBreadboardCol": 26,
+      "smeNotes": "resistor R12"
+    },
+    {
+      "smeCanvasNodeId": "Q13",
+      "smePhysicalNodeId": "Q13",
+      "smeComponentType": "NPN",
+      "smeComponentValue": "2N2222",
+      "smeBreadboardRow": 5,
+      "smeBreadboardCol": 31,
+      "smeNotes": "transistor Q13"
+    },
+    {
+      "smeCanvasNodeId": "R13",
+      "smePhysicalNodeId": "R13",
+      "smeComponentType": "resistor",
+      "smeComponentValue": "2K",
+      "smeBreadboardRow": 1,
+      "smeBreadboardCol": 31,
+      "smeNotes": "resistor R13"
+    },
+    {
+      "smeCanvasNodeId": "Q14",
+      "smePhysicalNodeId": "Q14",
+      "smeComponentType": "NPN",
+      "smeComponentValue": "2N2222",
+      "smeBreadboardRow": 5,
+      "smeBreadboardCol": 36,
+      "smeNotes": "transistor Q14"
+    },
+    {
+      "smeCanvasNodeId": "R14",
+      "smePhysicalNodeId": "R14",
+      "smeComponentType": "resistor",
+      "smeComponentValue": "2K",
+      "smeBreadboardRow": 1,
+      "smeBreadboardCol": 36,
+      "smeNotes": "resistor R14"
+    },
+    {
+      "smeCanvasNodeId": "BUS",
+      "smePhysicalNodeId": "BUS",
+      "smeComponentType": "bus",
+      "smeComponentValue": "8-bit",
+      "smeBreadboardRow": 1,
+      "smeBreadboardCol": 0,
+      "smeNotes": "bus BUS"
+    },
+    {
+      "smeCanvasNodeId": "GND",
+      "smePhysicalNodeId": "GND",
+      "smeComponentType": "rail",
+      "smeComponentValue": "0V",
+      "smeBreadboardRow": 20,
+      "smeBreadboardCol": 0,
+      "smeNotes": "rail GND"
+    },
+    {
+      "smeCanvasNodeId": "VCC",
+      "smePhysicalNodeId": "VCC",
+      "smeComponentType": "rail",
+      "smeComponentValue": "+5V",
+      "smeBreadboardRow": 1,
+      "smeBreadboardCol": 80,
+      "smeNotes": "rail VCC"
+    },
+    {
+      "smeCanvasNodeId": "RLED",
+      "smePhysicalNodeId": "RLED",
+      "smeComponentType": "resistor",
+      "smeComponentValue": "330",
+      "smeBreadboardRow": 15,
+      "smeBreadboardCol": 39,
+      "smeNotes": "resistor RLED"
+    },
+    {
+      "smeCanvasNodeId": "LED",
+      "smePhysicalNodeId": "LED",
+      "smeComponentType": "LED",
+      "smeComponentValue": "GREEN",
+      "smeBreadboardRow": 15,
+      "smeBreadboardCol": 41,
+      "smeNotes": "LED LED"
+    }
+  ],
+  "netlist": [
+    {
+      "step": 1,
+      "from": "R7",
+      "fromPin": "right",
+      "to": "VCC",
+      "toPin": "left",
+      "label": "pull-up"
+    },
+    {
+      "step": 2,
+      "from": "R8",
+      "fromPin": "right",
+      "to": "VCC",
+      "toPin": "left",
+      "label": "pull-up"
+    },
+    {
+      "step": 3,
+      "from": "R9",
+      "fromPin": "right",
+      "to": "VCC",
+      "toPin": "left",
+      "label": "pull-up"
+    },
+    {
+      "step": 4,
+      "from": "R10",
+      "fromPin": "right",
+      "to": "VCC",
+      "toPin": "left",
+      "label": "pull-up"
+    },
+    {
+      "step": 5,
+      "from": "R11",
+      "fromPin": "right",
+      "to": "VCC",
+      "toPin": "left",
+      "label": "pull-up"
+    },
+    {
+      "step": 6,
+      "from": "R12",
+      "fromPin": "right",
+      "to": "VCC",
+      "toPin": "left",
+      "label": "pull-up"
+    },
+    {
+      "step": 7,
+      "from": "R13",
+      "fromPin": "right",
+      "to": "VCC",
+      "toPin": "left",
+      "label": "pull-up"
+    },
+    {
+      "step": 8,
+      "from": "R14",
+      "fromPin": "right",
+      "to": "VCC",
+      "toPin": "left",
+      "label": "pull-up"
+    },
+    {
+      "step": 9,
+      "from": "BUS",
+      "fromPin": "left",
+      "to": "Q7",
+      "toPin": "top",
+      "label": "A"
+    },
+    {
+      "step": 10,
+      "from": "BUS",
+      "fromPin": "left",
+      "to": "Q8",
+      "toPin": "top",
+      "label": "B"
+    },
+    {
+      "step": 11,
+      "from": "Q8",
+      "fromPin": "E",
+      "to": "Q7",
+      "toPin": "C",
+      "label": "NAND"
+    },
+    {
+      "step": 12,
+      "from": "Q8",
+      "fromPin": "C",
+      "to": "Q10",
+      "toPin": "B",
+      "label": "NAND2-in"
+    },
+    {
+      "step": 13,
+      "from": "Q10",
+      "fromPin": "E",
+      "to": "Q9",
+      "toPin": "C",
+      "label": "NAND"
+    },
+    {
+      "step": 14,
+      "from": "Q12",
+      "fromPin": "E",
+      "to": "Q11",
+      "toPin": "C",
+      "label": "NAND"
+    },
+    {
+      "step": 15,
+      "from": "Q10",
+      "fromPin": "C",
+      "to": "Q13",
+      "toPin": "B",
+      "label": "NAND4-in"
+    },
+    {
+      "step": 16,
+      "from": "Q12",
+      "fromPin": "C",
+      "to": "Q14",
+      "toPin": "B",
+      "label": "NAND4-in"
+    },
+    {
+      "step": 17,
+      "from": "Q14",
+      "fromPin": "E",
+      "to": "Q13",
+      "toPin": "C",
+      "label": "NAND"
+    },
+    {
+      "step": 18,
+      "from": "Q7",
+      "fromPin": "E",
+      "to": "GND",
+      "toPin": "top",
+      "label": "emitter"
+    },
+    {
+      "step": 19,
+      "from": "Q9",
+      "fromPin": "E",
+      "to": "GND",
+      "toPin": "top",
+      "label": "emitter"
+    },
+    {
+      "step": 20,
+      "from": "Q11",
+      "fromPin": "E",
+      "to": "GND",
+      "toPin": "top",
+      "label": "emitter"
+    },
+    {
+      "step": 21,
+      "from": "Q13",
+      "fromPin": "E",
+      "to": "GND",
+      "toPin": "top",
+      "label": "emitter"
+    },
+    {
+      "step": 22,
+      "from": "Q14",
+      "fromPin": "C",
+      "to": "LED",
+      "toPin": "left",
+      "label": "OUT"
+    },
+    {
+      "step": 23,
+      "from": "LED",
+      "fromPin": "right",
+      "to": "RLED",
+      "toPin": "left",
+      "label": "current limit"
+    },
+    {
+      "step": 24,
+      "from": "RLED",
+      "fromPin": "bottom",
+      "to": "GND",
+      "toPin": "right",
+      "label": "return"
+    }
+  ],
+  "cues": [
+    {
+      "id": "wk-cn-03-eval-8t-s11",
+      "start": 0,
+      "end": 0.5,
+      "text": "Eval: NAND1 = ~(A & B) built from Q7, Q8.",
+      "payload": {
+        "chapter": 3,
+        "step": "s11",
+        "face": "SECURE",
+        "role": "eval"
+      }
+    },
+    {
+      "id": "wk-cn-03-eval-8t-s14",
+      "start": 0.5,
+      "end": 1,
+      "text": "NAND2 = ~(A & NAND1); NAND3 = ~(B & NAND1).",
+      "payload": {
+        "chapter": 3,
+        "step": "s14",
+        "face": "SECURE",
+        "role": "eval"
+      }
+    },
+    {
+      "id": "wk-cn-03-eval-8t-s17",
+      "start": 1,
+      "end": 1.5,
+      "text": "NAND4 = ~(NAND2 & NAND3).",
+      "payload": {
+        "chapter": 3,
+        "step": "s17",
+        "face": "SECURE",
+        "role": "eval"
+      }
+    },
+    {
+      "id": "wk-cn-03-eval-8t-s20",
+      "start": 1.5,
+      "end": 2,
+      "text": "Output: C(Q14) → 330Ω → GREEN LED. SECURE = eval output.",
+      "payload": {
+        "chapter": 3,
+        "step": "s20",
+        "face": "SECURE",
+        "role": "eval"
+      }
+    }
+  ],
+  "probes": {
+    "SECURE": {
+      "row": 2,
+      "col": 36
+    }
+  },
+  "codex": {
+    "role": "eval",
+    "centroid": "0x1E",
+    "face": "SECURE"
+  },
+  "verification": [
+    {
+      "A": 0,
+      "B": 0,
+      "out": 0,
+      "expect": "xor"
+    },
+    {
+      "A": 1,
+      "B": 0,
+      "out": 1,
+      "expect": "xor"
+    },
+    {
+      "A": 0,
+      "B": 1,
+      "out": 1,
+      "expect": "xor"
+    },
+    {
+      "A": 1,
+      "B": 1,
+      "out": 0,
+      "expect": "xor"
+    }
+  ]
+}

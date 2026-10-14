@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agreement — the closest thing to truth</title>
+<style>
+  :root {
+    --bg: #08080a; --panel: #101014; --line: #1e1e26; --ink: #d8d8e0; --dim: #6a6a78;
+    --ok: #4ade80; --warn: #fbbf24; --bad: #f87171; --idle: #4a4a58;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--mono);
+         font-size:14px; line-height:1.5; padding:36px 20px 90px; }
+  .wrap { max-width:1040px; margin:0 auto; }
+
+  h1 { font-size:12px; font-weight:500; letter-spacing:.18em; text-transform:uppercase;
+       color:var(--dim); margin:0 0 10px; }
+  .tagline { font-size:clamp(24px,4.4vw,38px); line-height:1.15; margin:0 0 10px; letter-spacing:-.02em; }
+  .tagline em { color:var(--ok); font-style:normal; }
+  .sub { color:var(--dim); font-size:13px; margin:0 0 30px; max-width:64ch; }
+  .sub b { color:var(--ink); font-weight:500; }
+
+  .peers { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .peer { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:13px 14px; }
+  .peer.off { opacity:.45; border-style:dashed; }
+  .peer.out { border-color:#5a2b2b; }
+  .peer h2 { font-size:11px; text-transform:uppercase; letter-spacing:.14em; color:var(--dim);
+             margin:0 0 9px; display:flex; justify-content:space-between; align-items:center; gap:6px; }
+  .peer.out h2 { color:var(--bad); }
+  .tag { font-size:9px; letter-spacing:.1em; padding:1px 5px; border-radius:3px;
+         border:1px solid var(--line); color:var(--idle); }
+  .tag.out { border-color:#5a2b2b; color:var(--bad); }
+  .word { font-size:25px; letter-spacing:.05em; margin:0 0 10px; }
+  .bytes { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; margin-bottom:10px; }
+  .byte { background:#0c0c10; border:1px solid var(--line); border-radius:3px; padding:4px 1px;
+          text-align:center; font-size:11px; }
+  .byte.hot { border-color:var(--bad); color:var(--bad); }
+  input[type=text] { background:#0c0c10; border:1px solid var(--line); color:var(--ink);
+                     font-family:var(--mono); font-size:12px; padding:5px 7px; border-radius:4px; width:100%; }
+  input[type=text]:focus { outline:none; border-color:var(--dim); }
+  label.sw { display:inline-flex; align-items:center; gap:5px; color:var(--dim); font-size:11px;
+             margin-top:8px; cursor:pointer; user-select:none; }
+
+  .read { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+          padding:20px; margin:14px 0; }
+  .read.agreed { border-color:#1d3a26; }
+  .read.stalled { border-color:#4a3a1a; }
+  .lab { color:var(--dim); font-size:11px; text-transform:uppercase; letter-spacing:.14em; }
+  .num { font-size:52px; letter-spacing:-.03em; line-height:1.05; }
+  .num.agreed { color:var(--ok); } .num.diverged { color:var(--warn); } .num.stalled { color:var(--warn); }
+  .outlier { margin-top:10px; padding:9px 11px; background:#0c0c10; border:1px solid var(--line);
+             border-radius:5px; font-size:12px; color:var(--dim); }
+  .outlier.hit { border-color:#5a2b2b; color:var(--ink); }
+  .outlier b { color:var(--warn); font-weight:500; }
+  code { background:#0c0c10; padding:1px 4px; border-radius:3px; font-size:12px; }
+
+  .controls { display:flex; gap:7px; flex-wrap:wrap; margin:16px 0 8px; }
+  button { background:#15151b; border:1px solid var(--line); color:var(--ink); font-family:var(--mono);
+           font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:10px 16px;
+           border-radius:5px; cursor:pointer; }
+  button:hover { border-color:var(--dim); }
+  button.go { border-color:#2f4a37; color:var(--ok); font-size:12px; padding:12px 20px; }
+  button.go:hover { background:#14201a; }
+  button.warn { border-color:#4a3a1a; color:var(--warn); }
+
+  .bindrow { display:flex; gap:10px; align-items:center; flex-wrap:wrap; background:var(--panel);
+             border:1px solid var(--line); border-radius:8px; padding:12px 16px; margin:14px 0 0;
+             font-size:13px; }
+  .bindrow .q { color:var(--dim); }
+  .bindrow .a { color:var(--ok); }
+
+  .sec { border-top:1px solid var(--line); margin-top:38px; padding-top:18px; }
+  .sec h3 { font-size:11px; text-transform:uppercase; letter-spacing:.14em; color:var(--dim);
+            margin:0 0 4px; font-weight:500; }
+  .sec p.q { color:var(--dim); font-size:12px; margin:0 0 12px; }
+  textarea { width:100%; background:#0c0c10; border:1px solid var(--line); color:var(--ink);
+             font-family:var(--mono); font-size:13px; line-height:1.6; padding:12px; border-radius:6px;
+             resize:vertical; min-height:200px; }
+  textarea:focus { outline:none; border-color:var(--dim); }
+  .log { background:#0c0c10; border:1px solid var(--line); border-radius:6px; padding:12px;
+         margin-top:10px; font-size:12px; max-height:300px; overflow:auto; }
+  .log div { white-space:pre-wrap; word-break:break-word; }
+  .ln { color:var(--dim); } .ok { color:var(--ok); } .warn { color:var(--warn); } .bad { color:var(--bad); }
+  .note { color:var(--dim); font-size:12px; max-width:74ch; margin:0 0 10px; }
+  .note b { color:var(--ink); font-weight:500; }
+  .mode { color:var(--idle); font-size:11px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>omi-imo / agreement</h1>
+  <p class="tagline">Agreement is the <em>closest thing to truth.</em></p>
+  <p class="sub">
+    Three peers. <b>No server, no clock, no authority, no merge function.</b>
+    One XOR says how far apart they are and exactly which bytes. One more brings
+    them back — because the distance and the displacement are the same object.
+  </p>
+
+  <div class="peers">
+    <div class="peer" id="pA">
+      <h2>alice <span class="mode" id="mA"></span></h2>
+      <div class="word" id="wA">0x00000000</div>
+      <div class="bytes" id="bA"></div>
+      <input type="text" id="eA" value="0x00000000" spellcheck="false">
+      <label class="sw"><input type="checkbox" id="offA"> offline</label>
+    </div>
+    <div class="peer" id="pB">
+      <h2>bob <span class="mode" id="mB"></span></h2>
+      <div class="word" id="wB">0x00000000</div>
+      <div class="bytes" id="bB"></div>
+      <input type="text" id="eB" value="0x00000000" spellcheck="false">
+      <label class="sw"><input type="checkbox" id="offB"> offline</label>
+    </div>
+    <div class="peer" id="pC">
+      <h2>carol <span class="mode" id="mC"></span><span class="tag" id="tC"></span></h2>
+      <div class="word" id="wC">0x00000000</div>
+      <div class="bytes" id="bC"></div>
+      <input type="text" id="eC" value="0x00000000" spellcheck="false">
+      <label class="sw"><input type="checkbox" id="offC"> offline</label>
+    </div>
+  </div>
+
+  <div class="read" id="readBox">
+    <div class="lab">disagreement — sum of the three pairwise distances</div>
+    <div class="num agreed" id="num">0</div>
+    <div class="outlier" id="outlier">all three agree.</div>
+  </div>
+
+  <div class="controls">
+    <button class="go" id="btnSplitOne">carol goes offline</button>
+    <button class="go" id="btnRoll">roll back</button>
+    <button class="warn" id="btnSplitAll">three-way split</button>
+    <button id="btnReset">reset</button>
+  </div>
+
+  <div class="bindrow">
+    <span class="q">the bind asks three possibilities, extremes first —</span>
+    <span>is this <b>0</b> the origin, <b>2</b> the offset, or <b>1</b> the unit?</span>
+    <span class="a" id="bindOut">&nbsp;</span>
+    <button id="btnBind">0, 2, 1</button>
+  </div>
+
+  <div class="sec">
+    <h3>declarative syntax</h3>
+    <p class="q">The protocol declares arrangements, not meanings. It does not decide what a number is and it does not decide who was right.</p>
+    <textarea id="src" spellcheck="false"></textarea>
+    <div class="controls">
+      <button class="go" id="btnRun">run</button>
+      <button id="btnDemo">load the demo</button>
+    </div>
+    <div class="log" id="log"></div>
+  </div>
+
+  <div class="sec">
+    <h3>what this is, precisely</h3>
+    <p class="note">
+      <b>With two peers</b> you learn the magnitude of a disagreement.
+      <b>With three</b> you also learn which peer is the odd one out, from the same single XOR:
+      if two agree and one does not, then <code>a ^ b ^ c</code> <b>is</b> the outlier's value.
+      Alice 5, Bob 5, Carol 9 gives <code>5 ^ 5 ^ 9 = 9</code> — which is Carol. No vote, no quorum,
+      nothing to elect.
+    </p>
+    <p class="note">
+      <b>It is not a clock.</b> XOR is commutative, so <code>a ^ b == b ^ a</code> — it measures the
+      <i>magnitude</i> of a difference and never the <i>order</i> of two concurrent edits. It does not
+      replace vector clocks and cannot tell you which edit came first. The narrow claim is the true one:
+      clocks exist to order events, and if all you need is how far apart states are and how to undo the
+      difference, you need no clock at all.
+    </p>
+    <p class="note">
+      <b>It refuses rather than guesses.</b> Three-way disagreement has no majority, so the portal says
+      so and does not pick a winner. The XOR of three values is also <i>not</i> the agreement test —
+      three copies of <code>x</code> fold to <code>x</code>, not to zero, because three is odd. Agreement
+      is measured pairwise.
+    </p>
+    <p class="note">
+      <b>Tamper evidence</b> comes from the representation: a peer's state is one word, and
+      <code>attested</code> is the last state that came through its own atomic gate. A quiet rewrite
+      moves the state and cannot move the attestation. Not a security primitive — a free consequence.
+    </p>
+    <p class="note">
+      <code>a ^ a == 0</code> for any <code>a</code>, anywhere, in any base. That is a logical truth
+      rather than a measurement, which is why it is the only genuinely invariant thing here.
+    </p>
+    <p class="note mode" id="modeLine"></p>
+  </div>
+
+</div>
+<script src="/client/portal.js"></script>
+</body>
+</html>

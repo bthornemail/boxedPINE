@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OMI-IMO Full DOM Stack — Bootstrap</title>
+
+  <meta name="omi-bootstrap" content="mode=sse; endpoint=/events; parse=body">
+  <meta name="omi-constraint" content="http11-only; regex:^[a-z0-9\-]+$">
+  <meta name="omi-constraint" content="require-dl-dt-dd">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    :root {
+      --omi-bg: #0a0a0f;
+      --omi-fg: #e8e8f0;
+      --omi-accent: #5b8def;
+      --omi-muted: #6b6b80;
+      --omi-cell: #16161f;
+      --omi-border: #2a2a3a;
+      --omi-ok: #6dcea5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+      background: var(--omi-bg);
+      color: var(--omi-fg);
+      min-height: 100vh;
+      line-height: 1.45;
+    }
+    header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--omi-border);
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    header h1 { margin: 0; font-size: 1.1rem; font-weight: 600; letter-spacing: 0.04em; }
+    header span { color: var(--omi-muted); font-size: 0.8rem; }
+    /* The front door. The two-click demo is the whole argument, so it is one
+       click from the site root rather than buried among the other pages. */
+    .door {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.9rem;
+      border: 1px solid var(--omi-accent, #4ade80);
+      border-radius: 6px;
+      color: var(--omi-accent, #4ade80);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .door:hover { background: rgba(74, 222, 128, 0.08); }
+    .door small { color: var(--omi-muted); text-transform: none; letter-spacing: 0; }
+    main { padding: 1.5rem; max-width: 1100px; margin: 0 auto; }
+    #status {
+      font-size: 0.85rem;
+      color: var(--omi-muted);
+      margin-bottom: 1rem;
+      padding: 0.75rem 1rem;
+      background: var(--omi-cell);
+      border: 1px solid var(--omi-border);
+      border-radius: 6px;
+    }
+    #status.ready { color: var(--omi-ok); border-color: #2a4a3a; }
+    #status.error { color: #e07a7a; border-color: #4a2a2a; }
+
+    .panel {
+      margin-bottom: 1.25rem;
+      padding: 1rem;
+      background: var(--omi-cell);
+      border: 1px solid var(--omi-border);
+      border-radius: 6px;
+    }
+    .panel h2 {
+      margin: 0 0 0.75rem;
+      font-size: 0.85rem;
+      color: var(--omi-accent);
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    #svg-host {
+      overflow: auto;
+      background: #0d0d14;
+      border-radius: 4px;
+      padding: 0.5rem;
+      min-height: 80px;
+    }
+    #svg-host svg { display: block; max-width: 100%; }
+    #map-host { font-size: 0.7rem; color: var(--omi-muted); overflow: auto; max-height: 120px; }
+    #metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.5rem;
+      font-size: 0.8rem;
+    }
+    #metrics div {
+      padding: 0.4rem 0.6rem;
+      background: var(--omi-bg);
+      border-radius: 4px;
+      border: 1px solid var(--omi-border);
+    }
+    #metrics strong { color: var(--omi-accent); }
+
+    #omi-canvas-overlay {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      margin: 0;
+      padding: 0;
+    }
+    #omi-canvas-overlay > dt {
+      margin: 0.5rem 0 0;
+      padding: 0.5rem 0.75rem;
+      background: var(--omi-bg);
+      border: 1px solid var(--omi-border);
+      border-radius: 6px 6px 0 0;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--omi-accent);
+    }
+    #omi-canvas-overlay > dd {
+      margin: 0 0 0.25rem;
+      padding: 0.45rem 0.75rem 0.65rem;
+      background: var(--omi-bg);
+      border: 1px solid var(--omi-border);
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      font-size: 0.75rem;
+      color: var(--omi-muted);
+    }
+
+    footer {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--omi-border);
+      font-size: 0.7rem;
+      color: var(--omi-muted);
+    }
+  </style>
+</head>
+<body data-omi-payload="bootstrap:full-dom-stack;version=1.0;pipeline=-5D..10D">
+
+  <header>
+    <h1>OMI-IMO</h1>
+    <span>Full DOM Stack · −5D→10D · SVG Worker</span>
+    <a class="door" href="/portal">Agreement demo <small>two clicks</small></a>
+  </header>
+
+  <main>
+    <div id="status">Initializing meta-compilation + pipeline…</div>
+
+    <div class="panel">
+      <h2>Metrics</h2>
+      <div id="metrics"></div>
+    </div>
+
+    <div class="panel">
+      <h2>SVG (worker geometry contract @ 6D)</h2>
+      <div id="svg-host"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Hit list · &lt;dl&gt;/&lt;dt&gt;/&lt;dd&gt;</h2>
+      <dl id="omi-canvas-overlay" class="omi-hit-list"></dl>
+    </div>
+
+    <div class="panel">
+      <h2>&lt;area&gt; map</h2>
+      <div id="map-host"></div>
+    </div>
+
+    <footer>
+      Layers: HTTP/1.1 · Regex · DOM geometry · Hit lists · PannerNode · Blobs · Worklets<br>
+      Pipeline: −5D…10D · Clock 240 · Slide-rule 5040 · Color codex 24 · WebVTT · SVG worker<br>
+      Primitive: Atomics.compareExchange · Reduction: XOR · Structure: 3!
+    </footer>
+  </main>
+
+  <script src="/client/dom-stack.js"></script>
+  <script>
+    (function () {
+      const statusEl = document.getElementById('status');
+      const metricsEl = document.getElementById('metrics');
+      const svgHost = document.getElementById('svg-host');
+      const mapHost = document.getElementById('map-host');
+      const dl = document.getElementById('omi-canvas-overlay');
+
+      function setStatus(msg, cls) {
+        statusEl.textContent = msg;
+        statusEl.className = cls || '';
+      }
+
+      function metric(label, value) {
+        const d = document.createElement('div');
+        d.innerHTML = '<strong>' + label + '</strong> ' + value;
+        metricsEl.appendChild(d);
+      }
+
+      // --- SVG Worker geometry contract ---
+      let svgWorker = null;
+      function ensureSvgWorker() {
+        if (svgWorker) return svgWorker;
+        try {
+          svgWorker = new Worker('/client/svg-worker.js');
+        } catch (e) {
+          console.warn('[OMI] SVG worker unavailable', e);
+          svgWorker = null;
+        }
+        return svgWorker;
+      }
+
+      function renderViaWorker(geometry) {
+        return new Promise((resolve, reject) => {
+          const w = ensureSvgWorker();
+          if (!w) {
+            resolve(geometry.svg || '');
+            return;
+          }
+          const id = 'r-' + Date.now();
+          const onMsg = (ev) => {
+            const msg = ev.data || {};
+            if (msg.id !== id) return;
+            w.removeEventListener('message', onMsg);
+            if (msg.type === 'error') reject(new Error(msg.error));
+            else resolve(msg.svg || '');
+          };
+          w.addEventListener('message', onMsg);
+          w.postMessage({
+            type: 'render',
+            id,
+            points: geometry.points,
+            rects: geometry.rects,
+            matrix: geometry.matrix,
+            color: geometry.color
+          });
+        });
+      }
+
+      // --- Build <dl> from pipeline elements ---
+      function fillHitList(elements) {
+        dl.innerHTML = '';
+        (elements || []).forEach((el) => {
+          const dt = document.createElement('dt');
+          dt.id = el.id || ('cell-' + Math.random().toString(36).slice(2));
+          dt.setAttribute('data-omi-mnemonic', el.mnemonic || el.id || 'X');
+          dt.setAttribute('data-omi-band', String(el.band || 1));
+          dt.textContent = (el.mnemonic || el.id || 'cell') + ' — band ' + (el.band || 1);
+
+          const dd = document.createElement('dd');
+          dd.setAttribute('data-omi-bpe-constraint', String(el.bpe || 1));
+          dd.setAttribute('data-omi-offset', String(el.offset != null ? el.offset : 0));
+          dd.textContent = 'BPE=' + (el.bpe || 1) + ' · offset=' + (el.offset != null ? el.offset : 0);
+
+          dl.appendChild(dt);
+          dl.appendChild(dd);
+        });
+      }
+
+      async function boot() {
+        try {
+          // 1. Local DOM stack meta-compile + PannerNode
+          const localState = (window.OMIDomStack && OMIDomStack.bootstrap)
+            ? OMIDomStack.bootstrap(document)
+            : { config: { mode: 'sse', endpoint: '/events' }, hitList: [], pannerReady: false };
+
+          // 2. Full pipeline via API (runFullPipeline + instantiateFromPipeline)
+          const payloadText = document.body.dataset.omiPayload || 'OMI bootstrap\r\ncolor Band1';
+          const res = await fetch('/api/pipeline?q=' + encodeURIComponent(payloadText));
+          if (!res.ok) throw new Error('pipeline API ' + res.status);
+          const data = await res.json();
+          if (!data.ok && data.error) throw new Error(data.error);
+
+          // 3. SVG via worker geometry contract (preferred) or server SVG
+          let svgMarkup = '';
+          try {
+            svgMarkup = await renderViaWorker(data);
+          } catch (e) {
+            console.warn('[OMI] worker render failed, using server SVG', e);
+            svgMarkup = data.svg || '';
+          }
+          if (!svgMarkup) svgMarkup = data.svg || '';
+          svgHost.innerHTML = svgMarkup;
+
+          // 4. Hit list from pipeline elements
+          fillHitList(data.elements);
+          if (window.OMIDomStack && OMIDomStack.bootstrap) {
+            OMIDomStack.bootstrap(document);
+          }
+
+          // 5. Area map
+          mapHost.textContent = data.mapHtml || '(no map)';
+
+          // 6. Metrics
+          metricsEl.innerHTML = '';
+          metric('tokens', (data.tokens && data.tokens.length) || 0);
+          metric('rects', (data.rects && data.rects.length) || 0);
+          metric('cues', (data.cues && data.cues.length) || 0);
+          metric('areas', (data.metrics && data.metrics.areaCount) || 0);
+          metric('schedule', (data.metrics && data.metrics.scheduleLength) || 0);
+          metric('readyForSvg', data.validation && data.validation.readyForSvg ? 'yes' : 'no');
+          metric('panner', localState.pannerReady ? 'yes' : 'no');
+          metric('worker', svgWorker ? 'yes' : 'fallback');
+
+          // 7. Observer → PannerNode
+          if (localState.pannerReady && data.observer && window.OMIDomStack) {
+            OMIDomStack.setObserverPosition(data.observer.x || 0, data.observer.y || 0, data.observer.z || 0);
+          }
+
+          // 8. SSE
+          if (localState.config && localState.config.mode === 'sse') {
+            const es = new EventSource(localState.config.endpoint || '/events');
+            es.addEventListener('open', () => console.info('[OMI] SSE connected'));
+            window.__OMI_SSE__ = es;
+          }
+
+          window.OMI = { localState, pipeline: data };
+          setStatus(
+            'Ready · pipeline −5D→10D · SVG worker · ' +
+            ((data.tokens && data.tokens.length) || 0) + ' tokens · ' +
+            ((data.metrics && data.metrics.areaCount) || 0) + ' areas',
+            'ready'
+          );
+        } catch (err) {
+          console.error(err);
+          setStatus('Bootstrap failed: ' + err.message, 'error');
+        }
+      }
+
+      boot();
+    })();
+  </script>
+</body>
+</html>
