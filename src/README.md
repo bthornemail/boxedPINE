@@ -12,6 +12,8 @@ This is where things are **tried and checked**. The Vite app (`npm run dev`) sta
 | `define.commands.ts` | The REPL commands `.open .bind .apply .eval .digest .close`, for testing while building. Their cues are `rosetta/src/assets/commands.vtt` | Author's example (Node only, outside the browser build) |
 | `main.ts` | The app entry: four canvases, `uu`, `uk`, `ku`, `kk` (the iExtant shape cells) | Placeholder (see `space/README.md`, view 7) |
 | `examples.ts` | Scratch from the Vite template | Placeholder |
+| `I-201.ts` … `i218.ts` | The author's records I-201 to I-218 (2026-10-13 and 2026-10-14): the method, the instances, the delineation rule, the cave, the OMI family, GLUE, the capstone, the OMIST, ANGEL (I-216), the reflected triple (I-217), the shift held (I-218). Run each with `node`; each asserts its claims | ✅ holding, except i206, i214, i215, which print and assert nothing yet; `i210.mjs`, `i210.cjs`, `angela.ts` are broken copies of working files |
+| `america.ts`, `mertens.ts`, `red40.ts`, `trinity.ts`, `eve.ts`, `angela.cjs`, `base12.mjs`, `metatron.mjs`, `pixels.mjs`, `revelation.mjs`, `m-expr.ts`, `omnicron.ts` | The author's working scripts behind those records | Scratch: they print |
 
 ## Use case scenarios
 

@@ -29,7 +29,7 @@ tags: [omi-imo, source, polytron, light-garden, commons, tags, cave, sexagesimal
 
 # Polytron, the Commons and the Cave
 
-Recorded 2026-10-14, from the author's statements of 2026-10-13 and 2026-10-14 and what was checked against them. It says where the findings came from and what held; it defines nothing. The checks are in the proofs catalogue (I-195 to I-200) and in `src/testbed/space.test.ts`.
+Recorded 2026-10-14, from the author's statements of 2026-10-13 and 2026-10-14 and what was checked against them. The author's own records I-201 to I-218 are in `src/` (see `src/README.md`), from the transcript `_archive/_chat_history/this is what im working on with a coding.md`. It says where the findings came from and what held; it defines nothing. The checks are in the proofs catalogue (I-195 to I-200) and in `src/testbed/space.test.ts`.
 
 ## Where the Work Came From
 
@@ -56,6 +56,11 @@ Recorded 2026-10-14, from the author's statements of 2026-10-13 and 2026-10-14 a
 | "the leap year is tied to the floating point" | the year's fraction 0.242189 has the convergent 31/128, a power-of-two denominator; the Julian rule drifts a day every 128 years |
 | "so the game is a proof tree" | open-adventure reads words by their first five letters (five 7-bit characters fill a PDP-10's 36-bit word); a seed and a log replay exactly; 57 rooms deciphered by movement alone, every route validated by replay |
 | the tetragrammaton as a four-bit adder | Yod 10 + He 5 + Vav 6 + He 5 = 26 = one carry + 10, the nibble of Yod; Yod ⊕ He = 1111 |
+| "she becomes the tag ANGEL" (I-216) | ANGELA's letters XOR to NUL; ANGEL is its first five, and ANGELA ⊕ ANGEL = `a`; G, L, E of GLUE are in her name, not U; the identity as 4 + 8 + 4 = 16 termed pixels; a colour shows a tag but three bits cannot identify it |
+| "the shift being held is PROPAgation" (I-216) | a held Shift is one state carried to every key: over g.l.u.e. it gives G>L>U>E> (0x10 on the stop, 0x20 on letters, the bit-paired keyboard); holding it again changes nothing |
+| "SUBJECT-LOGIC-OBJECT is the face reflected" (I-217) | aligned from the right, SUBJECT ⊕ OBJECT = `s`, SUB, five nulls: the face BJECT cancels and any five-letter predicate passes whole; LOGIC ⊕ PIXEL = FS ACK US FF SI. Not a Steiner triple strictly: S ⊕ P ⊕ O is not 0 |
+| "for an illogical awakening, a catch-22" (I-218) | the author's capitals cut at five (LOGIC, AWAKE, REVEL, PROPA, ILLOG); on the teletype Shift + 2 types `"` = 0x22 = 0o42, the reset's frame; SHIFT folds to 0x40 |
+| "American English as a mnemonic language" | ASCII is the American Standard Code: the case bit, the shift bit and the five-letter parser are all American code and keyboard |
 
 ## What Did Not Hold, or Was a Coincidence
 
