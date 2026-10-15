@@ -1,0 +1,203 @@
+{
+ "source": "proofs/svg/fano (the 14 planes) + proofs/svg/hasse/pair-6.svg (XOR read, XNOR write), with each project's border (space/src/border.ts)",
+ "projects": [
+  {
+   "tag": "POLYTRON",
+   "gloss": "the declarative metaverse renderer (OpenGL ES, QEMU)",
+   "set": [
+    "projects/POLYTRON/Hasse_XOR.svg",
+    "projects/POLYTRON/Fano_point_1.svg",
+    "projects/POLYTRON/Fano_point_2.svg",
+    "projects/POLYTRON/Fano_point_3.svg",
+    "projects/POLYTRON/Fano_point_4.svg",
+    "projects/POLYTRON/Fano_point_5.svg",
+    "projects/POLYTRON/Fano_point_6.svg",
+    "projects/POLYTRON/Fano_point_7.svg",
+    "projects/POLYTRON/Fano_line_3_5_6.svg",
+    "projects/POLYTRON/Fano_line_1_7_6.svg",
+    "projects/POLYTRON/Fano_line_2_7_5.svg",
+    "projects/POLYTRON/Fano_line_1_3_2.svg",
+    "projects/POLYTRON/Fano_line_4_7_3.svg",
+    "projects/POLYTRON/Fano_line_1_5_4.svg",
+    "projects/POLYTRON/Fano_line_2_6_4.svg",
+    "projects/POLYTRON/Hasse_XNOR.svg"
+   ]
+  },
+  {
+   "tag": "METALOG",
+   "gloss": "the abstract semantic lattice (meta-log)",
+   "set": [
+    "projects/METALOG/Hasse_XOR.svg",
+    "projects/METALOG/Fano_point_1.svg",
+    "projects/METALOG/Fano_point_2.svg",
+    "projects/METALOG/Fano_point_3.svg",
+    "projects/METALOG/Fano_point_4.svg",
+    "projects/METALOG/Fano_point_5.svg",
+    "projects/METALOG/Fano_point_6.svg",
+    "projects/METALOG/Fano_point_7.svg",
+    "projects/METALOG/Fano_line_3_5_6.svg",
+    "projects/METALOG/Fano_line_1_7_6.svg",
+    "projects/METALOG/Fano_line_2_7_5.svg",
+    "projects/METALOG/Fano_line_1_3_2.svg",
+    "projects/METALOG/Fano_line_4_7_3.svg",
+    "projects/METALOG/Fano_line_1_5_4.svg",
+    "projects/METALOG/Fano_line_2_6_4.svg",
+    "projects/METALOG/Hasse_XNOR.svg"
+   ]
+  },
+  {
+   "tag": "H2GNN",
+   "gloss": "the hyperbolic-geometric neural network",
+   "set": [
+    "projects/H2GNN/Hasse_XOR.svg",
+    "projects/H2GNN/Fano_point_1.svg",
+    "projects/H2GNN/Fano_point_2.svg",
+    "projects/H2GNN/Fano_point_3.svg",
+    "projects/H2GNN/Fano_point_4.svg",
+    "projects/H2GNN/Fano_point_5.svg",
+    "projects/H2GNN/Fano_point_6.svg",
+    "projects/H2GNN/Fano_point_7.svg",
+    "projects/H2GNN/Fano_line_3_5_6.svg",
+    "projects/H2GNN/Fano_line_1_7_6.svg",
+    "projects/H2GNN/Fano_line_2_7_5.svg",
+    "projects/H2GNN/Fano_line_1_3_2.svg",
+    "projects/H2GNN/Fano_line_4_7_3.svg",
+    "projects/H2GNN/Fano_line_1_5_4.svg",
+    "projects/H2GNN/Fano_line_2_6_4.svg",
+    "projects/H2GNN/Hasse_XNOR.svg"
+   ]
+  },
+  {
+   "tag": "CANVAS",
+   "gloss": "the canvas document trees (omi-canvas)",
+   "set": [
+    "projects/CANVAS/Hasse_XOR.svg",
+    "projects/CANVAS/Fano_point_1.svg",
+    "projects/CANVAS/Fano_point_2.svg",
+    "projects/CANVAS/Fano_point_3.svg",
+    "projects/CANVAS/Fano_point_4.svg",
+    "projects/CANVAS/Fano_point_5.svg",
+    "projects/CANVAS/Fano_point_6.svg",
+    "projects/CANVAS/Fano_point_7.svg",
+    "projects/CANVAS/Fano_line_3_5_6.svg",
+    "projects/CANVAS/Fano_line_1_7_6.svg",
+    "projects/CANVAS/Fano_line_2_7_5.svg",
+    "projects/CANVAS/Fano_line_1_3_2.svg",
+    "projects/CANVAS/Fano_line_4_7_3.svg",
+    "projects/CANVAS/Fano_line_1_5_4.svg",
+    "projects/CANVAS/Fano_line_2_6_4.svg",
+    "projects/CANVAS/Hasse_XNOR.svg"
+   ]
+  },
+  {
+   "tag": "SETCO",
+   "gloss": "the outside-in classification framework",
+   "set": [
+    "projects/SETCO/Hasse_XOR.svg",
+    "projects/SETCO/Fano_point_1.svg",
+    "projects/SETCO/Fano_point_2.svg",
+    "projects/SETCO/Fano_point_3.svg",
+    "projects/SETCO/Fano_point_4.svg",
+    "projects/SETCO/Fano_point_5.svg",
+    "projects/SETCO/Fano_point_6.svg",
+    "projects/SETCO/Fano_point_7.svg",
+    "projects/SETCO/Fano_line_3_5_6.svg",
+    "projects/SETCO/Fano_line_1_7_6.svg",
+    "projects/SETCO/Fano_line_2_7_5.svg",
+    "projects/SETCO/Fano_line_1_3_2.svg",
+    "projects/SETCO/Fano_line_4_7_3.svg",
+    "projects/SETCO/Fano_line_1_5_4.svg",
+    "projects/SETCO/Fano_line_2_6_4.svg",
+    "projects/SETCO/Hasse_XNOR.svg"
+   ]
+  },
+  {
+   "tag": "AXIOM",
+   "gloss": "axiomatic sovereignty, the free-knowledge frame",
+   "set": [
+    "projects/AXIOM/Hasse_XOR.svg",
+    "projects/AXIOM/Fano_point_1.svg",
+    "projects/AXIOM/Fano_point_2.svg",
+    "projects/AXIOM/Fano_point_3.svg",
+    "projects/AXIOM/Fano_point_4.svg",
+    "projects/AXIOM/Fano_point_5.svg",
+    "projects/AXIOM/Fano_point_6.svg",
+    "projects/AXIOM/Fano_point_7.svg",
+    "projects/AXIOM/Fano_line_3_5_6.svg",
+    "projects/AXIOM/Fano_line_1_7_6.svg",
+    "projects/AXIOM/Fano_line_2_7_5.svg",
+    "projects/AXIOM/Fano_line_1_3_2.svg",
+    "projects/AXIOM/Fano_line_4_7_3.svg",
+    "projects/AXIOM/Fano_line_1_5_4.svg",
+    "projects/AXIOM/Fano_line_2_6_4.svg",
+    "projects/AXIOM/Hasse_XNOR.svg"
+   ]
+  },
+  {
+   "tag": "TETRA",
+   "gloss": "the tetragrammatron, the fold-based deterministic VM",
+   "set": [
+    "projects/TETRA/Hasse_XOR.svg",
+    "projects/TETRA/Fano_point_1.svg",
+    "projects/TETRA/Fano_point_2.svg",
+    "projects/TETRA/Fano_point_3.svg",
+    "projects/TETRA/Fano_point_4.svg",
+    "projects/TETRA/Fano_point_5.svg",
+    "projects/TETRA/Fano_point_6.svg",
+    "projects/TETRA/Fano_point_7.svg",
+    "projects/TETRA/Fano_line_3_5_6.svg",
+    "projects/TETRA/Fano_line_1_7_6.svg",
+    "projects/TETRA/Fano_line_2_7_5.svg",
+    "projects/TETRA/Fano_line_1_3_2.svg",
+    "projects/TETRA/Fano_line_4_7_3.svg",
+    "projects/TETRA/Fano_line_1_5_4.svg",
+    "projects/TETRA/Fano_line_2_6_4.svg",
+    "projects/TETRA/Hasse_XNOR.svg"
+   ]
+  },
+  {
+   "tag": "ATOMIC",
+   "gloss": "the atomic kernel, the deterministic kernel gate",
+   "set": [
+    "projects/ATOMIC/Hasse_XOR.svg",
+    "projects/ATOMIC/Fano_point_1.svg",
+    "projects/ATOMIC/Fano_point_2.svg",
+    "projects/ATOMIC/Fano_point_3.svg",
+    "projects/ATOMIC/Fano_point_4.svg",
+    "projects/ATOMIC/Fano_point_5.svg",
+    "projects/ATOMIC/Fano_point_6.svg",
+    "projects/ATOMIC/Fano_point_7.svg",
+    "projects/ATOMIC/Fano_line_3_5_6.svg",
+    "projects/ATOMIC/Fano_line_1_7_6.svg",
+    "projects/ATOMIC/Fano_line_2_7_5.svg",
+    "projects/ATOMIC/Fano_line_1_3_2.svg",
+    "projects/ATOMIC/Fano_line_4_7_3.svg",
+    "projects/ATOMIC/Fano_line_1_5_4.svg",
+    "projects/ATOMIC/Fano_line_2_6_4.svg",
+    "projects/ATOMIC/Hasse_XNOR.svg"
+   ]
+  },
+  {
+   "tag": "MVKIT",
+   "gloss": "metaverse-kit, the protocol law and ABIs",
+   "set": [
+    "projects/MVKIT/Hasse_XOR.svg",
+    "projects/MVKIT/Fano_point_1.svg",
+    "projects/MVKIT/Fano_point_2.svg",
+    "projects/MVKIT/Fano_point_3.svg",
+    "projects/MVKIT/Fano_point_4.svg",
+    "projects/MVKIT/Fano_point_5.svg",
+    "projects/MVKIT/Fano_point_6.svg",
+    "projects/MVKIT/Fano_point_7.svg",
+    "projects/MVKIT/Fano_line_3_5_6.svg",
+    "projects/MVKIT/Fano_line_1_7_6.svg",
+    "projects/MVKIT/Fano_line_2_7_5.svg",
+    "projects/MVKIT/Fano_line_1_3_2.svg",
+    "projects/MVKIT/Fano_line_4_7_3.svg",
+    "projects/MVKIT/Fano_line_1_5_4.svg",
+    "projects/MVKIT/Fano_line_2_6_4.svg",
+    "projects/MVKIT/Hasse_XNOR.svg"
+   ]
+  }
+ ]
+}
