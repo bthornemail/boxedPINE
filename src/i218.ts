@@ -1,8 +1,9 @@
-// i218.ts — I-218: S>H>I>F>T> — the shift held, for a LOGICal AWAKEning, or REVELation
+// i218.ts — I-218: S>H>I>F>T> — the shift held, for an ILLOGICal AWAKEning: a catch-22
 //
 // The author, 2026-10-14: "so I-218 is being HELD as a SHIFT, for the SHIFT to be
-// HELD, for a LOGICal AWAKEning or REVELation: S>H>I>F>T>". Following I-216
-// (the shift held is PROPAgation). The letters and values below are asserted;
+// HELD, for a LOGICal AWAKEning or REVELation: S>H>I>F>T>", then, correcting:
+// "no, it's for an illogical awakening, a catch-22". Following I-216 (the shift
+// held is PROPAgation) and the Catch-22 reset of the exchange (frame 42). The letters and values below are asserted;
 // the readings are the author's.
 import assert from "node:assert";
 
@@ -35,6 +36,21 @@ assert.equal([..."REVEL"].reverse().join(""), "LEVER", "REVEL reversed is LEVER"
 assert.equal([..."HELD"].reverse().join(""), "DLEH", "HELD reversed begins DLE");
 assert.equal(0x10, ">".charCodeAt(0) ^ ".".charCodeAt(0), "DLE is 0x10, the bit a held Shift sets on the stop (the name a coincidence of letters; the bit, arithmetic)");
 
-console.log("I-218: S>H>I>F>T> — the shift held, for a LOGICal AWAKEning, or REVELation — passed");
+// ── 4. The illogical awakening: a catch-22 ───────────────────
+assert.equal("ILLOGICAL".slice(2), "LOGICAL", "ILLOGICAL is IL + LOGICAL");
+assert.ok(!TAG.test("ILLOGICAL") && TAG.test("ILLOG"), "nine letters, no tag; its first five, ILLOG, are");
+// On the bit-paired keyboards of the ASCII teletypes, Shift flipped 0x10 on the digits as on . and ,
+// (Shift + 2 typed "), so the shift held over CATCH 22 does not leave the number alone:
+const teletype = (c: string) => (/[a-z]/.test(c) ? String.fromCharCode(c.charCodeAt(0) ^ 0x20) : /[1-9.,]/.test(c) ? String.fromCharCode(c.charCodeAt(0) ^ 0x10) : c);
+const heldTeletype = (keys: string) => [...keys].map(teletype).join("");
+assert.equal(heldTeletype("2"), '"', "Shift + 2 on the teletype: the quote");
+assert.equal('"'.charCodeAt(0), 0x22, "and the quote is 0x22: the Catch-22 byte read as hex");
+assert.equal(0x22, 0o42, "0x22 = 0o42: frame 42, where the exchange's reset falls (60 ^ 22 = 42)");
+assert.equal(60 ^ 22, 42);
+assert.equal(held("catch 22"), "CATCH 22", "on today's keyboard the shift held gives the command pair, digits untouched");
+assert.equal(heldTeletype("catch 22"), 'CATCH ""', "on the teletype the digits turn too: the catch, the indices that could not be deprecated changed by the held shift");
+
+console.log("I-218: S>H>I>F>T> — the shift held, for an ILLOGICal AWAKEning: a catch-22 — passed");
+console.log("  ILLOGICAL = IL + LOGICAL; on the teletype Shift + 2 is the quote, 0x22 = 0o42, the reset's frame");
 console.log("  LOGIC AWAKE REVEL PROPA: each the first five, the cave's cut; the shift held over s.h.i.f.t. gives S>H>I>F>T>");
 console.log("  SHIFT folds to 0x40; REVEL reversed is LEVER; HELD reversed begins DLE, and 0x10 is the stop's bit");
