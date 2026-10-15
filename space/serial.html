@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Serial Bridge</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&family=JetBrains+Mono:wght@400;600&display=swap">
+  <style>
+    :root { color-scheme:dark; --ink:#edf0e9; --muted:#9da6ad; --line:#34404a; --panel:#10151bd9; --cyan:#74c8c0; --gold:#e2b66c; --err:#ef8068; }
+    * { box-sizing:border-box; }
+    html,body { margin:0; min-height:100%; background:#0c1015; color:var(--ink); font:13px/1.5 "JetBrains Mono",ui-monospace,monospace; }
+    main { max-width:720px; margin:0 auto; padding:24px 16px; }
+    nav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px; }
+    nav a,button,select { color:inherit; background:#10151b; border:1px solid var(--line); border-radius:5px; padding:6px 10px; text-decoration:none; font:inherit; cursor:pointer; }
+    nav a:hover,button:hover,button:focus-visible { color:var(--cyan); border-color:var(--cyan); }
+    .kicker { color:var(--muted); font-size:10px; letter-spacing:.1em; text-transform:uppercase; }
+    h1 { margin:3px 0 8px; font:600 2rem/1 Newsreader,Georgia,serif; }
+    p { color:var(--muted); }
+    .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:12px 0; }
+    #bytes { width:256px; max-width:100%; background:#0c1015; border-radius:4px; }
+    #log { margin-top:14px; height:300px; overflow:auto; padding:10px; border:1px solid var(--line); border-radius:6px; background:#0c1015; white-space:pre-wrap; }
+    #log .sent { color:var(--cyan); } #log .ok { color:var(--gold); } #log .err { color:var(--err); }
+    #status { color:var(--ink); }
+  </style>
+</head>
+<body>
+  <main>
+    <nav aria-label="Space rooms"><a href="./index.html">Commons</a><a href="./xr.html">Breadboard</a><a href="./agent.html">Agent</a><a href="./map.html">Map</a></nav>
+    <div class="kicker">Agent Commons · the go-between</div>
+    <h1>Serial Bridge</h1>
+    <p>The ESP32-S3 between the breadboard's XOR circuit and the logic here, over Web Serial. It reflects its state every 256 cycles and answers when asked (the parity organ), ending with 218. In AT mode the same page sends read-only queries to a modem, and reads an ICCID's Luhn check. Connecting asks for the port — a Yes. Chrome or Edge, over localhost or https.</p>
+    <div class="row">
+      <button id="connect">Connect</button>
+      <select id="mode" aria-label="Mode"><option value="organ">organ (ESP32)</option><option value="at">AT (modem)</option></select>
+      <select id="ask" aria-label="Request" disabled></select>
+      <button id="send" disabled>Send</button>
+    </div>
+    <div class="kicker">the 128 bytes · gold read (127) · blue written (63) · white the index</div>
+    <svg id="bytes" viewBox="0 0 16 8" width="256" height="128" aria-label="the 128-byte exchange as the board holds it"></svg>
+    <div id="status" aria-live="polite">Not connected.</div>
+    <div id="log" aria-live="polite"></div>
+  </main>
+  <script type="module" src="./src/serial.ts"></script>
+</body>
+</html>

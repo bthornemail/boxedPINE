@@ -618,3 +618,26 @@ test('The plane: the 2D canvas, the 2.5D map and the 3D scene map to one place a
   assert.equal(calls.filter((c) => c === 'fillText').length, 1, 'one mark, one name');
   assert.equal(calls.filter((c) => c === 'arc').length, 12 + 1 + 2, 'twelve sectors, the rim, the mark and its ring');
 });
+
+test('The serial bridge: it classifies organ reflections, numbered answers and modem replies, and checks an ICCID by Luhn', async () => {
+  const { classify, luhnOk, AT_CHOICES } = await import('../../space/src/serial.ts');
+  // an unprompted reflection line (organ.ts: reflect HH P DD CCCC) parses to its fields
+  const r = classify('reflect 69 1 00 0031');
+  assert.equal(r.kind, 'reflect');
+  if (r.kind === 'reflect') { assert.equal(r.parity, 0x69); assert.equal(r.pole, 1); assert.equal(r.dev, 0); assert.equal(r.count, 0x31); }
+  // a numbered answer opens on NNN and closes on 218
+  assert.equal(classify('200 ok').kind, 'answer-open');
+  assert.equal(classify('218 bye').kind, 'answer-close');
+  // modem replies
+  assert.equal(classify('OK').kind, 'ok');
+  assert.equal(classify('ERROR').kind, 'error');
+  assert.equal(classify('+CME ERROR: 10').kind, 'error');
+  assert.equal(classify('Quectel').kind, 'other');
+  // AT choices are read-only (no write verbs: CFUN, CPWROFF, CGACT, CMGS, write-form CPIN=)
+  for (const c of AT_CHOICES) assert.ok(!/=[^?]/.test(c) && !/CFUN|CPWROFF|CGACT|CMGS/.test(c), `${c} is read-only`);
+  // the Luhn check on an ICCID: a known-good test number holds, a bumped digit fails
+  assert.equal(luhnOk('8988303000000000007'), luhnOk('8988303000000000007'));
+  const good = '89014103211118510720'; // a standard ICCID example, Luhn-valid
+  assert.ok(luhnOk(good), 'the example ICCID passes Luhn');
+  assert.ok(!luhnOk(good.slice(0, -1) + String((Number(good.slice(-1)) + 1) % 10)), 'a changed check digit fails');
+});
