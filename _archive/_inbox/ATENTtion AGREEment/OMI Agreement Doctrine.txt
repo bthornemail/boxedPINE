@@ -1,0 +1,656 @@
+Agreement Is All We Need
+The OMI Doctrine of Bounded, Replayable Trust
+omi---imo
+o---o
+Agreement is the moment an open-world declaration becomes bounded, validated, replayable, and inspectable.
+It is not a feeling.
+It is not a vote.
+It is not a platform decision.
+It is not the fact that something rendered on a screen.
+In OMI, agreement is a structural event.
+A declaration enters the frame.
+A transition resolves.
+A receipt records.
+A materializer applies.
+A projection displays.
+An inspector explains.
+The spine is:
+validate -> resolve -> record -> materialize -> project -> inspect
+The forbidden shortcut is:
+render -> believe
+OMI exists to prevent that shortcut.
+
+1. The Problem
+Most digital systems confuse visibility with truth.
+If a page renders, people believe it exists.
+If a platform shows a badge, people believe it is trusted.
+If a database returns a value, people believe it is current.
+If a social feed repeats a claim, people believe it has weight.
+This is the old mistake:
+render -> believe
+OMI rejects this.
+Rendering is only projection.
+Projection can help a person read an object, but projection cannot validate the object.
+A DOM node can carry state.
+A CSS rule can style state.
+A JSON object can serialize state.
+A QR code can transport state.
+A gossip network can recover state.
+A portal can display state.
+None of these are authority by themselves.
+The first doctrine is:
+carrier != authority
+projection != validation
+prefix != identity
+gossip != authority
+render != believe
+
+2. What Agreement Means
+In everyday language, agreement often means:
+I agree.
+We voted.
+The group accepted it.
+The platform approved it.
+The majority believes it.
+In OMI, agreement means something stricter.
+Agreement means:
+the object has a boundary
+the frame validates
+the transition resolves
+the receipt records
+the history can replay
+the projection can be inspected
+Agreement is not the absence of disagreement.
+Agreement is the production of enough structure that disagreement can be located, replayed, compared, and resolved.
+A disagreement says:
+something is missing
+OMI asks:
+What boundary is missing?
+What source is missing?
+What receipt is missing?
+What context is missing?
+What transition failed?
+What projection is being mistaken for authority?
+Then it turns the disagreement into an object path.
+Short form:
+disagreement -> missing structure -> new object/path/test/receipt
+
+3. The OMI Agreement Pipeline
+The OMI pipeline is:
+reader -> resolver -> validation -> receipt -> materializer -> projection -> inspection
+Each layer has a job.
+Reader
+The reader recognizes a form.
+It may recognize:
+omi---imo
+omi-<tail>
+imo-<tail>
+8-segment frame candidate
+DOM carrier
+CSSOM carrier
+JSDOM snapshot
+gossip fragment
+receipt bundle
+plain text
+But recognition is not acceptance.
+The reader may recognize.
+Resolver
+The resolver promotes a recognized form into a candidate.
+A candidate may be:
+a possible frame
+a possible edit
+a possible object
+a possible route
+a possible receipt
+a possible reconstruction
+But promotion is not acceptance.
+The resolver may promote.
+Validation
+Validation checks the frame.
+The frame must close structurally:
+Q_frame(S) = 0
+If the structure fails, the object rejects.
+Resolution
+A valid frame yields a truth row:
+(LL, NN, MM)
+The system must prove:
+NN -> MM
+through the accepted Delta/Fano path.
+Receipt
+A successful transition writes a receipt.
+The receipt is the acceptance boundary.
+Only validation and receipt may accept.
+Materializer
+The materializer applies the accepted rule address.
+The rule may affect:
+object structure
+document projection
+DOM/CSSOM/JSDOM state
+snub geometry
+viewport control
+receipt export
+portal display
+But the materializer only acts after receipt.
+Projection
+Projection displays the accepted state.
+Projection may use:
+DOM
+CSSOM
+JSDOM
+SVG
+Canvas
+A-Frame
+QR
+JSON Canvas
+portal cards
+document views
+Projection is downstream.
+Inspection
+Inspection explains why the object should be trusted.
+It shows:
+source
+frame
+truth row
+receipts
+replay
+conflicts
+gossip candidates
+materializer rule
+projection path
+
+4. The Core Agreement Sentence
+The entire model can be reduced to one sentence:
+The reader may recognize. The resolver may promote. Only validation and receipt may accept.
+This sentence protects OMI from three failures:
+prefix -> identity
+gossip -> authority
+render -> believe
+A prefix may point toward an object.
+A gossip network may recover a candidate.
+A browser may render a projection.
+But only validation and receipt can accept.
+
+5. The Object Boundary
+OMI begins with a bounded relation:
+omi---imo
+or:
+o---o
+This boundary is the simplest agreement enclosure.
+The two sides bookend the relation.
+The hyphen field joins the terms.
+omi  = entry
+---  = bridge
+imo  = closure
+The hyphen is not empty punctuation.
+It is the join field.
+It is the bus.
+It is the compiler lane.
+It is where a declaration becomes an object candidate.
+Short form:
+omi enters.
+--- joins.
+imo closes.
+The symbolic lower anchors are:
+ο = 0x03BF
+Ο = 0x039F
+These Omicron anchors define structural boundary.
+They are not decoration.
+They are not typography.
+They are part of the frame’s lower law.
+
+6. The 128-Bit Agreement Frame
+An OMI frame has eight 16-bit segments:
+S0-S1-S2-S3-S4-S5-S6-S7
+Together:
+8 x 16 = 128 bits
+The canonical frame shape is:
+S0 = 0xLL00
+S1 = 0x03BF
+S2 = 0xNNNN
+S3 = 0x2BLL
+S4 = 0x2FLL
+S5 = 0xMMMM
+S6 = 0x039F
+S7 = 0xLLFF
+The frame contains:
+LL = scope / lens / ket selector
+NN = antecedent
+MM = consequent
+The frame validates only if:
+Q_frame(S) = 0
+The structure must close.
+The object cannot become accepted by looking correct.
+It must satisfy the frame.
+
+7. The Truth Row
+Every valid frame yields one truth row:
+(LL, NN, MM)
+This is the smallest agreement face.
+It can be read as:
+scope / antecedent / consequent
+or:
+lens / beginning / resolution
+or:
+declaration / definition / receipt
+The proven transition is:
+NN -> MM
+NN begins.
+MM resolves.
+LL scopes where the accepted transition lands.
+The transition is accepted only when Delta/Fano proves that MM is reachable from NN inside the bounded path.
+Short form:
+LL scopes.
+NN begins.
+MM resolves.
+
+8. Delta Proves, Fano Bounds
+The Delta Law is the bitwise transition engine.
+It uses bounded operations:
+rotate
+xor
+mask
+constant
+A simple form is:
+Delta_C(x) = rotl(x,1) xor rotl(x,3) xor rotr(x,2) xor C
+The resolver attempts:
+NN -> Delta(NN) -> ... -> MM
+The Fano layer bounds the incidence search.
+It asks:
+Which triangle resolves?
+Which relation closes?
+Which path can be replayed?
+The path is finite.
+The proof is local.
+The acceptance is receipted.
+Short doctrine:
+Delta proves.
+Fano bounds.
+Receipt records.
+
+9. LL as the Ket of Agreement
+LL is the ket-like selector of the frame.
+It is not the object.
+It is not the geometry.
+It is not the policy.
+It is the scope selector.
+The truth row can be read:
+(|LL>, NN, MM)
+LL has two nibbles:
+LL = 0xAB
+Where:
+A = high nibble
+B = low nibble
+OMI reads them as:
+high nibble = context / lens family / carry-forward scope
+low nibble  = execution slot selector
+The low nibble selects where the accepted transition materializes.
+The high nibble carries scope forward.
+The gate extracts:
+slot_index=$((ll & 0x0f))
+rule_slot=$((0xe0 + slot_index))
+context=$(((ll >> 4) & 0x0f))
+The shell does not know meaning.
+It only emits the accepted envelope.
+
+10. The 0xE_ Agreement Manifold
+The 0xE_ band is the accepted execution manifold.
+0xE0-0xEF
+The low nibble of LL selects one of sixteen slots:
+rule_slot = 0xE0 + (LL & 0x0F)
+The first twelve slots pack the object:
+0xE0-0xEB
+The final four slots hold the object:
+0xEC-0xEF
+The doctrine is:
+0xE0-0xEB pack the object.
+0xEC-0xEF hold the object.
+The first twelve are the inner materializer field.
+The final four are the outer controller vertices.
+Together they form one accepted execution manifold.
+No controller exists outside receipt.
+
+11. Inner Materializers
+The first twelve slots may materialize internal object operations:
+0xE0 = page-frame-root
+0xE1 = DOM import/export
+0xE2 = CSSOM import/export
+0xE3 = JSDOM normalization
+0xE4 = OMI object patch
+0xE5 = edge traversal
+0xE6 = vertex traversal
+0xE7 = snub bridge
+0xE8 = stellated octahedron mirror
+0xE9 = Fano triangle selection
+0xEA = 59/60/61 face band
+0xEB = receipt projection/export
+These are not shell branches.
+They are rule addresses.
+The registry owns the meaning.
+The gate only emits the slot.
+
+12. Outer Controller Vertices
+The final four slots control the projection envelope:
+0xEC = translation / viewport / focus
+0xED = scale / recursion depth
+0xEE = rotation / spin / orientation
+0xEF = boundary / opacity / clipping
+These are not UI shortcuts.
+They are accepted controller addresses.
+They must pass through the same pipeline:
+validate -> resolve -> record -> materialize -> project -> inspect
+The rule is:
+No controller outside receipt.
+A local browser may scroll, pan, rotate, or zoom as local UI.
+But a conforming OMI projection must not treat that local behavior as accepted state.
+The viewport is receipt-bound when controlled through 0xEC-0xEF.
+Out-of-band lens changes are local display only.
+
+13. The Gate and the Registry
+The gate is blind.
+The registry owns meaning.
+The Gate Does
+parse frame
+validate Q_frame(S) = 0
+extract (LL, NN, MM)
+resolve NN -> MM
+derive context
+derive slot_index
+derive rule_slot
+write receipt
+emit envelope
+The Gate Does Not
+know snub geometry
+know Platonic solids
+know Archimedean/Catalan duals
+know DOM policy
+know CSSOM policy
+know JSDOM policy
+know A-Frame policy
+know portal UX
+know application semantics
+The Registry Does
+read accepted envelope
+lookup rule_slot
+apply implementation
+respect context
+respect steps
+respect chirality
+project result
+explain result
+Short doctrine:
+LL selects.
+Delta proves.
+Fano bounds.
+Receipt authorizes.
+Rule block materializes.
+Projection displays.
+
+14. Agreement and Gossip
+OMI may receive candidates through a gossip storage substrate.
+The gossip layer may move fragments.
+Reed-Solomon may recover missing structure.
+Causality may bound reconstruction.
+But gossip does not decide agreement.
+The boundary is:
+MCRSGSP provides recoverable candidates.
+OMI decides accepted objects.
+Short stack:
+Gossip moves.
+Reed-Solomon recovers.
+Causality bounds.
+OMI accepts.
+Projection displays.
+This prevents the shortcut:
+gossip -> authority
+Availability is not acceptance.
+Recoverability is not acceptance.
+Causal closure is not acceptance.
+Only validation and receipt may accept.
+
+15. Agreement and Projection
+Projection is how humans encounter accepted state.
+Projection may be beautiful.
+Projection may be interactive.
+Projection may be 2D, 3D, textual, visual, spatial, or document-based.
+But projection is not authority.
+A projection can show:
+object cards
+document views
+routes
+menus
+events
+notes
+claims
+receipts
+timelines
+3D scenes
+SVG diagrams
+DOM trees
+CSSOM rules
+JSDOM snapshots
+But an object is trusted only because it has a valid acceptance path.
+The projection should show trust plainly:
+Accepted
+Unverified
+Conflict
+Rejected
+Local-only
+Mirrored
+Pending
+Replayed
+The user should not need to understand the full frame to know the trust state.
+But the user should be able to inspect the frame if they choose.
+
+16. Agreement and the User
+For normal users, OMI should feel like this:
+open -> understand -> trust -> act -> remember
+This maps to the protocol:
+reader recognizes -> projection displays -> receipt verifies -> materializer acts -> replay remembers
+The main user interface should answer:
+What is this?
+Can I trust it?
+What changed?
+Where does it belong?
+Can I move it?
+The four human modes are:
+Focus
+Attention
+Observation
+Experience
+Focus
+Choose the object.
+What am I working with?
+Attention
+See what needs review.
+What changed?
+What is unresolved?
+Observation
+Inspect evidence.
+Why should I trust this?
+Experience
+Remember interaction.
+What happened over time?
+Short doctrine:
+Focus selects.
+Attention alerts.
+Observation verifies.
+Experience remembers.
+
+17. Agreement and Documents
+A document in OMI should move between four synchronized surfaces:
+DOM
+CSSOM
+JSDOM
+OMI Object Model
+Their roles are:
+DOM   = live browser projection
+CSSOM = style and reader lens projection
+JSDOM = portable/headless normalized document
+OOM   = accepted object state, receipts, replay, trust
+Document edits are candidates until accepted.
+Import flow:
+import -> recognize -> candidate -> review -> validate -> receipt
+Receive flow:
+receive -> candidate -> compare -> resolve -> validate -> receipt
+Export flow:
+projection export = what it looks like
+object export     = what was accepted
+receipt export    = why it is trusted
+Short doctrine:
+DOM renders.
+CSSOM styles.
+JSDOM normalizes.
+OMI accepts.
+Receipts remember.
+Exports move.
+Imports return.
+
+18. Agreement and Geometry
+OMI’s geometry can be read through:
+Q_xy(x,y) = 60x² + 16xy + 4y²
+This gives three phases:
+4y²   = Platonic seed
+16xy  = Archimedean/Catalan bridge
+60x²  = 4D regular orbit
+Short form:
+4y² seeds.
+16xy snubs.
+60x² sweeps.
+The snub operation is the model of transformation.
+Snubbing:
+cuts
+twists
+re-faces
+In OMI:
+cut      = isolate unresolved boundary
+twist    = introduce chirality
+re-face  = create triangular agreement surfaces
+record   = preserve the path
+project  = expose the accepted state
+OMI does not overwrite.
+OMI snubs objects into agreement.
+
+19. The Agreement Face
+A truth row is a triangle:
+(LL, NN, MM)
+A receipt is the memory of that triangle resolving.
+A snub operation creates triangular agreement faces.
+A Fano selector chooses the resolving incidence.
+The replay ring remembers the accepted path.
+Short form:
+Snub creates agreement faces.
+Fano selects the resolving triangle.
+Receipt records the path.
+Replay remembers.
+Agreement is therefore not flat sameness.
+Agreement is structured closure.
+
+20. Agreement Without Collapse
+A peer-to-peer system does not require every peer to see the same surface.
+It requires peers to resolve around the same accepted center.
+Two peers may hold different orientations.
+One may see an edge traversal.
+One may see a vertex traversal.
+One may see a face traversal.
+Agreement does not require them to collapse into one view.
+Agreement requires:
+shared boundary
+valid transition
+receipt-backed path
+inspectable context
+Short form:
+same centroid
+different traversal
+lawful relation
+replayable path
+Chirality is not disagreement.
+Chirality is oriented complementarity.
+
+21. The Object Is the Accepted Relation
+An OMI object is not:
+a rendered card
+a DOM node
+a CSS selector
+a gossip fragment
+a prefix string
+a pretty portal
+An OMI object is:
+an accepted, replayable relation
+It has:
+boundary
+truth row
+transition proof
+receipt
+materializer address
+projection path
+inspection surface
+The object may appear in many places:
+web portal
+document workbench
+local inbox
+QR code
+JSON file
+SVG map
+A-Frame demo
+gossip storage
+receipt bundle
+But those are appearances.
+The object is the accepted relation.
+
+22. The Agreement Doctrine
+The doctrine is:
+The reader may recognize.
+The resolver may promote.
+MCRSGSP may recover.
+Q_frame validates.
+Delta proves.
+Fano bounds.
+Receipt accepts.
+Rule block materializes.
+Projection displays.
+Inspection explains.
+The forbidden shortcuts are:
+prefix -> identity
+gossip -> authority
+render -> believe
+controller -> outside receipt
+The final OMI substrate canon is:
+The 0xE_ band is a single accepted execution manifold:
+0xE0-0xEB pack the object through twelve inner materializers,
+while 0xEC-0xEF hold the object through four outer controller vertices;
+start.sh selects the slot by LL & 0x0F,
+records the receipt,
+and remains blind to all semantic geometry.
+
+23. Final Statement
+Agreement is all we need because agreement is the point where open-world activity becomes bounded structure.
+A declaration alone is not enough.
+A projection alone is not enough.
+A gossip candidate alone is not enough.
+A prefix alone is not enough.
+Agreement requires:
+boundary
+validation
+resolution
+receipt
+materialization
+projection
+inspection
+OMI turns declarations into objects by making agreement replayable.
+Short canon:
+o---o encloses.
+LL scopes.
+NN begins.
+MM resolves.
+Delta proves.
+Fano bounds.
+Receipt closes.
+0xE_ materializes.
+Projection displays.
+Experience remembers.
+One-line canon:
+Agreement is the accepted, receipted transition from declaration to inspectable object.
+Product promise:
+OMI lets people save, share, verify, and move objects without losing history or context.
+Substrate promise:
+OMI turns open-world declarations into bounded, validated, replayable, and inspectable agreement.

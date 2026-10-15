@@ -1,0 +1,2036 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMI — Operational Meta-Intelligence Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #090b0f;
+            --bg2: #0d1018;
+            --bg3: #121620;
+            --bg4: #181d2a;
+            --bg5: #1e2435;
+            --border: rgba(255, 255, 255, 0.06);
+            --bord2: rgba(255, 255, 255, 0.11);
+            --bord3: rgba(255, 255, 255, 0.18);
+            --text: #dde2ee;
+            --text2: #7c85a0;
+            --text3: #404758;
+            --pu: #8b78ff;
+            --pu2: #b8adff;
+            --te: #3ecfc6;
+            --te2: #7ee8e2;
+            --gd: #e8aa28;
+            --gd2: #f5cc72;
+            --rd: #e05454;
+            --gr: #45c47a;
+            --mono: 'JetBrains Mono', monospace;
+            --serif: 'Fraunces', serif;
+            --sans: 'DM Sans', sans-serif
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 56px
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 15px;
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow-x: hidden
+        }
+
+        ::-webkit-scrollbar {
+            width: 3px
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg)
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg5);
+            border-radius: 2px
+        }
+
+        ::selection {
+            background: rgba(139, 120, 255, 0.3)
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+            height: 54px;
+            background: rgba(9, 11, 15, 0.94);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            gap: 2rem
+        }
+
+        .nav-logo {
+            font-family: var(--mono);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: 0.04em;
+            flex-shrink: 0
+        }
+
+        .nav-logo .o {
+            color: var(--pu)
+        }
+
+        .nav-logo .i {
+            color: var(--te)
+        }
+
+        .nav-logo .d {
+            color: var(--text3)
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0;
+            list-style: none;
+            overflow: hidden
+        }
+
+        .nav-links a {
+            font-family: var(--mono);
+            font-size: 10.5px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text3);
+            text-decoration: none;
+            padding: 0 14px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1.5px solid transparent;
+            transition: color 0.15s, border-color 0.15s;
+            white-space: nowrap
+        }
+
+        .nav-links a:hover {
+            color: var(--pu2);
+            border-color: var(--pu)
+        }
+
+        .nav-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0
+        }
+
+        .pill {
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.06em;
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid
+        }
+
+        .pill-g {
+            border-color: rgba(69, 196, 122, 0.35);
+            color: var(--gr);
+            background: rgba(69, 196, 122, 0.07)
+        }
+
+        .pill-p {
+            border-color: rgba(139, 120, 255, 0.35);
+            color: var(--pu2);
+            background: rgba(139, 120, 255, 0.07)
+        }
+
+        .hero {
+            padding: 118px 2rem 70px;
+            max-width: 1120px;
+            margin: 0 auto
+        }
+
+        .eyebrow {
+            font-family: var(--mono);
+            font-size: 10.5px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--te);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .eyebrow::before {
+            content: '';
+            display: block;
+            width: 28px;
+            height: 1px;
+            background: var(--te);
+            opacity: 0.5
+        }
+
+        h1 {
+            font-family: var(--serif);
+            font-size: clamp(44px, 6.5vw, 86px);
+            font-weight: 300;
+            line-height: 1.04;
+            letter-spacing: -0.015em;
+            color: var(--text);
+            margin-bottom: 14px
+        }
+
+        h1 i {
+            font-style: italic;
+            color: var(--pu2)
+        }
+
+        .hero-sub {
+            font-family: var(--mono);
+            font-size: 12.5px;
+            color: var(--text2);
+            line-height: 2;
+            max-width: 680px;
+            margin-bottom: 36px
+        }
+
+        .hero-sub code {
+            color: var(--gd);
+            background: rgba(232, 170, 40, 0.08);
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-size: 12px
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .btn {
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 9px 20px;
+            border-radius: 3px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.15s
+        }
+
+        .btn-pu {
+            background: var(--pu);
+            color: #fff
+        }
+
+        .btn-pu:hover {
+            background: #7a69e8;
+            transform: translateY(-1px)
+        }
+
+        .btn-ol {
+            background: transparent;
+            color: var(--text2);
+            border: 1px solid var(--bord2)
+        }
+
+        .btn-ol:hover {
+            color: var(--text);
+            background: var(--bg3)
+        }
+
+        .strip {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            background: var(--border);
+            gap: 1px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border)
+        }
+
+        .strip-item {
+            background: var(--bg);
+            padding: 22px 16px;
+            text-align: center
+        }
+
+        .strip-val {
+            font-family: var(--mono);
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 6px;
+            color: var(--text)
+        }
+
+        .strip-val .a {
+            color: var(--pu)
+        }
+
+        .strip-val .b {
+            color: var(--te)
+        }
+
+        .strip-val .c {
+            color: var(--gd)
+        }
+
+        .strip-lab {
+            font-family: var(--mono);
+            font-size: 9px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--text3)
+        }
+
+        section {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 76px 2rem
+        }
+
+        .sec-tag {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--text3);
+            margin-bottom: 10px
+        }
+
+        h2 {
+            font-family: var(--serif);
+            font-size: clamp(28px, 3.5vw, 46px);
+            font-weight: 300;
+            line-height: 1.15;
+            color: var(--text);
+            margin-bottom: 14px
+        }
+
+        h2 i {
+            font-style: italic;
+            color: var(--te)
+        }
+
+        .sec-lead {
+            font-family: var(--mono);
+            font-size: 12.5px;
+            color: var(--text2);
+            line-height: 1.95;
+            max-width: 660px;
+            margin-bottom: 44px
+        }
+
+        .sec-lead code {
+            color: var(--gd);
+            background: rgba(232, 170, 40, 0.08);
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-size: 11.5px
+        }
+
+        hr.div {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 0
+        }
+
+        .law {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 28px 32px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden
+        }
+
+        .law::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 100%
+        }
+
+        .law.pu::before {
+            background: var(--pu)
+        }
+
+        .law.te::before {
+            background: var(--te)
+        }
+
+        .law.gd::before {
+            background: var(--gd)
+        }
+
+        .law.rd::before {
+            background: var(--rd)
+        }
+
+        .law-label {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text3);
+            margin-bottom: 10px
+        }
+
+        .law-eq {
+            font-family: var(--mono);
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 10px;
+            line-height: 1.6;
+            word-break: break-word
+        }
+
+        .law-eq .v1 {
+            color: var(--pu2)
+        }
+
+        .law-eq .v2 {
+            color: var(--te)
+        }
+
+        .law-eq .v3 {
+            color: var(--gd)
+        }
+
+        .law-eq .v4 {
+            color: var(--rd)
+        }
+
+        .law-body {
+            font-size: 13px;
+            color: var(--text2);
+            line-height: 1.7;
+            max-width: 620px
+        }
+
+        .law-body code {
+            font-family: var(--mono);
+            font-size: 11.5px;
+            color: var(--gd);
+            background: rgba(232, 170, 40, 0.08);
+            padding: 1px 5px;
+            border-radius: 3px
+        }
+
+        .g2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px
+        }
+
+        .g3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px
+        }
+
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin: 20px 0
+        }
+
+        .spec-table th {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text3);
+            text-align: left;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg2)
+        }
+
+        .spec-table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            font-family: var(--mono);
+            font-size: 12px;
+            vertical-align: middle
+        }
+
+        .spec-table tr:last-child td {
+            border-bottom: none
+        }
+
+        .spec-table tr:hover td {
+            background: var(--bg3)
+        }
+
+        .tag {
+            display: inline-block;
+            font-family: var(--mono);
+            font-size: 9.5px;
+            letter-spacing: 0.06em;
+            padding: 2px 8px;
+            border-radius: 3px;
+            text-transform: uppercase
+        }
+
+        .tag-pu {
+            background: rgba(139, 120, 255, 0.14);
+            color: var(--pu2)
+        }
+
+        .tag-te {
+            background: rgba(62, 207, 198, 0.12);
+            color: var(--te2)
+        }
+
+        .tag-gd {
+            background: rgba(232, 170, 40, 0.12);
+            color: var(--gd2)
+        }
+
+        .tag-rd {
+            background: rgba(224, 84, 84, 0.12);
+            color: #f08080
+        }
+
+        .tag-gr {
+            background: rgba(69, 196, 122, 0.12);
+            color: #7be0a8
+        }
+
+        .codeblock {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 24px 0
+        }
+
+        .code-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 16px;
+            background: var(--bg4);
+            border-bottom: 1px solid var(--border);
+            font-family: var(--mono);
+            font-size: 10.5px;
+            color: var(--text3);
+            letter-spacing: 0.07em
+        }
+
+        .dots {
+            display: flex;
+            gap: 5px
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%
+        }
+
+        pre {
+            padding: 20px 24px;
+            font-family: var(--mono);
+            font-size: 12.5px;
+            line-height: 1.9;
+            overflow-x: auto;
+            tab-size: 2
+        }
+
+        .k {
+            color: var(--pu2)
+        }
+
+        .cm {
+            color: var(--text3)
+        }
+
+        .s {
+            color: #e8a04a
+        }
+
+        .n {
+            color: var(--te)
+        }
+
+        .t {
+            color: var(--gd)
+        }
+
+        .v {
+            color: #e06c75
+        }
+
+        .card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 24px;
+            transition: border-color 0.15s
+        }
+
+        .card:hover {
+            border-color: var(--bord2)
+        }
+
+        .card-title {
+            font-family: var(--mono);
+            font-size: 12.5px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 8px
+        }
+
+        .card-body {
+            font-size: 12.5px;
+            color: var(--text2);
+            line-height: 1.65
+        }
+
+        .orbit-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin: 20px 0;
+            flex-wrap: wrap
+        }
+
+        .ostep {
+            width: 54px;
+            height: 54px;
+            border-radius: 4px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center
+        }
+
+        .ostep .si {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--text3);
+            margin-bottom: 3px
+        }
+
+        .ostep .sv {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--pu2)
+        }
+
+        .oarr {
+            font-family: var(--mono);
+            font-size: 14px;
+            color: var(--text3)
+        }
+
+        .frame-layout {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 1px;
+            background: var(--bord2);
+            border: 1px solid var(--bord2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 24px 0;
+            font-family: var(--mono)
+        }
+
+        .fseg {
+            background: var(--bg2);
+            padding: 16px 8px;
+            text-align: center;
+            transition: background 0.15s
+        }
+
+        .fseg:hover {
+            background: var(--bg4)
+        }
+
+        .fseg-id {
+            font-size: 9px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text3);
+            margin-bottom: 8px
+        }
+
+        .fseg-val {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px
+        }
+
+        .fseg-role {
+            font-size: 9px;
+            color: var(--text3);
+            line-height: 1.4
+        }
+
+        .f-bnd {
+            background: rgba(139, 120, 255, 0.08)
+        }
+
+        .f-del {
+            background: rgba(62, 207, 198, 0.07)
+        }
+
+        .f-dat {
+            background: rgba(232, 170, 40, 0.06)
+        }
+
+        .f-len {
+            background: rgba(232, 170, 40, 0.04)
+        }
+
+        .pipeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin: 24px 0
+        }
+
+        .pstep {
+            display: flex;
+            align-items: stretch;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-bottom: none;
+            transition: background 0.15s
+        }
+
+        .pstep:first-child {
+            border-radius: 5px 5px 0 0
+        }
+
+        .pstep:last-child {
+            border-bottom: 1px solid var(--border);
+            border-radius: 0 0 5px 5px
+        }
+
+        .pstep:hover {
+            background: var(--bg3)
+        }
+
+        .pnum {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--text3);
+            padding: 14px 16px;
+            border-right: 1px solid var(--border);
+            min-width: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.08em
+        }
+
+        .picon {
+            padding: 14px 12px;
+            border-right: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            min-width: 44px;
+            font-size: 16px
+        }
+
+        .pcontent {
+            padding: 14px 18px;
+            flex: 1
+        }
+
+        .pname {
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 3px
+        }
+
+        .pdesc {
+            font-size: 12.5px;
+            color: var(--text2)
+        }
+
+        .ptag {
+            padding: 14px 16px;
+            display: flex;
+            align-items: center
+        }
+
+        .dom-tree {
+            font-family: var(--mono);
+            font-size: 12.5px;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 24px;
+            line-height: 2.1
+        }
+
+        .de {
+            color: var(--pu2)
+        }
+
+        .de.hi {
+            color: var(--te2)
+        }
+
+        .de.gd {
+            color: var(--gd2)
+        }
+
+        .dcm {
+            color: var(--text3)
+        }
+
+        .ti {
+            padding-left: 22px;
+            border-left: 1px solid var(--border);
+            margin-left: 8px
+        }
+
+        .fano-wrap {
+            display: flex;
+            gap: 32px;
+            align-items: flex-start
+        }
+
+        .fano-diag {
+            flex-shrink: 0;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 20px;
+            width: 240px
+        }
+
+        .fano-tbl {
+            flex: 1;
+            overflow-x: auto
+        }
+
+        .ring-viz {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 24px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 24px 0
+        }
+
+        .rf {
+            flex: 1;
+            min-width: 120px
+        }
+
+        .rf-lab {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text3);
+            margin-bottom: 8px
+        }
+
+        .rf-val {
+            font-family: var(--mono);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.1
+        }
+
+        .rsep {
+            width: 1px;
+            background: var(--border);
+            align-self: stretch
+        }
+
+        .proj-rule {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 22px 26px;
+            margin: 16px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 18px
+        }
+
+        .pr-icon {
+            font-family: var(--mono);
+            font-size: 26px;
+            flex-shrink: 0;
+            margin-top: 2px
+        }
+
+        .pr-title {
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 5px
+        }
+
+        .pr-body {
+            font-size: 12.5px;
+            color: var(--text2);
+            line-height: 1.6
+        }
+
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 12px;
+            margin: 24px 0
+        }
+
+        .portal-item {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 18px 16px;
+            transition: border-color 0.15s
+        }
+
+        .portal-item:hover {
+            border-color: var(--bord2)
+        }
+
+        .portal-tag {
+            font-family: var(--mono);
+            font-size: 11.5px;
+            color: var(--pu2);
+            margin-bottom: 6px
+        }
+
+        .portal-name {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 5px
+        }
+
+        .portal-desc {
+            font-size: 12px;
+            color: var(--text2);
+            line-height: 1.55
+        }
+
+        .status-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 14px 20px;
+            font-family: var(--mono);
+            font-size: 11px;
+            margin-bottom: 28px
+        }
+
+        .si2 {
+            display: flex;
+            align-items: center;
+            gap: 7px
+        }
+
+        .sk {
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 9.5px
+        }
+
+        .sv2 {
+            color: var(--text)
+        }
+
+        .pulse {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gr);
+            animation: pulse 2.5s ease infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0.4;
+                transform: scale(0.8)
+            }
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 36px 2rem;
+            max-width: 1120px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px
+        }
+
+        .fl {
+            font-family: var(--mono);
+            font-size: 11.5px;
+            color: var(--text3);
+            line-height: 1.9
+        }
+
+        .fl strong {
+            color: var(--text2)
+        }
+
+        .fr {
+            display: flex;
+            gap: 22px
+        }
+
+        .fr a {
+            font-family: var(--mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text3);
+            text-decoration: none;
+            transition: color 0.15s
+        }
+
+        .fr a:hover {
+            color: var(--te)
+        }
+
+        @keyframes fadeup {
+            from {
+                opacity: 0;
+                transform: translateY(18px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .hero .eyebrow {
+            animation: fadeup 0.45s ease both
+        }
+
+        .hero h1 {
+            animation: fadeup 0.45s ease 0.08s both
+        }
+
+        .hero .hero-sub {
+            animation: fadeup 0.45s ease 0.16s both
+        }
+
+        .hero .hero-actions {
+            animation: fadeup 0.45s ease 0.24s both
+        }
+
+        @media(max-width:900px) {
+            .nav-links {
+                display: none
+            }
+
+            .g2 {
+                grid-template-columns: 1fr
+            }
+
+            .frame-layout {
+                grid-template-columns: repeat(4, 1fr)
+            }
+
+            .fano-wrap {
+                flex-direction: column
+            }
+
+            .strip {
+                grid-template-columns: repeat(4, 1fr)
+            }
+        }
+
+        @media(max-width:600px) {
+            .strip {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .g3 {
+                grid-template-columns: 1fr
+            }
+
+            .frame-layout {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a class="nav-logo" href="#"><span class="o">omi</span><span class="d">---</span><span class="i">imo</span></a>
+        <ul class="nav-links">
+            <li><a href="#delta">Delta Law</a></li>
+            <li><a href="#quadratic">Quadratic</a></li>
+            <li><a href="#validation">Q_frame</a></li>
+            <li><a href="#fano">Fano / Ring</a></li>
+            <li><a href="#ipv6">IPv6 / eBPF</a></li>
+            <li><a href="#dom">DOM</a></li>
+            <li><a href="#ring">Ring</a></li>
+            <li><a href="#portals">Portals</a></li>
+        </ul>
+        <div class="nav-right">
+            <span class="pill pill-g">563/563 &#x2713;</span>
+            <span class="pill pill-p">v2.0</span>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <p class="eyebrow">Axiomatic Research Laboratory &middot; Operational Meta-Intelligence</p>
+        <h1>Agreement<br><i>Is All You Need</i></h1>
+        <p class="hero-sub">
+            A self-contained algebraic substrate in which <code>Q_frame(S)&nbsp;=&nbsp;0</code> is the sole admission
+            criterion.
+            Frames are 128-bit structures that map directly onto IPv6 source addresses. Consensus runs in a
+            <code>7! = 5040</code>-slot replay ring gated by Fano plane geometry.
+            Validated in JavaScript, C99, WASM, and eBPF &mdash; all producing equivalent outcomes.
+        </p>
+        <div class="hero-actions">
+            <a href="#delta" class="btn btn-pu">&#x2193; Delta Law</a>
+            <a href="#ipv6" class="btn btn-ol">IPv6 Frame Layout</a>
+            <a href="#dom" class="btn btn-ol">DOM Hierarchy</a>
+        </div>
+    </div>
+
+    <div class="strip">
+        <div class="strip-item">
+            <div class="strip-val"><span class="a">&Delta;</span>16</div>
+            <div class="strip-lab">Delta Law</div>
+        </div>
+        <div class="strip-item">
+            <div class="strip-val">8</div>
+            <div class="strip-lab">Period orbit</div>
+        </div>
+        <div class="strip-item">
+            <div class="strip-val">128</div>
+            <div class="strip-lab">Frame bits</div>
+        </div>
+        <div class="strip-item">
+            <div class="strip-val"><span class="b">7!</span></div>
+            <div class="strip-lab">Replay ring</div>
+        </div>
+        <div class="strip-item">
+            <div class="strip-val"><span class="c">7</span></div>
+            <div class="strip-lab">Fano points</div>
+        </div>
+        <div class="strip-item">
+            <div class="strip-val">0</div>
+            <div class="strip-lab">Q_frame target</div>
+        </div>
+        <div class="strip-item">
+            <div class="strip-val">5</div>
+            <div class="strip-lab">Receipt fields</div>
+        </div>
+        <div class="strip-item">
+            <div class="strip-val"><span class="a">563</span></div>
+            <div class="strip-lab">Tests passing</div>
+        </div>
+    </div>
+    <hr class="div">
+
+    <!-- DELTA LAW -->
+    <section id="delta">
+        <p class="sec-tag">&sect;1 &mdash; The Delta Law</p>
+        <h2>Bitwise <i>State Transition</i> Engine</h2>
+        <p class="sec-lead">
+            The Delta Law is OMI&rsquo;s atomic 16-bit step function. Rotations preserve all bits; XOR is reversible;
+            constant <code>C = 0x5A3C</code> breaks the zero fixed point so the identity state is never a trap. The
+            bounded version masks to <code>0xFFFF</code> on every platform.
+        </p>
+
+        <div class="law pu">
+            <div class="law-label">Canonical Definition</div>
+            <div class="law-eq"><span class="v1">&Delta;</span><sub>16</sub>(x) = ( rotl(x,<span class="v3">1</span>)
+                &oplus; rotl(x,<span class="v3">3</span>) &oplus; rotr(x,<span class="v3">2</span>) &oplus; <span
+                    class="v2">C</span> ) &amp; <span class="v4">0xFFFF</span></div>
+            <div class="law-body">where <code>C = 0x5A3C</code>. Every bit is touched by at least two rotation terms.
+                The constant ensures 0x0000 never maps to itself. The mask keeps state bounded to exactly 16 bits
+                regardless of host integer width.</div>
+        </div>
+
+        <div class="g2" style="margin-bottom:24px">
+            <div class="law te" style="margin-bottom:0">
+                <div class="law-label">Period-8 Orbit Theorem</div>
+                <div class="law-eq">&forall; x &isin; &Bopf;<sup>16</sup> : <span
+                        class="v2">&Delta;</span><sup>8</sup>(x) = x</div>
+                <div class="law-body">Applying the Delta Law exactly 8 times to any 16-bit word returns the original
+                    word. This period-8 closure is the fundamental clock of the entire OMI system &mdash; the replay
+                    ring, scheduling primitives, and Fano resolution all derive their timing guarantees from it.</div>
+            </div>
+            <div class="law gd" style="margin-bottom:0">
+                <div class="law-label">1/73 Decimal Orbit</div>
+                <div class="law-eq"><span class="v3">1/73</span> = 0.013698630&hellip;</div>
+                <div class="law-body">OMI connects the period-8 orbit to the repeating decimal block of
+                    <code>1/73</code>. <code>B = [0,1,3,6,9,8,6,3]</code>, <code>W = 36</code>. Epoch and phase
+                    decompose as <code>divmod(position, 36)</code>, giving OMI its replay cadence and orbit tracking.
+                </div>
+            </div>
+        </div>
+
+        <div class="orbit-row">
+            <div class="ostep"><span class="si">step 0</span><span class="sv">B[0]</span></div><span
+                class="oarr">&rarr;</span>
+            <div class="ostep"><span class="si">step 1</span><span class="sv">B[1]</span></div><span
+                class="oarr">&rarr;</span>
+            <div class="ostep"><span class="si">step 2</span><span class="sv">B[2]</span></div><span
+                class="oarr">&rarr;</span>
+            <div class="ostep"><span class="si">step 3</span><span class="sv">B[3]</span></div><span
+                class="oarr">&rarr;</span>
+            <div class="ostep"><span class="si">step 4</span><span class="sv">B[4]</span></div><span
+                class="oarr">&rarr;</span>
+            <div class="ostep"><span class="si">step 5</span><span class="sv">B[5]</span></div><span
+                class="oarr">&rarr;</span>
+            <div class="ostep"><span class="si">step 6</span><span class="sv">B[6]</span></div><span
+                class="oarr">&rarr;</span>
+            <div class="ostep"><span class="si">step 7</span><span class="sv">B[7]</span></div><span
+                class="oarr">&#x21BA;</span>
+            <div class="ostep" style="border-color:rgba(139,120,255,0.4)"><span class="si">step 8</span><span
+                    class="sv">B[0]</span></div>
+        </div>
+
+        <div class="codeblock">
+            <div class="code-head">
+                <div class="dots">
+                    <div class="dot" style="background:#e05454"></div>
+                    <div class="dot" style="background:#e8aa28"></div>
+                    <div class="dot" style="background:#45c47a"></div>
+                </div>
+                delta.js &mdash; reference implementation
+            </div>
+            <pre><span class="k">const</span> C    = <span class="v">0x5A3C</span>;
+<span class="k">const</span> MASK = <span class="v">0xFFFF</span>;
+<span class="k">const</span> B    = [<span class="v">0</span>,<span class="v">1</span>,<span class="v">3</span>,<span class="v">6</span>,<span class="v">9</span>,<span class="v">8</span>,<span class="v">6</span>,<span class="v">3</span>];   <span class="cm">// 1/73 orbit block  W=36</span>
+
+<span class="k">const</span> <span class="n">rotl</span> = (x,n) =&gt; ((x&lt;&lt;n)|(x&gt;&gt;(16-n))) &amp; MASK;
+<span class="k">const</span> <span class="n">rotr</span> = (x,n) =&gt; ((x&gt;&gt;n)|(x&lt;&lt;(16-n))) &amp; MASK;
+
+<span class="cm">// &Delta;16(x) &mdash; one period step</span>
+<span class="k">const</span> <span class="t">delta16</span> = x =&gt;
+  (<span class="n">rotl</span>(x,<span class="v">1</span>) ^ <span class="n">rotl</span>(x,<span class="v">3</span>) ^ <span class="n">rotr</span>(x,<span class="v">2</span>) ^ C) &amp; MASK;
+
+<span class="cm">// Period-8 orbit  assert: orbit[8] === orbit[0]</span>
+<span class="k">function</span> <span class="n">orbitOf</span>(x) {
+  <span class="k">const</span> o=[]; <span class="k">let</span> c=x;
+  <span class="k">for</span>(<span class="k">let</span> i=<span class="v">0</span>;i&lt;<span class="v">8</span>;i++){o.push(c);c=<span class="t">delta16</span>(c);}
+  <span class="k">return</span> o;
+}
+
+<span class="cm">// Epoch / phase via 1/73 block</span>
+<span class="k">const</span> <span class="n">epochPhase</span> = pos =&gt;
+  ({ epoch: Math.floor(pos/<span class="v">36</span>), phase: pos%<span class="v">36</span> });</pre>
+        </div>
+    </section>
+    <hr class="div">
+
+    <!-- QUADRATIC LAW -->
+    <section id="quadratic">
+        <p class="sec-tag">&sect;2 &mdash; The Quadratic Law</p>
+        <h2><i>Projection</i> &amp; Address Geometry</h2>
+        <p class="sec-lead">
+            The Omicron Binary Quadratic Form <code>Q_xy</code> is the address-projection law, not the validation gate.
+            It transforms decoded coordinates into visible geometry. The three coefficients 60, 16, and 4 each carry
+            explicit system meaning and anchor OMI to the sexagesimal orientation system.
+        </p>
+
+        <div class="law gd">
+            <div class="law-label">Omicron Binary Quadratic Form</div>
+            <div class="law-eq"><span class="v1">Q_xy</span>(x,y) = <span class="v3">60</span>x&sup2; + <span
+                    class="v2">16</span>xy + <span class="v4">4</span>y&sup2;</div>
+            <div class="law-body">Key evaluations:
+                <code>Q_xy(3,3) = 60&middot;9 + 16&middot;9 + 4&middot;9 = 720 = 6!</code>. The replay ring is
+                <code>5040 = 7!</code>. Both constants arise naturally from the same factorial tower as the form&rsquo;s
+                coefficients. Q_xy projects; it does not authorize.</div>
+        </div>
+
+        <table class="spec-table">
+            <thead>
+                <tr>
+                    <th>Term</th>
+                    <th>Coeff</th>
+                    <th>Side</th>
+                    <th>OMI Meaning</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="color:var(--rd)">4y&sup2;</td>
+                    <td><span class="tag tag-rd">4</span></td>
+                    <td>Low</td>
+                    <td style="color:var(--text2)">omi- atomic data, data-* attributes, local payload. Maps to 4 visible
+                        selector/control faces: FS, GS, RS, US.</td>
+                </tr>
+                <tr>
+                    <td style="color:var(--te2)">16xy</td>
+                    <td><span class="tag tag-te">16</span></td>
+                    <td>Bridge</td>
+                    <td style="color:var(--text2)">CSSOM / JSDOM meeting plane, shared address relation, nibble / 4-bit
+                        word-boundary bridge between low and high sides.</td>
+                </tr>
+                <tr>
+                    <td style="color:var(--gd2)">60x&sup2;</td>
+                    <td><span class="tag tag-gd">60</span></td>
+                    <td>High</td>
+                    <td style="color:var(--text2)">-imo DOM id, stable identity, sexagesimal orientation. 60 =
+                        LCM(1&ndash;6). Anchors the high side to the temporal identity system.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="proj-rule">
+            <div class="pr-icon" style="color:var(--rd)">&ne;</div>
+            <div>
+                <div class="pr-title">Projection &ne; Validation</div>
+                <div class="pr-body">Q_xy transforms decoded coordinates into visible geometry &mdash; it is the
+                    rendering law. Q_frame is the validation gate. A glyph, color, Base36 symbol, emoji, or DOM
+                    projection produced by Q_xy may carry state, but it cannot make an invalid frame valid. Correct
+                    pipeline: validate &rarr; resolve &rarr; record &rarr; project &rarr; inspect. Not: render &rarr;
+                    believe.</div>
+            </div>
+        </div>
+    </section>
+    <hr class="div">
+
+    <!-- FRAME VALIDATION -->
+    <section id="validation">
+        <p class="sec-tag">&sect;3 &mdash; Frame Validation</p>
+        <h2 style="font-size:clamp(22px,3vw,36px)"><code
+                style="font-family:var(--mono);font-weight:400;color:var(--te2)">Q_frame(S) = 0</code> &mdash; The
+            <i>Admission Gate</i></h2>
+        <p class="sec-lead">
+            A frame is structurally valid if and only if <code>Q_frame(S) = 0</code>. This is the sole admission
+            criterion. Q_frame has two independent error terms: <code>E_var</code> checks LL lens-binding agreement;
+            <code>E_const</code> checks the four fixed delimiter constants.
+        </p>
+
+        <div class="law te">
+            <div class="law-label">Frame Validation Law</div>
+            <div class="law-eq"><span class="v2">Q_frame</span>(S) = <span class="v1">E_var</span> + <span
+                    class="v3">E_const</span> = 0</div>
+            <div class="law-body"><code>E_var</code> checks agreement among the repeated LL lens bindings at positions
+                S0, S3, S4, S7. <code>E_const</code> checks fixed delimiters: <code>0x03BF</code> at S1,
+                <code>0x039F</code> at S6, <code>0x2B</code> at S3 high byte, <code>0x2F</code> at S4 high byte. Both
+                must be zero.</div>
+        </div>
+
+        <div class="g2" style="margin-bottom:24px">
+            <div class="law pu" style="margin-bottom:0">
+                <div class="law-label">E_var &mdash; Lens Agreement</div>
+                <div class="law-eq"><span class="v1">E_var</span> = &sum; err(LL at S0,S3,S4,S7)</div>
+                <div class="law-body">All four LL occurrences must be identical. Any single mismatch in the lens
+                    bindings produces a nonzero E_var, immediately failing validation regardless of delimiter
+                    correctness.</div>
+            </div>
+            <div class="law rd" style="margin-bottom:0">
+                <div class="law-label">E_const &mdash; Delimiter Check</div>
+                <div class="law-eq"><span class="v4">E_const</span> = err(<span class="v2">0x03BF</span>, <span
+                        class="v2">0x039F</span>, <span class="v3">0x2B</span>, <span class="v3">0x2F</span>)</div>
+                <div class="law-body">Small omicron &omicron; U+03BF at S1. Capital omicron &Omicron; U+039F at S6.
+                    Interior lens operators: + (0x2B) high byte of S3, / (0x2F) high byte of S4.</div>
+            </div>
+        </div>
+
+        <div class="codeblock">
+            <div class="code-head">
+                <div class="dots">
+                    <div class="dot" style="background:#e05454"></div>
+                    <div class="dot" style="background:#e8aa28"></div>
+                    <div class="dot" style="background:#45c47a"></div>
+                </div>
+                validate.js &mdash; Q_frame check
+            </div>
+            <pre><span class="cm">// S is Uint16Array[8] containing segments S0..S7</span>
+<span class="k">function</span> <span class="t">qFrame</span>(S) {
+  <span class="k">const</span> LL = S[<span class="v">0</span>] &gt;&gt; <span class="v">8</span>;              <span class="cm">// LL = high byte of S0</span>
+
+  <span class="cm">// E_var: all four LL positions must agree</span>
+  <span class="k">const</span> e_var =
+    ((S[<span class="v">0</span>] &gt;&gt; <span class="v">8</span>)  !== LL ? <span class="v">1</span> : <span class="v">0</span>) +   <span class="cm">// S0 high</span>
+    ((S[<span class="v">3</span>] &amp; <span class="v">0xFF</span>) !== LL ? <span class="v">1</span> : <span class="v">0</span>) +   <span class="cm">// S3 low</span>
+    ((S[<span class="v">4</span>] &amp; <span class="v">0xFF</span>) !== LL ? <span class="v">1</span> : <span class="v">0</span>) +   <span class="cm">// S4 low</span>
+    ((S[<span class="v">7</span>] &gt;&gt; <span class="v">8</span>)  !== LL ? <span class="v">1</span> : <span class="v">0</span>);    <span class="cm">// S7 high</span>
+
+  <span class="cm">// E_const: fixed structural delimiters</span>
+  <span class="k">const</span> e_const =
+    (S[<span class="v">1</span>]        !== <span class="v">0x03BF</span> ? <span class="v">1</span> : <span class="v">0</span>) + <span class="cm">// &omicron; small omicron U+03BF</span>
+    (S[<span class="v">6</span>]        !== <span class="v">0x039F</span> ? <span class="v">1</span> : <span class="v">0</span>) + <span class="cm">// &Omicron; capital omicron U+039F</span>
+    ((S[<span class="v">3</span>] &gt;&gt; <span class="v">8</span>) !== <span class="v">0x2B</span>   ? <span class="v">1</span> : <span class="v">0</span>) + <span class="cm">// + interior lens</span>
+    ((S[<span class="v">4</span>] &gt;&gt; <span class="v">8</span>) !== <span class="v">0x2F</span>   ? <span class="v">1</span> : <span class="v">0</span>);  <span class="cm">// / interior lens</span>
+
+  <span class="k">return</span> e_var + e_const; <span class="cm">// MUST equal 0</span>
+}</pre>
+        </div>
+    </section>
+    <hr class="div">
+
+    <!-- FANO + RING -->
+    <section id="fano">
+        <p class="sec-tag">&sect;4 &mdash; Fano Resolution &amp; Replay Ring</p>
+        <h2>Truth Rows &amp; the <i>5040-Slot Ring</i></h2>
+        <p class="sec-lead">
+            After a frame passes <code>Q_frame(S) = 0</code>, OMI extracts the truth row <code>(LL, NN, MM)</code> and
+            attempts to resolve MM from NN under the lens-modulated Delta Law within a bounded Fano window. Accepted
+            truth rows are committed to the 5040-slot replay ring as 64-bit receipts via atomic compare-exchange.
+        </p>
+
+        <div class="law pu" style="margin-bottom:28px">
+            <div class="law-label">Minimal Pipeline</div>
+            <div class="law-eq">Q_frame = <span class="v3">0</span> &rarr; (<span class="v1">LL</span>, <span
+                    class="v2">NN</span>, <span class="v4">MM</span>) &rarr; <span class="v2">&Delta;/Fano</span>
+                resolve &rarr; ring receipt</div>
+            <div class="law-body">A PG(2,2) Fano incidence layer provides seven coordination paths. The resolution bound
+                is tied to the 5040 replay architecture. Agreement means MM was reached from NN under the Delta Law
+                &mdash; not merely asserted. The ring is written via <code>Atomics.compareExchange</code> so agreement
+                becomes replayable state.</div>
+        </div>
+
+        <div class="fano-wrap">
+            <div class="fano-diag">
+                <svg viewBox="0 0 200 200" width="196" height="196" style="display:block;margin:0 auto">
+                    <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(139,120,255,0.1)" stroke-width="1" />
+                    <circle cx="100" cy="100" r="44" fill="none" stroke="rgba(62,207,198,0.15)" stroke-width="0.8" />
+                    <line x1="100" y1="14" x2="43" y2="101" stroke="rgba(139,120,255,0.28)" stroke-width="0.8" />
+                    <line x1="100" y1="14" x2="157" y2="101" stroke="rgba(139,120,255,0.28)" stroke-width="0.8" />
+                    <line x1="43" y1="101" x2="157" y2="101" stroke="rgba(62,207,198,0.28)" stroke-width="0.8" />
+                    <line x1="100" y1="14" x2="100" y2="186" stroke="rgba(62,207,198,0.18)" stroke-width="0.8" />
+                    <line x1="43" y1="101" x2="72" y2="55" stroke="rgba(232,170,40,0.22)" stroke-width="0.8" />
+                    <line x1="157" y1="101" x2="128" y2="55" stroke="rgba(232,170,40,0.22)" stroke-width="0.8" />
+                    <circle cx="100" cy="101" r="44" fill="none" stroke="rgba(232,170,40,0.12)" stroke-width="0.8" />
+                    <circle cx="100" cy="14" r="7" fill="#8b78ff" opacity="0.9" />
+                    <circle cx="43" cy="101" r="7" fill="#3ecfc6" opacity="0.9" />
+                    <circle cx="157" cy="101" r="7" fill="#3ecfc6" opacity="0.9" />
+                    <circle cx="100" cy="186" r="7" fill="#e8aa28" opacity="0.85" />
+                    <circle cx="72" cy="55" r="7" fill="#e05454" opacity="0.8" />
+                    <circle cx="128" cy="55" r="7" fill="#8b78ff" opacity="0.65" />
+                    <circle cx="100" cy="101" r="7" fill="rgba(255,255,255,0.5)" />
+                    <text x="100" y="10" font-family="JetBrains Mono,monospace" font-size="9" fill="#b8adff"
+                        text-anchor="middle">p&#x2080;</text>
+                    <text x="29" y="105" font-family="JetBrains Mono,monospace" font-size="9" fill="#7ee8e2"
+                        text-anchor="middle">p&#x2081;</text>
+                    <text x="171" y="105" font-family="JetBrains Mono,monospace" font-size="9" fill="#7ee8e2"
+                        text-anchor="middle">p&#x2082;</text>
+                    <text x="100" y="198" font-family="JetBrains Mono,monospace" font-size="9" fill="#f5cc72"
+                        text-anchor="middle">p&#x2083;</text>
+                    <text x="57" y="51" font-family="JetBrains Mono,monospace" font-size="9" fill="#f08080"
+                        text-anchor="middle">p&#x2084;</text>
+                    <text x="143" y="51" font-family="JetBrains Mono,monospace" font-size="9" fill="#b8adff"
+                        text-anchor="middle">p&#x2085;</text>
+                    <text x="116" y="104" font-family="JetBrains Mono,monospace" font-size="9" fill="#7c85a0"
+                        text-anchor="middle">p&#x2086;</text>
+                </svg>
+                <p
+                    style="text-align:center;font-family:var(--mono);font-size:9.5px;color:var(--text3);margin-top:10px;letter-spacing:0.14em">
+                    PG(2,2) &middot; 7 pts &middot; 7 lines</p>
+            </div>
+            <div class="fano-tbl">
+                <table class="spec-table" style="margin-top:0">
+                    <thead>
+                        <tr>
+                            <th>Line</th>
+                            <th>Points</th>
+                            <th>OMI Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="tag tag-pu">L0</span></td>
+                            <td style="color:var(--pu2)">&#123;p&#x2080;, p&#x2081;, p&#x2083;&#125;</td>
+                            <td style="color:var(--text2)">Orbit axis &mdash; clock synchronization</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-te">L1</span></td>
+                            <td style="color:var(--pu2)">&#123;p&#x2081;, p&#x2082;, p&#x2084;&#125;</td>
+                            <td style="color:var(--text2)">Gate coupling &mdash; BQ matrix selection</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-gd">L2</span></td>
+                            <td style="color:var(--pu2)">&#123;p&#x2082;, p&#x2083;, p&#x2085;&#125;</td>
+                            <td style="color:var(--text2)">Ring head &mdash; replay pointer advance</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-rd">L3</span></td>
+                            <td style="color:var(--pu2)">&#123;p&#x2083;, p&#x2084;, p&#x2086;&#125;</td>
+                            <td style="color:var(--text2)">Delta residue &mdash; &Delta; checkpoint line</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-gr">L4</span></td>
+                            <td style="color:var(--pu2)">&#123;p&#x2084;, p&#x2085;, p&#x2080;&#125;</td>
+                            <td style="color:var(--text2)">Quorum threshold &mdash; consensus quorum</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-pu">L5</span></td>
+                            <td style="color:var(--pu2)">&#123;p&#x2085;, p&#x2086;, p&#x2081;&#125;</td>
+                            <td style="color:var(--text2)">Address hash &mdash; coordinate encode</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-te">L6</span></td>
+                            <td style="color:var(--pu2)">&#123;p&#x2086;, p&#x2080;, p&#x2082;&#125;</td>
+                            <td style="color:var(--text2)">Identity close &mdash; orbit return proof</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div style="margin-top:32px">
+            <p class="sec-tag" style="margin-bottom:8px">5040-Slot Replay Ring &mdash; Receipt Structure</p>
+            <div class="ring-viz">
+                <div class="rf">
+                    <div class="rf-lab">Capacity</div>
+                    <div class="rf-val" style="color:var(--pu2)">7! = 5040</div>
+                </div>
+                <div class="rsep"></div>
+                <div class="rf">
+                    <div class="rf-lab">Slot width</div>
+                    <div class="rf-val" style="color:var(--te2)">64 bits</div>
+                </div>
+                <div class="rsep"></div>
+                <div class="rf">
+                    <div class="rf-lab">Write method</div>
+                    <div class="rf-val" style="color:var(--gd2);font-size:15px">Atomics.CAS</div>
+                </div>
+                <div class="rsep"></div>
+                <div class="rf">
+                    <div class="rf-lab">Receipt fields</div>
+                    <div class="rf-val">5</div>
+                </div>
+            </div>
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color:var(--pu2)">Provenance</td>
+                        <td><span class="tag tag-pu">bits</span></td>
+                        <td style="color:var(--text2)">Source frame identity &mdash; where this truth row originated
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="color:var(--te2)">Steps</td>
+                        <td><span class="tag tag-te">int</span></td>
+                        <td style="color:var(--text2)">Number of Delta steps taken to reach MM from NN</td>
+                    </tr>
+                    <tr>
+                        <td style="color:var(--gd2)">LL</td>
+                        <td><span class="tag tag-gd">16-bit</span></td>
+                        <td style="color:var(--text2)">Lens binding &mdash; must match across all four frame positions
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="color:var(--gd2)">NN</td>
+                        <td><span class="tag tag-gd">16-bit</span></td>
+                        <td style="color:var(--text2)">Antecedent &mdash; input to the truth-row resolution</td>
+                    </tr>
+                    <tr>
+                        <td style="color:var(--gd2)">MM</td>
+                        <td><span class="tag tag-gd">16-bit</span></td>
+                        <td style="color:var(--text2)">Consequent &mdash; target reached from NN under &Delta;/Fano
+                            bound</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <hr class="div">
+
+    <!-- IPv6 + eBPF -->
+    <section id="ipv6">
+        <p class="sec-tag">&sect;5 &mdash; IPv6 Integration &amp; eBPF Kernel Gate</p>
+        <h2>128-bit Frame <i>Width Alignment</i></h2>
+        <p class="sec-lead">
+            An OMI frame and an IPv6 address are both exactly 128 bits. A full instruction frame maps directly into
+            IPv6-style segment layout, with each 16-bit colon-delimited group acting as one OMI segment. An eBPF/XDP
+            kernel gate can validate frames at NIC-driver speed before they touch userspace.
+        </p>
+
+        <div class="status-row">
+            <div class="si2"><span class="pulse"></span><span class="sk">Frame width</span><span class="sv2">128 bits =
+                    8 &times; 16</span></div>
+            <div class="si2"><span class="sk">IPv6 width</span><span class="sv2">128 bits = 8 &times; 16</span></div>
+            <div class="si2"><span class="sk">Alignment</span><span class="sv2" style="color:var(--gr)">EXACT</span>
+            </div>
+            <div class="si2"><span class="sk">Gate depth</span><span class="sv2">2 stages</span></div>
+        </div>
+
+        <div class="frame-layout">
+            <div class="fseg f-bnd">
+                <div class="fseg-id">S0</div>
+                <div class="fseg-val" style="color:var(--pu2)">0xLL00</div>
+                <div class="fseg-role">Opening boundary LL high byte</div>
+            </div>
+            <div class="fseg f-del">
+                <div class="fseg-id">S1</div>
+                <div class="fseg-val" style="color:var(--te2)">0x03BF</div>
+                <div class="fseg-role">Small &omicron; U+03BF delimiter</div>
+            </div>
+            <div class="fseg f-dat">
+                <div class="fseg-id">S2</div>
+                <div class="fseg-val" style="color:var(--gd2)">0xNNNN</div>
+                <div class="fseg-role">Antecedent input NN</div>
+            </div>
+            <div class="fseg f-len">
+                <div class="fseg-id">S3</div>
+                <div class="fseg-val" style="color:var(--gd)">0x2BLL</div>
+                <div class="fseg-role">Interior + lens binding</div>
+            </div>
+            <div class="fseg f-len">
+                <div class="fseg-id">S4</div>
+                <div class="fseg-val" style="color:var(--gd)">0x2FLL</div>
+                <div class="fseg-role">Interior / lens binding</div>
+            </div>
+            <div class="fseg f-dat">
+                <div class="fseg-id">S5</div>
+                <div class="fseg-val" style="color:var(--gd2)">0xMMMM</div>
+                <div class="fseg-role">Consequent output MM</div>
+            </div>
+            <div class="fseg f-del">
+                <div class="fseg-id">S6</div>
+                <div class="fseg-val" style="color:var(--te2)">0x039F</div>
+                <div class="fseg-role">Capital &Omicron; U+039F delimiter</div>
+            </div>
+            <div class="fseg f-bnd">
+                <div class="fseg-id">S7</div>
+                <div class="fseg-val" style="color:var(--pu2)">0xLLFF</div>
+                <div class="fseg-role">Closing boundary LL high byte</div>
+            </div>
+        </div>
+
+        <div style="margin-top:36px">
+            <p class="sec-tag" style="margin-bottom:16px">eBPF / XDP Kernel Gate Pipeline</p>
+            <div class="pipeline">
+                <div class="pstep">
+                    <div class="pnum">01</div>
+                    <div class="picon" style="color:var(--text3)">&#x2B21;</div>
+                    <div class="pcontent">
+                        <div class="pname">Packet arrives at NIC</div>
+                        <div class="pdesc">IPv6 frame enters the XDP hook before the kernel network stack processes it
+                        </div>
+                    </div>
+                    <div class="ptag"><span class="tag tag-te">XDP</span></div>
+                </div>
+                <div class="pstep">
+                    <div class="pnum">02</div>
+                    <div class="picon" style="color:var(--te)">&#x27FF;</div>
+                    <div class="pcontent">
+                        <div class="pname">Read IPv6 source address as OMI frame</div>
+                        <div class="pdesc">8 &times; 16-bit colon groups extracted as S0&ndash;S7 &mdash; zero-copy, no
+                            allocation required</div>
+                    </div>
+                    <div class="ptag"><span class="tag tag-pu">eBPF</span></div>
+                </div>
+                <div class="pstep">
+                    <div class="pnum">03</div>
+                    <div class="picon" style="color:var(--gd)">&#x229E;</div>
+                    <div class="pcontent">
+                        <div class="pname">Gate 1 &mdash; Q_frame structural validation</div>
+                        <div class="pdesc">E_var and E_const computed; frame rejected at kernel if Q_frame &ne; 0</div>
+                    </div>
+                    <div class="ptag"><span class="tag tag-gd">Gate 1</span></div>
+                </div>
+                <div class="pstep">
+                    <div class="pnum">04</div>
+                    <div class="picon" style="color:var(--pu)">&triangle;</div>
+                    <div class="pcontent">
+                        <div class="pname">Gate 2 &mdash; Delta / Fano truth-row resolution</div>
+                        <div class="pdesc">Truth row (LL,NN,MM) extracted; MM reachability from NN checked under &Delta;
+                            within Fano bound</div>
+                    </div>
+                    <div class="ptag"><span class="tag tag-gd">Gate 2</span></div>
+                </div>
+                <div class="pstep">
+                    <div class="pnum">05</div>
+                    <div class="picon" style="color:var(--gr)">&#x2713;</div>
+                    <div class="pcontent">
+                        <div class="pname">Valid frame passes to userspace</div>
+                        <div class="pdesc">Receipt written to 5040-slot ring via Atomics.compareExchange; packet
+                            forwarded normally</div>
+                    </div>
+                    <div class="ptag"><span class="tag tag-gr">PASS</span></div>
+                </div>
+                <div class="pstep" style="border-color:rgba(224,84,84,0.2)">
+                    <div class="pnum" style="color:var(--rd)">&times;</div>
+                    <div class="picon" style="color:var(--rd)">&#x2297;</div>
+                    <div class="pcontent">
+                        <div class="pname">Invalid frame dropped before userspace</div>
+                        <div class="pdesc">Frames failing Gate 1 or Gate 2 are dropped at NIC-driver speed &mdash; never
+                            reach the application layer</div>
+                    </div>
+                    <div class="ptag"><span class="tag tag-rd">DROP</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="g3" style="margin-top:24px">
+            <div class="card">
+                <div class="card-title">JavaScript reference</div>
+                <div class="card-body">All Delta, Q_frame, ring, and Fano operations. Runs in browser and Node.js. The
+                    primary development and conformance-test target.</div>
+            </div>
+            <div class="card">
+                <div class="card-title">C99 + WASM</div>
+                <div class="card-body">Portable core with exact arithmetic. WASM target eliminates JS shim overhead. All
+                    implementations produce byte-identical receipts for identical input frames.</div>
+            </div>
+            <div class="card">
+                <div class="card-title">eBPF / XDP</div>
+                <div class="card-body">Compiles to ELF object, JITs to small native kernel code. Validates at NIC-driver
+                    speed. Identical Gate 1 / Gate 2 logic as JS reference &mdash; no behavioral divergence.</div>
+            </div>
+        </div>
+    </section>
+    <hr class="div">
+
+    <!-- DOM HIERARCHY -->
+    <section id="dom">
+        <p class="sec-tag">&sect;6 &mdash; DOM Hierarchy</p>
+        <h2>The <i>omi &mdash;&mdash;&mdash; imo</i> Object Model</h2>
+        <p class="sec-lead">
+            OMI treats the DOM as an object-addressing surface, not a rendering tree. The palindrome
+            <code>omi---imo</code> (small omicron U+03BF &middot;&middot;&middot; capital omicron U+039F) bookends each
+            frame. The FS&rarr;GS&rarr;RS&rarr;US containment hierarchy answers: where does this object belong, what
+            contains it, what context controls it, what unit is being inspected.
+        </p>
+
+        <div class="g2" style="margin-bottom:24px">
+            <div>
+                <p
+                    style="font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text3);margin-bottom:12px">
+                    Full Containment Tree</p>
+                <div class="dom-tree">
+                    <div><span class="de">&lt;OMI-FS&gt;</span> <span class="dcm">&mdash; outer field system</span>
+                    </div>
+                    <div class="ti">
+                        <div><span class="de">&lt;omi-fs /&gt;</span> <span class="dcm">&mdash; low atomic field</span>
+                        </div>
+                        <div><span class="de hi">&lt;IMO-FS&gt;</span> <span class="dcm">&mdash; high orientation
+                                field</span></div>
+                        <div class="ti">
+                            <div><span class="de hi">&lt;imo-fs&gt;</span> <span class="dcm">&mdash; frame system</span>
+                            </div>
+                            <div class="ti">
+                                <div><span class="de gd">&lt;imo-gs&gt;</span> <span class="dcm">&mdash; glyph /
+                                        geometry / graph</span></div>
+                                <div class="ti">
+                                    <div><span class="de" style="color:#f08080">&lt;imo-rs&gt;</span> <span
+                                            class="dcm">&mdash; resolution segment</span></div>
+                                    <div class="ti">
+                                        <div><span class="de" style="color:var(--pu2)">&lt;imo-us /&gt;</span> <span
+                                                class="dcm">&mdash; unit state</span></div>
+                                    </div>
+                                    <div><span class="de" style="color:#f08080">&lt;/imo-rs&gt;</span></div>
+                                </div>
+                                <div><span class="de gd">&lt;/imo-gs&gt;</span></div>
+                            </div>
+                            <div><span class="de hi">&lt;/imo-fs&gt;</span></div>
+                        </div>
+                        <div><span class="de hi">&lt;/IMO-FS&gt;</span></div>
+                    </div>
+                    <div><span class="de">&lt;/OMI-FS&gt;</span></div>
+                </div>
+            </div>
+            <div>
+                <p
+                    style="font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text3);margin-bottom:12px">
+                    Element Roles</p>
+                <table class="spec-table" style="margin-top:0">
+                    <thead>
+                        <tr>
+                            <th>Element</th>
+                            <th>Meaning</th>
+                            <th>Level</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="color:var(--pu2)">OMI-FS</td>
+                            <td style="color:var(--text2)">Outer field system</td>
+                            <td><span class="tag tag-pu">FS</span></td>
+                        </tr>
+                        <tr>
+                            <td style="color:var(--pu2)">omi-fs</td>
+                            <td style="color:var(--text2)">Low atomic field, data-* payload</td>
+                            <td><span class="tag tag-pu">FS</span></td>
+                        </tr>
+                        <tr>
+                            <td style="color:var(--te2)">IMO-FS</td>
+                            <td style="color:var(--text2)">High orientation field, -imo identity</td>
+                            <td><span class="tag tag-te">FS</span></td>
+                        </tr>
+                        <tr>
+                            <td style="color:var(--te2)">imo-fs</td>
+                            <td style="color:var(--text2)">Frame system, 8-segment boundary</td>
+                            <td><span class="tag tag-te">FS</span></td>
+                        </tr>
+                        <tr>
+                            <td style="color:var(--gd2)">imo-gs</td>
+                            <td style="color:var(--text2)">Glyph / geometry / graph structure</td>
+                            <td><span class="tag tag-gd">GS</span></td>
+                        </tr>
+                        <tr>
+                            <td style="color:#f08080">imo-rs</td>
+                            <td style="color:var(--text2)">Resolution segment, truth-row context</td>
+                            <td><span class="tag tag-rd">RS</span></td>
+                        </tr>
+                        <tr>
+                            <td style="color:var(--pu2)">imo-us</td>
+                            <td style="color:var(--text2)">Unit state, minimal inspectable atom</td>
+                            <td><span class="tag tag-pu">US</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="law te">
+            <div class="law-label">Two Projection Modes</div>
+            <div class="law-eq"><span class="v2">Linear</span>: omi &rarr; payload &rarr; imo &nbsp;&nbsp; <span
+                    class="v1">Hierarchical</span>: FS &rarr; GS &rarr; RS &rarr; US</div>
+            <div class="law-body">The linear view shows how state moved (traversal / replay order). The hierarchical
+                view shows where state belongs (containment / scope order). Both are inspectable projections only.
+                Neither authorizes validity. Correct pipeline: <strong style="color:var(--text)">validate &rarr; resolve
+                    &rarr; record &rarr; project &rarr; inspect</strong>. Not: render &rarr; believe.</div>
+        </div>
+    </section>
+    <hr class="div">
+
+    <!-- PORTALS -->
+    <section id="portals">
+        <p class="sec-tag">&sect;7 &mdash; Wormhole Portals</p>
+        <h2><i>Floating Nodes</i> &amp; Carrier Surfaces</h2>
+        <p class="sec-lead">
+            Wormhole portals are floating nodes that project the same addressed OMI state into disconnected or scoped
+            layout contexts without changing the object&rsquo;s address. One OMI event object can appear simultaneously
+            as a web card, a map pin, an SVG route, a JSON Canvas node, a QR code, a receipt row, and a ShadowDOM widget
+            &mdash; all projections of the same addressed state.
+        </p>
+
+        <div class="portal-grid">
+            <div class="portal-item">
+                <div class="portal-tag">&lt;OMI-* /&gt;</div>
+                <div class="portal-name">OMI element</div>
+                <div class="portal-desc">Root portal anchor. Projects the omi-imo frame into a custom-element surface
+                    for composed UI hierarchies.</div>
+            </div>
+            <div class="portal-item">
+                <div class="portal-tag">&lt;IMO-* /&gt;</div>
+                <div class="portal-name">IMO element</div>
+                <div class="portal-desc">High-side projection carrying the -imo 60x&sup2; identity component into the
+                    orientation field.</div>
+            </div>
+            <div class="portal-item">
+                <div class="portal-tag">&lt;svg&gt;</div>
+                <div class="portal-name">SVG portal</div>
+                <div class="portal-desc">Geometry, routes, glyph-like projections. Q_xy address coordinates drive SVG
+                    path generation directly.</div>
+            </div>
+            <div class="portal-item">
+                <div class="portal-tag">shadowrootmode</div>
+                <div class="portal-name">ShadowDOM capsule</div>
+                <div class="portal-desc">Scoped UI capsule. Projected state is isolated from outer style and layout
+                    &mdash; ideal for receipt display widgets.</div>
+            </div>
+            <div class="portal-item">
+                <div class="portal-tag">&lt;iframe&gt;</div>
+                <div class="portal-name">Iframe capsule</div>
+                <div class="portal-desc">Fully sandboxed browsing context. Projects a frame object without losing its
+                    address or provenance receipt.</div>
+            </div>
+            <div class="portal-item">
+                <div class="portal-tag">JSON Canvas</div>
+                <div class="portal-name">Canvas node</div>
+                <div class="portal-desc">Graph / canvas projection. Each truth row becomes an addressable node with
+                    Fano-derived edges in infinite canvas space.</div>
+            </div>
+            <div class="portal-item">
+                <div class="portal-tag">innerHTML</div>
+                <div class="portal-name">HTML island</div>
+                <div class="portal-desc">Portable rendered fragment. Lowest-overhead projection surface &mdash; no
+                    custom-element boundary required.</div>
+            </div>
+            <div class="portal-item">
+                <div class="portal-tag">&lt;template&gt;</div>
+                <div class="portal-name">Template portal</div>
+                <div class="portal-desc">Declarative projection template stamped into a target document on receipt
+                    acceptance &mdash; not before Q_frame = 0.</div>
+            </div>
+        </div>
+
+        <div class="g2" style="margin-top:8px">
+            <div class="proj-rule">
+                <div class="pr-icon" style="color:var(--rd)">&ne;</div>
+                <div>
+                    <div class="pr-title">carrier &ne; authority</div>
+                    <div class="pr-body">A ShadowDOM widget may display an accepted object but does not make it
+                        accepted. A glyph may help inspect an address but is not semantic authority. Validation belongs
+                        to Q_frame, truth-row resolution, receipts, and replay &mdash; not to any projection surface.
+                    </div>
+                </div>
+            </div>
+            <div class="proj-rule">
+                <div class="pr-icon" style="color:var(--rd)">&ne;</div>
+                <div>
+                    <div class="pr-title">projection &ne; validation; glyph &ne; meaning</div>
+                    <div class="pr-body">Visual carriers cannot authorize validity. A color, Base36 symbol, emoji, or
+                        DOM element may carry state, but it cannot make an invalid frame valid. The pipeline direction
+                        is one-way and irreversible: validate first, then project.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <hr class="div">
+
+    <!-- OMI-RING -->
+    <section id="ring">
+        <p class="sec-tag">&sect;8 &mdash; Omi-Ring</p>
+        <h2><i>Intent</i> Before Projection</h2>
+        <p class="sec-lead">
+            <code>&Omega;&#8320; = 0! = omi---imo</code> is the zero-point of bounded agreement. Omi-Ring is the
+            atomic waveform enclosure of <code>omi---imo</code>. OMI captures intent as declared activity in space
+            and time; voice, image, gesture, DOM, SVG, sound, and color are carriers or projections, not authority by
+            themselves.
+        </p>
+
+        <div class="portal-grid">
+            <div class="portal-item">
+                <div class="portal-tag">&Omega;&#8320;</div>
+                <div class="portal-name">universal constant</div>
+                <div class="portal-desc">The smallest bounded agreement capable of carrying relation: <code>0! = omi---imo</code>.</div>
+            </div>
+            <div class="portal-item">
+                <div class="portal-tag">Omi-Dome</div>
+                <div class="portal-name">capture environment</div>
+                <div class="portal-desc">Captures declared activity from space-time events, not merely the media trace.</div>
+            </div>
+            <div class="portal-item">
+                <div class="portal-tag">Omi-Sense</div>
+                <div class="portal-name">intent extraction</div>
+                <div class="portal-desc">Reads light, sound, orientation, gesture, and action as carriers of declared intent.</div>
+            </div>
+            <div class="portal-item">
+                <div class="portal-tag">Omi-Light</div>
+                <div class="portal-name">wavelength carrier</div>
+                <div class="portal-desc">Carries color, brightness, phase, pulse, shadow, aperture, and spectral difference.</div>
+            </div>
+            <div class="portal-item">
+                <div class="portal-tag">Omi-Sound</div>
+                <div class="portal-name">intonation carrier</div>
+                <div class="portal-desc">Captures intonation of intent: rhythm, accent, contour, silence, and timing.</div>
+            </div>
+            <div class="portal-item">
+                <div class="portal-tag">Omi-Gnomon</div>
+                <div class="portal-name">orientation field</div>
+                <div class="portal-desc"><code>Omi-Gnomon(aA) = rRgGbBaA</code> orients wavelength without replacing validation.</div>
+            </div>
+            <div class="portal-item">
+                <div class="portal-tag">Portal / Mirror</div>
+                <div class="portal-name">public and introspective views</div>
+                <div class="portal-desc">Portal projects outward; Mirror reflects inward; Ring encloses the waveform between them.</div>
+            </div>
+        </div>
+
+        <div class="proj-rule">
+            <div class="pr-icon" style="color:var(--cy)">&#9711;</div>
+            <div>
+                <div class="pr-title">representation is recoverable, not authoritative</div>
+                <div class="pr-body">Different encodings can carry the same declared object, up to agreement. &Omega;&#8320;
+                    bounds; Q(x,y) projects. OMI does not force interpretation; OMI makes interpretation addressable.</div>
+            </div>
+        </div>
+    </section>
+    <hr class="div">
+
+    <footer>
+        <div class="fl">
+            <strong>omi---imo &middot; Axiomatic Research Laboratory</strong><br>
+            Operational Meta-Intelligence &middot; Agreement Is All You Need &middot; v2.0 &middot; 563/563
+        </div>
+        <div class="fr">
+            <a href="#delta">Delta</a>
+            <a href="#quadratic">Q_xy</a>
+            <a href="#validation">Q_frame</a>
+            <a href="#fano">Fano</a>
+            <a href="#ipv6">IPv6</a>
+            <a href="#dom">DOM</a>
+            <a href="#ring">Ring</a>
+            <a href="#portals">Portals</a>
+        </div>
+    </footer>
+
+</body>
+
+</html>

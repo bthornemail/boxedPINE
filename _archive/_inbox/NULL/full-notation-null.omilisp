@@ -1,0 +1,11 @@
+;; full-notation-null.omilisp
+;; The full OMI notation null value
+
+(full-notation-null
+  (form . "(omi---imo . '(o---o /---/ ?---? @---@))")
+  (meaning . "Full-notation NULL value")
+  (resolution-order
+    (at-sign . "@---@ resolves through ?---?")
+    (question . "?---? resolves through /---/")
+    (slash . "/---/ resolves through o---o")
+    (lower . "o---o resolves through omi---imo")))
