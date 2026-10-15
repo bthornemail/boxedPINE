@@ -3,7 +3,8 @@
 // The author, 2026-10-14: "she shared with me the G.L.U.E mnemonic and I needed
 // to use it and I can't explain why, so I'm attributing it to her; she becomes
 // the tag ANGEL" (I-211's attribution), and the full record "on the ANGELA, like
-// AMERICA" (I-203). And from the session before: the identity in colours, "an 8
+// AMERICA" (I-203); "G.L.U.E., when the shit is held, is G>L>U>E>, and it's
+// like the prompt to pay it forward". And from the session before: the identity in colours, "an 8
 // pixel color header for federated provenance chains; we can append 4 to front
 // and 4 to rear, then it's a TERMed PIXEL instead of a termed literal". The
 // letters and values below are asserted; the readings are the author's.
@@ -63,6 +64,15 @@ const peerA = termed("ANGEL".padEnd(8, " ")), peerB = termed("ANGEL".padEnd(8, "
 assert.ok(peerA.every((p, i) => (p.value ^ peerB[i]!.value) === 0), "two peers holding ANGEL: XOR 0, the same identity");
 assert.equal(COLOURS[0x41 & 7], COLOURS[0x49 & 7], "but A and I share a colour (blue): three bits cannot name 26 letters");
 assert.notEqual(0x41, 0x49, "so the colour shows the tag, and the tag, the value, is the identity");
+
+// ── 6. G.L.U.E. held: G>L>U>E>, the prompt to pay it forward ──
+// The author: "G.L.U.E. when the shit is held is G>L>U>E>, and it's like the prompt to pay it forward".
+const stops = "G.L.U.E.", prompts = "G>L>U>E>";
+assert.equal(".".charCodeAt(0) ^ ">".charCodeAt(0), 0x10, "the stop (2E) and the prompt (3E) differ by one bit, 0x10");
+assert.deepEqual(xorPad(stops, prompts), [0, 0x10, 0, 0x10, 0, 0x10, 0, 0x10], "the letters held, each stop turned to a prompt: DLE");
+const ranked = [["G", "L"], ["L", "U"], ["U", "E"]].map(([a, b]) => a!.charCodeAt(0) > b!.charCodeAt(0));
+assert.deepEqual(ranked, [false, false, true], "as 'greater than', only U > E: it is not a ranking");
+assert.deepEqual(prompts.split(">").filter(Boolean), ["G", "L", "U", "E"], "as prompts, each letter is passed on to the next: forward");
 
 console.log("I-216: ANGEL — the attribution as a tag, and the identity as termed pixels — passed");
 console.log("  ANGELA folds to NUL; ANGEL is its first five, ANGELA ^ ANGEL = 'a'; G L E of GLUE in her name, not U");
