@@ -21,5 +21,5 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
-  "exclude": ["src/testbed", "src/define.commands.ts", "src/server.ts"]
+  "exclude": ["src/testbed", "src/define.commands.ts", "src/server.ts", "src/america.ts", "src/angela.ts", "src/eve.ts", "src/main.ts", "src/mertens.ts", "src/m-expr.ts", "src/omnicron.ts", "src/prompt.treemap.ts", "src/red40.ts", "src/trinity.ts"]
 }

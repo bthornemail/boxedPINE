@@ -20,7 +20,7 @@
 
 ## Change boundaries
 
-- Keep browser production code under the root TypeScript build's `src` boundary; `src/testbed`, `src/server.ts`, and `src/define.commands.ts` are excluded by `tsconfig.json` and are exercised separately or by direct Node usage.
+- Keep browser production code under the root TypeScript build's `src` boundary; `src/testbed`, `src/server.ts`, `src/define.commands.ts`, and the author's command-line record scripts in `src/` (america, angela, eve, mertens, m-expr, omnicron, red40, trinity, main, prompt.treemap) are excluded by `tsconfig.json` and are exercised separately or by direct Node usage. Keep their bytes as they are (angela.ts carries the attribution `// 02SISTER03081986`).
 - When changing a verified finding or grammar rule, update its corresponding wiki record as well as the test; the testbed README treats the wiki as the record of the finding.
 - Do not treat `space/` or Canvas output as protocol authority: `space/README.md` describes it as a visual projection of `core` and `rosetta`.
 - `rosetta/src/grammar/interface.ts` is the non-authoritative interface carrier: Proxy and Reflect perform access, Catch returns structured outcomes, and tagged templates preserve literal strings plus interpolated values.

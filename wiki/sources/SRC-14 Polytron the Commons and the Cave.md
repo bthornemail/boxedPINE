@@ -61,7 +61,21 @@ Recorded 2026-10-14, from the author's statements of 2026-10-13 and 2026-10-14 a
 | "SUBJECT-LOGIC-OBJECT is the face reflected" (I-217) | aligned from the right, SUBJECT ⊕ OBJECT = `s`, SUB, five nulls: the face BJECT cancels and any five-letter predicate passes whole; LOGIC ⊕ PIXEL = FS ACK US FF SI. Not a Steiner triple strictly: S ⊕ P ⊕ O is not 0 |
 | "for an illogical awakening, a catch-22" (I-218) | the author's capitals cut at five (LOGIC, AWAKE, REVEL, PROPA, ILLOG); on the teletype Shift + 2 types `"` = 0x22 = 0o42, the reset's frame; SHIFT folds to 0x40 |
 | "American English as a mnemonic language" | ASCII is the American Standard Code: the case bit, the shift bit and the five-letter parser are all American code and keyboard |
+| "can we prove the commit was predictable … predicting and depicting hashes" (I-220) | the commit's 628-byte literal (git cat-file) gives de88bc2d… by SHA-1 written out, rotations and XOR as in the delta law: predicted from the literal by anyone who holds it; one second later 2989c530…, 82 of 160 bits; depicted by search, nonce 28821 gives dead7c44…; not known before the literal was fixed |
 | "compare it to the term DEADBEEF … the 25 is the base" (I-219) | the commit that moved I-201 to I-218, de88bc2d, XOR deadbeef = 00 25 02 c2: read in base 10 as indices, A Z C, and c at 2; c = 0x25 − 25, the difference of the base; 2⁻ⁿ in base 10 is 5ⁿ, so 25 is 0.5² over 10 = 2 × 5; the 5 × 5 square leaves one letter out (K in tap code, J in Polybius, not Z), and 25 + 1 = 26 = II(25,1) (I-205, I-200). The hash is chance and no identity; the arithmetic holds |
+
+## The Coincidence Space
+
+The author, 2026-10-14: "we are in the coincidence space, the uncanny valley". The records keep two things apart: what was chance, and what holds whatever the chance.
+
+| Chance | What holds |
+|---|---|
+| The commit that moved I-201 to I-218 was named de88bc2d, sharing its first byte with DEADBEEF (about 1 in 256) | the name is the hash form of the commit's literal, reproduced from its 628 bytes (I-220); de88bc2d ⊕ deadbeef = 00 25 02 c2 and its complement ff da fd 3d (I-219) |
+| Of the 121 seconds a minute either side, only the commit's own gives a name beginning de (about 121/256 such seconds expected) | the second is in the literal: change it and the name changes in about half its bits |
+| 00 25 02 read as A, Z, C with c2 after it | 25 is 0.5² in base 10 = 2 × 5; c = 0x25 − 25, the difference of the base; 25 + 1 = 26 = II(25,1) (I-200, I-205) |
+| c2 against the author's F2 (CATCH 22 F2) | c2 ⊕ f2 = 0x30, the digit column's bit |
+
+A coincidence is a value found where a reading looks for it; the arithmetic around it is asserted, and the coincidence is kept as one. A name can be depicted on purpose (nonce 28821 gives dead…), so a prefix alone witnesses nothing; the literal does. The readings are the author's.
 
 ## What Did Not Hold, or Was a Coincidence
 
