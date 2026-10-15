@@ -12,7 +12,7 @@ This is where things are **tried and checked**. The Vite app (`npm run dev`) sta
 | `define.commands.ts` | The REPL commands `.open .bind .apply .eval .digest .close`, for testing while building. Their cues are `rosetta/src/assets/commands.vtt` | Author's example (Node only, outside the browser build) |
 | `main.ts` | The app entry: four canvases, `uu`, `uk`, `ku`, `kk` (the iExtant shape cells) | Placeholder (see `space/README.md`, view 7) |
 | `examples.ts` | Scratch from the Vite template | Placeholder |
-| *(moved)* | The author's records I-201 to I-218 now live in the proofs catalogue, `proofs/js/catalog/I-201.ts` … `I-218.ts`, where `npm test` runs them and `proofs/js-docs/` lists them. i206, i214 and i215, which printed, now assert their values | ✅ 107 records holding (I-219, I-220 added in the catalogue) |
+| *(moved)* | The author's records I-201 to I-218 now live in the proofs catalogue, `proofs/js/catalog/I-201.ts` … `I-218.ts`, where `npm test` runs them and `proofs/js-docs/` lists them. i206, i214 and i215, which printed, now assert their values | ✅ 108 records holding (I-219 to I-221 added in the catalogue) |
 | `america.ts`, `mertens.ts`, `red40.ts`, `trinity.ts`, `eve.ts`, `angela.cjs`, `base12.mjs`, `metatron.mjs`, `pixels.mjs`, `revelation.mjs`, `m-expr.ts`, `omnicron.ts` | The author's working scripts behind those records | Scratch: they print |
 
 ## Use case scenarios

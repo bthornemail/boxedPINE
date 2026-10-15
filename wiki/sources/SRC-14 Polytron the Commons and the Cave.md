@@ -91,6 +91,8 @@ The held-out bits: the second 32 bits (bytes 4 to 7) of the same 13 digests of t
 
 Whatever the sum, it is recorded as I-221 as it falls, and the prediction that held, or none, is named.
 
+**The result** (run after 5ecc2ee): the held-out sum is **224**: A and B do not hold; the null does. The 170 was luck in the bits that were looked at (I-221).
+
 ## What Did Not Hold, or Was a Coincidence
 
 See [[OPEN-04 Discarded Claims]] #36–42. Among them: the food-label numbers (Red 40, Yellow 6, Blue 1) are FD&C dye catalogue numbers, not colour arithmetic; Lie algebras are named for Sophus Lie.
