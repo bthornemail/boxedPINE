@@ -30,17 +30,27 @@ assert.equal(xor(["MERIDIAN", "MERTENS"]).charCodeAt(3), 0x1d, "GS");
 // METAT XOR MERKA: ME shared, then three control codes.
 assert.equal(xor(["METAT", "MERKA"]), "\0\0\x06\x0a\x15", "ME then ACK LF NAK");
 
-// ── 2. AMERICA, with I at the centre ─────────────────────────
+// ── 2. AMERICA, with R at the centre ─────────────────────────
 const am = "AMERICA";
 assert.equal(am.length, 7);
-assert.equal(am[3], "I", "the I is at the centre");
-assert.equal(am.charCodeAt(3), 0x49);
-const rev = [...am].reverse().join("");
-assert.equal(rev, "ACIREMA");
-assert.equal(am[0], rev[0], "A matches A");
-assert.equal(am[3], rev[3], "I is the fixed point");
-assert.notEqual(am[1], rev[1], "M and C differ");
-assert.notEqual(am[2], rev[2], "E and I differ");
+assert.equal(am[3], "R", "the R is the centre");
+assert.equal(am[4], "I", "the I is one past the centre");
+assert.equal(am[0], am[6], "the A's match at the ends");
+// The R is the same R as in TERM/MERT:
+assert.equal("TERM"[2], "R", "the R is at index 2 of TERM");
+assert.equal("MERT"[2], "R", "the R is at index 2 of MERT");
+assert.equal("MER"[2], "R", "the R is at index 2 of MER");
+assert.equal("AMERICA"[3], "R", "the R is at index 3 of AMERICA");
+
+
+assert.equal(am[3], "R", "the R is the centre (the same R as in TERM/MERT)");
+assert.equal(am[4], "I", "the I is one past the centre");
+
+
+const i = am.indexOf("I");
+assert.equal(i, 4, "the I is at index 4");
+assert.equal(am.length - 1 - i, 2, "2 letters after it");
+assert.equal(i, 4, "4 letters before it");
 
 // ── 3. GOD IS WORD and WORD IS GOD ───────────────────────────
 const g = "GOD IS WORD", w = "WORD IS GOD";
