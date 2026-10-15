@@ -575,3 +575,19 @@ test('The tag tree: each path\'s tags are its name\'s words promoted; its addres
   assert.deepEqual(t.universal.map((u: { tag: string }) => u.tag), ['README'], 'README in two projects: a universal tag');
   assert.equal(t.edges.filter((e: { type: string }) => e.type === 'v:child').length, t.nodes.length - 1, 'every path but the root has its parent edge');
 });
+
+test('The characters in the 3D Commons: each at its hue on the rim, the Observer above the centre; seeds pair each tag initial with its point; each starts on a line through its point', async () => {
+  const { CHARACTERS, placeOf, seedOf, RIM } = await import('../../space/src/characters.ts');
+  const { LINES } = await import('../../space/src/story.ts');
+  assert.deepEqual(CHARACTERS.map((c) => c.tag), ['METATRON', 'SOLOMON', 'SOLON', 'ASABIYAH', 'ENOCH', 'SPEAKER', 'GENESIS', 'OBSERVER']);
+  for (const c of CHARACTERS.filter((c) => c.point <= 7)) {
+    assert.ok(Math.abs(Math.hypot(c.at[0], c.at[2]) - RIM) < 1e-9, `${c.tag} on the rim`);
+    assert.ok(LINES[c.line - 1]!.includes(c.point), `${c.tag} starts on a line through its own point`);
+  }
+  assert.deepEqual(placeOf(8), [0, 3.4, 0], 'the Observer above the centre');
+  const m = placeOf(1);
+  assert.ok(Math.abs(m[0]) < 1e-9 && m[2] < 0, 'Metatron, hue 0, to the north as on the map');
+  assert.equal(seedOf('METATRON', 1), 0x4d01, 'M and point 1, as a pair');
+  assert.equal(seedOf('SOLOMON', 2) === seedOf('SOLON', 3), false, 'SOLOMON and SOLON, both SO, are not twins');
+  assert.equal(new Set(CHARACTERS.map((c) => c.seed)).size, 8, 'eight distinct seeds');
+});

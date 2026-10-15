@@ -5,6 +5,12 @@ import { gnomon, hex16 } from './gnomon.ts';
 import { daliCross, grow, type Cell } from './polyform.ts';
 import { namedSynset, placeOf, speakerSeed, stepAgent, synsetDeclaration, synsetSeed, type SynsetAgent } from './commons-agents.ts';
 import { BRIDGE_PORT } from '../../rosetta/src/agent.ts';
+import { CHARACTERS } from './characters.ts';
+import { avatarSvg } from './avatar.ts';
+import { newWalker, step as storyStep, type Passage } from './story.ts';
+import { buildAgent, type AgentGraph } from './sound.ts';
+import { scoreOf, BEAT } from './score.ts';
+import { newState, frameGate, written, fileOf, type FrameGate } from './exchange.ts';
 
 type Station = {
   title: string;
@@ -248,6 +254,60 @@ events.onmessage = (e) => {
 };
 events.onerror = () => { /* the bridge is not running; the synset agents walk on their own */ };
 
+// ── The characters, live: Light Garden's eight at their hues (characters.ts) ──
+// Each walks the story by K, exchanges its 128 bytes every frame (60 ^ frame, the reset at 22), and,
+// once sound is on, sounds each step through its own graph and panner node; the listener is the camera.
+type Live = { c: typeof CHARACTERS[number]; group: THREE.Group; label: THREE.Sprite; walker: ReturnType<typeof newWalker>; gate: FrameGate; state: Uint8Array; next: number; graph?: AgentGraph; last: string };
+let storyPassages: Passage[] = [];
+fetch(new URL('../story/passages.json', location.href)).then((r) => r.json()).then((m: { passages: Passage[] }) => { storyPassages = m.passages; }).catch(() => { /* no story: the characters stand */ });
+const live: Live[] = CHARACTERS.map((c, i) => {
+  const group = new THREE.Group();
+  group.position.set(...c.at);
+  const tex = new THREE.TextureLoader().load(`data:image/svg+xml;utf8,${encodeURIComponent(avatarSvg({ id: c.seed, word: c.tag, depth: 6, hue: c.hue }))}`);
+  const avatar = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true }));
+  avatar.scale.set(1.2, 1.2, 1);
+  avatar.position.y = 1.2;
+  group.add(avatar);
+  const label = textSprite([c.tag, `line ${c.line}`], c.hue === null ? '#ffffff' : `hsl(${c.hue} 80% 65%)`);
+  label.position.y = 2.25;
+  group.add(label);
+  scene.add(group);
+  const state = newState();
+  return { c, group, label, walker: newWalker(c.seed, c.line), gate: frameGate(state), state, next: 1500 + i * 230, last: '' };
+});
+let audio: AudioContext | null = null;
+const soundButton = document.createElement('button');
+soundButton.textContent = 'sound';
+soundButton.title = 'each character sounds its steps through its own panner; the listener is the camera';
+soundButton.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:5;font:13px monospace;padding:6px 10px;background:#10151bd9;color:#edf0e9;border:1px solid #34404a;border-radius:5px;cursor:pointer';
+soundButton.onclick = () => {
+  if (audio) { audio.close(); audio = null; live.forEach((l) => (l.graph = undefined)); soundButton.textContent = 'sound'; return; }
+  audio = new AudioContext();
+  const master = new GainNode(audio, { gain: 0.12 });
+  master.connect(audio.destination);
+  for (const l of live) { l.graph = buildAgent(audio, l.c.at, master); for (const src of l.graph.sources) src.start(); }
+  soundButton.textContent = 'sound off';
+};
+document.body.appendChild(soundButton);
+let frameCount = 0;
+function liveFrame(time: number) {
+  frameCount++;
+  for (const l of live) {
+    l.gate.frame = frameCount;
+    if (time < l.next || !storyPassages.length) continue;
+    l.next = time + 2 * BEAT * 1000;
+    const s = storyStep(l.walker, storyPassages);
+    const state = fileOf(frameCount) === 'Hasse_XOR' ? 'read' : 'write';
+    if (audio && l.graph) for (const e of scoreOf([{ point: s.point, line: s.line, state }])) l.graph.params.get(`${e.node}.${e.param}`)?.setValueAtTime(e.value, audio.currentTime);
+    const text = `${l.c.tag}|line ${s.line} via P${s.point}|${written(l.state)}/128 ${state}`;
+    if (text !== l.last) { l.last = text; const fresh = textSprite(text.split('|'), l.c.hue === null ? '#ffffff' : `hsl(${l.c.hue} 80% 65%)`); fresh.position.copy(l.label.position); l.group.remove(l.label); l.label.material.map?.dispose(); l.label = fresh; l.group.add(fresh); }
+  }
+  if (audio) {
+    const L = audio.listener, f = new THREE.Vector3(); camera.getWorldDirection(f);
+    if (L.positionX) { L.positionX.value = camera.position.x; L.positionY.value = camera.position.y; L.positionZ.value = camera.position.z; L.forwardX.value = f.x; L.forwardY.value = f.y; L.forwardZ.value = f.z; L.upX.value = 0; L.upY.value = 1; L.upZ.value = 0; }
+  }
+}
+
 const links = [
   [[-3.2, .18, -.4], [0, .18, 0]], [[3.2, .18, -.4], [0, .18, 0]],
   [[0, .18, -3.4], [0, .18, 0]], [[0, .18, 2.9], [0, .18, 0]],
@@ -305,5 +365,6 @@ renderer.setAnimationLoop((time) => {
     p.x += (w.target.x - p.x) * .02; p.z += (w.target.y - p.z) * .02;
     w.group.rotation.y = time / 4000 + w.lane;
   }
+  liveFrame(time);
   renderer.render(scene, camera);
 });
