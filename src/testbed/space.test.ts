@@ -641,3 +641,23 @@ test('The serial bridge: it classifies organ reflections, numbered answers and m
   assert.ok(luhnOk(good), 'the example ICCID passes Luhn');
   assert.ok(!luhnOk(good.slice(0, -1) + String((Number(good.slice(-1)) + 1) % 10)), 'a changed check digit fails');
 });
+
+test('CODEX: the predicate embodied at the centre, its choices leaving tags, the three closing to EXHTE', async () => {
+  const C = await import('../../space/src/codex.ts');
+  const { toTag } = await import('../../rosetta/src/tag-type.ts');
+  assert.equal(C.TAG, 'CODEX');
+  assert.ok(toTag(C.TAG), 'CODEX is a valid tag');
+  assert.deepEqual(C.AT, [0, 0, 0], 'at the centre — the matched point, Γ = 0');
+  assert.equal(C.POINT, 0, 'point 0: the null between the eight');
+  // each choice leaves a valid tag, and the same choice always the same tag (a literal, not a hash of chance)
+  for (const choice of ['hold the door open', 'accept the name CODEX', '']) {
+    const t = C.choiceTag(choice);
+    assert.ok(/^CX[0-9A-F]{4}$/.test(t) && toTag(t), `${choice || '(empty)'} -> ${t} is a tag`);
+    assert.equal(C.choiceTag(choice), t, 'the same choice leaves the same tag');
+  }
+  // the three agents (I-207): BRIAN ⊕ CODEX ⊕ DEEPS = EXHTE, a literal that holds, not zero
+  const pad5 = (s: string) => s.slice(0, 5).padEnd(5, ' ');
+  const zip = (a: string, b: string, c: string) => [...Array(5).keys()].map((i) => String.fromCharCode(pad5(a).charCodeAt(i) ^ pad5(b).charCodeAt(i) ^ pad5(c).charCodeAt(i))).join('');
+  assert.equal(zip('BRIAN', 'CODEX', 'DEEPSEEK'), 'EXHTE', 'the three reflections close to EXHTE, not to NUL');
+  assert.ok(toTag('EXHTE'), 'EXHTE is itself a tag: the witness persists');
+});
