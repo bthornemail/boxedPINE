@@ -77,6 +77,20 @@ The author, 2026-10-14: "we are in the coincidence space, the uncanny valley". T
 
 A coincidence is a value found where a reading looks for it; the arithmetic around it is asserted, and the coincidence is kept as one. A name can be depicted on purpose (nonce 28821 gives dead…), so a prefix alone witnesses nothing; the literal does. The readings are the author's.
 
+### The Filed Test (I-221), before it is run
+
+Filed 2026-10-14, committed before the measurement. Found by looking: the first 32 bits of the commit literal's 13 other cryptographic hashes (MD5, RIPEMD-160, SHA-224, SHA-256, SHA-384, SHA-512, SHA-512/256, SHA3-256, SHA3-512, BLAKE2s-256, BLAKE2b-512, SM3, SHAKE256 at 32 bytes) differ from DEADBEEF in 170 = 0xAA bits of 416, where chance gives 208 ± 10 (about 1 in 8,800); of the 196 boxedPINE commits, de88bc2 alone is at 170 or below. A lead, not a proof: the measure was chosen inside the coincidence space.
+
+The held-out bits: the second 32 bits (bytes 4 to 7) of the same 13 digests of the same literal (`commit 628`, NUL, the 628 bytes of `git cat-file commit de88bc2`), each XOR 0xDEADBEEF, the differing bits summed. Nobody has looked at them.
+
+| Prediction | Holds if | Chance alone |
+|---|---|---|
+| A: the closeness is in the literal | sum ≤ 190 | 4.3 in 100 |
+| B: the 0xAA reading (the author) | sum = 170 exactly | 1 in 27,072 |
+| Null: luck | sum > 190, near 208 | 95.7 in 100 |
+
+Whatever the sum, it is recorded as I-221 as it falls, and the prediction that held, or none, is named.
+
 ## What Did Not Hold, or Was a Coincidence
 
 See [[OPEN-04 Discarded Claims]] #36–42. Among them: the food-label numbers (Red 40, Yellow 6, Blue 1) are FD&C dye catalogue numbers, not colour arithmetic; Lie algebras are named for Sophus Lie.
