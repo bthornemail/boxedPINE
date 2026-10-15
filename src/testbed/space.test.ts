@@ -591,3 +591,30 @@ test('The characters in the 3D Commons: each at its hue on the rim, the Observer
   assert.equal(seedOf('SOLOMON', 2) === seedOf('SOLON', 3), false, 'SOLOMON and SOLON, both SO, are not twins');
   assert.equal(new Set(CHARACTERS.map((c) => c.seed)).size, 8, 'eight distinct seeds');
 });
+
+test('The plane: the 2D canvas, the 2.5D map and the 3D scene map to one place and back; the floor draws on any 2D context', async () => {
+  const P = await import('../../space/src/plane.ts');
+  const { CHARACTERS, placeOf } = await import('../../space/src/characters.ts');
+  const near = (a: number[], b: number[], what: string) => a.forEach((x, i) => assert.ok(Math.abs(x - b[i]!) < 1e-9, `${what}: ${a} against ${b}`));
+  const places = [{ u: 0, v: 0, layer: 0 }, P.atHue(0), P.atHue(137, 0.6, 3), P.atHue(300, 1.1, 16.5)];
+  for (const p of places) {
+    for (const view of ['2d', '2.5d'] as const) { const [x, y] = P.toMap(p, view); const q = P.fromMap(x, y, view, p.layer); near([q.u, q.v], [p.u, p.v], `the map in ${view} and back`); }
+    const w = P.fromWorld(P.toWorld(p)); near([w.u, w.v, w.layer], [p.u, p.v, p.layer], 'the world and back');
+    // the floor: a canvas pixel to three.js's uv (v up) and back to the plane
+    const size = 1024, [px, py] = P.toFloor(p, size), f = P.fromUv({ x: px / size, y: 1 - py / size }, p.layer);
+    near([f.u, f.v], [p.u, p.v], 'the floor canvas and back');
+  }
+  near(P.toMap(P.atHue(0), '2d'), [0, -P.MAP_RIM], 'hue 0 is north on the map');
+  near(P.toWorld(P.atHue(0)), [0, 0, -P.RIM], 'and north (−z) in the world');
+  near(P.toFloor(P.atHue(0), 1024), [512, 512 - (P.RIM / P.FLOOR) * 512], 'and at the top of the floor canvas');
+  assert.equal(P.LIFT * P.MAP_RIM, P.LAYER * P.RIM, 'a layer lifts the same in the map and the world, at their scales');
+  for (const c of CHARACTERS) near(placeOf(c.point), P.toWorld(c.hue === null ? P.fromWorld(c.at) : P.atHue(c.hue)), `${c.tag} stands where the plane puts it`);
+  assert.deepEqual(placeOf(8), [0, 3.4, 0], 'the Observer still 3.4 above the centre');
+  assert.equal(P.nearest(P.atHue(30, 0.97), CHARACTERS.map((c) => ({ at: P.fromWorld(c.at), hue: c.hue, name: c.tag })))?.name, 'SOLOMON', 'a hit near hue 30 selects SOLOMON');
+  // no DOM: the floor draws on a stand-in context that only records the calls
+  const calls: string[] = [];
+  const ctx = new Proxy({}, { get: (_t, k) => (typeof k === 'string' ? (...args: unknown[]) => { calls.push(k); return args; } : undefined), set: () => true }) as unknown as CanvasRenderingContext2D;
+  P.drawFloor(ctx, 256, [{ at: P.atHue(0), hue: 0, name: 'METATRON' }], 'METATRON');
+  assert.equal(calls.filter((c) => c === 'fillText').length, 1, 'one mark, one name');
+  assert.equal(calls.filter((c) => c === 'arc').length, 12 + 1 + 2, 'twelve sectors, the rim, the mark and its ring');
+});

@@ -37,6 +37,7 @@
 ## The Agent Commons
 
 - `space/index.html` is the 3D playground (the gnomon dial and the Dalí cross at the Polytron station, synset and bridge agents walking); `space/map.html` the z-indexed maps: the 144 colour synsets on the colour wheel (2D, 2.5D), a character's 128-byte state, the 65,536-pair mask, the story on the plane, the terms box and the witness recorder.
+- `space/src/plane.ts` is the one place both derive from: a place is (u, v, layer) on the Commons plane, and the map's 2D and 2.5D, the 3D world and the floor canvas map to it and back. The hub's floor is that canvas (an OffscreenCanvas, no DOM), so in a headset the floor is the map; a pointer or an XR controller hitting the floor selects through its uv.
 - Each of Light Garden's characters (`space/src/border.ts`, tags METATRON SOLOMON SOLON ASABIYAH ENOCH SPEAKER GENESIS OBSERVER) has its own set of 16 in `public/characters/<TAG>/`: the 14 Fano planes and two Hasse diagrams, XOR (read, place 0) and XNOR (write, place 15), each file's margin carrying the tag and its place. Regenerate with `node scripts/character-trees.mjs`.
 - The exchange (`space/src/exchange.ts`) is `Atomics.compareExchange(svg, 60 ⊕ frame, 127, 63)` on 128 bytes, handed over through a Proxy with Reflect and Catch (rosetta's interface carrier); its reset restores the literal at byte 22 (frame 42) unless `CATCH n` moves it.
 - The trace (`space/src/trace.ts`) XORs each of an agent's 16 files' places into a 65,536 buffer at its name pairs: an intact set traces to zero.

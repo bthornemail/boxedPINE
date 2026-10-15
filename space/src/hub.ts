@@ -11,6 +11,7 @@ import { newWalker, step as storyStep, type Passage } from './story.ts';
 import { buildAgent, type AgentGraph } from './sound.ts';
 import { scoreOf, BEAT } from './score.ts';
 import { newState, frameGate, written, fileOf, type FrameGate } from './exchange.ts';
+import { drawFloor, fromUv, fromWorld, nearest, FLOOR, type Mark } from './plane.ts';
 
 type Station = {
   title: string;
@@ -58,9 +59,16 @@ key.position.set(-4, 8, 5);
 key.castShadow = true;
 scene.add(key);
 
+// ── The floor is the map: the plane's 2D canvas laid under the scene (plane.ts) ──
+// Drawn on an OffscreenCanvas where there is one, so it needs no DOM: in a headset the floor is the map.
+const FLOOR_SIZE = 1024;
+const floorCanvas = typeof OffscreenCanvas === 'function' ? new OffscreenCanvas(FLOOR_SIZE, FLOOR_SIZE) : Object.assign(document.createElement('canvas'), { width: FLOOR_SIZE, height: FLOOR_SIZE });
+const floorContext = floorCanvas.getContext('2d') as CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+const floorTexture = new THREE.CanvasTexture(floorCanvas as HTMLCanvasElement);
+floorTexture.colorSpace = THREE.SRGBColorSpace;
 const floor = new THREE.Mesh(
-  new THREE.CircleGeometry(8, 64),
-  new THREE.MeshStandardMaterial({ color: 0x151c24, roughness: .82, metalness: .08 }),
+  new THREE.CircleGeometry(FLOOR, 64),
+  new THREE.MeshStandardMaterial({ map: floorTexture, roughness: .82, metalness: .08 }),
 );
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
@@ -320,19 +328,43 @@ for (const [from, to] of links) {
   scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...from), new THREE.Vector3(...to)]), material));
 }
 
+// ── The marks on the floor: the characters at their places, the synset walkers where they walk (back through the plane) ──
+let selected: string | undefined;
+function floorMarks(): Mark[] {
+  const marks: Mark[] = live.map((l) => ({ at: fromWorld(l.c.at), hue: l.c.hue, name: l.c.tag }));
+  for (const w of walkers) if (w.synset) marks.push({ at: fromWorld([w.group.position.x, 0, w.group.position.z]), hue: null, name: w.synset.word });
+  return marks;
+}
+let floorDrawn = -Infinity;
+function redrawFloor(time: number) {
+  if (time - floorDrawn < 500) return;
+  floorDrawn = time;
+  drawFloor(floorContext, FLOOR_SIZE, floorMarks(), selected);
+  floorTexture.needsUpdate = true;
+}
+
+// One pick for the pointer and the XR controllers: a station opens its room; the floor, hit at its uv, selects the nearest mark on the plane.
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
+function pick(ray: THREE.Raycaster) {
+  const hit = ray.intersectObjects([...selectable, floor], false)[0];
+  const station = hit?.object.userData.station as Station | undefined;
+  if (station) { window.location.href = station.room; return; }
+  if (hit?.object === floor && hit.uv) { selected = nearest(fromUv(hit.uv), floorMarks(), 0.2)?.name; floorDrawn = -Infinity; }
+}
 function choose(event: PointerEvent) {
   const rect = renderer.domElement.getBoundingClientRect();
   pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
   pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
   raycaster.setFromCamera(pointer, camera);
-  const hit = raycaster.intersectObjects(selectable, false)[0]?.object;
-  const station = hit?.userData.station as Station | undefined;
-  if (!station) return;
-  window.location.href = station.room;
+  pick(raycaster);
 }
 renderer.domElement.addEventListener('pointerup', choose);
+for (const i of [0, 1]) {
+  const controller = renderer.xr.getController(i);
+  controller.addEventListener('select', () => { raycaster.setFromXRController(controller); pick(raycaster); });
+  scene.add(controller);
+}
 
 function resize() {
   const width = host.clientWidth, height = host.clientHeight;
@@ -366,5 +398,6 @@ renderer.setAnimationLoop((time) => {
     w.group.rotation.y = time / 4000 + w.lane;
   }
   liveFrame(time);
+  redrawFloor(time);
   renderer.render(scene, camera);
 });

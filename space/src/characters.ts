@@ -10,19 +10,20 @@
 // score.ts), and exchanges its 128 bytes (exchange.ts).
 import { CHARACTER_TAGS } from './border.ts';
 import { linesThrough } from './story.ts';
+import { atHue, fromWorld, toWorld, RIM } from './plane.ts';
 
 export type Character = { point: number; tag: string; hue: number | null; at: [number, number, number]; seed: number; line: number };
 
 /** Light Garden's ratios of the circle, as hues: point 1-7; the Observer (8) has none. */
 export const CHARACTER_HUES: Record<number, number | null> = { 1: 0, 2: 30, 3: 60, 4: 120, 5: 240, 6: 270, 7: 300, 8: null };
-export const RIM = 7;
+export { RIM };
+/** The Observer stands above the centre, 3.4 up: its layer on the plane is derived from that height. */
+export const OBSERVER = fromWorld([0, 3.4, 0]);
 
-/** Where a character stands: its hue on the rim (the map's convention, hue 0 to the north), the Observer above the centre. */
+/** Where a character stands: its hue on the rim (the plane's convention, hue 0 to the north), the Observer above the centre. */
 export function placeOf(point: number): [number, number, number] {
   const hue = CHARACTER_HUES[point];
-  if (hue === null || hue === undefined) return [0, 3.4, 0];
-  const a = ((hue - 90) * Math.PI) / 180;
-  return [Math.cos(a) * RIM, 0, Math.sin(a) * RIM];
+  return toWorld(hue === null || hue === undefined ? OBSERVER : atHue(hue));
 }
 
 /** The seed: the pair (car, cdr) of the tag's first letter and the character's point. */

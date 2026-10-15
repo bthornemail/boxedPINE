@@ -21,6 +21,7 @@ import { LINES, choices, linesThrough, newWalker, step as storyStep, type Passag
 import { parseTerms, BEAT } from './score.ts';
 import { recordWitness } from './witness.ts';
 import { fileOf } from './exchange.ts';
+import { atHue, MAP_RIM, project as planeProject } from './plane.ts';
 
 type Color = AvatarAgent & { parent: number | null; hueFrom: string | null; glyphName?: string; glyphFrom?: string; homographs?: string[] };
 type Placed = { a: AvatarAgent; x: number; y: number; z: number; state: number; beat: number; next: number; el: SVGGElement; to?: { x: number; y: number } };
@@ -39,9 +40,8 @@ export function wheelPlace(c: AvatarAgent, i: number, noHue: number, count: numb
   return { x: Math.cos(a) * r, y: Math.sin(a) * r };
 }
 
-function project(x: number, y: number, z: number): [number, number] {
-  return mode === '2d' ? [x, y] : [(x - y) * 0.82, (x + y) * 0.41 - z * 14];
-}
+/** The page from map units, through the plane (plane.ts): the same projection the 3D floor derives from. */
+const project = (x: number, y: number, z: number) => planeProject(x, y, z, mode);
 
 function icon(a: AvatarAgent, size: number) {
   const g = document.createElementNS(NS, 'g');
@@ -108,8 +108,8 @@ fetch(new URL('../polytron/colors.json', location.href)).then((r) => r.json()).t
   // Light Garden's eight characters (docs/index.md): ratio x 360 is the hue; the Observer, white, at the centre
   CHARACTERS.forEach(([word, ratio], i) => {
     const hue = ratio === null ? null : Math.round(ratio * 360);
-    const a = ((hue ?? 0) - 90) * Math.PI / 180, r = hue === null ? 0 : 480;
-    add({ id: 0x10000 + i, word, depth: 6, hue }, Math.cos(a) * r, Math.sin(a) * r, 3000 + i * 211);
+    const at = atHue(hue);
+    add({ id: 0x10000 + i, word, depth: 6, hue }, at.u * MAP_RIM, at.v * MAP_RIM, 3000 + i * 211);
   });
   status.textContent = `${colors.length} colour synsets: ${colors.filter((c) => c.hue !== null).length} on the wheel by hue, ${count} on the inner ring`;
   draw();
