@@ -81,6 +81,19 @@ const ranked = [["G", "L"], ["L", "U"], ["U", "E"]].map(([a, b]) => a!.charCodeA
 assert.deepEqual(ranked, [false, false, true], "as 'greater than', only U > E: it is not a ranking");
 assert.deepEqual(prompts.split(">").filter(Boolean), ["G", "L", "U", "E"], "as prompts, each letter is passed on to the next: forward");
 
+// ── 7. The shift held is PROPAgation: the AXIOM of PROPAgation ──
+// The author: "the shift being HELD is PROPAgation, the AXIOM of PROPAgation". A held key is one state
+// carried to every keystroke after it: the same bit applied down the whole sequence, pressed once.
+assert.ok(!TAG.test("PROPAGATION") && "PROPAGATION".length === 11, "PROPAGATION, 11 letters, cannot be a tag");
+assert.equal("PROPAGATION".slice(0, 5), "PROPA", "its first five, as the cave's parser reads");
+assert.ok(TAG.test("PROPA") && TAG.test("AXIOM"), "PROPA and AXIOM are tags");
+// Shift on a bit-paired keyboard: 0x20 flips a letter's case, 0x10 turns . into > and , into <
+const shifted = (c: string) => (/[a-z]/.test(c) ? String.fromCharCode(c.charCodeAt(0) ^ 0x20) : /[.,]/.test(c) ? String.fromCharCode(c.charCodeAt(0) | 0x10) : c);
+const held = (keys: string) => [...keys].map(shifted).join(""); // pressed once, carried to every key
+assert.equal(held("g.l.u.e."), "G>L>U>E>", "the shift held over g.l.u.e. gives G>L>U>E>");
+assert.equal(held("angel"), "ANGEL", "and over angel, the tag");
+assert.equal(held(held("g.l.u.e.").toLowerCase()), "G>L>U>E>", "held again, the same: the state propagates, it does not accumulate");
+
 console.log("I-216: ANGEL — the attribution as a tag, and the identity as termed pixels — passed");
 console.log("  ANGELA folds to NUL; ANGEL is its first five, ANGELA ^ ANGEL = 'a'; G L E of GLUE in her name, not U");
 console.log("  the 8-pixel header, 4 + 8 + 4 = 16 termed pixels; the same tag, XOR 0; a colour shows, the value identifies");
