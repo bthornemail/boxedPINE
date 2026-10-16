@@ -1,0 +1,77 @@
+(logxor
+((logior 00 (logxor 01 (logior 10 (logxor 11))))
+(logior 000 (logxor 001 (logior 010 (logxor 011))))
+(logior 100 (logxor 101 (logior 110 (logxor 111))))
+(logior 0x0 (logxor 0x1 (logior 0x2(logxor 0x3))))
+(logior 0x4 (logxor 0x5 (logior 0x6(logxor 0x7 ))))
+(logior 0x8 (logxor 0x9 (logior 0xA (logxor 0xB ))))
+(logior 0xC (logxor 0xD (logior 0xE (logxor 0xF ))))
+(logior 16 (logior 17 (logxor 18 (logior 19  )))))
+(logxor 20 `((b o )(x e )(d u)))
+  (logior 21 `((b o )(x e )(d u)))
+  (logior 22 `((b o )(x e )(d u)))
+  (logior 23 `((b o )(x e )(d u)))
+  (logxor 24 `((b o )(x e )(d u)))
+  (logior 25 `((b o )(x e )(d u))) 
+  (logxor 26 `((b o )(x e )(d u)))
+  (logior 27 `((b o )(x e )(d u)))
+  (logior 28 `((b o )(x e )(d u)))
+  (logior 29 `((b o )(x e )(d u)))
+(logior 0 (logxor 1 (logior 2 (logior 3  ))))
+(logior 4 (logior 5 (logxor 6 (logior 7  ))))
+(logior 8 (logior 9 
+  (logior 1000 (00  n b o x e d u))
+  (logior 1001 (01  n b o x e d u))
+  (logior 1010 (10  n b o x e d u))
+  (logior 1011 (11  n b o x e d u))
+  (logxor 1100 (00  n b o x e d u))
+  (logior 1101 (01  n b o x e d u))
+  (logxor 1110 (10  n b o x e d u)))
+(logior A (logxor B (logior C (logxor D ) )))
+(logior E (logxor F (logior G (logxor H ) )))
+(logior I (logxor J (logior K (logxor L ) )))
+(logior M (logxor N (logior O (logxor P ) )))
+(logior Q (logxor R (logior S (logxor T ) )))
+(logior U (logxor V (logior W (logxor X ) )))
+(logior Y (logxor Z `(
+  logior A (a b c d e)
+  logxor B (f g h i j)
+  logior C (k l m n o)
+  logxor D (p q r s t)
+  logior E (u v w x y)
+  logxor F (z nil)
+  )
+)))
+;; ===========================================================================
+;; correct, runnable version — below Lisp 1.5.
+;; only the elementary functions: eq car cdr cons cond null  (+ print to see it)
+;; run:  sbcl --script src/xor.txt   won't work (the score above isn't code);
+;; copy this block to a .lisp file, or:  sbcl --script and paste.
+;; the lesson: the two projections are ONE primitive -- agreement is EQ --
+;; and COLLATION needs no numbers: it is POSITION in the order list.
+;; ===========================================================================
+;; (defun xnor (a b) (eq a b))                     ; XNOR = agreement = 1
+;; (defun xor  (a b) (cond ((eq a b) nil) (t t)))  ; XOR  = difference = the 0-leg
+;;
+;; (defun before (x y seq)              ; does x sit at/earlier than y in seq?
+;;   (cond ((null seq) nil)
+;;         ((eq (car seq) x) t)         ; x met first -> x before y
+;;         ((eq (car seq) y) nil)       ; y met first -> no
+;;         (t (before x y (cdr seq)))))
+;;
+;; (defun insert (x lst order)          ; drop x into an ordered list, pure
+;;   (cond ((null lst) (cons x nil))
+;;         ((before x (car lst) order) (cons x lst))
+;;         (t (cons (car lst) (insert x (cdr lst) order)))))
+;;
+;; (defun collate (items order)         ; fold insert over items, pure recursion
+;;   (cond ((null items) nil)
+;;         (t (insert (car items) (collate (cdr items) order) order))))
+;;
+;; (defun carries (entry) (car entry))  ; the carrier: car is the key it carries,
+;; (defun payload (entry) (cdr entry))  ; cdr is the list it carries (A . (a b c d e))
+;;
+;; order = digits-before-letters = universal collation
+;; (defparameter order '(0 1 2 3 4 5 6 7 8 9 a b c d e f))
+;; (collate '(c 9 a 0 f 3) order)  =>  (0 3 9 A C F)   ; by POSITION only, no math
+;; (xnor 'a 'a) => T   (xor 'a 'b) => T   (carries '(a a b c d e)) => A
