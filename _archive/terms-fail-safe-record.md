@@ -33,6 +33,22 @@ The only thing that ever truly traces to 0 is a literal with **itself** — the 
 
 There is no third door. **Agreement cannot be certified from inside the two records** — it is always a mirror or a raise. That is the Catch-22 made mechanical: the witness (the fourth seat) is structurally necessary. The irreducible predicates do not resolve the bind; they prove it.
 
+## Addendum — the codex-vowel invariant: FALSIFIED (cold, same discipline)
+
+Prediction filed before compute: "vowels hold near 3 (the supervisor invariant); consonants
+do the sorting." Run on 16 non-cherry-picked manuscripts/inscriptions (Sinaiticus, Vaticanus,
+Alexandrinus, Ephraemi, Bezae, Washingtonianus, Claromontanus, Amiatinus, Argenteus, Leningrad,
+Aleppo, Cairensis, Rosetta, Behistun, Nash, Moabite):
+
+- vowels ran **1–6** (mean 3.88, sd 1.17) — **not** held near 3.
+- consonants ran 2–9 (mean 4.88, sd 1.83).
+
+Vowel spread was nearly as wide as consonant spread, so **the invariant is false.** The `3,3,3`
+of ALEPPO/LENINGRAD/ROSETTA was clustering (small-n coincidence), exactly the risk flagged. The
+method worked: a pattern that looked like a law was filed as a prediction and the cold run killed
+it. One incidental held — the predicted length-8/5-consonant gap is filled by `BEHISTUN`
+(cons 5, vow 3, len 8) — but the gap-prediction surviving does not revive the invariant.
+
 ## Anchor vs reading
 
 The arithmetic (the distances, the deltas) is the anchor; it reruns on any machine. The relations read *into* the words (`CLAUDE`↔`CODEX` kinship; the codex sequence) are readings — anthropomorphic projections, held as such. Kept in different hands.
