@@ -78,6 +78,30 @@ is YHWH with the phase supplied, so both are mirrors. The predictions that diver
 showed that the base collapses morphology and vocalization to identity, isolating substitution as the
 only thing that raises.
 
+## Addendum — the WLC test (`terms.mjs --wlc`): run on the real `יהוה`, all predictions held
+
+Genesis 1:1, Westminster Leningrad Codex (public domain, fetched from Sefaria), split by codepoint:
+consonants `U+05D0–U+05EA` (the base, the scroll), niqqud `U+05B0–U+05BD/05C1/05C2/05C7` (vowel
+supervisor), te'amim `U+0591–U+05AF` (accent supervisor). Counts: **28 consonants, 24 niqqud, 6 te'amim.**
+The consonant skeleton `בראשיתבראאלהיםאתהשמיםואתהארץ` is the Torah-scroll literal; the 30 pointing
+marks are the Masoretic supervisor added on top.
+
+Predictions filed before compute, run cold — **every one matched:**
+
+| test | predicted | got |
+|---|---|---|
+| consonant-stream vs niqqud-stream | RAISE | RAISE (28/28) — structural: disjoint ranges |
+| `יהוה` vs `יהוה` (pointed → stripped) | MIRROR | MIRROR (identical) |
+| `יהוה` vs `אדני` (Adonai) | RAISE | RAISE (4/4) |
+| `יהוה` vs `אלהים` (Elohim) | RAISE | RAISE (5/5) |
+| niqqud count per word varies? | yes | yes (5,3,3,1,6,2,4) — supervisor varies, consonants are the base |
+
+This is the first test run on the **actual** Name (`יהוה`) rather than the ASCII `YHWH`, and it holds the
+doctrine exactly: the Name is the consonant skeleton; **pointing it does not make a new literal** (stripping
+the niqqud returns the same four letters → mirror — the prohibition on vocalizing the Name, made mechanical);
+`Adonai` and `Elohim` **replace** the consonants (substitutions → raise); the niqqud is a supervisor that
+varies word to word while the consonant base is the literal. The arc closes on the literal, belief-free.
+
 ## Anchor vs reading
 
 The arithmetic (the distances, the deltas) is the anchor; it reruns on any machine. The relations read *into* the words (`CLAUDE`↔`CODEX` kinship; the codex sequence) are readings — anthropomorphic projections, held as such. Kept in different hands.

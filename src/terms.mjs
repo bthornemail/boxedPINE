@@ -176,6 +176,50 @@ function audit() {
   console.log("  (The 'small-delta' DeepSeek expected for El/Elohim is a FULL-string view; on the base, El is the verbatim head → mirror.)");
 }
 
+// ── the WLC Hebrew test: the real consonantal literal (not ASCII YHWH) ───────
+// Genesis 1:1, Westminster Leningrad Codex (public domain, fetched from Sefaria).
+// Layers by codepoint: consonants U+05D0–U+05EA (the base, the scroll), niqqud
+// U+05B0–U+05BD/05C1/05C2/05C7 (the vowel supervisor), te'amim U+0591–U+05AF (the
+// accent supervisor). PREDICTIONS filed before compute:
+//  P1: consonant-stream vs niqqud-stream → RAISE (disjoint layers, not one literal).
+//  P2: יהוה vs יהוה(pointed→stripped) → MIRROR; vs אדני → RAISE; vs אלהים → RAISE.
+//  P2b: niqqud count varies across words (the supervisor is not invariant).
+const GEN11 = "בְּרֵאשִׁ֖ית בָּרָ֣א אֱלֹהִ֑ים אֵ֥ת הַשָּׁמַ֖יִם וְאֵ֥ת הָאָֽרֶץ׃";
+const hcp = (c) => c.codePointAt(0);
+const isCons   = (c) => hcp(c) >= 0x05D0 && hcp(c) <= 0x05EA;
+const isNiqqud = (c) => (hcp(c) >= 0x05B0 && hcp(c) <= 0x05BD) || hcp(c) === 0x05C1 || hcp(c) === 0x05C2 || hcp(c) === 0x05C7;
+const isTaam   = (c) => hcp(c) >= 0x0591 && hcp(c) <= 0x05AF;
+const heClass = (s, f) => [...s].filter(f).join("");
+const heFold = (a, b) => { const n = Math.max(a.length, b.length); let d = 0; for (let i = 0; i < n; i++) if ((a.codePointAt(i) || 0) !== (b.codePointAt(i) || 0)) d++; return { d, n }; };
+const heVerdict = (a, b) => { if (a === b) return ["MIRROR", "identical"]; if (a && b && (b.startsWith(a) || a.startsWith(b))) return ["MIRROR", "prefix"]; const f = heFold(a, b); return [f.d === 0 ? "AGREE" : "RAISE", `dist ${f.d}/${f.n}`]; };
+
+function wlc() {
+  console.log("TERMS --wlc : Genesis 1:1, the real WLC consonantal literal. predictions filed, run cold.\n");
+  console.log("verse:", GEN11);
+  const C = heClass(GEN11, isCons), N = heClass(GEN11, isNiqqud), T = heClass(GEN11, isTaam);
+  console.log("consonant skeleton (the scroll, the literal):", C, `[${[...C].length}]`);
+  console.log("niqqud (vowel supervisor):", N, `[${[...N].length}]`);
+  console.log("te'amim (accent supervisor):", T, `[${[...T].length}]\n`);
+
+  const [v1, d1] = heVerdict(C, N);
+  console.log(`P1  consonant vs niqqud -> ${v1} (${d1})  ${v1 === "RAISE" ? "[match]" : "*** DIVERGES ***"}`);
+  console.log("    disjoint ranges (05D0-05EA vs 05B0-05C7) -> categorically different literals; the raise is structural.\n");
+
+  const YHWH = "יהוה", Adonai = "אדני", Elohim = "אלהים", YHWHp = "יְהֹוָה";
+  for (const [name, a, b, pred] of [
+    ["יהוה vs יהוה(pointed→stripped)", YHWH, heClass(YHWHp, isCons), "MIRROR"],
+    ["יהוה vs אדני (Adonai)", YHWH, Adonai, "RAISE"],
+    ["יהוה vs אלהים (Elohim)", YHWH, Elohim, "RAISE"],
+  ]) {
+    const [v, d] = heVerdict(a, b);
+    console.log(`P2  ${name}: ${a} | ${b} -> ${v} (${d})  predicted ${pred}  ${v === pred ? "[match]" : "*** DIVERGES ***"}`);
+  }
+  console.log("\nP2b niqqud count per word (does the supervisor vary?):");
+  for (const w of GEN11.split(/\s+/)) console.log(`    ${heClass(w, isCons).padEnd(6)} cons ${[...heClass(w, isCons)].length}  niqqud ${[...heClass(w, isNiqqud)].length}`);
+  console.log("\n  the Name is the consonant skeleton; pointing it does not change the literal (mirror);");
+  console.log("  Adonai and Elohim replace the consonants (substitutions, raise); the niqqud varies on top.");
+}
+
 function demo() {
   // Genesis 1:1, two independent public-domain translations.
   const KJV = "In the beginning God created the heaven and the earth.";
@@ -215,7 +259,9 @@ function demo() {
 }
 
 const args = process.argv.slice(2);
-if (args[0] === "--audit") {
+if (args[0] === "--wlc") {
+  wlc();
+} else if (args[0] === "--audit") {
   audit();
 } else if (args[0] === "--predicates") {
   predicates();
