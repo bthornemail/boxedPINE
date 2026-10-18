@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Gate</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,400;6..72,0,600;6..72,1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--paper:#f6f6f2;--ink:#1d1f24;--muted:#5d636e;--rule:#d9dad3;--sel:#2b5fa8;
+  --void:#070608;--gold:#e8c56a;--golddim:#8a7638;
+  --display:"Newsreader",Georgia,serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#15171b;--ink:#e8e8e3;--muted:#9aa0aa;--rule:#2c3038;--sel:#7aa7e8;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#15171b;--ink:#e8e8e3;--muted:#9aa0aa;--rule:#2c3038;--sel:#7aa7e8;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.5 var(--mono)}
+.wrap{max-width:1080px;margin:0 auto;padding:16px 16px 40px;display:grid;gap:14px}
+h1{font:600 1.9rem/1.1 var(--display);margin:0}
+.label{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.space-nav{display:flex;gap:6px;flex-wrap:wrap}
+.space-nav a{color:inherit;text-decoration:none;border:1px solid var(--rule);border-radius:4px;padding:5px 9px}
+.space-nav a:hover,.space-nav a:focus-visible{border-color:var(--sel);color:var(--sel)}
+button{font:inherit;color:inherit;background:none;border:1px solid var(--rule);border-radius:4px;padding:5px 10px;cursor:pointer}
+button:focus-visible{outline:2px solid var(--sel);outline-offset:2px}
+button[data-on]{border-color:var(--sel);color:var(--sel)}
+/* the void + the gate */
+.stage{position:relative;height:min(68vh,620px);background:radial-gradient(130% 90% at 50% 100%,#1a1726 0%,var(--void) 60%);
+  border:1px solid var(--rule);border-radius:8px;overflow:hidden;cursor:pointer;touch-action:none}
+.narrators{position:absolute;inset:0;z-index:4;pointer-events:none;display:flex;justify-content:space-between;padding:10px 12px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--golddim)}
+.gatehead{position:absolute;top:10px;left:0;right:0;z-index:4;pointer-events:none;text-align:center;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--golddim)}
+/* the crawl */
+.crawl-mask{position:absolute;inset:0;perspective:380px;perspective-origin:50% 44%;overflow:hidden;
+  mask-image:linear-gradient(to top,transparent 2%,#000 26%,#000 72%,transparent 96%);-webkit-mask-image:linear-gradient(to top,transparent 2%,#000 26%,#000 72%,transparent 96%)}
+.crawl{position:absolute;left:50%;top:92%;width:min(80%,640px);transform-origin:50% 0;transform:translateX(-50%) rotateX(32deg);
+  color:var(--gold);text-align:justify;will-change:transform}
+.crawl .ln{margin:0 0 1.1em;font:400 clamp(14px,2.2vw,20px)/1.5 var(--display);text-shadow:0 0 18px rgba(232,197,106,.18)}
+.crawl .ev{display:block;font:600 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--golddim);margin-bottom:.35em}
+.crawl .ln.big{font-size:clamp(20px,4vw,34px);font-weight:600;text-align:center}
+/* entered: the scene */
+.scene{position:absolute;inset:0;z-index:3;display:none;background:rgba(7,6,8,.72)}
+.scene.on{display:block}
+.scene canvas{position:absolute;inset:0;width:100%;height:100%}
+.node-card{position:absolute;left:12px;right:12px;bottom:12px;z-index:5;background:rgba(10,9,12,.82);border:1px solid var(--golddim);border-radius:6px;padding:10px 12px;color:#efe7d4}
+.node-card .ev{font:600 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.node-card p{margin:.4em 0 0;font:400 15px/1.45 var(--display)}
+.node-card .pos{margin-top:.5em;font-size:10.5px;color:#9b937f}
+.hint{position:absolute;left:0;right:0;bottom:-0;z-index:6;text-align:center;font-size:10px;letter-spacing:.08em;color:var(--golddim);padding-bottom:4px;pointer-events:none}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.bar .grow{flex:1}
+#status{color:var(--muted);font-size:11px}
+.leftworld{position:absolute;inset:0;z-index:7;display:none;background:radial-gradient(120% 90% at 50% 50%,#0d1016,#060608)}
+.leftworld.on{display:block;cursor:crosshair}
+.leftworld .note{position:absolute;top:12px;left:0;right:0;text-align:center;color:#6f7786;font-size:11px;letter-spacing:.06em;pointer-events:none}
+.err{color:#c8553d}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar">
+    <div class="grow"><div class="label">Light Garden · narrative-series</div><h1>The Gate</h1></div>
+    <nav class="space-nav">
+      <a href="./index.html">the Commons</a>
+      <a href="./map.html">the Map</a>
+      <a href="./metaverse.html">the Metaverse</a>
+    </nav>
+  </div>
+  <p class="label" id="blurb">Solomon, Solon, and ʿAsabiyyah at the gate — narrated by Enoch the Scribe and Metatron the Observer. The reading plays on its own; touch the scene to enter; stop, and it carries on without you.</p>
+
+  <div class="stage" id="stage" tabindex="0" aria-label="the gate scene">
+    <div class="gatehead">Solomon · Solon · ʿAsabiyyah — at the gate</div>
+    <div class="narrators"><span>Enoch · the Scribe records</span><span>Metatron · the Observer sees</span></div>
+    <div class="crawl-mask"><div class="crawl" id="crawl"></div></div>
+    <div class="scene" id="scene"><canvas id="cv"></canvas>
+      <div class="node-card" id="card"><span class="ev"></span><p></p><div class="pos"></div></div>
+    </div>
+    <div class="leftworld" id="leftworld"><div class="note">you left the gate. this universe is yours — click to place. the canon carries on without you.</div></div>
+    <div class="hint" id="hint"></div>
+  </div>
+
+  <div class="bar">
+    <button id="stay" data-on>Stay in the canon</button>
+    <button id="leave">Leave the gate — make your own</button>
+    <span class="grow"></span>
+    <span id="status">loading the canon…</span>
+  </div>
+</div>
+
+<script type="module">
+const $=s=>document.querySelector(s);
+const stage=$('#stage'), crawl=$('#crawl'), scene=$('#scene'), leftworld=$('#leftworld'),
+      card=$('#card'), hint=$('#hint'), status=$('#status'), cv=$('#cv'), ctx=cv.getContext('2d');
+
+// ── load the canon (the Scribe's trace + the Observer's map) ──────────────────
+let nodes=[], crawlNodes=[], scene3d=[], byId=new Map();
+async function load(){
+  try{
+    const [tl,sp]=await Promise.all([
+      fetch('/narrative/timeline.ndjson').then(r=>{if(!r.ok)throw 0;return r.text()}),
+      fetch('/narrative/scene.patch.json').then(r=>{if(!r.ok)throw 0;return r.json()}),
+    ]);
+    nodes=tl.trim().split('\n').map(l=>JSON.parse(l));
+    for(const e of (sp.entities||[])) byId.set(e.id,e);
+    scene3d=(sp.entities||[]).map(e=>({id:e.id,ev:e.meta?.event||'node',label:e.label||'',p:e.position||{x:.5,y:.5,z:.5}}));
+    crawlNodes=nodes.filter(n=>n.text && n.text.trim().length);
+    buildCrawl();
+    status.textContent=`${nodes.length} nodes · ${crawlNodes.length} spoken · trace ${nodes[0]?.run_id?.slice(7,15)||''}`;
+    requestAnimationFrame(tick);
+  }catch(e){ status.innerHTML='<span class="err">could not load /narrative/ — run <code>npm run dev</code> from the repo root.</span>'; }
+}
+
+function buildCrawl(){
+  const frag=document.createDocumentFragment();
+  crawlNodes.forEach((n,i)=>{
+    const d=document.createElement('p'); d.className='ln'+(i===0?' big':'');
+    if(i!==0){const ev=document.createElement('span');ev.className='ev';ev.textContent=n.event||'';d.appendChild(ev);}
+    d.appendChild(document.createTextNode(n.text));
+    d.dataset.i=i; frag.appendChild(d);
+  });
+  crawl.appendChild(frag);
+}
+
+// ── mode: crawling | entered | left ──────────────────────────────────────────
+let mode='crawling', scroll=0, speed=18 /*px/s*/, last=0, idleAt=0, current=0;
+const IDLE_MS=6000;
+
+function tick(t){
+  const dt=last?Math.min(0.05,(t-last)/1000):0; last=t;
+  if(mode==='crawling'){
+    scroll+=speed*dt;
+    const h=crawl.scrollHeight, limit=h+stage.clientHeight*0.9;
+    if(scroll>limit) scroll=0;                      // the movie loops — it carries on
+    crawl.style.transform=`translateX(-50%) rotateX(32deg) translateY(${-scroll}px)`;
+    current=nearestNode();
+  } else if(mode==='entered'){
+    drawScene(t/1000);
+    const left=Math.max(0,IDLE_MS-(performance.now()-idleAt));
+    hint.textContent=left>0?`the reading resumes in ${(left/1000).toFixed(0)}s — move to stay`:'';
+    if(left<=0) resume();
+  }
+  requestAnimationFrame(tick);
+}
+
+// which spoken node is nearest the focal line (~44% up the stage)
+function nearestNode(){
+  const focus=stage.clientHeight*0.44, lns=crawl.children; let best=0,bd=1e9;
+  for(const ln of lns){
+    const top=ln.offsetTop - scroll + stage.clientHeight*0.92; // matches .crawl top:92%
+    const d=Math.abs(top-focus);
+    if(d<bd){bd=d;best=+ln.dataset.i;}
+  }
+  return best;
+}
+
+// ── entering the scene: the Observer's 3D map, current node lit ───────────────
+function sizeCanvas(){const r=stage.getBoundingClientRect(),d=devicePixelRatio||1;cv.width=r.width*d;cv.height=r.height*d;ctx.setTransform(d,0,0,d,0,0);}
+function drawScene(t){
+  const w=stage.clientWidth,h=stage.clientHeight,cx=w/2,cy=h/2,S=Math.min(w,h)*0.62,rot=t*0.25;
+  ctx.clearRect(0,0,w,h);
+  const node=crawlNodes[current]; const curId=node?.node_id;
+  const proj=p=>{const x=p.x-.5,y=p.y-.5,z=p.z-.5;const c=Math.cos(rot),s=Math.sin(rot);
+    const X=x*c+z*s, Z=-x*s+z*c, f=1/(1.7-Z); return {sx:cx+X*S*f, sy:cy+y*S*f, f};};
+  // faint cloud (all nodes = the whole trace in space)
+  for(const e of scene3d){const q=proj(e.p);ctx.beginPath();ctx.arc(q.sx,q.sy,1.2*q.f+0.4,0,7);ctx.fillStyle='rgba(138,118,56,.5)';ctx.fill();}
+  // the current node, lit
+  const cur=byId.get(curId);
+  if(cur){const q=proj(cur.position);
+    ctx.beginPath();ctx.arc(q.sx,q.sy,4.5*q.f+2,0,7);ctx.fillStyle='#e8c56a';ctx.shadowColor='#e8c56a';ctx.shadowBlur=18;ctx.fill();ctx.shadowBlur=0;}
+  // card
+  card.querySelector('.ev').textContent=node?.event||'';
+  card.querySelector('p').textContent=node?.text||'';
+  const p=cur?.position; card.querySelector('.pos').textContent=p?`place (u ${p.x.toFixed(3)}, v ${p.y.toFixed(3)}, layer ${p.z.toFixed(3)}) · seq ${node?.seq}`:'';
+}
+
+function enter(){ if(mode==='left')return; if(mode!=='entered'){mode='entered';sizeCanvas();scene.classList.add('on');} idleAt=performance.now(); }
+function resume(){ mode='crawling'; scene.classList.remove('on'); hint.textContent=''; }
+
+// interaction: touch the scene to enter; any motion while in resets the idle clock
+for(const ev of ['pointerdown','keydown','wheel']) stage.addEventListener(ev,enter,{passive:true});
+stage.addEventListener('pointermove',()=>{if(mode==='entered')idleAt=performance.now();},{passive:true});
+window.addEventListener('resize',()=>{if(mode==='entered')sizeCanvas();});
+
+// ── stay / leave ─────────────────────────────────────────────────────────────
+const stayBtn=$('#stay'), leaveBtn=$('#leave'); const myWorld=[];
+stayBtn.onclick=()=>{leftworld.classList.remove('on');mode='crawling';scene.classList.remove('on');leftworld.onclick=null;stayBtn.dataset.on='';leaveBtn.removeAttribute('data-on');};
+leaveBtn.onclick=()=>{mode='left';scene.classList.remove('on');leftworld.classList.add('on');leaveBtn.dataset.on='';stayBtn.removeAttribute('data-on');
+  const lw=leftworld; lw.onclick=e=>{const r=lw.getBoundingClientRect();const d=document.createElement('div');
+    d.style.cssText=`position:absolute;left:${e.clientX-r.left}px;top:${e.clientY-r.top}px;width:5px;height:5px;border-radius:50%;background:#7aa7e8;box-shadow:0 0 10px #7aa7e8;transform:translate(-50%,-50%)`;
+    lw.appendChild(d); myWorld.push([e.clientX-r.left,e.clientY-r.top]); status.textContent=`your universe: ${myWorld.length} placed · the canon carries on (seq ${crawlNodes[current]?.seq||0})`;};
+};
+load();
+</script>
+</body>
+</html>
