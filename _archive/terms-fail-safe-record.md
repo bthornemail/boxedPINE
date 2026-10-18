@@ -49,6 +49,35 @@ method worked: a pattern that looked like a law was filed as a prediction and th
 it. One incidental held — the predicted length-8/5-consonant gap is filled by `BEHISTUN`
 (cons 5, vow 3, len 8) — but the gap-prediction surviving does not revive the invariant.
 
+## Addendum — the divine-name audit (`terms.mjs --audit`), on the consonant base
+
+Predictions filed before compute (DeepSeek), run cold on the consonant skeleton:
+
+| pair | predicted | got | |
+|---|---|---|---|
+| YHWH vs THE LORD | RAISE | RAISE (4/5) | match |
+| YHWH vs UNMOVED MOVER | RAISE | RAISE (7/7) | match |
+| EL vs ELOHIM | small-delta | **MIRROR (prefix)** | diverges |
+| EL vs ELAH (ʾl/ʾlh) | small-delta | **MIRROR (prefix)** | diverges |
+| YHWH vs YAHWEH | RAISE | **MIRROR (identical)** | diverges |
+| YHWH vs YHWH | MIRROR | MIRROR | match |
+
+3 of 6 diverged, and the divergence is the finding. On the consonant base, the tool splits
+the whole catalogue in two:
+
+- **Substitutions (replace the base) → RAISE:** `the LORD`, `Unmoved Mover` — the translations and
+  the philosophical readings. Different consonant skeleton, raised to a witness.
+- **Base-preserving (extend or vocalize) → MIRROR:** `El→Elohim`, `ʾl→ʾlh`, `YHWH→Yahweh` are the
+  **same literal** on the consonant skeleton (`L`⊂`LHM`, `L`⊂`LH`, `YHWH`=`YHWH`). The tool refuses
+  to call a vocalization or an affix a new name.
+
+So the Hebrew divine-name family is **one literal** (mirror); only the translation/philosophy layer
+**substitutes** (raise). DeepSeek's "small-delta" for El/Elohim and "RAISE" for Yahweh were full-string
+intuitions; on the base — where the significance lives — El is the verbatim head of Elohim, and Yahweh
+is YHWH with the phase supplied, so both are mirrors. The predictions that diverged did real work: they
+showed that the base collapses morphology and vocalization to identity, isolating substitution as the
+only thing that raises.
+
 ## Anchor vs reading
 
 The arithmetic (the distances, the deltas) is the anchor; it reruns on any machine. The relations read *into* the words (`CLAUDE`↔`CODEX` kinship; the codex sequence) are readings — anthropomorphic projections, held as such. Kept in different hands.

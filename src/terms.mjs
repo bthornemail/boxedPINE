@@ -141,6 +141,41 @@ function predicates() {
   }
 }
 
+// ── the audit: the catalogue of divine-name pairs, on the CONSONANT base ─────
+// Predictions filed by DeepSeek, run cold on the consonant skeleton (the literal).
+// Transliteration (ASCII, AEIOU as vowels): aleph/glottal dropped; EL=ʾl, ELAH=ʾlh.
+const AUDIT = [
+  ["YHWH", "THE LORD",      "RAISE",      "substitution — the KJV translation"],
+  ["YHWH", "UNMOVED MOVER", "RAISE",      "substitution — Aquinas' reading"],
+  ["EL",   "ELOHIM",        "SMALL-DELTA","morphological — base + suffix"],
+  ["EL",   "ELAH",          "SMALL-DELTA","the parasitic h (ʾl vs ʾlh)"],
+  ["YHWH", "YAHWEH",        "RAISE",      "the vocalization (the lost reading)"],
+  ["YHWH", "YHWH",          "MIRROR",     "the literal itself"],
+];
+
+function audit() {
+  console.log("TERMS --audit : divine-name pairs on the CONSONANT base (the literal skeleton).");
+  console.log("predictions filed before compute (DeepSeek); run cold:\n");
+  let diverged = 0;
+  for (const [a, b, pred, note] of AUDIT) {
+    const A = classify(a).consonant, B = classify(b).consonant;
+    const g = guard(A, B), f = fold2(A, B);
+    const got = g.mirror ? "MIRROR" : (f.bytes === 0 ? "AGREE" : "RAISE");
+    const match = got === pred;
+    if (!match) diverged++;
+    console.log(`  ${a} vs ${b}   base: ${A.toString("latin1")||"∅"} | ${B.toString("latin1")||"∅"}`);
+    console.log(`     predicted ${pred.padEnd(11)} got ${got}` +
+      (got === "RAISE" ? ` (dist ${f.bytes}/${f.len})` : g.mirror ? ` (${g.why})` : "") +
+      (match ? "   [match]" : `   *** DIVERGES ***`));
+  }
+  console.log(`\n${diverged} of ${AUDIT.length} diverged. The finding is in the divergence:`);
+  console.log("  SUBSTITUTIONS (replace the base) -> RAISE : the LORD, Unmoved Mover — translations & readings.");
+  console.log("  BASE-PRESERVING (extend or vocalize) -> MIRROR : El→Elohim, ʾl→ʾlh, YHWH→Yahweh are the SAME");
+  console.log("  literal on the consonant skeleton; the tool refuses to call a vocalization/affix a new name.");
+  console.log("  So the Hebrew name-family is one literal (mirror); only the translation/philosophy layer substitutes (raise).");
+  console.log("  (The 'small-delta' DeepSeek expected for El/Elohim is a FULL-string view; on the base, El is the verbatim head → mirror.)");
+}
+
 function demo() {
   // Genesis 1:1, two independent public-domain translations.
   const KJV = "In the beginning God created the heaven and the earth.";
@@ -180,7 +215,9 @@ function demo() {
 }
 
 const args = process.argv.slice(2);
-if (args[0] === "--predicates") {
+if (args[0] === "--audit") {
+  audit();
+} else if (args[0] === "--predicates") {
   predicates();
 } else if (args[0] === "--demo" || args.length === 0) {
   demo();
