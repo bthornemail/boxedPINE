@@ -1,0 +1,1076 @@
+{"s":"migration-guide-metabrowser-adapter-to-canvasl-browser","p":"enables","o":"migration-implementation","kind":"link","file":"omi-files/meta-log-db/docs/03-Guides/MIGRATION_GUIDE.md","resolved":false}
+{"s":"migration-guide-metabrowser-adapter-to-canvasl-browser","p":"enables","o":"api-upgrade","kind":"link","file":"omi-files/meta-log-db/docs/03-Guides/MIGRATION_GUIDE.md","resolved":false}
+{"s":"migration-guide-metabrowser-adapter-to-canvasl-browser","p":"related","o":"canvasl-metaverse-browser-api","kind":"link","file":"omi-files/meta-log-db/docs/03-Guides/MIGRATION_GUIDE.md","resolved":true}
+{"s":"migration-guide-metabrowser-adapter-to-canvasl-browser","p":"related","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/docs/03-Guides/MIGRATION_GUIDE.md","resolved":true}
+{"s":"migration-guide-metabrowser-adapter-to-canvasl-browser","p":"prerequisites","o":"canvasl-metaverse-browser-api","kind":"link","file":"omi-files/meta-log-db/docs/03-Guides/MIGRATION_GUIDE.md","resolved":true}
+{"s":"migration-guide-metabrowser-adapter-to-canvasl-browser","p":"type","o":"migration-guide","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/MIGRATION_GUIDE.md"}
+{"s":"migration-guide-metabrowser-adapter-to-canvasl-browser","p":"level","o":"practical","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/MIGRATION_GUIDE.md"}
+{"s":"migration-guide-metabrowser-adapter-to-canvasl-browser","p":"tags","o":"migration","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/MIGRATION_GUIDE.md"}
+{"s":"migration-guide-metabrowser-adapter-to-canvasl-browser","p":"tags","o":"guide","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/MIGRATION_GUIDE.md"}
+{"s":"migration-guide-metabrowser-adapter-to-canvasl-browser","p":"tags","o":"breaking-changes","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/MIGRATION_GUIDE.md"}
+{"s":"migration-guide-metabrowser-adapter-to-canvasl-browser","p":"tags","o":"api-migration","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/MIGRATION_GUIDE.md"}
+{"s":"migration-guide-metabrowser-adapter-to-canvasl-browser","p":"keywords","o":"migration-guide","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/MIGRATION_GUIDE.md"}
+{"s":"migration-guide-metabrowser-adapter-to-canvasl-browser","p":"keywords","o":"metabrowser-adapter","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/MIGRATION_GUIDE.md"}
+{"s":"migration-guide-metabrowser-adapter-to-canvasl-browser","p":"keywords","o":"canvasl-browser-migration","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/MIGRATION_GUIDE.md"}
+{"s":"migration-guide-metabrowser-adapter-to-canvasl-browser","p":"keywords","o":"breaking-changes","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/MIGRATION_GUIDE.md"}
+{"s":"migration-guide-metabrowser-adapter-to-canvasl-browser","p":"keywords","o":"api-migration","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/MIGRATION_GUIDE.md"}
+{"s":"canvasl-metaverse-browser-api","p":"enables","o":"canvasl-browser-implementation","kind":"link","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md","resolved":false}
+{"s":"canvasl-metaverse-browser-api","p":"enables","o":"browser-integration","kind":"link","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md","resolved":false}
+{"s":"canvasl-metaverse-browser-api","p":"related","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md","resolved":true}
+{"s":"canvasl-metaverse-browser-api","p":"related","o":"migration-guide","kind":"link","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md","resolved":false}
+{"s":"canvasl-metaverse-browser-api","p":"related","o":"examples","kind":"link","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md","resolved":false}
+{"s":"canvasl-metaverse-browser-api","p":"prerequisites","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md","resolved":true}
+{"s":"canvasl-metaverse-browser-api","p":"type","o":"api-reference","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md"}
+{"s":"canvasl-metaverse-browser-api","p":"level","o":"foundational","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md"}
+{"s":"canvasl-metaverse-browser-api","p":"tags","o":"api-reference","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md"}
+{"s":"canvasl-metaverse-browser-api","p":"tags","o":"canvasl-browser","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md"}
+{"s":"canvasl-metaverse-browser-api","p":"tags","o":"browser-api","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md"}
+{"s":"canvasl-metaverse-browser-api","p":"tags","o":"documentation","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md"}
+{"s":"canvasl-metaverse-browser-api","p":"keywords","o":"canvasl-metaverse-browser","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md"}
+{"s":"canvasl-metaverse-browser-api","p":"keywords","o":"api-reference","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md"}
+{"s":"canvasl-metaverse-browser-api","p":"keywords","o":"browser-api","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md"}
+{"s":"canvasl-metaverse-browser-api","p":"keywords","o":"canvasl-objects","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md"}
+{"s":"canvasl-metaverse-browser-api","p":"keywords","o":"query-api","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md"}
+{"s":"canvasl-metaverse-browser-api","p":"keywords","o":"r5rs-integration","kind":"attr","file":"omi-files/meta-log-db/docs/03-Guides/CANVASL_METAVERSE_BROWSER_API.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"enables","o":"meta-log-db-implementation","kind":"link","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md","resolved":false}
+{"s":"meta-log-db-rfc2119-specification","p":"enables","o":"meta-log-db-integration","kind":"link","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md","resolved":false}
+{"s":"meta-log-db-rfc2119-specification","p":"related","o":"canvasl-metaverse-browser-api","kind":"link","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md","resolved":true}
+{"s":"meta-log-db-rfc2119-specification","p":"related","o":"migration-guide","kind":"link","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md","resolved":false}
+{"s":"meta-log-db-rfc2119-specification","p":"related","o":"examples","kind":"link","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md","resolved":false}
+{"s":"meta-log-db-rfc2119-specification","p":"type","o":"specification","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"level","o":"foundational","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"tags","o":"meta-log-db","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"tags","o":"rfc2119","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"tags","o":"specification","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"tags","o":"api","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"tags","o":"prolog","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"tags","o":"datalog","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"tags","o":"r5rs","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"tags","o":"sparql","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"tags","o":"shacl","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"keywords","o":"meta-log-db","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"keywords","o":"package-specification","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"keywords","o":"api-contract","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"keywords","o":"prolog-engine","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"keywords","o":"datalog-engine","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"keywords","o":"r5rs-integration","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"keywords","o":"sparql-support","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"keywords","o":"shacl-validation","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"keywords","o":"browser-api","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-rfc2119-specification","p":"keywords","o":"node-api","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/META-LOG-DB-RFC2119.md"}
+{"s":"meta-log-db-glossary","p":"enables","o":"meta-log-db-understanding","kind":"link","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md","resolved":false}
+{"s":"meta-log-db-glossary","p":"enables","o":"api-documentation","kind":"link","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md","resolved":false}
+{"s":"meta-log-db-glossary","p":"related","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md","resolved":true}
+{"s":"meta-log-db-glossary","p":"related","o":"canvasl-metaverse-browser-api","kind":"link","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md","resolved":true}
+{"s":"meta-log-db-glossary","p":"type","o":"documentation","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"meta-log-db-glossary","p":"level","o":"foundational","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"meta-log-db-glossary","p":"tags","o":"glossary","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"meta-log-db-glossary","p":"tags","o":"terminology","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"meta-log-db-glossary","p":"tags","o":"definitions","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"meta-log-db-glossary","p":"tags","o":"meta-log-db","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"meta-log-db-glossary","p":"keywords","o":"glossary","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"meta-log-db-glossary","p":"keywords","o":"terms","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"meta-log-db-glossary","p":"keywords","o":"definitions","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"meta-log-db-glossary","p":"keywords","o":"concepts","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"meta-log-db-glossary","p":"keywords","o":"meta-log","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"meta-log-db-glossary","p":"keywords","o":"prolog","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"meta-log-db-glossary","p":"keywords","o":"datalog","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"meta-log-db-glossary","p":"keywords","o":"r5rs","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"meta-log-db-glossary","p":"keywords","o":"canvasl","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"meta-log-db-glossary","p":"keywords","o":"sparql","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"meta-log-db-glossary","p":"keywords","o":"shacl","kind":"attr","file":"omi-files/meta-log-db/docs/01-Specification/GLOSSARY.md"}
+{"s":"sparql-examples","p":"enables","o":"sparql-implementation","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/SPARQL_EXAMPLES.md","resolved":false}
+{"s":"sparql-examples","p":"enables","o":"query-patterns","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/SPARQL_EXAMPLES.md","resolved":false}
+{"s":"sparql-examples","p":"related","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/SPARQL_EXAMPLES.md","resolved":true}
+{"s":"sparql-examples","p":"related","o":"canvasl-metaverse-browser-api","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/SPARQL_EXAMPLES.md","resolved":true}
+{"s":"sparql-examples","p":"prerequisites","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/SPARQL_EXAMPLES.md","resolved":true}
+{"s":"sparql-examples","p":"type","o":"examples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SPARQL_EXAMPLES.md"}
+{"s":"sparql-examples","p":"level","o":"practical","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SPARQL_EXAMPLES.md"}
+{"s":"sparql-examples","p":"tags","o":"sparql","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SPARQL_EXAMPLES.md"}
+{"s":"sparql-examples","p":"tags","o":"rdf","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SPARQL_EXAMPLES.md"}
+{"s":"sparql-examples","p":"tags","o":"query-examples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SPARQL_EXAMPLES.md"}
+{"s":"sparql-examples","p":"tags","o":"examples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SPARQL_EXAMPLES.md"}
+{"s":"sparql-examples","p":"keywords","o":"sparql-examples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SPARQL_EXAMPLES.md"}
+{"s":"sparql-examples","p":"keywords","o":"sparql-queries","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SPARQL_EXAMPLES.md"}
+{"s":"sparql-examples","p":"keywords","o":"rdf-queries","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SPARQL_EXAMPLES.md"}
+{"s":"sparql-examples","p":"keywords","o":"triple-store","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SPARQL_EXAMPLES.md"}
+{"s":"shacl-examples","p":"enables","o":"shacl-implementation","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/SHACL_EXAMPLES.md","resolved":false}
+{"s":"shacl-examples","p":"enables","o":"validation-patterns","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/SHACL_EXAMPLES.md","resolved":false}
+{"s":"shacl-examples","p":"related","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/SHACL_EXAMPLES.md","resolved":true}
+{"s":"shacl-examples","p":"related","o":"canvasl-metaverse-browser-api","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/SHACL_EXAMPLES.md","resolved":true}
+{"s":"shacl-examples","p":"prerequisites","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/SHACL_EXAMPLES.md","resolved":true}
+{"s":"shacl-examples","p":"type","o":"examples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SHACL_EXAMPLES.md"}
+{"s":"shacl-examples","p":"level","o":"practical","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SHACL_EXAMPLES.md"}
+{"s":"shacl-examples","p":"tags","o":"shacl","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SHACL_EXAMPLES.md"}
+{"s":"shacl-examples","p":"tags","o":"validation","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SHACL_EXAMPLES.md"}
+{"s":"shacl-examples","p":"tags","o":"examples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SHACL_EXAMPLES.md"}
+{"s":"shacl-examples","p":"tags","o":"rdf","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SHACL_EXAMPLES.md"}
+{"s":"shacl-examples","p":"tags","o":"shape-validation","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SHACL_EXAMPLES.md"}
+{"s":"shacl-examples","p":"keywords","o":"shacl-examples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SHACL_EXAMPLES.md"}
+{"s":"shacl-examples","p":"keywords","o":"shacl-validation","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SHACL_EXAMPLES.md"}
+{"s":"shacl-examples","p":"keywords","o":"rdf-validation","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SHACL_EXAMPLES.md"}
+{"s":"shacl-examples","p":"keywords","o":"shape-constraints","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/SHACL_EXAMPLES.md"}
+{"s":"r5rs-examples","p":"enables","o":"r5rs-implementation","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/R5RS_EXAMPLES.md","resolved":false}
+{"s":"r5rs-examples","p":"enables","o":"function-registry-usage","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/R5RS_EXAMPLES.md","resolved":false}
+{"s":"r5rs-examples","p":"related","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/R5RS_EXAMPLES.md","resolved":true}
+{"s":"r5rs-examples","p":"related","o":"canvasl-metaverse-browser-api","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/R5RS_EXAMPLES.md","resolved":true}
+{"s":"r5rs-examples","p":"prerequisites","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/R5RS_EXAMPLES.md","resolved":true}
+{"s":"r5rs-examples","p":"type","o":"examples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/R5RS_EXAMPLES.md"}
+{"s":"r5rs-examples","p":"level","o":"practical","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/R5RS_EXAMPLES.md"}
+{"s":"r5rs-examples","p":"tags","o":"r5rs","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/R5RS_EXAMPLES.md"}
+{"s":"r5rs-examples","p":"tags","o":"scheme","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/R5RS_EXAMPLES.md"}
+{"s":"r5rs-examples","p":"tags","o":"examples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/R5RS_EXAMPLES.md"}
+{"s":"r5rs-examples","p":"tags","o":"parser","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/R5RS_EXAMPLES.md"}
+{"s":"r5rs-examples","p":"tags","o":"function-execution","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/R5RS_EXAMPLES.md"}
+{"s":"r5rs-examples","p":"keywords","o":"r5rs-examples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/R5RS_EXAMPLES.md"}
+{"s":"r5rs-examples","p":"keywords","o":"scheme-parser","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/R5RS_EXAMPLES.md"}
+{"s":"r5rs-examples","p":"keywords","o":"function-execution","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/R5RS_EXAMPLES.md"}
+{"s":"r5rs-examples","p":"keywords","o":"r5rs-integration","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/R5RS_EXAMPLES.md"}
+{"s":"canvasl-metaverse-browser-examples","p":"enables","o":"implementation-examples","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md","resolved":false}
+{"s":"canvasl-metaverse-browser-examples","p":"enables","o":"integration-patterns","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md","resolved":false}
+{"s":"canvasl-metaverse-browser-examples","p":"related","o":"canvasl-metaverse-browser-api","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md","resolved":true}
+{"s":"canvasl-metaverse-browser-examples","p":"related","o":"migration-guide","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md","resolved":false}
+{"s":"canvasl-metaverse-browser-examples","p":"prerequisites","o":"canvasl-metaverse-browser-api","kind":"link","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md","resolved":true}
+{"s":"canvasl-metaverse-browser-examples","p":"type","o":"examples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md"}
+{"s":"canvasl-metaverse-browser-examples","p":"level","o":"practical","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md"}
+{"s":"canvasl-metaverse-browser-examples","p":"tags","o":"examples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md"}
+{"s":"canvasl-metaverse-browser-examples","p":"tags","o":"usage-examples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md"}
+{"s":"canvasl-metaverse-browser-examples","p":"tags","o":"real-world","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md"}
+{"s":"canvasl-metaverse-browser-examples","p":"tags","o":"code-samples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md"}
+{"s":"canvasl-metaverse-browser-examples","p":"keywords","o":"canvasl-browser-examples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md"}
+{"s":"canvasl-metaverse-browser-examples","p":"keywords","o":"usage-examples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md"}
+{"s":"canvasl-metaverse-browser-examples","p":"keywords","o":"code-samples","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md"}
+{"s":"canvasl-metaverse-browser-examples","p":"keywords","o":"react-integration","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md"}
+{"s":"canvasl-metaverse-browser-examples","p":"keywords","o":"error-handling","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md"}
+{"s":"canvasl-metaverse-browser-examples","p":"keywords","o":"performance","kind":"attr","file":"omi-files/meta-log-db/docs/04-Examples/EXAMPLES.md"}
+{"s":"phase-3-next-steps-complete","p":"related","o":"phase-3-complete","kind":"link","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_NEXT_STEPS_COMPLETE.md","resolved":true}
+{"s":"phase-3-next-steps-complete","p":"prerequisites","o":"phase-3-complete","kind":"link","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_NEXT_STEPS_COMPLETE.md","resolved":true}
+{"s":"phase-3-next-steps-complete","p":"type","o":"progress-tracking","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_NEXT_STEPS_COMPLETE.md"}
+{"s":"phase-3-next-steps-complete","p":"level","o":"practical","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_NEXT_STEPS_COMPLETE.md"}
+{"s":"phase-3-next-steps-complete","p":"tags","o":"phase-3","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_NEXT_STEPS_COMPLETE.md"}
+{"s":"phase-3-next-steps-complete","p":"tags","o":"next-steps","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_NEXT_STEPS_COMPLETE.md"}
+{"s":"phase-3-next-steps-complete","p":"tags","o":"complete","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_NEXT_STEPS_COMPLETE.md"}
+{"s":"phase-3-next-steps-complete","p":"tags","o":"testing","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_NEXT_STEPS_COMPLETE.md"}
+{"s":"phase-3-next-steps-complete","p":"tags","o":"documentation","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_NEXT_STEPS_COMPLETE.md"}
+{"s":"phase-3-next-steps-complete","p":"tags","o":"examples","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_NEXT_STEPS_COMPLETE.md"}
+{"s":"phase-3-next-steps-complete","p":"keywords","o":"phase-3-next-steps-complete","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_NEXT_STEPS_COMPLETE.md"}
+{"s":"phase-3-next-steps-complete","p":"keywords","o":"testing-setup","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_NEXT_STEPS_COMPLETE.md"}
+{"s":"phase-3-next-steps-complete","p":"keywords","o":"documentation-review","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_NEXT_STEPS_COMPLETE.md"}
+{"s":"phase-3-next-steps-complete","p":"keywords","o":"examples-creation","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_NEXT_STEPS_COMPLETE.md"}
+{"s":"phase-3-complete","p":"enables","o":"phase-3-next-steps","kind":"link","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_COMPLETE.md","resolved":false}
+{"s":"phase-3-complete","p":"related","o":"phase-3-next-steps-complete","kind":"link","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_COMPLETE.md","resolved":true}
+{"s":"phase-3-complete","p":"type","o":"progress-tracking","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_COMPLETE.md"}
+{"s":"phase-3-complete","p":"level","o":"practical","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_COMPLETE.md"}
+{"s":"phase-3-complete","p":"tags","o":"phase-3","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_COMPLETE.md"}
+{"s":"phase-3-complete","p":"tags","o":"testing","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_COMPLETE.md"}
+{"s":"phase-3-complete","p":"tags","o":"documentation","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_COMPLETE.md"}
+{"s":"phase-3-complete","p":"tags","o":"complete","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_COMPLETE.md"}
+{"s":"phase-3-complete","p":"tags","o":"progress","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_COMPLETE.md"}
+{"s":"phase-3-complete","p":"keywords","o":"phase-3-complete","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_COMPLETE.md"}
+{"s":"phase-3-complete","p":"keywords","o":"testing-complete","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_COMPLETE.md"}
+{"s":"phase-3-complete","p":"keywords","o":"documentation-complete","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_COMPLETE.md"}
+{"s":"phase-3-complete","p":"keywords","o":"canvasl-browser","kind":"attr","file":"omi-files/meta-log-db/docs/00-Inbox/PHASE_3_COMPLETE.md"}
+{"s":"meta-log-db-documentation-home","p":"enables","o":"meta-log-db-usage","kind":"link","file":"omi-files/meta-log-db/docs/index.md","resolved":false}
+{"s":"meta-log-db-documentation-home","p":"enables","o":"documentation-navigation","kind":"link","file":"omi-files/meta-log-db/docs/index.md","resolved":false}
+{"s":"meta-log-db-documentation-home","p":"related","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/docs/index.md","resolved":true}
+{"s":"meta-log-db-documentation-home","p":"related","o":"glossary","kind":"link","file":"omi-files/meta-log-db/docs/index.md","resolved":false}
+{"s":"meta-log-db-documentation-home","p":"type","o":"documentation","kind":"attr","file":"omi-files/meta-log-db/docs/index.md"}
+{"s":"meta-log-db-documentation-home","p":"level","o":"foundational","kind":"attr","file":"omi-files/meta-log-db/docs/index.md"}
+{"s":"meta-log-db-documentation-home","p":"tags","o":"meta-log-db","kind":"attr","file":"omi-files/meta-log-db/docs/index.md"}
+{"s":"meta-log-db-documentation-home","p":"tags","o":"documentation","kind":"attr","file":"omi-files/meta-log-db/docs/index.md"}
+{"s":"meta-log-db-documentation-home","p":"tags","o":"home","kind":"attr","file":"omi-files/meta-log-db/docs/index.md"}
+{"s":"meta-log-db-documentation-home","p":"tags","o":"overview","kind":"attr","file":"omi-files/meta-log-db/docs/index.md"}
+{"s":"meta-log-db-documentation-home","p":"keywords","o":"meta-log-db","kind":"attr","file":"omi-files/meta-log-db/docs/index.md"}
+{"s":"meta-log-db-documentation-home","p":"keywords","o":"documentation","kind":"attr","file":"omi-files/meta-log-db/docs/index.md"}
+{"s":"meta-log-db-documentation-home","p":"keywords","o":"home","kind":"attr","file":"omi-files/meta-log-db/docs/index.md"}
+{"s":"meta-log-db-documentation-home","p":"keywords","o":"getting-started","kind":"attr","file":"omi-files/meta-log-db/docs/index.md"}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"enables","o":"test-implementation","kind":"link","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md","resolved":false}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"enables","o":"ci-cd-integration","kind":"link","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md","resolved":false}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"related","o":"canvasl-metaverse-browser-api","kind":"link","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md","resolved":true}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"related","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md","resolved":true}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"prerequisites","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md","resolved":true}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"type","o":"guide","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md"}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"level","o":"practical","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md"}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"tags","o":"testing","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md"}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"tags","o":"jest","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md"}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"tags","o":"browser-tests","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md"}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"tags","o":"node-tests","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md"}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"tags","o":"test-coverage","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md"}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"keywords","o":"testing-guide","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md"}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"keywords","o":"jest-configuration","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md"}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"keywords","o":"browser-testing","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md"}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"keywords","o":"test-coverage","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md"}
+{"s":"testing-guide-canvasl-metaverse-browser","p":"keywords","o":"canvasl-browser-tests","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/TESTING.md"}
+{"s":"meta-log-db-linking-setup","p":"enables","o":"meta-log-db-development","kind":"link","file":"omi-files/meta-log-db/docs/02-Reference/LINKING_SETUP.md","resolved":false}
+{"s":"meta-log-db-linking-setup","p":"enables","o":"plugin-integration","kind":"link","file":"omi-files/meta-log-db/docs/02-Reference/LINKING_SETUP.md","resolved":false}
+{"s":"meta-log-db-linking-setup","p":"related","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/docs/02-Reference/LINKING_SETUP.md","resolved":true}
+{"s":"meta-log-db-linking-setup","p":"type","o":"guide","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/LINKING_SETUP.md"}
+{"s":"meta-log-db-linking-setup","p":"level","o":"practical","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/LINKING_SETUP.md"}
+{"s":"meta-log-db-linking-setup","p":"tags","o":"npm-link","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/LINKING_SETUP.md"}
+{"s":"meta-log-db-linking-setup","p":"tags","o":"setup","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/LINKING_SETUP.md"}
+{"s":"meta-log-db-linking-setup","p":"tags","o":"development","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/LINKING_SETUP.md"}
+{"s":"meta-log-db-linking-setup","p":"tags","o":"package-management","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/LINKING_SETUP.md"}
+{"s":"meta-log-db-linking-setup","p":"keywords","o":"npm-link","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/LINKING_SETUP.md"}
+{"s":"meta-log-db-linking-setup","p":"keywords","o":"package-linking","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/LINKING_SETUP.md"}
+{"s":"meta-log-db-linking-setup","p":"keywords","o":"development-setup","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/LINKING_SETUP.md"}
+{"s":"meta-log-db-linking-setup","p":"keywords","o":"meta-log-db-setup","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/LINKING_SETUP.md"}
+{"s":"frontmatter-validation-setup","p":"enables","o":"frontmatter-validation-implementation","kind":"link","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md","resolved":false}
+{"s":"frontmatter-validation-setup","p":"related","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md","resolved":true}
+{"s":"frontmatter-validation-setup","p":"related","o":"canvasl-metaverse-browser-api","kind":"link","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md","resolved":true}
+{"s":"frontmatter-validation-setup","p":"prerequisites","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md","resolved":true}
+{"s":"frontmatter-validation-setup","p":"type","o":"guide","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md"}
+{"s":"frontmatter-validation-setup","p":"level","o":"practical","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md"}
+{"s":"frontmatter-validation-setup","p":"tags","o":"frontmatter","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md"}
+{"s":"frontmatter-validation-setup","p":"tags","o":"validation","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md"}
+{"s":"frontmatter-validation-setup","p":"tags","o":"typescript","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md"}
+{"s":"frontmatter-validation-setup","p":"tags","o":"setup","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md"}
+{"s":"frontmatter-validation-setup","p":"tags","o":"configuration","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md"}
+{"s":"frontmatter-validation-setup","p":"tags","o":"bipartite-bqf","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md"}
+{"s":"frontmatter-validation-setup","p":"keywords","o":"frontmatter-validation","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md"}
+{"s":"frontmatter-validation-setup","p":"keywords","o":"typescript-config","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md"}
+{"s":"frontmatter-validation-setup","p":"keywords","o":"bipartite-bqf-validation","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md"}
+{"s":"frontmatter-validation-setup","p":"keywords","o":"canvasl-frontmatter","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md"}
+{"s":"frontmatter-validation-setup","p":"keywords","o":"type-definitions","kind":"attr","file":"omi-files/meta-log-db/docs/02-Reference/FRONTMATTER_VALIDATION_SETUP.md"}
+{"s":"meta-log-db-readme","p":"enables","o":"meta-log-db-installation","kind":"link","file":"omi-files/meta-log-db/README.md","resolved":false}
+{"s":"meta-log-db-readme","p":"enables","o":"meta-log-db-usage","kind":"link","file":"omi-files/meta-log-db/README.md","resolved":false}
+{"s":"meta-log-db-readme","p":"related","o":"meta-log-db-rfc2119-specification","kind":"link","file":"omi-files/meta-log-db/README.md","resolved":true}
+{"s":"meta-log-db-readme","p":"related","o":"glossary","kind":"link","file":"omi-files/meta-log-db/README.md","resolved":false}
+{"s":"meta-log-db-readme","p":"related","o":"canvasl-metaverse-browser-api","kind":"link","file":"omi-files/meta-log-db/README.md","resolved":true}
+{"s":"meta-log-db-readme","p":"type","o":"documentation","kind":"attr","file":"omi-files/meta-log-db/README.md"}
+{"s":"meta-log-db-readme","p":"level","o":"foundational","kind":"attr","file":"omi-files/meta-log-db/README.md"}
+{"s":"meta-log-db-readme","p":"tags","o":"meta-log-db","kind":"attr","file":"omi-files/meta-log-db/README.md"}
+{"s":"meta-log-db-readme","p":"tags","o":"readme","kind":"attr","file":"omi-files/meta-log-db/README.md"}
+{"s":"meta-log-db-readme","p":"tags","o":"package-overview","kind":"attr","file":"omi-files/meta-log-db/README.md"}
+{"s":"meta-log-db-readme","p":"tags","o":"installation","kind":"attr","file":"omi-files/meta-log-db/README.md"}
+{"s":"meta-log-db-readme","p":"tags","o":"usage","kind":"attr","file":"omi-files/meta-log-db/README.md"}
+{"s":"meta-log-db-readme","p":"keywords","o":"meta-log-db","kind":"attr","file":"omi-files/meta-log-db/README.md"}
+{"s":"meta-log-db-readme","p":"keywords","o":"prolog","kind":"attr","file":"omi-files/meta-log-db/README.md"}
+{"s":"meta-log-db-readme","p":"keywords","o":"datalog","kind":"attr","file":"omi-files/meta-log-db/README.md"}
+{"s":"meta-log-db-readme","p":"keywords","o":"r5rs","kind":"attr","file":"omi-files/meta-log-db/README.md"}
+{"s":"meta-log-db-readme","p":"keywords","o":"sparql","kind":"attr","file":"omi-files/meta-log-db/README.md"}
+{"s":"meta-log-db-readme","p":"keywords","o":"shacl","kind":"attr","file":"omi-files/meta-log-db/README.md"}
+{"s":"meta-log-db-readme","p":"keywords","o":"canvasl","kind":"attr","file":"omi-files/meta-log-db/README.md"}
+{"s":"meta-log-db-readme","p":"keywords","o":"npm-package","kind":"attr","file":"omi-files/meta-log-db/README.md"}
+{"s":"META-02","p":"related","o":"- \"[[META-00 Vault Schema]]","kind":"link","file":"wiki/meta/META-02 Evidence and Confidence.md","resolved":false}
+{"s":"META-02","p":"status","o":"canonical","kind":"attr","file":"wiki/meta/META-02 Evidence and Confidence.md"}
+{"s":"META-02","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/meta/META-02 Evidence and Confidence.md"}
+{"s":"META-02","p":"tags","o":"meta","kind":"attr","file":"wiki/meta/META-02 Evidence and Confidence.md"}
+{"s":"META-02","p":"tags","o":"evidence","kind":"attr","file":"wiki/meta/META-02 Evidence and Confidence.md"}
+{"s":"META-02","p":"tags","o":"confidence","kind":"attr","file":"wiki/meta/META-02 Evidence and Confidence.md"}
+{"s":"META-02","p":"tags","o":"verification","kind":"attr","file":"wiki/meta/META-02 Evidence and Confidence.md"}
+{"s":"META-01","p":"related","o":"- \"[[META-00 Vault Schema]]","kind":"link","file":"wiki/meta/META-01 Extractive Method.md","resolved":false}
+{"s":"META-01","p":"status","o":"canonical","kind":"attr","file":"wiki/meta/META-01 Extractive Method.md"}
+{"s":"META-01","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/meta/META-01 Extractive Method.md"}
+{"s":"META-01","p":"tags","o":"meta","kind":"attr","file":"wiki/meta/META-01 Extractive Method.md"}
+{"s":"META-01","p":"tags","o":"extraction","kind":"attr","file":"wiki/meta/META-01 Extractive Method.md"}
+{"s":"META-01","p":"tags","o":"method","kind":"attr","file":"wiki/meta/META-01 Extractive Method.md"}
+{"s":"META-01","p":"tags","o":"pdftotext","kind":"attr","file":"wiki/meta/META-01 Extractive Method.md"}
+{"s":"META-01","p":"tags","o":"structured","kind":"attr","file":"wiki/meta/META-01 Extractive Method.md"}
+{"s":"META-04","p":"related","o":"- \"[[PROG-00 Homoiconic Syntax Tracker]]","kind":"link","file":"wiki/meta/META-04 Repository Frame.md","resolved":false}
+{"s":"META-04","p":"status","o":"canonical","kind":"attr","file":"wiki/meta/META-04 Repository Frame.md"}
+{"s":"META-04","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/meta/META-04 Repository Frame.md"}
+{"s":"META-04","p":"tags","o":"meta","kind":"attr","file":"wiki/meta/META-04 Repository Frame.md"}
+{"s":"META-04","p":"tags","o":"repository","kind":"attr","file":"wiki/meta/META-04 Repository Frame.md"}
+{"s":"META-04","p":"tags","o":"frame","kind":"attr","file":"wiki/meta/META-04 Repository Frame.md"}
+{"s":"META-04","p":"tags","o":"folders","kind":"attr","file":"wiki/meta/META-04 Repository Frame.md"}
+{"s":"META-04","p":"tags","o":"demonstration","kind":"attr","file":"wiki/meta/META-04 Repository Frame.md"}
+{"s":"META-00","p":"related","o":"- \"[[OMI-IMO]]","kind":"link","file":"wiki/meta/META-00 Vault Schema.md","resolved":false}
+{"s":"META-00","p":"status","o":"canonical","kind":"attr","file":"wiki/meta/META-00 Vault Schema.md"}
+{"s":"META-00","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/meta/META-00 Vault Schema.md"}
+{"s":"META-00","p":"tags","o":"meta","kind":"attr","file":"wiki/meta/META-00 Vault Schema.md"}
+{"s":"META-00","p":"tags","o":"schema","kind":"attr","file":"wiki/meta/META-00 Vault Schema.md"}
+{"s":"META-00","p":"tags","o":"frontmatter","kind":"attr","file":"wiki/meta/META-00 Vault Schema.md"}
+{"s":"META-00","p":"tags","o":"structure","kind":"attr","file":"wiki/meta/META-00 Vault Schema.md"}
+{"s":"META-03","p":"related","o":"- \"[[META-00 Vault Schema]]","kind":"link","file":"wiki/meta/META-03 Change Log.md","resolved":false}
+{"s":"META-03","p":"status","o":"canonical","kind":"attr","file":"wiki/meta/META-03 Change Log.md"}
+{"s":"META-03","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/meta/META-03 Change Log.md"}
+{"s":"META-03","p":"tags","o":"meta","kind":"attr","file":"wiki/meta/META-03 Change Log.md"}
+{"s":"META-03","p":"tags","o":"changelog","kind":"attr","file":"wiki/meta/META-03 Change Log.md"}
+{"s":"META-03","p":"tags","o":"history","kind":"attr","file":"wiki/meta/META-03 Change Log.md"}
+{"s":"SRC-12","p":"related","o":"- \"[[SPEC-07 The Fundamental Invariants]]","kind":"link","file":"wiki/sources/SRC-12 The Continuation Brain Dump.md","resolved":false}
+{"s":"SRC-12","p":"status","o":"draft","kind":"attr","file":"wiki/sources/SRC-12 The Continuation Brain Dump.md"}
+{"s":"SRC-12","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/SRC-12 The Continuation Brain Dump.md"}
+{"s":"SRC-12","p":"tags","o":"source","kind":"attr","file":"wiki/sources/SRC-12 The Continuation Brain Dump.md"}
+{"s":"SRC-12","p":"tags","o":"archive","kind":"attr","file":"wiki/sources/SRC-12 The Continuation Brain Dump.md"}
+{"s":"SRC-12","p":"tags","o":"frames","kind":"attr","file":"wiki/sources/SRC-12 The Continuation Brain Dump.md"}
+{"s":"SRC-12","p":"tags","o":"ping","kind":"attr","file":"wiki/sources/SRC-12 The Continuation Brain Dump.md"}
+{"s":"SRC-12","p":"tags","o":"status-codes","kind":"attr","file":"wiki/sources/SRC-12 The Continuation Brain Dump.md"}
+{"s":"SRC-12","p":"tags","o":"three-body","kind":"attr","file":"wiki/sources/SRC-12 The Continuation Brain Dump.md"}
+{"s":"SRC-12","p":"tags","o":"falsifiable","kind":"attr","file":"wiki/sources/SRC-12 The Continuation Brain Dump.md"}
+{"s":"SRC-09","p":"related","o":"- \"[[OPEN-01 Open Questions]]","kind":"link","file":"wiki/sources/SRC-09 Try XOR Catch XNOR Finally.md","resolved":false}
+{"s":"SRC-09","p":"status","o":"draft","kind":"attr","file":"wiki/sources/SRC-09 Try XOR Catch XNOR Finally.md"}
+{"s":"SRC-09","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/SRC-09 Try XOR Catch XNOR Finally.md"}
+{"s":"SRC-09","p":"tags","o":"source","kind":"attr","file":"wiki/sources/SRC-09 Try XOR Catch XNOR Finally.md"}
+{"s":"SRC-09","p":"tags","o":"archive","kind":"attr","file":"wiki/sources/SRC-09 Try XOR Catch XNOR Finally.md"}
+{"s":"SRC-09","p":"tags","o":"fano","kind":"attr","file":"wiki/sources/SRC-09 Try XOR Catch XNOR Finally.md"}
+{"s":"SRC-09","p":"tags","o":"fold","kind":"attr","file":"wiki/sources/SRC-09 Try XOR Catch XNOR Finally.md"}
+{"s":"SRC-09","p":"tags","o":"try-catch","kind":"attr","file":"wiki/sources/SRC-09 Try XOR Catch XNOR Finally.md"}
+{"s":"SRC-04","p":"related","o":"- \"[[SRC-99 Source Index]]","kind":"link","file":"wiki/sources/SRC-04 Assembly Register Programming.md","resolved":false}
+{"s":"SRC-04","p":"status","o":"canonical","kind":"attr","file":"wiki/sources/SRC-04 Assembly Register Programming.md"}
+{"s":"SRC-04","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/SRC-04 Assembly Register Programming.md"}
+{"s":"SRC-04","p":"tags","o":"source","kind":"attr","file":"wiki/sources/SRC-04 Assembly Register Programming.md"}
+{"s":"SRC-04","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/SRC-04 Assembly Register Programming.md"}
+{"s":"SRC-04","p":"tags","o":"assembly","kind":"attr","file":"wiki/sources/SRC-04 Assembly Register Programming.md"}
+{"s":"SRC-04","p":"tags","o":"registers","kind":"attr","file":"wiki/sources/SRC-04 Assembly Register Programming.md"}
+{"s":"SRC-04","p":"tags","o":"machine-code","kind":"attr","file":"wiki/sources/SRC-04 Assembly Register Programming.md"}
+{"s":"SRC-04","p":"tags","o":"origin","kind":"attr","file":"wiki/sources/SRC-04 Assembly Register Programming.md"}
+{"s":"SRC-11","p":"related","o":"- \"[[SPEC-44 The Virtual Breadboard]]","kind":"link","file":"wiki/sources/SRC-11 The UI Brain Dump.md","resolved":false}
+{"s":"SRC-11","p":"status","o":"draft","kind":"attr","file":"wiki/sources/SRC-11 The UI Brain Dump.md"}
+{"s":"SRC-11","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/SRC-11 The UI Brain Dump.md"}
+{"s":"SRC-11","p":"tags","o":"source","kind":"attr","file":"wiki/sources/SRC-11 The UI Brain Dump.md"}
+{"s":"SRC-11","p":"tags","o":"archive","kind":"attr","file":"wiki/sources/SRC-11 The UI Brain Dump.md"}
+{"s":"SRC-11","p":"tags","o":"user-interface","kind":"attr","file":"wiki/sources/SRC-11 The UI Brain Dump.md"}
+{"s":"SRC-11","p":"tags","o":"panner","kind":"attr","file":"wiki/sources/SRC-11 The UI Brain Dump.md"}
+{"s":"SRC-11","p":"tags","o":"vtt","kind":"attr","file":"wiki/sources/SRC-11 The UI Brain Dump.md"}
+{"s":"SRC-11","p":"tags","o":"dom-geometry","kind":"attr","file":"wiki/sources/SRC-11 The UI Brain Dump.md"}
+{"s":"SRC-11","p":"tags","o":"busybox","kind":"attr","file":"wiki/sources/SRC-11 The UI Brain Dump.md"}
+{"s":"SRC-11","p":"tags","o":"cidr","kind":"attr","file":"wiki/sources/SRC-11 The UI Brain Dump.md"}
+{"s":"SRC-06","p":"related","o":"- \"[[SRC-99 Source Index]]","kind":"link","file":"wiki/sources/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md","resolved":false}
+{"s":"SRC-06","p":"status","o":"draft","kind":"attr","file":"wiki/sources/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md"}
+{"s":"SRC-06","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md"}
+{"s":"SRC-06","p":"tags","o":"source","kind":"attr","file":"wiki/sources/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md"}
+{"s":"SRC-06","p":"tags","o":"google-search","kind":"attr","file":"wiki/sources/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md"}
+{"s":"SRC-06","p":"tags","o":"knots","kind":"attr","file":"wiki/sources/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md"}
+{"s":"SRC-06","p":"tags","o":"encoding","kind":"attr","file":"wiki/sources/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md"}
+{"s":"SRC-06","p":"tags","o":"topology","kind":"attr","file":"wiki/sources/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md"}
+{"s":"SRC-06","p":"tags","o":"draft","kind":"attr","file":"wiki/sources/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md"}
+{"s":"SRC-00","p":"related","o":"- \"[[SRC-99 Source Index]]","kind":"link","file":"wiki/sources/SRC-00 Protocol Review and Bug Fixes.md","resolved":false}
+{"s":"SRC-00","p":"status","o":"canonical","kind":"attr","file":"wiki/sources/SRC-00 Protocol Review and Bug Fixes.md"}
+{"s":"SRC-00","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/SRC-00 Protocol Review and Bug Fixes.md"}
+{"s":"SRC-00","p":"tags","o":"source","kind":"attr","file":"wiki/sources/SRC-00 Protocol Review and Bug Fixes.md"}
+{"s":"SRC-00","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/SRC-00 Protocol Review and Bug Fixes.md"}
+{"s":"SRC-00","p":"tags","o":"protocol-review","kind":"attr","file":"wiki/sources/SRC-00 Protocol Review and Bug Fixes.md"}
+{"s":"SRC-00","p":"tags","o":"bug-fixes","kind":"attr","file":"wiki/sources/SRC-00 Protocol Review and Bug Fixes.md"}
+{"s":"SRC-02","p":"related","o":"- \"[[SRC-99 Source Index]]","kind":"link","file":"wiki/sources/SRC-02 XOR Gate Transistor Circuits.md","resolved":false}
+{"s":"SRC-02","p":"status","o":"canonical","kind":"attr","file":"wiki/sources/SRC-02 XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/SRC-02 XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02","p":"tags","o":"source","kind":"attr","file":"wiki/sources/SRC-02 XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/SRC-02 XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02","p":"tags","o":"hardware","kind":"attr","file":"wiki/sources/SRC-02 XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02","p":"tags","o":"xor","kind":"attr","file":"wiki/sources/SRC-02 XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02","p":"tags","o":"transistor","kind":"attr","file":"wiki/sources/SRC-02 XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02","p":"tags","o":"circuits","kind":"attr","file":"wiki/sources/SRC-02 XOR Gate Transistor Circuits.md"}
+{"s":"SRC-01","p":"related","o":"- \"[[SRC-99 Source Index]]","kind":"link","file":"wiki/sources/SRC-01 XOR Tetrahedron Transform.md","resolved":false}
+{"s":"SRC-01","p":"status","o":"canonical","kind":"attr","file":"wiki/sources/SRC-01 XOR Tetrahedron Transform.md"}
+{"s":"SRC-01","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/SRC-01 XOR Tetrahedron Transform.md"}
+{"s":"SRC-01","p":"tags","o":"source","kind":"attr","file":"wiki/sources/SRC-01 XOR Tetrahedron Transform.md"}
+{"s":"SRC-01","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/SRC-01 XOR Tetrahedron Transform.md"}
+{"s":"SRC-01","p":"tags","o":"xor","kind":"attr","file":"wiki/sources/SRC-01 XOR Tetrahedron Transform.md"}
+{"s":"SRC-01","p":"tags","o":"tetrahedron","kind":"attr","file":"wiki/sources/SRC-01 XOR Tetrahedron Transform.md"}
+{"s":"SRC-01","p":"tags","o":"transform","kind":"attr","file":"wiki/sources/SRC-01 XOR Tetrahedron Transform.md"}
+{"s":"SRC-99","p":"related","o":"- \"[[OMI-IMO]]","kind":"link","file":"wiki/sources/SRC-99 Source Index.md","resolved":false}
+{"s":"SRC-99","p":"status","o":"canonical","kind":"attr","file":"wiki/sources/SRC-99 Source Index.md"}
+{"s":"SRC-99","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/SRC-99 Source Index.md"}
+{"s":"SRC-99","p":"tags","o":"source","kind":"attr","file":"wiki/sources/SRC-99 Source Index.md"}
+{"s":"SRC-99","p":"tags","o":"index","kind":"attr","file":"wiki/sources/SRC-99 Source Index.md"}
+{"s":"SRC-99","p":"tags","o":"moc","kind":"attr","file":"wiki/sources/SRC-99 Source Index.md"}
+{"s":"SRC-05","p":"related","o":"- \"[[SRC-99 Source Index]]","kind":"link","file":"wiki/sources/SRC-05 Conspiracy Check.md","resolved":false}
+{"s":"SRC-05","p":"status","o":"canonical","kind":"attr","file":"wiki/sources/SRC-05 Conspiracy Check.md"}
+{"s":"SRC-05","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/SRC-05 Conspiracy Check.md"}
+{"s":"SRC-05","p":"tags","o":"source","kind":"attr","file":"wiki/sources/SRC-05 Conspiracy Check.md"}
+{"s":"SRC-05","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/SRC-05 Conspiracy Check.md"}
+{"s":"SRC-05","p":"tags","o":"verification","kind":"attr","file":"wiki/sources/SRC-05 Conspiracy Check.md"}
+{"s":"SRC-05","p":"tags","o":"audit","kind":"attr","file":"wiki/sources/SRC-05 Conspiracy Check.md"}
+{"s":"SRC-05","p":"tags","o":"conspiracy","kind":"attr","file":"wiki/sources/SRC-05 Conspiracy Check.md"}
+{"s":"SRC-07","p":"related","o":"- \"[[SRC-99 Source Index]]","kind":"link","file":"wiki/sources/SRC-07 The OMI-IMO Complete Synthesis.md","resolved":false}
+{"s":"SRC-07","p":"status","o":"canonical","kind":"attr","file":"wiki/sources/SRC-07 The OMI-IMO Complete Synthesis.md"}
+{"s":"SRC-07","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/SRC-07 The OMI-IMO Complete Synthesis.md"}
+{"s":"SRC-07","p":"tags","o":"source","kind":"attr","file":"wiki/sources/SRC-07 The OMI-IMO Complete Synthesis.md"}
+{"s":"SRC-07","p":"tags","o":"synthesis","kind":"attr","file":"wiki/sources/SRC-07 The OMI-IMO Complete Synthesis.md"}
+{"s":"SRC-07","p":"tags","o":"canonical","kind":"attr","file":"wiki/sources/SRC-07 The OMI-IMO Complete Synthesis.md"}
+{"s":"SRC-07","p":"tags","o":"complete","kind":"attr","file":"wiki/sources/SRC-07 The OMI-IMO Complete Synthesis.md"}
+{"s":"SRC-10","p":"related","o":"- \"[[SPEC-04 First Principles]]","kind":"link","file":"wiki/sources/SRC-10 The Ontology Conversation.md","resolved":false}
+{"s":"SRC-10","p":"status","o":"draft","kind":"attr","file":"wiki/sources/SRC-10 The Ontology Conversation.md"}
+{"s":"SRC-10","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/SRC-10 The Ontology Conversation.md"}
+{"s":"SRC-10","p":"tags","o":"source","kind":"attr","file":"wiki/sources/SRC-10 The Ontology Conversation.md"}
+{"s":"SRC-10","p":"tags","o":"archive","kind":"attr","file":"wiki/sources/SRC-10 The Ontology Conversation.md"}
+{"s":"SRC-10","p":"tags","o":"ontology","kind":"attr","file":"wiki/sources/SRC-10 The Ontology Conversation.md"}
+{"s":"SRC-10","p":"tags","o":"propagation","kind":"attr","file":"wiki/sources/SRC-10 The Ontology Conversation.md"}
+{"s":"SRC-10","p":"tags","o":"circulator","kind":"attr","file":"wiki/sources/SRC-10 The Ontology Conversation.md"}
+{"s":"SRC-10","p":"tags","o":"first-principles","kind":"attr","file":"wiki/sources/SRC-10 The Ontology Conversation.md"}
+{"s":"SRC-13","p":"related","o":"- \"[[SRC-12 The Continuation Brain Dump]]","kind":"link","file":"wiki/sources/SRC-13 Provenance of the OMI Trees and the Metaverse Spine.md","resolved":false}
+{"s":"SRC-13","p":"status","o":"draft","kind":"attr","file":"wiki/sources/SRC-13 Provenance of the OMI Trees and the Metaverse Spine.md"}
+{"s":"SRC-13","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/SRC-13 Provenance of the OMI Trees and the Metaverse Spine.md"}
+{"s":"SRC-13","p":"tags","o":"source","kind":"attr","file":"wiki/sources/SRC-13 Provenance of the OMI Trees and the Metaverse Spine.md"}
+{"s":"SRC-13","p":"tags","o":"provenance","kind":"attr","file":"wiki/sources/SRC-13 Provenance of the OMI Trees and the Metaverse Spine.md"}
+{"s":"SRC-13","p":"tags","o":"lineage","kind":"attr","file":"wiki/sources/SRC-13 Provenance of the OMI Trees and the Metaverse Spine.md"}
+{"s":"SRC-13","p":"tags","o":"restore","kind":"attr","file":"wiki/sources/SRC-13 Provenance of the OMI Trees and the Metaverse Spine.md"}
+{"s":"SRC-13","p":"tags","o":"closure","kind":"attr","file":"wiki/sources/SRC-13 Provenance of the OMI Trees and the Metaverse Spine.md"}
+{"s":"SRC-08","p":"related","o":"- \"[[SRC-99 Source Index]]","kind":"link","file":"wiki/sources/SRC-08 XOR Gate Built with Transistors.md","resolved":false}
+{"s":"SRC-08","p":"status","o":"canonical","kind":"attr","file":"wiki/sources/SRC-08 XOR Gate Built with Transistors.md"}
+{"s":"SRC-08","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/SRC-08 XOR Gate Built with Transistors.md"}
+{"s":"SRC-08","p":"tags","o":"source","kind":"attr","file":"wiki/sources/SRC-08 XOR Gate Built with Transistors.md"}
+{"s":"SRC-08","p":"tags","o":"hardware","kind":"attr","file":"wiki/sources/SRC-08 XOR Gate Built with Transistors.md"}
+{"s":"SRC-08","p":"tags","o":"xor","kind":"attr","file":"wiki/sources/SRC-08 XOR Gate Built with Transistors.md"}
+{"s":"SRC-08","p":"tags","o":"transistor","kind":"attr","file":"wiki/sources/SRC-08 XOR Gate Built with Transistors.md"}
+{"s":"SRC-08","p":"tags","o":"reference","kind":"attr","file":"wiki/sources/SRC-08 XOR Gate Built with Transistors.md"}
+{"s":"SRC-03","p":"related","o":"- \"[[SRC-99 Source Index]]","kind":"link","file":"wiki/sources/SRC-03 Protocol Sequence Analysis.md","resolved":false}
+{"s":"SRC-03","p":"status","o":"canonical","kind":"attr","file":"wiki/sources/SRC-03 Protocol Sequence Analysis.md"}
+{"s":"SRC-03","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/SRC-03 Protocol Sequence Analysis.md"}
+{"s":"SRC-03","p":"tags","o":"source","kind":"attr","file":"wiki/sources/SRC-03 Protocol Sequence Analysis.md"}
+{"s":"SRC-03","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/SRC-03 Protocol Sequence Analysis.md"}
+{"s":"SRC-03","p":"tags","o":"sequence","kind":"attr","file":"wiki/sources/SRC-03 Protocol Sequence Analysis.md"}
+{"s":"SRC-03","p":"tags","o":"orbits","kind":"attr","file":"wiki/sources/SRC-03 Protocol Sequence Analysis.md"}
+{"s":"SRC-03","p":"tags","o":"generator","kind":"attr","file":"wiki/sources/SRC-03 Protocol Sequence Analysis.md"}
+{"s":"SRC-03","p":"tags","o":"analysis","kind":"attr","file":"wiki/sources/SRC-03 Protocol Sequence Analysis.md"}
+{"s":"SRC-14","p":"related","o":"- \"[[SRC-13 Provenance of the OMI Trees and the Metaverse Spine]]","kind":"link","file":"wiki/sources/SRC-14 Polytron the Commons and the Cave.md","resolved":false}
+{"s":"SRC-14","p":"status","o":"draft","kind":"attr","file":"wiki/sources/SRC-14 Polytron the Commons and the Cave.md"}
+{"s":"SRC-14","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/SRC-14 Polytron the Commons and the Cave.md"}
+{"s":"SRC-14","p":"tags","o":"source","kind":"attr","file":"wiki/sources/SRC-14 Polytron the Commons and the Cave.md"}
+{"s":"SRC-14","p":"tags","o":"polytron","kind":"attr","file":"wiki/sources/SRC-14 Polytron the Commons and the Cave.md"}
+{"s":"SRC-14","p":"tags","o":"light-garden","kind":"attr","file":"wiki/sources/SRC-14 Polytron the Commons and the Cave.md"}
+{"s":"SRC-14","p":"tags","o":"commons","kind":"attr","file":"wiki/sources/SRC-14 Polytron the Commons and the Cave.md"}
+{"s":"SRC-14","p":"tags","o":"tags","kind":"attr","file":"wiki/sources/SRC-14 Polytron the Commons and the Cave.md"}
+{"s":"SRC-14","p":"tags","o":"cave","kind":"attr","file":"wiki/sources/SRC-14 Polytron the Commons and the Cave.md"}
+{"s":"SRC-14","p":"tags","o":"sexagesimal","kind":"attr","file":"wiki/sources/SRC-14 Polytron the Commons and the Cave.md"}
+{"s":"SRC-03b","p":"parent","o":"[[SRC-03 Protocol Sequence Analysis]]","kind":"link","file":"wiki/sources/parts/SRC-03b Protocol Sequence Analysis.md","resolved":false}
+{"s":"SRC-03b","p":"status","o":"draft","kind":"attr","file":"wiki/sources/parts/SRC-03b Protocol Sequence Analysis.md"}
+{"s":"SRC-03b","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/parts/SRC-03b Protocol Sequence Analysis.md"}
+{"s":"SRC-03b","p":"tags","o":"source","kind":"attr","file":"wiki/sources/parts/SRC-03b Protocol Sequence Analysis.md"}
+{"s":"SRC-03b","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/parts/SRC-03b Protocol Sequence Analysis.md"}
+{"s":"SRC-03b","p":"tags","o":"sequence","kind":"attr","file":"wiki/sources/parts/SRC-03b Protocol Sequence Analysis.md"}
+{"s":"SRC-03b","p":"tags","o":"orbits","kind":"attr","file":"wiki/sources/parts/SRC-03b Protocol Sequence Analysis.md"}
+{"s":"SRC-03b","p":"tags","o":"generator","kind":"attr","file":"wiki/sources/parts/SRC-03b Protocol Sequence Analysis.md"}
+{"s":"SRC-04a","p":"parent","o":"[[SRC-04 Assembly Register Programming]]","kind":"link","file":"wiki/sources/parts/SRC-04a Assembly Register Programming.md","resolved":false}
+{"s":"SRC-04a","p":"status","o":"draft","kind":"attr","file":"wiki/sources/parts/SRC-04a Assembly Register Programming.md"}
+{"s":"SRC-04a","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/parts/SRC-04a Assembly Register Programming.md"}
+{"s":"SRC-04a","p":"tags","o":"source","kind":"attr","file":"wiki/sources/parts/SRC-04a Assembly Register Programming.md"}
+{"s":"SRC-04a","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/parts/SRC-04a Assembly Register Programming.md"}
+{"s":"SRC-04a","p":"tags","o":"assembly","kind":"attr","file":"wiki/sources/parts/SRC-04a Assembly Register Programming.md"}
+{"s":"SRC-04a","p":"tags","o":"registers","kind":"attr","file":"wiki/sources/parts/SRC-04a Assembly Register Programming.md"}
+{"s":"SRC-04a","p":"tags","o":"machine-code","kind":"attr","file":"wiki/sources/parts/SRC-04a Assembly Register Programming.md"}
+{"s":"SRC-06","p":"parent","o":"[[SRC-06 Phases vs Attributes vs Constraints vs Configurations]]","kind":"link","file":"wiki/sources/parts/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md","resolved":false}
+{"s":"SRC-06","p":"status","o":"draft","kind":"attr","file":"wiki/sources/parts/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md"}
+{"s":"SRC-06","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/parts/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md"}
+{"s":"SRC-06","p":"tags","o":"source","kind":"attr","file":"wiki/sources/parts/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md"}
+{"s":"SRC-06","p":"tags","o":"google-search","kind":"attr","file":"wiki/sources/parts/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md"}
+{"s":"SRC-06","p":"tags","o":"knots","kind":"attr","file":"wiki/sources/parts/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md"}
+{"s":"SRC-06","p":"tags","o":"encoding","kind":"attr","file":"wiki/sources/parts/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md"}
+{"s":"SRC-06","p":"tags","o":"topology","kind":"attr","file":"wiki/sources/parts/SRC-06 Phases vs Attributes vs Constraints vs Configurations.md"}
+{"s":"SRC-02a","p":"parent","o":"[[SRC-02 XOR Gate Transistor Circuits]]","kind":"link","file":"wiki/sources/parts/SRC-02a XOR Gate Transistor Circuits.md","resolved":false}
+{"s":"SRC-02a","p":"status","o":"draft","kind":"attr","file":"wiki/sources/parts/SRC-02a XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02a","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/parts/SRC-02a XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02a","p":"tags","o":"source","kind":"attr","file":"wiki/sources/parts/SRC-02a XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02a","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/parts/SRC-02a XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02a","p":"tags","o":"hardware","kind":"attr","file":"wiki/sources/parts/SRC-02a XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02a","p":"tags","o":"xor","kind":"attr","file":"wiki/sources/parts/SRC-02a XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02a","p":"tags","o":"transistor","kind":"attr","file":"wiki/sources/parts/SRC-02a XOR Gate Transistor Circuits.md"}
+{"s":"SRC-03c","p":"parent","o":"[[SRC-03 Protocol Sequence Analysis]]","kind":"link","file":"wiki/sources/parts/SRC-03c Protocol Sequence Analysis.md","resolved":false}
+{"s":"SRC-03c","p":"status","o":"draft","kind":"attr","file":"wiki/sources/parts/SRC-03c Protocol Sequence Analysis.md"}
+{"s":"SRC-03c","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/parts/SRC-03c Protocol Sequence Analysis.md"}
+{"s":"SRC-03c","p":"tags","o":"source","kind":"attr","file":"wiki/sources/parts/SRC-03c Protocol Sequence Analysis.md"}
+{"s":"SRC-03c","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/parts/SRC-03c Protocol Sequence Analysis.md"}
+{"s":"SRC-03c","p":"tags","o":"sequence","kind":"attr","file":"wiki/sources/parts/SRC-03c Protocol Sequence Analysis.md"}
+{"s":"SRC-03c","p":"tags","o":"orbits","kind":"attr","file":"wiki/sources/parts/SRC-03c Protocol Sequence Analysis.md"}
+{"s":"SRC-03c","p":"tags","o":"generator","kind":"attr","file":"wiki/sources/parts/SRC-03c Protocol Sequence Analysis.md"}
+{"s":"SRC-05b","p":"parent","o":"[[SRC-05 Conspiracy Check]]","kind":"link","file":"wiki/sources/parts/SRC-05b Conspiracy Check.md","resolved":false}
+{"s":"SRC-05b","p":"status","o":"draft","kind":"attr","file":"wiki/sources/parts/SRC-05b Conspiracy Check.md"}
+{"s":"SRC-05b","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/parts/SRC-05b Conspiracy Check.md"}
+{"s":"SRC-05b","p":"tags","o":"source","kind":"attr","file":"wiki/sources/parts/SRC-05b Conspiracy Check.md"}
+{"s":"SRC-05b","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/parts/SRC-05b Conspiracy Check.md"}
+{"s":"SRC-05b","p":"tags","o":"verification","kind":"attr","file":"wiki/sources/parts/SRC-05b Conspiracy Check.md"}
+{"s":"SRC-05b","p":"tags","o":"audit","kind":"attr","file":"wiki/sources/parts/SRC-05b Conspiracy Check.md"}
+{"s":"SRC-00b","p":"parent","o":"[[SRC-00 Protocol Review and Bug Fixes]]","kind":"link","file":"wiki/sources/parts/SRC-00b Protocol Review and Bug Fixes.md","resolved":false}
+{"s":"SRC-00b","p":"status","o":"draft","kind":"attr","file":"wiki/sources/parts/SRC-00b Protocol Review and Bug Fixes.md"}
+{"s":"SRC-00b","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/parts/SRC-00b Protocol Review and Bug Fixes.md"}
+{"s":"SRC-00b","p":"tags","o":"source","kind":"attr","file":"wiki/sources/parts/SRC-00b Protocol Review and Bug Fixes.md"}
+{"s":"SRC-00b","p":"tags","o":"protocol","kind":"attr","file":"wiki/sources/parts/SRC-00b Protocol Review and Bug Fixes.md"}
+{"s":"SRC-00b","p":"tags","o":"grammar","kind":"attr","file":"wiki/sources/parts/SRC-00b Protocol Review and Bug Fixes.md"}
+{"s":"SRC-00b","p":"tags","o":"review","kind":"attr","file":"wiki/sources/parts/SRC-00b Protocol Review and Bug Fixes.md"}
+{"s":"SRC-00b","p":"tags","o":"reference","kind":"attr","file":"wiki/sources/parts/SRC-00b Protocol Review and Bug Fixes.md"}
+{"s":"SRC-01a","p":"parent","o":"[[SRC-01 XOR Tetrahedron Transform]]","kind":"link","file":"wiki/sources/parts/SRC-01a XOR Tetrahedron Transform.md","resolved":false}
+{"s":"SRC-01a","p":"status","o":"draft","kind":"attr","file":"wiki/sources/parts/SRC-01a XOR Tetrahedron Transform.md"}
+{"s":"SRC-01a","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/parts/SRC-01a XOR Tetrahedron Transform.md"}
+{"s":"SRC-01a","p":"tags","o":"source","kind":"attr","file":"wiki/sources/parts/SRC-01a XOR Tetrahedron Transform.md"}
+{"s":"SRC-01a","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/parts/SRC-01a XOR Tetrahedron Transform.md"}
+{"s":"SRC-01a","p":"tags","o":"xor","kind":"attr","file":"wiki/sources/parts/SRC-01a XOR Tetrahedron Transform.md"}
+{"s":"SRC-01a","p":"tags","o":"tetrahedron","kind":"attr","file":"wiki/sources/parts/SRC-01a XOR Tetrahedron Transform.md"}
+{"s":"SRC-01b","p":"parent","o":"[[SRC-01 XOR Tetrahedron Transform]]","kind":"link","file":"wiki/sources/parts/SRC-01b XOR Tetrahedron Transform.md","resolved":false}
+{"s":"SRC-01b","p":"status","o":"draft","kind":"attr","file":"wiki/sources/parts/SRC-01b XOR Tetrahedron Transform.md"}
+{"s":"SRC-01b","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/parts/SRC-01b XOR Tetrahedron Transform.md"}
+{"s":"SRC-01b","p":"tags","o":"source","kind":"attr","file":"wiki/sources/parts/SRC-01b XOR Tetrahedron Transform.md"}
+{"s":"SRC-01b","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/parts/SRC-01b XOR Tetrahedron Transform.md"}
+{"s":"SRC-01b","p":"tags","o":"xor","kind":"attr","file":"wiki/sources/parts/SRC-01b XOR Tetrahedron Transform.md"}
+{"s":"SRC-01b","p":"tags","o":"tetrahedron","kind":"attr","file":"wiki/sources/parts/SRC-01b XOR Tetrahedron Transform.md"}
+{"s":"SRC-03d","p":"parent","o":"[[SRC-03 Protocol Sequence Analysis]]","kind":"link","file":"wiki/sources/parts/SRC-03d Protocol Sequence Analysis.md","resolved":false}
+{"s":"SRC-03d","p":"status","o":"draft","kind":"attr","file":"wiki/sources/parts/SRC-03d Protocol Sequence Analysis.md"}
+{"s":"SRC-03d","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/parts/SRC-03d Protocol Sequence Analysis.md"}
+{"s":"SRC-03d","p":"tags","o":"source","kind":"attr","file":"wiki/sources/parts/SRC-03d Protocol Sequence Analysis.md"}
+{"s":"SRC-03d","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/parts/SRC-03d Protocol Sequence Analysis.md"}
+{"s":"SRC-03d","p":"tags","o":"sequence","kind":"attr","file":"wiki/sources/parts/SRC-03d Protocol Sequence Analysis.md"}
+{"s":"SRC-03d","p":"tags","o":"orbits","kind":"attr","file":"wiki/sources/parts/SRC-03d Protocol Sequence Analysis.md"}
+{"s":"SRC-03d","p":"tags","o":"generator","kind":"attr","file":"wiki/sources/parts/SRC-03d Protocol Sequence Analysis.md"}
+{"s":"SRC-08","p":"parent","o":"[[SRC-08 XOR Gate Built with Transistors]]","kind":"link","file":"wiki/sources/parts/SRC-08 XOR Gate Built with Transistors.md","resolved":false}
+{"s":"SRC-08","p":"status","o":"draft","kind":"attr","file":"wiki/sources/parts/SRC-08 XOR Gate Built with Transistors.md"}
+{"s":"SRC-08","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/parts/SRC-08 XOR Gate Built with Transistors.md"}
+{"s":"SRC-08","p":"tags","o":"source","kind":"attr","file":"wiki/sources/parts/SRC-08 XOR Gate Built with Transistors.md"}
+{"s":"SRC-08","p":"tags","o":"hardware","kind":"attr","file":"wiki/sources/parts/SRC-08 XOR Gate Built with Transistors.md"}
+{"s":"SRC-08","p":"tags","o":"xor","kind":"attr","file":"wiki/sources/parts/SRC-08 XOR Gate Built with Transistors.md"}
+{"s":"SRC-08","p":"tags","o":"transistor","kind":"attr","file":"wiki/sources/parts/SRC-08 XOR Gate Built with Transistors.md"}
+{"s":"SRC-08","p":"tags","o":"reference","kind":"attr","file":"wiki/sources/parts/SRC-08 XOR Gate Built with Transistors.md"}
+{"s":"SRC-02b","p":"parent","o":"[[SRC-02 XOR Gate Transistor Circuits]]","kind":"link","file":"wiki/sources/parts/SRC-02b XOR Gate Transistor Circuits.md","resolved":false}
+{"s":"SRC-02b","p":"status","o":"draft","kind":"attr","file":"wiki/sources/parts/SRC-02b XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02b","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/parts/SRC-02b XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02b","p":"tags","o":"source","kind":"attr","file":"wiki/sources/parts/SRC-02b XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02b","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/parts/SRC-02b XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02b","p":"tags","o":"hardware","kind":"attr","file":"wiki/sources/parts/SRC-02b XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02b","p":"tags","o":"xor","kind":"attr","file":"wiki/sources/parts/SRC-02b XOR Gate Transistor Circuits.md"}
+{"s":"SRC-02b","p":"tags","o":"transistor","kind":"attr","file":"wiki/sources/parts/SRC-02b XOR Gate Transistor Circuits.md"}
+{"s":"SRC-03a","p":"parent","o":"[[SRC-03 Protocol Sequence Analysis]]","kind":"link","file":"wiki/sources/parts/SRC-03a Protocol Sequence Analysis.md","resolved":false}
+{"s":"SRC-03a","p":"status","o":"draft","kind":"attr","file":"wiki/sources/parts/SRC-03a Protocol Sequence Analysis.md"}
+{"s":"SRC-03a","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/parts/SRC-03a Protocol Sequence Analysis.md"}
+{"s":"SRC-03a","p":"tags","o":"source","kind":"attr","file":"wiki/sources/parts/SRC-03a Protocol Sequence Analysis.md"}
+{"s":"SRC-03a","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/parts/SRC-03a Protocol Sequence Analysis.md"}
+{"s":"SRC-03a","p":"tags","o":"sequence","kind":"attr","file":"wiki/sources/parts/SRC-03a Protocol Sequence Analysis.md"}
+{"s":"SRC-03a","p":"tags","o":"orbits","kind":"attr","file":"wiki/sources/parts/SRC-03a Protocol Sequence Analysis.md"}
+{"s":"SRC-03a","p":"tags","o":"generator","kind":"attr","file":"wiki/sources/parts/SRC-03a Protocol Sequence Analysis.md"}
+{"s":"SRC-05a","p":"parent","o":"[[SRC-05 Conspiracy Check]]","kind":"link","file":"wiki/sources/parts/SRC-05a Conspiracy Check.md","resolved":false}
+{"s":"SRC-05a","p":"status","o":"draft","kind":"attr","file":"wiki/sources/parts/SRC-05a Conspiracy Check.md"}
+{"s":"SRC-05a","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/parts/SRC-05a Conspiracy Check.md"}
+{"s":"SRC-05a","p":"tags","o":"source","kind":"attr","file":"wiki/sources/parts/SRC-05a Conspiracy Check.md"}
+{"s":"SRC-05a","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/parts/SRC-05a Conspiracy Check.md"}
+{"s":"SRC-05a","p":"tags","o":"verification","kind":"attr","file":"wiki/sources/parts/SRC-05a Conspiracy Check.md"}
+{"s":"SRC-05a","p":"tags","o":"audit","kind":"attr","file":"wiki/sources/parts/SRC-05a Conspiracy Check.md"}
+{"s":"SRC-00a","p":"parent","o":"[[SRC-00 Protocol Review and Bug Fixes]]","kind":"link","file":"wiki/sources/parts/SRC-00a Protocol Review and Bug Fixes.md","resolved":false}
+{"s":"SRC-00a","p":"status","o":"draft","kind":"attr","file":"wiki/sources/parts/SRC-00a Protocol Review and Bug Fixes.md"}
+{"s":"SRC-00a","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/parts/SRC-00a Protocol Review and Bug Fixes.md"}
+{"s":"SRC-00a","p":"tags","o":"source","kind":"attr","file":"wiki/sources/parts/SRC-00a Protocol Review and Bug Fixes.md"}
+{"s":"SRC-00a","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/parts/SRC-00a Protocol Review and Bug Fixes.md"}
+{"s":"SRC-00a","p":"tags","o":"protocol-review","kind":"attr","file":"wiki/sources/parts/SRC-00a Protocol Review and Bug Fixes.md"}
+{"s":"SRC-04b","p":"parent","o":"[[SRC-04 Assembly Register Programming]]","kind":"link","file":"wiki/sources/parts/SRC-04b Assembly Register Programming.md","resolved":false}
+{"s":"SRC-04b","p":"status","o":"draft","kind":"attr","file":"wiki/sources/parts/SRC-04b Assembly Register Programming.md"}
+{"s":"SRC-04b","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/sources/parts/SRC-04b Assembly Register Programming.md"}
+{"s":"SRC-04b","p":"tags","o":"source","kind":"attr","file":"wiki/sources/parts/SRC-04b Assembly Register Programming.md"}
+{"s":"SRC-04b","p":"tags","o":"deepseek","kind":"attr","file":"wiki/sources/parts/SRC-04b Assembly Register Programming.md"}
+{"s":"SRC-04b","p":"tags","o":"assembly","kind":"attr","file":"wiki/sources/parts/SRC-04b Assembly Register Programming.md"}
+{"s":"SRC-04b","p":"tags","o":"registers","kind":"attr","file":"wiki/sources/parts/SRC-04b Assembly Register Programming.md"}
+{"s":"SRC-04b","p":"tags","o":"machine-code","kind":"attr","file":"wiki/sources/parts/SRC-04b Assembly Register Programming.md"}
+{"s":"OMI-IMO","p":"related","o":"- \"[[MAP-00 Protocol Canvas]]","kind":"link","file":"wiki/OMI-IMO.md","resolved":false}
+{"s":"OMI-IMO","p":"status","o":"canonical","kind":"attr","file":"wiki/OMI-IMO.md"}
+{"s":"OMI-IMO","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/OMI-IMO.md"}
+{"s":"OMI-IMO","p":"tags","o":"index","kind":"attr","file":"wiki/OMI-IMO.md"}
+{"s":"OMI-IMO","p":"tags","o":"moc","kind":"attr","file":"wiki/OMI-IMO.md"}
+{"s":"USE-00","p":"related","o":"- \"[[META-04 Repository Frame]]","kind":"link","file":"wiki/usecases/USE-00 Use Case Scenarios.md","resolved":false}
+{"s":"USE-00","p":"status","o":"draft","kind":"attr","file":"wiki/usecases/USE-00 Use Case Scenarios.md"}
+{"s":"USE-00","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/usecases/USE-00 Use Case Scenarios.md"}
+{"s":"USE-00","p":"tags","o":"usecase","kind":"attr","file":"wiki/usecases/USE-00 Use Case Scenarios.md"}
+{"s":"USE-00","p":"tags","o":"scenarios","kind":"attr","file":"wiki/usecases/USE-00 Use Case Scenarios.md"}
+{"s":"USE-00","p":"tags","o":"omi-files","kind":"attr","file":"wiki/usecases/USE-00 Use Case Scenarios.md"}
+{"s":"USE-00","p":"tags","o":"demonstration","kind":"attr","file":"wiki/usecases/USE-00 Use Case Scenarios.md"}
+{"s":"SPEC-34","p":"related","o":"- \"[[SPEC-30 The Symbol Table G]]","kind":"link","file":"wiki/spec/30-grammar/SPEC-34 Phases Attributes Constraints Configurations.md","resolved":false}
+{"s":"SPEC-34","p":"status","o":"draft","kind":"attr","file":"wiki/spec/30-grammar/SPEC-34 Phases Attributes Constraints Configurations.md"}
+{"s":"SPEC-34","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/30-grammar/SPEC-34 Phases Attributes Constraints Configurations.md"}
+{"s":"SPEC-34","p":"tags","o":"phases","kind":"attr","file":"wiki/spec/30-grammar/SPEC-34 Phases Attributes Constraints Configurations.md"}
+{"s":"SPEC-34","p":"tags","o":"attributes","kind":"attr","file":"wiki/spec/30-grammar/SPEC-34 Phases Attributes Constraints Configurations.md"}
+{"s":"SPEC-34","p":"tags","o":"constraints","kind":"attr","file":"wiki/spec/30-grammar/SPEC-34 Phases Attributes Constraints Configurations.md"}
+{"s":"SPEC-34","p":"tags","o":"configurations","kind":"attr","file":"wiki/spec/30-grammar/SPEC-34 Phases Attributes Constraints Configurations.md"}
+{"s":"SPEC-34","p":"tags","o":"knots","kind":"attr","file":"wiki/spec/30-grammar/SPEC-34 Phases Attributes Constraints Configurations.md"}
+{"s":"SPEC-34","p":"tags","o":"encoding","kind":"attr","file":"wiki/spec/30-grammar/SPEC-34 Phases Attributes Constraints Configurations.md"}
+{"s":"SPEC-34","p":"tags","o":"draft","kind":"attr","file":"wiki/spec/30-grammar/SPEC-34 Phases Attributes Constraints Configurations.md"}
+{"s":"SPEC-36","p":"related","o":"- \"[[SPEC-30 The Symbol Table G]]","kind":"link","file":"wiki/spec/30-grammar/SPEC-36 The Literal Separation.md","resolved":false}
+{"s":"SPEC-36","p":"status","o":"draft","kind":"attr","file":"wiki/spec/30-grammar/SPEC-36 The Literal Separation.md"}
+{"s":"SPEC-36","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/30-grammar/SPEC-36 The Literal Separation.md"}
+{"s":"SPEC-36","p":"tags","o":"grammar","kind":"attr","file":"wiki/spec/30-grammar/SPEC-36 The Literal Separation.md"}
+{"s":"SPEC-36","p":"tags","o":"literal","kind":"attr","file":"wiki/spec/30-grammar/SPEC-36 The Literal Separation.md"}
+{"s":"SPEC-36","p":"tags","o":"index","kind":"attr","file":"wiki/spec/30-grammar/SPEC-36 The Literal Separation.md"}
+{"s":"SPEC-36","p":"tags","o":"value","kind":"attr","file":"wiki/spec/30-grammar/SPEC-36 The Literal Separation.md"}
+{"s":"SPEC-36","p":"tags","o":"iExtant","kind":"attr","file":"wiki/spec/30-grammar/SPEC-36 The Literal Separation.md"}
+{"s":"SPEC-36","p":"tags","o":"omicron","kind":"attr","file":"wiki/spec/30-grammar/SPEC-36 The Literal Separation.md"}
+{"s":"SPEC-33","p":"related","o":"- \"[[SPEC-30 The Symbol Table G]]","kind":"link","file":"wiki/spec/30-grammar/SPEC-33 The Quadratic Forms.md","resolved":false}
+{"s":"SPEC-33","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/30-grammar/SPEC-33 The Quadratic Forms.md"}
+{"s":"SPEC-33","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/30-grammar/SPEC-33 The Quadratic Forms.md"}
+{"s":"SPEC-33","p":"tags","o":"quadratic","kind":"attr","file":"wiki/spec/30-grammar/SPEC-33 The Quadratic Forms.md"}
+{"s":"SPEC-33","p":"tags","o":"forms","kind":"attr","file":"wiki/spec/30-grammar/SPEC-33 The Quadratic Forms.md"}
+{"s":"SPEC-33","p":"tags","o":"BQF","kind":"attr","file":"wiki/spec/30-grammar/SPEC-33 The Quadratic Forms.md"}
+{"s":"SPEC-33","p":"tags","o":"discriminant","kind":"attr","file":"wiki/spec/30-grammar/SPEC-33 The Quadratic Forms.md"}
+{"s":"SPEC-33","p":"tags","o":"affine","kind":"attr","file":"wiki/spec/30-grammar/SPEC-33 The Quadratic Forms.md"}
+{"s":"SPEC-33","p":"tags","o":"projective","kind":"attr","file":"wiki/spec/30-grammar/SPEC-33 The Quadratic Forms.md"}
+{"s":"SPEC-31","p":"related","o":"- \"[[SPEC-30 The Symbol Table G]]","kind":"link","file":"wiki/spec/30-grammar/SPEC-31 Declaration Syntax.md","resolved":false}
+{"s":"SPEC-31","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/30-grammar/SPEC-31 Declaration Syntax.md"}
+{"s":"SPEC-31","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/30-grammar/SPEC-31 Declaration Syntax.md"}
+{"s":"SPEC-31","p":"tags","o":"declarations","kind":"attr","file":"wiki/spec/30-grammar/SPEC-31 Declaration Syntax.md"}
+{"s":"SPEC-31","p":"tags","o":"regex","kind":"attr","file":"wiki/spec/30-grammar/SPEC-31 Declaration Syntax.md"}
+{"s":"SPEC-31","p":"tags","o":"syntax","kind":"attr","file":"wiki/spec/30-grammar/SPEC-31 Declaration Syntax.md"}
+{"s":"SPEC-31","p":"tags","o":"TLV","kind":"attr","file":"wiki/spec/30-grammar/SPEC-31 Declaration Syntax.md"}
+{"s":"SPEC-31","p":"tags","o":"grammar","kind":"attr","file":"wiki/spec/30-grammar/SPEC-31 Declaration Syntax.md"}
+{"s":"SPEC-30","p":"related","o":"- \"[[SPEC-00 Canonical Statement]]","kind":"link","file":"wiki/spec/30-grammar/SPEC-30 The Symbol Table G.md","resolved":false}
+{"s":"SPEC-30","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/30-grammar/SPEC-30 The Symbol Table G.md"}
+{"s":"SPEC-30","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/30-grammar/SPEC-30 The Symbol Table G.md"}
+{"s":"SPEC-30","p":"tags","o":"grammar","kind":"attr","file":"wiki/spec/30-grammar/SPEC-30 The Symbol Table G.md"}
+{"s":"SPEC-30","p":"tags","o":"symbols","kind":"attr","file":"wiki/spec/30-grammar/SPEC-30 The Symbol Table G.md"}
+{"s":"SPEC-30","p":"tags","o":"regex","kind":"attr","file":"wiki/spec/30-grammar/SPEC-30 The Symbol Table G.md"}
+{"s":"SPEC-30","p":"tags","o":"G","kind":"attr","file":"wiki/spec/30-grammar/SPEC-30 The Symbol Table G.md"}
+{"s":"SPEC-30","p":"tags","o":"vocabulary","kind":"attr","file":"wiki/spec/30-grammar/SPEC-30 The Symbol Table G.md"}
+{"s":"SPEC-37","p":"related","o":"- \"[[SPEC-36 The Literal Separation]]","kind":"link","file":"wiki/spec/30-grammar/SPEC-37 The Catalog Coordinate.md","resolved":false}
+{"s":"SPEC-37","p":"status","o":"draft","kind":"attr","file":"wiki/spec/30-grammar/SPEC-37 The Catalog Coordinate.md"}
+{"s":"SPEC-37","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/30-grammar/SPEC-37 The Catalog Coordinate.md"}
+{"s":"SPEC-37","p":"tags","o":"grammar","kind":"attr","file":"wiki/spec/30-grammar/SPEC-37 The Catalog Coordinate.md"}
+{"s":"SPEC-37","p":"tags","o":"catalog","kind":"attr","file":"wiki/spec/30-grammar/SPEC-37 The Catalog Coordinate.md"}
+{"s":"SPEC-37","p":"tags","o":"base32","kind":"attr","file":"wiki/spec/30-grammar/SPEC-37 The Catalog Coordinate.md"}
+{"s":"SPEC-37","p":"tags","o":"base36","kind":"attr","file":"wiki/spec/30-grammar/SPEC-37 The Catalog Coordinate.md"}
+{"s":"SPEC-37","p":"tags","o":"base64","kind":"attr","file":"wiki/spec/30-grammar/SPEC-37 The Catalog Coordinate.md"}
+{"s":"SPEC-37","p":"tags","o":"coordinate","kind":"attr","file":"wiki/spec/30-grammar/SPEC-37 The Catalog Coordinate.md"}
+{"s":"SPEC-35","p":"related","o":"- \"[[SPEC-30 The Symbol Table G]]","kind":"link","file":"wiki/spec/30-grammar/SPEC-35 Reflections and Orbits.md","resolved":false}
+{"s":"SPEC-35","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/30-grammar/SPEC-35 Reflections and Orbits.md"}
+{"s":"SPEC-35","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/30-grammar/SPEC-35 Reflections and Orbits.md"}
+{"s":"SPEC-35","p":"tags","o":"reflections","kind":"attr","file":"wiki/spec/30-grammar/SPEC-35 Reflections and Orbits.md"}
+{"s":"SPEC-35","p":"tags","o":"base36","kind":"attr","file":"wiki/spec/30-grammar/SPEC-35 Reflections and Orbits.md"}
+{"s":"SPEC-35","p":"tags","o":"orbits","kind":"attr","file":"wiki/spec/30-grammar/SPEC-35 Reflections and Orbits.md"}
+{"s":"SPEC-35","p":"tags","o":"labels","kind":"attr","file":"wiki/spec/30-grammar/SPEC-35 Reflections and Orbits.md"}
+{"s":"SPEC-35","p":"tags","o":"XOR","kind":"attr","file":"wiki/spec/30-grammar/SPEC-35 Reflections and Orbits.md"}
+{"s":"SPEC-32","p":"related","o":"- \"[[SPEC-30 The Symbol Table G]]","kind":"link","file":"wiki/spec/30-grammar/SPEC-32 Mnemonics and Axes.md","resolved":false}
+{"s":"SPEC-32","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/30-grammar/SPEC-32 Mnemonics and Axes.md"}
+{"s":"SPEC-32","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/30-grammar/SPEC-32 Mnemonics and Axes.md"}
+{"s":"SPEC-32","p":"tags","o":"mnemonics","kind":"attr","file":"wiki/spec/30-grammar/SPEC-32 Mnemonics and Axes.md"}
+{"s":"SPEC-32","p":"tags","o":"axes","kind":"attr","file":"wiki/spec/30-grammar/SPEC-32 Mnemonics and Axes.md"}
+{"s":"SPEC-32","p":"tags","o":"palindromes","kind":"attr","file":"wiki/spec/30-grammar/SPEC-32 Mnemonics and Axes.md"}
+{"s":"SPEC-32","p":"tags","o":"wordform","kind":"attr","file":"wiki/spec/30-grammar/SPEC-32 Mnemonics and Axes.md"}
+{"s":"SPEC-32","p":"tags","o":"grammar","kind":"attr","file":"wiki/spec/30-grammar/SPEC-32 Mnemonics and Axes.md"}
+{"s":"SPEC-12","p":"related","o":"- \"[[SPEC-10 The Primitive]]","kind":"link","file":"wiki/spec/10-foundations/SPEC-12 The Ruler.md","resolved":false}
+{"s":"SPEC-12","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/10-foundations/SPEC-12 The Ruler.md"}
+{"s":"SPEC-12","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/10-foundations/SPEC-12 The Ruler.md"}
+{"s":"SPEC-12","p":"tags","o":"ruler","kind":"attr","file":"wiki/spec/10-foundations/SPEC-12 The Ruler.md"}
+{"s":"SPEC-12","p":"tags","o":"slide-rule","kind":"attr","file":"wiki/spec/10-foundations/SPEC-12 The Ruler.md"}
+{"s":"SPEC-12","p":"tags","o":"3!","kind":"attr","file":"wiki/spec/10-foundations/SPEC-12 The Ruler.md"}
+{"s":"SPEC-12","p":"tags","o":"permutation","kind":"attr","file":"wiki/spec/10-foundations/SPEC-12 The Ruler.md"}
+{"s":"SPEC-11","p":"related","o":"- \"[[SPEC-10 The Primitive]]","kind":"link","file":"wiki/spec/10-foundations/SPEC-11 The Three Primitives.md","resolved":false}
+{"s":"SPEC-11","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/10-foundations/SPEC-11 The Three Primitives.md"}
+{"s":"SPEC-11","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/10-foundations/SPEC-11 The Three Primitives.md"}
+{"s":"SPEC-11","p":"tags","o":"primitives","kind":"attr","file":"wiki/spec/10-foundations/SPEC-11 The Three Primitives.md"}
+{"s":"SPEC-11","p":"tags","o":"bind","kind":"attr","file":"wiki/spec/10-foundations/SPEC-11 The Three Primitives.md"}
+{"s":"SPEC-11","p":"tags","o":"apply","kind":"attr","file":"wiki/spec/10-foundations/SPEC-11 The Three Primitives.md"}
+{"s":"SPEC-11","p":"tags","o":"eval","kind":"attr","file":"wiki/spec/10-foundations/SPEC-11 The Three Primitives.md"}
+{"s":"SPEC-11","p":"tags","o":"monad","kind":"attr","file":"wiki/spec/10-foundations/SPEC-11 The Three Primitives.md"}
+{"s":"SPEC-11","p":"tags","o":"functor","kind":"attr","file":"wiki/spec/10-foundations/SPEC-11 The Three Primitives.md"}
+{"s":"SPEC-11","p":"tags","o":"comonad","kind":"attr","file":"wiki/spec/10-foundations/SPEC-11 The Three Primitives.md"}
+{"s":"SPEC-10","p":"related","o":"- \"[[SPEC-01 The Three Laws]]","kind":"link","file":"wiki/spec/10-foundations/SPEC-10 The Primitive.md","resolved":false}
+{"s":"SPEC-10","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/10-foundations/SPEC-10 The Primitive.md"}
+{"s":"SPEC-10","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/10-foundations/SPEC-10 The Primitive.md"}
+{"s":"SPEC-10","p":"tags","o":"primitive","kind":"attr","file":"wiki/spec/10-foundations/SPEC-10 The Primitive.md"}
+{"s":"SPEC-10","p":"tags","o":"compareExchange","kind":"attr","file":"wiki/spec/10-foundations/SPEC-10 The Primitive.md"}
+{"s":"SPEC-10","p":"tags","o":"atomics","kind":"attr","file":"wiki/spec/10-foundations/SPEC-10 The Primitive.md"}
+{"s":"SPEC-14","p":"related","o":"- \"[[SPEC-10 The Primitive]]","kind":"link","file":"wiki/spec/10-foundations/SPEC-14 Knots and Binds.md","resolved":false}
+{"s":"SPEC-14","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/10-foundations/SPEC-14 Knots and Binds.md"}
+{"s":"SPEC-14","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/10-foundations/SPEC-14 Knots and Binds.md"}
+{"s":"SPEC-14","p":"tags","o":"knots","kind":"attr","file":"wiki/spec/10-foundations/SPEC-14 Knots and Binds.md"}
+{"s":"SPEC-14","p":"tags","o":"binds","kind":"attr","file":"wiki/spec/10-foundations/SPEC-14 Knots and Binds.md"}
+{"s":"SPEC-14","p":"tags","o":"homoiconic","kind":"attr","file":"wiki/spec/10-foundations/SPEC-14 Knots and Binds.md"}
+{"s":"SPEC-14","p":"tags","o":"code-as-data","kind":"attr","file":"wiki/spec/10-foundations/SPEC-14 Knots and Binds.md"}
+{"s":"SPEC-13","p":"related","o":"- \"[[SPEC-10 The Primitive]]","kind":"link","file":"wiki/spec/10-foundations/SPEC-13 XOR Algebra.md","resolved":false}
+{"s":"SPEC-13","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/10-foundations/SPEC-13 XOR Algebra.md"}
+{"s":"SPEC-13","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/10-foundations/SPEC-13 XOR Algebra.md"}
+{"s":"SPEC-13","p":"tags","o":"xor","kind":"attr","file":"wiki/spec/10-foundations/SPEC-13 XOR Algebra.md"}
+{"s":"SPEC-13","p":"tags","o":"algebra","kind":"attr","file":"wiki/spec/10-foundations/SPEC-13 XOR Algebra.md"}
+{"s":"SPEC-13","p":"tags","o":"self-dual","kind":"attr","file":"wiki/spec/10-foundations/SPEC-13 XOR Algebra.md"}
+{"s":"SPEC-13","p":"tags","o":"involution","kind":"attr","file":"wiki/spec/10-foundations/SPEC-13 XOR Algebra.md"}
+{"s":"SPEC-13","p":"tags","o":"orbits","kind":"attr","file":"wiki/spec/10-foundations/SPEC-13 XOR Algebra.md"}
+{"s":"SPEC-16","p":"related","o":"- \"[[SPEC-10 The Primitive]]","kind":"link","file":"wiki/spec/10-foundations/SPEC-16 The Fano Invariant.md","resolved":false}
+{"s":"SPEC-16","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/10-foundations/SPEC-16 The Fano Invariant.md"}
+{"s":"SPEC-16","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/10-foundations/SPEC-16 The Fano Invariant.md"}
+{"s":"SPEC-16","p":"tags","o":"fano","kind":"attr","file":"wiki/spec/10-foundations/SPEC-16 The Fano Invariant.md"}
+{"s":"SPEC-16","p":"tags","o":"invariant","kind":"attr","file":"wiki/spec/10-foundations/SPEC-16 The Fano Invariant.md"}
+{"s":"SPEC-16","p":"tags","o":"projective-plane","kind":"attr","file":"wiki/spec/10-foundations/SPEC-16 The Fano Invariant.md"}
+{"s":"SPEC-16","p":"tags","o":"7-points","kind":"attr","file":"wiki/spec/10-foundations/SPEC-16 The Fano Invariant.md"}
+{"s":"SPEC-15","p":"related","o":"- \"[[SPEC-10 The Primitive]]","kind":"link","file":"wiki/spec/10-foundations/SPEC-15 The Delta Transform.md","resolved":false}
+{"s":"SPEC-15","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/10-foundations/SPEC-15 The Delta Transform.md"}
+{"s":"SPEC-15","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/10-foundations/SPEC-15 The Delta Transform.md"}
+{"s":"SPEC-15","p":"tags","o":"delta","kind":"attr","file":"wiki/spec/10-foundations/SPEC-15 The Delta Transform.md"}
+{"s":"SPEC-15","p":"tags","o":"transform","kind":"attr","file":"wiki/spec/10-foundations/SPEC-15 The Delta Transform.md"}
+{"s":"SPEC-15","p":"tags","o":"rotation","kind":"attr","file":"wiki/spec/10-foundations/SPEC-15 The Delta Transform.md"}
+{"s":"SPEC-15","p":"tags","o":"period-8","kind":"attr","file":"wiki/spec/10-foundations/SPEC-15 The Delta Transform.md"}
+{"s":"SPEC-60","p":"related","o":"- \"[[SPEC-00 Canonical Statement]]","kind":"link","file":"wiki/spec/60-verification/SPEC-60 Test Vectors.md","resolved":false}
+{"s":"SPEC-60","p":"status","o":"draft","kind":"attr","file":"wiki/spec/60-verification/SPEC-60 Test Vectors.md"}
+{"s":"SPEC-60","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/60-verification/SPEC-60 Test Vectors.md"}
+{"s":"SPEC-60","p":"tags","o":"conformance","kind":"attr","file":"wiki/spec/60-verification/SPEC-60 Test Vectors.md"}
+{"s":"SPEC-60","p":"tags","o":"test-vectors","kind":"attr","file":"wiki/spec/60-verification/SPEC-60 Test Vectors.md"}
+{"s":"SPEC-60","p":"tags","o":"verification","kind":"attr","file":"wiki/spec/60-verification/SPEC-60 Test Vectors.md"}
+{"s":"SPEC-63","p":"related","o":"- \"[[SPEC-62 Sexagesimal XOR Delineation]]","kind":"link","file":"wiki/spec/60-verification/SPEC-63 Block Partition and OCR.md","resolved":false}
+{"s":"SPEC-63","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/60-verification/SPEC-63 Block Partition and OCR.md"}
+{"s":"SPEC-63","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/60-verification/SPEC-63 Block Partition and OCR.md"}
+{"s":"SPEC-63","p":"tags","o":"block","kind":"attr","file":"wiki/spec/60-verification/SPEC-63 Block Partition and OCR.md"}
+{"s":"SPEC-63","p":"tags","o":"partition","kind":"attr","file":"wiki/spec/60-verification/SPEC-63 Block Partition and OCR.md"}
+{"s":"SPEC-63","p":"tags","o":"OCR","kind":"attr","file":"wiki/spec/60-verification/SPEC-63 Block Partition and OCR.md"}
+{"s":"SPEC-63","p":"tags","o":"magic-number","kind":"attr","file":"wiki/spec/60-verification/SPEC-63 Block Partition and OCR.md"}
+{"s":"SPEC-63","p":"tags","o":"shebang","kind":"attr","file":"wiki/spec/60-verification/SPEC-63 Block Partition and OCR.md"}
+{"s":"SPEC-63","p":"tags","o":"knots","kind":"attr","file":"wiki/spec/60-verification/SPEC-63 Block Partition and OCR.md"}
+{"s":"SPEC-63","p":"tags","o":"spatial","kind":"attr","file":"wiki/spec/60-verification/SPEC-63 Block Partition and OCR.md"}
+{"s":"SPEC-61","p":"related","o":"- \"[[SPEC-00 Canonical Statement]]","kind":"link","file":"wiki/spec/60-verification/SPEC-61 Implementation Status.md","resolved":false}
+{"s":"SPEC-61","p":"status","o":"draft","kind":"attr","file":"wiki/spec/60-verification/SPEC-61 Implementation Status.md"}
+{"s":"SPEC-61","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/60-verification/SPEC-61 Implementation Status.md"}
+{"s":"SPEC-61","p":"tags","o":"implementation","kind":"attr","file":"wiki/spec/60-verification/SPEC-61 Implementation Status.md"}
+{"s":"SPEC-61","p":"tags","o":"status","kind":"attr","file":"wiki/spec/60-verification/SPEC-61 Implementation Status.md"}
+{"s":"SPEC-61","p":"tags","o":"bugs","kind":"attr","file":"wiki/spec/60-verification/SPEC-61 Implementation Status.md"}
+{"s":"SPEC-61","p":"tags","o":"completeness","kind":"attr","file":"wiki/spec/60-verification/SPEC-61 Implementation Status.md"}
+{"s":"SPEC-65","p":"related","o":"- \"[[SPEC-62 Sexagesimal XOR Delineation]]","kind":"link","file":"wiki/spec/60-verification/SPEC-65 Hamming Code Delta.md","resolved":false}
+{"s":"SPEC-65","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/60-verification/SPEC-65 Hamming Code Delta.md"}
+{"s":"SPEC-65","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/60-verification/SPEC-65 Hamming Code Delta.md"}
+{"s":"SPEC-65","p":"tags","o":"Hamming","kind":"attr","file":"wiki/spec/60-verification/SPEC-65 Hamming Code Delta.md"}
+{"s":"SPEC-65","p":"tags","o":"delta","kind":"attr","file":"wiki/spec/60-verification/SPEC-65 Hamming Code Delta.md"}
+{"s":"SPEC-65","p":"tags","o":"BOM","kind":"attr","file":"wiki/spec/60-verification/SPEC-65 Hamming Code Delta.md"}
+{"s":"SPEC-65","p":"tags","o":"swap","kind":"attr","file":"wiki/spec/60-verification/SPEC-65 Hamming Code Delta.md"}
+{"s":"SPEC-65","p":"tags","o":"byte-order","kind":"attr","file":"wiki/spec/60-verification/SPEC-65 Hamming Code Delta.md"}
+{"s":"SPEC-65","p":"tags","o":"fold","kind":"attr","file":"wiki/spec/60-verification/SPEC-65 Hamming Code Delta.md"}
+{"s":"SPEC-62","p":"related","o":"- \"[[SPEC-13 XOR Algebra]]","kind":"link","file":"wiki/spec/60-verification/SPEC-62 Sexagesimal XOR Delineation.md","resolved":false}
+{"s":"SPEC-62","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/60-verification/SPEC-62 Sexagesimal XOR Delineation.md"}
+{"s":"SPEC-62","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/60-verification/SPEC-62 Sexagesimal XOR Delineation.md"}
+{"s":"SPEC-62","p":"tags","o":"sexagesimal","kind":"attr","file":"wiki/spec/60-verification/SPEC-62 Sexagesimal XOR Delineation.md"}
+{"s":"SPEC-62","p":"tags","o":"XOR","kind":"attr","file":"wiki/spec/60-verification/SPEC-62 Sexagesimal XOR Delineation.md"}
+{"s":"SPEC-62","p":"tags","o":"60","kind":"attr","file":"wiki/spec/60-verification/SPEC-62 Sexagesimal XOR Delineation.md"}
+{"s":"SPEC-62","p":"tags","o":"ASCII","kind":"attr","file":"wiki/spec/60-verification/SPEC-62 Sexagesimal XOR Delineation.md"}
+{"s":"SPEC-62","p":"tags","o":"delineation","kind":"attr","file":"wiki/spec/60-verification/SPEC-62 Sexagesimal XOR Delineation.md"}
+{"s":"SPEC-62","p":"tags","o":"orbit","kind":"attr","file":"wiki/spec/60-verification/SPEC-62 Sexagesimal XOR Delineation.md"}
+{"s":"SPEC-67","p":"related","o":"- \"[[SPEC-01 The Three Laws]]","kind":"link","file":"wiki/spec/60-verification/SPEC-67 The Block and Its Closure.md","resolved":false}
+{"s":"SPEC-67","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/60-verification/SPEC-67 The Block and Its Closure.md"}
+{"s":"SPEC-67","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/60-verification/SPEC-67 The Block and Its Closure.md"}
+{"s":"SPEC-67","p":"tags","o":"verification","kind":"attr","file":"wiki/spec/60-verification/SPEC-67 The Block and Its Closure.md"}
+{"s":"SPEC-67","p":"tags","o":"block","kind":"attr","file":"wiki/spec/60-verification/SPEC-67 The Block and Its Closure.md"}
+{"s":"SPEC-67","p":"tags","o":"tetrahedron","kind":"attr","file":"wiki/spec/60-verification/SPEC-67 The Block and Its Closure.md"}
+{"s":"SPEC-67","p":"tags","o":"closure","kind":"attr","file":"wiki/spec/60-verification/SPEC-67 The Block and Its Closure.md"}
+{"s":"SPEC-67","p":"tags","o":"theorem","kind":"attr","file":"wiki/spec/60-verification/SPEC-67 The Block and Its Closure.md"}
+{"s":"SPEC-66","p":"related","o":"- \"[[SPEC-62 Sexagesimal XOR Delineation]]","kind":"link","file":"wiki/spec/60-verification/SPEC-66 BOM Swap Table.md","resolved":false}
+{"s":"SPEC-66","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/60-verification/SPEC-66 BOM Swap Table.md"}
+{"s":"SPEC-66","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/60-verification/SPEC-66 BOM Swap Table.md"}
+{"s":"SPEC-66","p":"tags","o":"BOM","kind":"attr","file":"wiki/spec/60-verification/SPEC-66 BOM Swap Table.md"}
+{"s":"SPEC-66","p":"tags","o":"swap","kind":"attr","file":"wiki/spec/60-verification/SPEC-66 BOM Swap Table.md"}
+{"s":"SPEC-66","p":"tags","o":"reference","kind":"attr","file":"wiki/spec/60-verification/SPEC-66 BOM Swap Table.md"}
+{"s":"SPEC-66","p":"tags","o":"operations","kind":"attr","file":"wiki/spec/60-verification/SPEC-66 BOM Swap Table.md"}
+{"s":"SPEC-66","p":"tags","o":"get","kind":"attr","file":"wiki/spec/60-verification/SPEC-66 BOM Swap Table.md"}
+{"s":"SPEC-66","p":"tags","o":"set","kind":"attr","file":"wiki/spec/60-verification/SPEC-66 BOM Swap Table.md"}
+{"s":"SPEC-66","p":"tags","o":"catch","kind":"attr","file":"wiki/spec/60-verification/SPEC-66 BOM Swap Table.md"}
+{"s":"SPEC-66","p":"tags","o":"bind","kind":"attr","file":"wiki/spec/60-verification/SPEC-66 BOM Swap Table.md"}
+{"s":"SPEC-66","p":"tags","o":"apply","kind":"attr","file":"wiki/spec/60-verification/SPEC-66 BOM Swap Table.md"}
+{"s":"SPEC-66","p":"tags","o":"eval","kind":"attr","file":"wiki/spec/60-verification/SPEC-66 BOM Swap Table.md"}
+{"s":"SPEC-66","p":"tags","o":"digest","kind":"attr","file":"wiki/spec/60-verification/SPEC-66 BOM Swap Table.md"}
+{"s":"SPEC-64","p":"related","o":"- \"[[SPEC-62 Sexagesimal XOR Delineation]]","kind":"link","file":"wiki/spec/60-verification/SPEC-64 Three Cubes.md","resolved":false}
+{"s":"SPEC-64","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/60-verification/SPEC-64 Three Cubes.md"}
+{"s":"SPEC-64","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/60-verification/SPEC-64 Three Cubes.md"}
+{"s":"SPEC-64","p":"tags","o":"cubes","kind":"attr","file":"wiki/spec/60-verification/SPEC-64 Three Cubes.md"}
+{"s":"SPEC-64","p":"tags","o":"canvas","kind":"attr","file":"wiki/spec/60-verification/SPEC-64 Three Cubes.md"}
+{"s":"SPEC-64","p":"tags","o":"blackboard","kind":"attr","file":"wiki/spec/60-verification/SPEC-64 Three Cubes.md"}
+{"s":"SPEC-64","p":"tags","o":"views","kind":"attr","file":"wiki/spec/60-verification/SPEC-64 Three Cubes.md"}
+{"s":"SPEC-64","p":"tags","o":"60-of-64","kind":"attr","file":"wiki/spec/60-verification/SPEC-64 Three Cubes.md"}
+{"s":"SPEC-51","p":"related","o":"- \"[[SPEC-50 Stream Transport]]","kind":"link","file":"wiki/spec/50-runtime/SPEC-51 JSON Canvas Interchange.md","resolved":false}
+{"s":"SPEC-51","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/50-runtime/SPEC-51 JSON Canvas Interchange.md"}
+{"s":"SPEC-51","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/50-runtime/SPEC-51 JSON Canvas Interchange.md"}
+{"s":"SPEC-51","p":"tags","o":"canvas","kind":"attr","file":"wiki/spec/50-runtime/SPEC-51 JSON Canvas Interchange.md"}
+{"s":"SPEC-51","p":"tags","o":"JSON","kind":"attr","file":"wiki/spec/50-runtime/SPEC-51 JSON Canvas Interchange.md"}
+{"s":"SPEC-51","p":"tags","o":"interchange","kind":"attr","file":"wiki/spec/50-runtime/SPEC-51 JSON Canvas Interchange.md"}
+{"s":"SPEC-51","p":"tags","o":"interoperability","kind":"attr","file":"wiki/spec/50-runtime/SPEC-51 JSON Canvas Interchange.md"}
+{"s":"SPEC-51","p":"tags","o":"visualization","kind":"attr","file":"wiki/spec/50-runtime/SPEC-51 JSON Canvas Interchange.md"}
+{"s":"SPEC-53","p":"related","o":"- \"[[SPEC-50 Stream Transport]]","kind":"link","file":"wiki/spec/50-runtime/SPEC-53 Clocks and Periods.md","resolved":false}
+{"s":"SPEC-53","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/50-runtime/SPEC-53 Clocks and Periods.md"}
+{"s":"SPEC-53","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/50-runtime/SPEC-53 Clocks and Periods.md"}
+{"s":"SPEC-53","p":"tags","o":"clocks","kind":"attr","file":"wiki/spec/50-runtime/SPEC-53 Clocks and Periods.md"}
+{"s":"SPEC-53","p":"tags","o":"periods","kind":"attr","file":"wiki/spec/50-runtime/SPEC-53 Clocks and Periods.md"}
+{"s":"SPEC-53","p":"tags","o":"240","kind":"attr","file":"wiki/spec/50-runtime/SPEC-53 Clocks and Periods.md"}
+{"s":"SPEC-53","p":"tags","o":"5040","kind":"attr","file":"wiki/spec/50-runtime/SPEC-53 Clocks and Periods.md"}
+{"s":"SPEC-53","p":"tags","o":"time-crystals","kind":"attr","file":"wiki/spec/50-runtime/SPEC-53 Clocks and Periods.md"}
+{"s":"SPEC-53","p":"tags","o":"delta","kind":"attr","file":"wiki/spec/50-runtime/SPEC-53 Clocks and Periods.md"}
+{"s":"SPEC-50","p":"related","o":"- \"[[SPEC-23 The Rosetta Stone]]","kind":"link","file":"wiki/spec/50-runtime/SPEC-50 Stream Transport.md","resolved":false}
+{"s":"SPEC-50","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/50-runtime/SPEC-50 Stream Transport.md"}
+{"s":"SPEC-50","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/50-runtime/SPEC-50 Stream Transport.md"}
+{"s":"SPEC-50","p":"tags","o":"stream","kind":"attr","file":"wiki/spec/50-runtime/SPEC-50 Stream Transport.md"}
+{"s":"SPEC-50","p":"tags","o":"transport","kind":"attr","file":"wiki/spec/50-runtime/SPEC-50 Stream Transport.md"}
+{"s":"SPEC-50","p":"tags","o":"JSONL","kind":"attr","file":"wiki/spec/50-runtime/SPEC-50 Stream Transport.md"}
+{"s":"SPEC-50","p":"tags","o":"NDJSON","kind":"attr","file":"wiki/spec/50-runtime/SPEC-50 Stream Transport.md"}
+{"s":"SPEC-50","p":"tags","o":"HTTP","kind":"attr","file":"wiki/spec/50-runtime/SPEC-50 Stream Transport.md"}
+{"s":"SPEC-50","p":"tags","o":"SSE","kind":"attr","file":"wiki/spec/50-runtime/SPEC-50 Stream Transport.md"}
+{"s":"SPEC-50","p":"tags","o":"WebVTT","kind":"attr","file":"wiki/spec/50-runtime/SPEC-50 Stream Transport.md"}
+{"s":"SPEC-54","p":"related","o":"- \"[[SPEC-50 Stream Transport]]","kind":"link","file":"wiki/spec/50-runtime/SPEC-54 The Web Platform Layers.md","resolved":false}
+{"s":"SPEC-54","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/50-runtime/SPEC-54 The Web Platform Layers.md"}
+{"s":"SPEC-54","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/50-runtime/SPEC-54 The Web Platform Layers.md"}
+{"s":"SPEC-54","p":"tags","o":"web","kind":"attr","file":"wiki/spec/50-runtime/SPEC-54 The Web Platform Layers.md"}
+{"s":"SPEC-54","p":"tags","o":"platform","kind":"attr","file":"wiki/spec/50-runtime/SPEC-54 The Web Platform Layers.md"}
+{"s":"SPEC-54","p":"tags","o":"layers","kind":"attr","file":"wiki/spec/50-runtime/SPEC-54 The Web Platform Layers.md"}
+{"s":"SPEC-54","p":"tags","o":"HTTP","kind":"attr","file":"wiki/spec/50-runtime/SPEC-54 The Web Platform Layers.md"}
+{"s":"SPEC-54","p":"tags","o":"DOM","kind":"attr","file":"wiki/spec/50-runtime/SPEC-54 The Web Platform Layers.md"}
+{"s":"SPEC-54","p":"tags","o":"PannerNode","kind":"attr","file":"wiki/spec/50-runtime/SPEC-54 The Web Platform Layers.md"}
+{"s":"SPEC-54","p":"tags","o":"Blob","kind":"attr","file":"wiki/spec/50-runtime/SPEC-54 The Web Platform Layers.md"}
+{"s":"SPEC-54","p":"tags","o":"Worklet","kind":"attr","file":"wiki/spec/50-runtime/SPEC-54 The Web Platform Layers.md"}
+{"s":"SPEC-52","p":"related","o":"- \"[[SPEC-50 Stream Transport]]","kind":"link","file":"wiki/spec/50-runtime/SPEC-52 The REPL and the Digest.md","resolved":false}
+{"s":"SPEC-52","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/50-runtime/SPEC-52 The REPL and the Digest.md"}
+{"s":"SPEC-52","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/50-runtime/SPEC-52 The REPL and the Digest.md"}
+{"s":"SPEC-52","p":"tags","o":"REPL","kind":"attr","file":"wiki/spec/50-runtime/SPEC-52 The REPL and the Digest.md"}
+{"s":"SPEC-52","p":"tags","o":"digest","kind":"attr","file":"wiki/spec/50-runtime/SPEC-52 The REPL and the Digest.md"}
+{"s":"SPEC-52","p":"tags","o":"F-mean","kind":"attr","file":"wiki/spec/50-runtime/SPEC-52 The REPL and the Digest.md"}
+{"s":"SPEC-52","p":"tags","o":"read-eval-print","kind":"attr","file":"wiki/spec/50-runtime/SPEC-52 The REPL and the Digest.md"}
+{"s":"SPEC-52","p":"tags","o":"Horn-clause","kind":"attr","file":"wiki/spec/50-runtime/SPEC-52 The REPL and the Digest.md"}
+{"s":"SPEC-55","p":"related","o":"- \"[[SPEC-50 Stream Transport]]","kind":"link","file":"wiki/spec/50-runtime/SPEC-55 ASCII Folds.md","resolved":false}
+{"s":"SPEC-55","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/50-runtime/SPEC-55 ASCII Folds.md"}
+{"s":"SPEC-55","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/50-runtime/SPEC-55 ASCII Folds.md"}
+{"s":"SPEC-55","p":"tags","o":"ASCII","kind":"attr","file":"wiki/spec/50-runtime/SPEC-55 ASCII Folds.md"}
+{"s":"SPEC-55","p":"tags","o":"folds","kind":"attr","file":"wiki/spec/50-runtime/SPEC-55 ASCII Folds.md"}
+{"s":"SPEC-55","p":"tags","o":"separators","kind":"attr","file":"wiki/spec/50-runtime/SPEC-55 ASCII Folds.md"}
+{"s":"SPEC-55","p":"tags","o":"control-codes","kind":"attr","file":"wiki/spec/50-runtime/SPEC-55 ASCII Folds.md"}
+{"s":"SPEC-55","p":"tags","o":"0x1C","kind":"attr","file":"wiki/spec/50-runtime/SPEC-55 ASCII Folds.md"}
+{"s":"SPEC-55","p":"tags","o":"0x0C","kind":"attr","file":"wiki/spec/50-runtime/SPEC-55 ASCII Folds.md"}
+{"s":"SPEC-22","p":"related","o":"- \"[[SPEC-20 The Dimensional Axis]]","kind":"link","file":"wiki/spec/20-architecture/SPEC-22 The Blob.md","resolved":false}
+{"s":"SPEC-22","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/20-architecture/SPEC-22 The Blob.md"}
+{"s":"SPEC-22","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/20-architecture/SPEC-22 The Blob.md"}
+{"s":"SPEC-22","p":"tags","o":"blob","kind":"attr","file":"wiki/spec/20-architecture/SPEC-22 The Blob.md"}
+{"s":"SPEC-22","p":"tags","o":"65536","kind":"attr","file":"wiki/spec/20-architecture/SPEC-22 The Blob.md"}
+{"s":"SPEC-22","p":"tags","o":"truth-table","kind":"attr","file":"wiki/spec/20-architecture/SPEC-22 The Blob.md"}
+{"s":"SPEC-22","p":"tags","o":"substrate","kind":"attr","file":"wiki/spec/20-architecture/SPEC-22 The Blob.md"}
+{"s":"SPEC-24","p":"related","o":"- \"[[SPEC-20 The Dimensional Axis]]","kind":"link","file":"wiki/spec/20-architecture/SPEC-24 Observers.md","resolved":false}
+{"s":"SPEC-24","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/20-architecture/SPEC-24 Observers.md"}
+{"s":"SPEC-24","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/20-architecture/SPEC-24 Observers.md"}
+{"s":"SPEC-24","p":"tags","o":"observer","kind":"attr","file":"wiki/spec/20-architecture/SPEC-24 Observers.md"}
+{"s":"SPEC-24","p":"tags","o":"circulator","kind":"attr","file":"wiki/spec/20-architecture/SPEC-24 Observers.md"}
+{"s":"SPEC-24","p":"tags","o":"perceptron","kind":"attr","file":"wiki/spec/20-architecture/SPEC-24 Observers.md"}
+{"s":"SPEC-24","p":"tags","o":"mnemonic","kind":"attr","file":"wiki/spec/20-architecture/SPEC-24 Observers.md"}
+{"s":"SPEC-21","p":"related","o":"- \"[[SPEC-20 The Dimensional Axis]]","kind":"link","file":"wiki/spec/20-architecture/SPEC-21 The Inversion Law.md","resolved":false}
+{"s":"SPEC-21","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/20-architecture/SPEC-21 The Inversion Law.md"}
+{"s":"SPEC-21","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/20-architecture/SPEC-21 The Inversion Law.md"}
+{"s":"SPEC-21","p":"tags","o":"inversion","kind":"attr","file":"wiki/spec/20-architecture/SPEC-21 The Inversion Law.md"}
+{"s":"SPEC-21","p":"tags","o":"law","kind":"attr","file":"wiki/spec/20-architecture/SPEC-21 The Inversion Law.md"}
+{"s":"SPEC-21","p":"tags","o":"parity","kind":"attr","file":"wiki/spec/20-architecture/SPEC-21 The Inversion Law.md"}
+{"s":"SPEC-21","p":"tags","o":"active","kind":"attr","file":"wiki/spec/20-architecture/SPEC-21 The Inversion Law.md"}
+{"s":"SPEC-21","p":"tags","o":"passive","kind":"attr","file":"wiki/spec/20-architecture/SPEC-21 The Inversion Law.md"}
+{"s":"SPEC-26","p":"related","o":"- \"[[SPEC-04 First Principles]]","kind":"link","file":"wiki/spec/20-architecture/SPEC-26 The Prompt Tree.md","resolved":false}
+{"s":"SPEC-26","p":"status","o":"review","kind":"attr","file":"wiki/spec/20-architecture/SPEC-26 The Prompt Tree.md"}
+{"s":"SPEC-26","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/20-architecture/SPEC-26 The Prompt Tree.md"}
+{"s":"SPEC-26","p":"tags","o":"architecture","kind":"attr","file":"wiki/spec/20-architecture/SPEC-26 The Prompt Tree.md"}
+{"s":"SPEC-26","p":"tags","o":"prompt-tree","kind":"attr","file":"wiki/spec/20-architecture/SPEC-26 The Prompt Tree.md"}
+{"s":"SPEC-26","p":"tags","o":"patricia-trie","kind":"attr","file":"wiki/spec/20-architecture/SPEC-26 The Prompt Tree.md"}
+{"s":"SPEC-26","p":"tags","o":"bom","kind":"attr","file":"wiki/spec/20-architecture/SPEC-26 The Prompt Tree.md"}
+{"s":"SPEC-26","p":"tags","o":"treemap","kind":"attr","file":"wiki/spec/20-architecture/SPEC-26 The Prompt Tree.md"}
+{"s":"SPEC-26","p":"tags","o":"blob","kind":"attr","file":"wiki/spec/20-architecture/SPEC-26 The Prompt Tree.md"}
+{"s":"SPEC-20","p":"related","o":"- \"[[SPEC-00 Canonical Statement]]","kind":"link","file":"wiki/spec/20-architecture/SPEC-20 The Dimensional Axis.md","resolved":false}
+{"s":"SPEC-20","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/20-architecture/SPEC-20 The Dimensional Axis.md"}
+{"s":"SPEC-20","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/20-architecture/SPEC-20 The Dimensional Axis.md"}
+{"s":"SPEC-20","p":"tags","o":"dimensions","kind":"attr","file":"wiki/spec/20-architecture/SPEC-20 The Dimensional Axis.md"}
+{"s":"SPEC-20","p":"tags","o":"axis","kind":"attr","file":"wiki/spec/20-architecture/SPEC-20 The Dimensional Axis.md"}
+{"s":"SPEC-20","p":"tags","o":"D-axis","kind":"attr","file":"wiki/spec/20-architecture/SPEC-20 The Dimensional Axis.md"}
+{"s":"SPEC-20","p":"tags","o":"ladder","kind":"attr","file":"wiki/spec/20-architecture/SPEC-20 The Dimensional Axis.md"}
+{"s":"SPEC-25","p":"related","o":"- \"[[SPEC-20 The Dimensional Axis]]","kind":"link","file":"wiki/spec/20-architecture/SPEC-25 The Iff.md","resolved":false}
+{"s":"SPEC-25","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/20-architecture/SPEC-25 The Iff.md"}
+{"s":"SPEC-25","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/20-architecture/SPEC-25 The Iff.md"}
+{"s":"SPEC-25","p":"tags","o":"iff","kind":"attr","file":"wiki/spec/20-architecture/SPEC-25 The Iff.md"}
+{"s":"SPEC-25","p":"tags","o":"coordinate","kind":"attr","file":"wiki/spec/20-architecture/SPEC-25 The Iff.md"}
+{"s":"SPEC-25","p":"tags","o":"types","kind":"attr","file":"wiki/spec/20-architecture/SPEC-25 The Iff.md"}
+{"s":"SPEC-25","p":"tags","o":"boundary","kind":"attr","file":"wiki/spec/20-architecture/SPEC-25 The Iff.md"}
+{"s":"SPEC-25","p":"tags","o":"constraint","kind":"attr","file":"wiki/spec/20-architecture/SPEC-25 The Iff.md"}
+{"s":"SPEC-27","p":"related","o":"- \"[[SPEC-07 The Fundamental Invariants]]","kind":"link","file":"wiki/spec/20-architecture/SPEC-27 The Prompt Tree Index.md","resolved":false}
+{"s":"SPEC-27","p":"status","o":"review","kind":"attr","file":"wiki/spec/20-architecture/SPEC-27 The Prompt Tree Index.md"}
+{"s":"SPEC-27","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/20-architecture/SPEC-27 The Prompt Tree Index.md"}
+{"s":"SPEC-27","p":"tags","o":"architecture","kind":"attr","file":"wiki/spec/20-architecture/SPEC-27 The Prompt Tree Index.md"}
+{"s":"SPEC-27","p":"tags","o":"prompt-tree","kind":"attr","file":"wiki/spec/20-architecture/SPEC-27 The Prompt Tree Index.md"}
+{"s":"SPEC-27","p":"tags","o":"index","kind":"attr","file":"wiki/spec/20-architecture/SPEC-27 The Prompt Tree Index.md"}
+{"s":"SPEC-27","p":"tags","o":"derivation","kind":"attr","file":"wiki/spec/20-architecture/SPEC-27 The Prompt Tree Index.md"}
+{"s":"SPEC-27","p":"tags","o":"declaration","kind":"attr","file":"wiki/spec/20-architecture/SPEC-27 The Prompt Tree Index.md"}
+{"s":"SPEC-27","p":"tags","o":"pattern","kind":"attr","file":"wiki/spec/20-architecture/SPEC-27 The Prompt Tree Index.md"}
+{"s":"SPEC-23","p":"related","o":"- \"[[SPEC-20 The Dimensional Axis]]","kind":"link","file":"wiki/spec/20-architecture/SPEC-23 The Rosetta Stone.md","resolved":false}
+{"s":"SPEC-23","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/20-architecture/SPEC-23 The Rosetta Stone.md"}
+{"s":"SPEC-23","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/20-architecture/SPEC-23 The Rosetta Stone.md"}
+{"s":"SPEC-23","p":"tags","o":"rosetta","kind":"attr","file":"wiki/spec/20-architecture/SPEC-23 The Rosetta Stone.md"}
+{"s":"SPEC-23","p":"tags","o":"stone","kind":"attr","file":"wiki/spec/20-architecture/SPEC-23 The Rosetta Stone.md"}
+{"s":"SPEC-23","p":"tags","o":"specification","kind":"attr","file":"wiki/spec/20-architecture/SPEC-23 The Rosetta Stone.md"}
+{"s":"SPEC-23","p":"tags","o":"yaml","kind":"attr","file":"wiki/spec/20-architecture/SPEC-23 The Rosetta Stone.md"}
+{"s":"SPEC-23","p":"tags","o":"json","kind":"attr","file":"wiki/spec/20-architecture/SPEC-23 The Rosetta Stone.md"}
+{"s":"SPEC-23","p":"tags","o":"canvas","kind":"attr","file":"wiki/spec/20-architecture/SPEC-23 The Rosetta Stone.md"}
+{"s":"SPEC-40","p":"related","o":"- \"[[SPEC-23 The Rosetta Stone]]","kind":"link","file":"wiki/spec/40-hardware/SPEC-40 The 6T XOR Circuit.md","resolved":false}
+{"s":"SPEC-40","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/40-hardware/SPEC-40 The 6T XOR Circuit.md"}
+{"s":"SPEC-40","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/40-hardware/SPEC-40 The 6T XOR Circuit.md"}
+{"s":"SPEC-40","p":"tags","o":"hardware","kind":"attr","file":"wiki/spec/40-hardware/SPEC-40 The 6T XOR Circuit.md"}
+{"s":"SPEC-40","p":"tags","o":"XOR","kind":"attr","file":"wiki/spec/40-hardware/SPEC-40 The 6T XOR Circuit.md"}
+{"s":"SPEC-40","p":"tags","o":"transistor","kind":"attr","file":"wiki/spec/40-hardware/SPEC-40 The 6T XOR Circuit.md"}
+{"s":"SPEC-40","p":"tags","o":"6T","kind":"attr","file":"wiki/spec/40-hardware/SPEC-40 The 6T XOR Circuit.md"}
+{"s":"SPEC-40","p":"tags","o":"circuit","kind":"attr","file":"wiki/spec/40-hardware/SPEC-40 The 6T XOR Circuit.md"}
+{"s":"SPEC-40","p":"tags","o":"breadboard","kind":"attr","file":"wiki/spec/40-hardware/SPEC-40 The 6T XOR Circuit.md"}
+{"s":"SPEC-44","p":"related","o":"- \"[[SPEC-40 The 6T XOR Circuit]]","kind":"link","file":"wiki/spec/40-hardware/SPEC-44 The Virtual Breadboard.md","resolved":false}
+{"s":"SPEC-44","p":"status","o":"draft","kind":"attr","file":"wiki/spec/40-hardware/SPEC-44 The Virtual Breadboard.md"}
+{"s":"SPEC-44","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/40-hardware/SPEC-44 The Virtual Breadboard.md"}
+{"s":"SPEC-44","p":"tags","o":"hardware","kind":"attr","file":"wiki/spec/40-hardware/SPEC-44 The Virtual Breadboard.md"}
+{"s":"SPEC-44","p":"tags","o":"XOR","kind":"attr","file":"wiki/spec/40-hardware/SPEC-44 The Virtual Breadboard.md"}
+{"s":"SPEC-44","p":"tags","o":"breadboard","kind":"attr","file":"wiki/spec/40-hardware/SPEC-44 The Virtual Breadboard.md"}
+{"s":"SPEC-44","p":"tags","o":"canvas","kind":"attr","file":"wiki/spec/40-hardware/SPEC-44 The Virtual Breadboard.md"}
+{"s":"SPEC-44","p":"tags","o":"web-audio","kind":"attr","file":"wiki/spec/40-hardware/SPEC-44 The Virtual Breadboard.md"}
+{"s":"SPEC-44","p":"tags","o":"self-generating","kind":"attr","file":"wiki/spec/40-hardware/SPEC-44 The Virtual Breadboard.md"}
+{"s":"SPEC-44","p":"tags","o":"example","kind":"attr","file":"wiki/spec/40-hardware/SPEC-44 The Virtual Breadboard.md"}
+{"s":"SPEC-41","p":"related","o":"- \"[[SPEC-40 The 6T XOR Circuit]]","kind":"link","file":"wiki/spec/40-hardware/SPEC-41 The 8T XOR Circuit.md","resolved":false}
+{"s":"SPEC-41","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/40-hardware/SPEC-41 The 8T XOR Circuit.md"}
+{"s":"SPEC-41","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/40-hardware/SPEC-41 The 8T XOR Circuit.md"}
+{"s":"SPEC-41","p":"tags","o":"hardware","kind":"attr","file":"wiki/spec/40-hardware/SPEC-41 The 8T XOR Circuit.md"}
+{"s":"SPEC-41","p":"tags","o":"XOR","kind":"attr","file":"wiki/spec/40-hardware/SPEC-41 The 8T XOR Circuit.md"}
+{"s":"SPEC-41","p":"tags","o":"transistor","kind":"attr","file":"wiki/spec/40-hardware/SPEC-41 The 8T XOR Circuit.md"}
+{"s":"SPEC-41","p":"tags","o":"8T","kind":"attr","file":"wiki/spec/40-hardware/SPEC-41 The 8T XOR Circuit.md"}
+{"s":"SPEC-41","p":"tags","o":"circuit","kind":"attr","file":"wiki/spec/40-hardware/SPEC-41 The 8T XOR Circuit.md"}
+{"s":"SPEC-41","p":"tags","o":"NAND","kind":"attr","file":"wiki/spec/40-hardware/SPEC-41 The 8T XOR Circuit.md"}
+{"s":"SPEC-41","p":"tags","o":"SECURE","kind":"attr","file":"wiki/spec/40-hardware/SPEC-41 The 8T XOR Circuit.md"}
+{"s":"SPEC-43","p":"related","o":"- \"[[SPEC-40 The 6T XOR Circuit]]","kind":"link","file":"wiki/spec/40-hardware/SPEC-43 Prime Gaps and Sextuplets.md","resolved":false}
+{"s":"SPEC-43","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/40-hardware/SPEC-43 Prime Gaps and Sextuplets.md"}
+{"s":"SPEC-43","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/40-hardware/SPEC-43 Prime Gaps and Sextuplets.md"}
+{"s":"SPEC-43","p":"tags","o":"primes","kind":"attr","file":"wiki/spec/40-hardware/SPEC-43 Prime Gaps and Sextuplets.md"}
+{"s":"SPEC-43","p":"tags","o":"sextuplet","kind":"attr","file":"wiki/spec/40-hardware/SPEC-43 Prime Gaps and Sextuplets.md"}
+{"s":"SPEC-43","p":"tags","o":"gaps","kind":"attr","file":"wiki/spec/40-hardware/SPEC-43 Prime Gaps and Sextuplets.md"}
+{"s":"SPEC-43","p":"tags","o":"generator","kind":"attr","file":"wiki/spec/40-hardware/SPEC-43 Prime Gaps and Sextuplets.md"}
+{"s":"SPEC-43","p":"tags","o":"pseudo-generator","kind":"attr","file":"wiki/spec/40-hardware/SPEC-43 Prime Gaps and Sextuplets.md"}
+{"s":"SPEC-42","p":"related","o":"- \"[[SPEC-40 The 6T XOR Circuit]]","kind":"link","file":"wiki/spec/40-hardware/SPEC-42 Circuit Sourcemap.md","resolved":false}
+{"s":"SPEC-42","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/40-hardware/SPEC-42 Circuit Sourcemap.md"}
+{"s":"SPEC-42","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/40-hardware/SPEC-42 Circuit Sourcemap.md"}
+{"s":"SPEC-42","p":"tags","o":"sourcemap","kind":"attr","file":"wiki/spec/40-hardware/SPEC-42 Circuit Sourcemap.md"}
+{"s":"SPEC-42","p":"tags","o":"physical","kind":"attr","file":"wiki/spec/40-hardware/SPEC-42 Circuit Sourcemap.md"}
+{"s":"SPEC-42","p":"tags","o":"trace","kind":"attr","file":"wiki/spec/40-hardware/SPEC-42 Circuit Sourcemap.md"}
+{"s":"SPEC-42","p":"tags","o":"breadboard","kind":"attr","file":"wiki/spec/40-hardware/SPEC-42 Circuit Sourcemap.md"}
+{"s":"SPEC-42","p":"tags","o":"datasheet","kind":"attr","file":"wiki/spec/40-hardware/SPEC-42 Circuit Sourcemap.md"}
+{"s":"SPEC-02","p":"related","o":"- \"[[SPEC-00 Canonical Statement]]","kind":"link","file":"wiki/spec/00-canonical/SPEC-02 Conformance Criteria.md","resolved":false}
+{"s":"SPEC-02","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/00-canonical/SPEC-02 Conformance Criteria.md"}
+{"s":"SPEC-02","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/00-canonical/SPEC-02 Conformance Criteria.md"}
+{"s":"SPEC-02","p":"tags","o":"conformance","kind":"attr","file":"wiki/spec/00-canonical/SPEC-02 Conformance Criteria.md"}
+{"s":"SPEC-02","p":"tags","o":"criteria","kind":"attr","file":"wiki/spec/00-canonical/SPEC-02 Conformance Criteria.md"}
+{"s":"SPEC-02","p":"tags","o":"requirements","kind":"attr","file":"wiki/spec/00-canonical/SPEC-02 Conformance Criteria.md"}
+{"s":"SPEC-04","p":"related","o":"- \"[[SPEC-01 The Three Laws]]","kind":"link","file":"wiki/spec/00-canonical/SPEC-04 First Principles.md","resolved":false}
+{"s":"SPEC-04","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/00-canonical/SPEC-04 First Principles.md"}
+{"s":"SPEC-04","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/00-canonical/SPEC-04 First Principles.md"}
+{"s":"SPEC-04","p":"tags","o":"canonical","kind":"attr","file":"wiki/spec/00-canonical/SPEC-04 First Principles.md"}
+{"s":"SPEC-04","p":"tags","o":"first-principles","kind":"attr","file":"wiki/spec/00-canonical/SPEC-04 First Principles.md"}
+{"s":"SPEC-04","p":"tags","o":"minimum","kind":"attr","file":"wiki/spec/00-canonical/SPEC-04 First Principles.md"}
+{"s":"SPEC-04","p":"tags","o":"prompt","kind":"attr","file":"wiki/spec/00-canonical/SPEC-04 First Principles.md"}
+{"s":"SPEC-04","p":"tags","o":"buffer","kind":"attr","file":"wiki/spec/00-canonical/SPEC-04 First Principles.md"}
+{"s":"SPEC-04","p":"tags","o":"exchange","kind":"attr","file":"wiki/spec/00-canonical/SPEC-04 First Principles.md"}
+{"s":"SPEC-03","p":"related","o":"- \"[[SPEC-00 Canonical Statement]]","kind":"link","file":"wiki/spec/00-canonical/SPEC-03 Notation OMI-Lisp.md","resolved":false}
+{"s":"SPEC-03","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/00-canonical/SPEC-03 Notation OMI-Lisp.md"}
+{"s":"SPEC-03","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/00-canonical/SPEC-03 Notation OMI-Lisp.md"}
+{"s":"SPEC-03","p":"tags","o":"notation","kind":"attr","file":"wiki/spec/00-canonical/SPEC-03 Notation OMI-Lisp.md"}
+{"s":"SPEC-03","p":"tags","o":"OMI-Lisp","kind":"attr","file":"wiki/spec/00-canonical/SPEC-03 Notation OMI-Lisp.md"}
+{"s":"SPEC-03","p":"tags","o":"ASCII","kind":"attr","file":"wiki/spec/00-canonical/SPEC-03 Notation OMI-Lisp.md"}
+{"s":"SPEC-03","p":"tags","o":"terminal","kind":"attr","file":"wiki/spec/00-canonical/SPEC-03 Notation OMI-Lisp.md"}
+{"s":"SPEC-09","p":"related","o":"- \"[[SPEC-04 First Principles]]","kind":"link","file":"wiki/spec/00-canonical/SPEC-09 The Structure Map.md","resolved":false}
+{"s":"SPEC-09","p":"status","o":"review","kind":"attr","file":"wiki/spec/00-canonical/SPEC-09 The Structure Map.md"}
+{"s":"SPEC-09","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/00-canonical/SPEC-09 The Structure Map.md"}
+{"s":"SPEC-09","p":"tags","o":"canonical","kind":"attr","file":"wiki/spec/00-canonical/SPEC-09 The Structure Map.md"}
+{"s":"SPEC-09","p":"tags","o":"structure-map","kind":"attr","file":"wiki/spec/00-canonical/SPEC-09 The Structure Map.md"}
+{"s":"SPEC-09","p":"tags","o":"medium","kind":"attr","file":"wiki/spec/00-canonical/SPEC-09 The Structure Map.md"}
+{"s":"SPEC-09","p":"tags","o":"canonicalization","kind":"attr","file":"wiki/spec/00-canonical/SPEC-09 The Structure Map.md"}
+{"s":"SPEC-01","p":"related","o":"- \"[[SPEC-10 The Primitive]]","kind":"link","file":"wiki/spec/00-canonical/SPEC-01 The Three Laws.md","resolved":false}
+{"s":"SPEC-01","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/00-canonical/SPEC-01 The Three Laws.md"}
+{"s":"SPEC-01","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/00-canonical/SPEC-01 The Three Laws.md"}
+{"s":"SPEC-01","p":"tags","o":"laws","kind":"attr","file":"wiki/spec/00-canonical/SPEC-01 The Three Laws.md"}
+{"s":"SPEC-01","p":"tags","o":"axioms","kind":"attr","file":"wiki/spec/00-canonical/SPEC-01 The Three Laws.md"}
+{"s":"SPEC-00","p":"related","o":"- \"[[SPEC-10 The Primitive]]","kind":"link","file":"wiki/spec/00-canonical/SPEC-00 Canonical Statement.md","resolved":false}
+{"s":"SPEC-00","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/00-canonical/SPEC-00 Canonical Statement.md"}
+{"s":"SPEC-00","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/00-canonical/SPEC-00 Canonical Statement.md"}
+{"s":"SPEC-00","p":"tags","o":"canonical","kind":"attr","file":"wiki/spec/00-canonical/SPEC-00 Canonical Statement.md"}
+{"s":"SPEC-00","p":"tags","o":"statement","kind":"attr","file":"wiki/spec/00-canonical/SPEC-00 Canonical Statement.md"}
+{"s":"SPEC-05","p":"related","o":"- \"[[SPEC-01 The Three Laws]]","kind":"link","file":"wiki/spec/00-canonical/SPEC-05 The Axiom of Propagation.md","resolved":false}
+{"s":"SPEC-05","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/00-canonical/SPEC-05 The Axiom of Propagation.md"}
+{"s":"SPEC-05","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/00-canonical/SPEC-05 The Axiom of Propagation.md"}
+{"s":"SPEC-05","p":"tags","o":"canonical","kind":"attr","file":"wiki/spec/00-canonical/SPEC-05 The Axiom of Propagation.md"}
+{"s":"SPEC-05","p":"tags","o":"axiom","kind":"attr","file":"wiki/spec/00-canonical/SPEC-05 The Axiom of Propagation.md"}
+{"s":"SPEC-05","p":"tags","o":"propagation","kind":"attr","file":"wiki/spec/00-canonical/SPEC-05 The Axiom of Propagation.md"}
+{"s":"SPEC-05","p":"tags","o":"choice","kind":"attr","file":"wiki/spec/00-canonical/SPEC-05 The Axiom of Propagation.md"}
+{"s":"SPEC-05","p":"tags","o":"return","kind":"attr","file":"wiki/spec/00-canonical/SPEC-05 The Axiom of Propagation.md"}
+{"s":"SPEC-07","p":"related","o":"- \"[[SPEC-04 First Principles]]","kind":"link","file":"wiki/spec/00-canonical/SPEC-07 The Fundamental Invariants.md","resolved":false}
+{"s":"SPEC-07","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/00-canonical/SPEC-07 The Fundamental Invariants.md"}
+{"s":"SPEC-07","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/00-canonical/SPEC-07 The Fundamental Invariants.md"}
+{"s":"SPEC-07","p":"tags","o":"canonical","kind":"attr","file":"wiki/spec/00-canonical/SPEC-07 The Fundamental Invariants.md"}
+{"s":"SPEC-07","p":"tags","o":"invariants","kind":"attr","file":"wiki/spec/00-canonical/SPEC-07 The Fundamental Invariants.md"}
+{"s":"SPEC-07","p":"tags","o":"ontology","kind":"attr","file":"wiki/spec/00-canonical/SPEC-07 The Fundamental Invariants.md"}
+{"s":"SPEC-07","p":"tags","o":"theorem","kind":"attr","file":"wiki/spec/00-canonical/SPEC-07 The Fundamental Invariants.md"}
+{"s":"SPEC-07","p":"tags","o":"definition","kind":"attr","file":"wiki/spec/00-canonical/SPEC-07 The Fundamental Invariants.md"}
+{"s":"SPEC-06","p":"related","o":"- \"[[SPEC-04 First Principles]]","kind":"link","file":"wiki/spec/00-canonical/SPEC-06 The Circulator.md","resolved":false}
+{"s":"SPEC-06","p":"status","o":"canonical","kind":"attr","file":"wiki/spec/00-canonical/SPEC-06 The Circulator.md"}
+{"s":"SPEC-06","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/00-canonical/SPEC-06 The Circulator.md"}
+{"s":"SPEC-06","p":"tags","o":"canonical","kind":"attr","file":"wiki/spec/00-canonical/SPEC-06 The Circulator.md"}
+{"s":"SPEC-06","p":"tags","o":"circulator","kind":"attr","file":"wiki/spec/00-canonical/SPEC-06 The Circulator.md"}
+{"s":"SPEC-06","p":"tags","o":"boundary","kind":"attr","file":"wiki/spec/00-canonical/SPEC-06 The Circulator.md"}
+{"s":"SPEC-06","p":"tags","o":"decision","kind":"attr","file":"wiki/spec/00-canonical/SPEC-06 The Circulator.md"}
+{"s":"SPEC-06","p":"tags","o":"delta","kind":"attr","file":"wiki/spec/00-canonical/SPEC-06 The Circulator.md"}
+{"s":"SPEC-06","p":"tags","o":"exit","kind":"attr","file":"wiki/spec/00-canonical/SPEC-06 The Circulator.md"}
+{"s":"SPEC-08","p":"related","o":"- \"[[SPEC-04 First Principles]]","kind":"link","file":"wiki/spec/00-canonical/SPEC-08 The Derivation Path.md","resolved":false}
+{"s":"SPEC-08","p":"status","o":"review","kind":"attr","file":"wiki/spec/00-canonical/SPEC-08 The Derivation Path.md"}
+{"s":"SPEC-08","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/spec/00-canonical/SPEC-08 The Derivation Path.md"}
+{"s":"SPEC-08","p":"tags","o":"canonical","kind":"attr","file":"wiki/spec/00-canonical/SPEC-08 The Derivation Path.md"}
+{"s":"SPEC-08","p":"tags","o":"pedagogy","kind":"attr","file":"wiki/spec/00-canonical/SPEC-08 The Derivation Path.md"}
+{"s":"SPEC-08","p":"tags","o":"derivation","kind":"attr","file":"wiki/spec/00-canonical/SPEC-08 The Derivation Path.md"}
+{"s":"SPEC-08","p":"tags","o":"reading-order","kind":"attr","file":"wiki/spec/00-canonical/SPEC-08 The Derivation Path.md"}
+{"s":"README","p":"related","o":"- \"[[OMI-IMO]]","kind":"link","file":"wiki/README.md","resolved":false}
+{"s":"README","p":"status","o":"canonical","kind":"attr","file":"wiki/README.md"}
+{"s":"README","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/README.md"}
+{"s":"README","p":"tags","o":"index","kind":"attr","file":"wiki/README.md"}
+{"s":"README","p":"tags","o":"readme","kind":"attr","file":"wiki/README.md"}
+{"s":"README","p":"tags","o":"vault","kind":"attr","file":"wiki/README.md"}
+{"s":"PROG-00","p":"related","o":"- \"[[SPEC-14 Knots and Binds]]","kind":"link","file":"wiki/progress/PROG-00 Homoiconic Syntax Tracker.md","resolved":false}
+{"s":"PROG-00","p":"status","o":"review","kind":"attr","file":"wiki/progress/PROG-00 Homoiconic Syntax Tracker.md"}
+{"s":"PROG-00","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/progress/PROG-00 Homoiconic Syntax Tracker.md"}
+{"s":"PROG-00","p":"tags","o":"progress","kind":"attr","file":"wiki/progress/PROG-00 Homoiconic Syntax Tracker.md"}
+{"s":"PROG-00","p":"tags","o":"homoiconic","kind":"attr","file":"wiki/progress/PROG-00 Homoiconic Syntax Tracker.md"}
+{"s":"PROG-00","p":"tags","o":"syntax","kind":"attr","file":"wiki/progress/PROG-00 Homoiconic Syntax Tracker.md"}
+{"s":"PROG-00","p":"tags","o":"grammar","kind":"attr","file":"wiki/progress/PROG-00 Homoiconic Syntax Tracker.md"}
+{"s":"PROG-00","p":"tags","o":"tracker","kind":"attr","file":"wiki/progress/PROG-00 Homoiconic Syntax Tracker.md"}
+{"s":"OPEN-02","p":"related","o":"- \"[[OPEN-00 Contradiction Register]]","kind":"link","file":"wiki/open/OPEN-02 Broken Code Inventory.md","resolved":false}
+{"s":"OPEN-02","p":"status","o":"canonical","kind":"attr","file":"wiki/open/OPEN-02 Broken Code Inventory.md"}
+{"s":"OPEN-02","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/open/OPEN-02 Broken Code Inventory.md"}
+{"s":"OPEN-02","p":"tags","o":"bugs","kind":"attr","file":"wiki/open/OPEN-02 Broken Code Inventory.md"}
+{"s":"OPEN-02","p":"tags","o":"broken","kind":"attr","file":"wiki/open/OPEN-02 Broken Code Inventory.md"}
+{"s":"OPEN-02","p":"tags","o":"code","kind":"attr","file":"wiki/open/OPEN-02 Broken Code Inventory.md"}
+{"s":"OPEN-02","p":"tags","o":"inventory","kind":"attr","file":"wiki/open/OPEN-02 Broken Code Inventory.md"}
+{"s":"OPEN-04","p":"related","o":"- \"[[OPEN-00 Contradiction Register]]","kind":"link","file":"wiki/open/OPEN-04 Discarded Claims.md","resolved":false}
+{"s":"OPEN-04","p":"status","o":"canonical","kind":"attr","file":"wiki/open/OPEN-04 Discarded Claims.md"}
+{"s":"OPEN-04","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/open/OPEN-04 Discarded Claims.md"}
+{"s":"OPEN-04","p":"tags","o":"discarded","kind":"attr","file":"wiki/open/OPEN-04 Discarded Claims.md"}
+{"s":"OPEN-04","p":"tags","o":"claims","kind":"attr","file":"wiki/open/OPEN-04 Discarded Claims.md"}
+{"s":"OPEN-04","p":"tags","o":"rejected","kind":"attr","file":"wiki/open/OPEN-04 Discarded Claims.md"}
+{"s":"OPEN-04","p":"tags","o":"debunked","kind":"attr","file":"wiki/open/OPEN-04 Discarded Claims.md"}
+{"s":"OPEN-03","p":"related","o":"- \"[[OPEN-00 Contradiction Register]]","kind":"link","file":"wiki/open/OPEN-03 Glossary.md","resolved":false}
+{"s":"OPEN-03","p":"status","o":"canonical","kind":"attr","file":"wiki/open/OPEN-03 Glossary.md"}
+{"s":"OPEN-03","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/open/OPEN-03 Glossary.md"}
+{"s":"OPEN-03","p":"tags","o":"glossary","kind":"attr","file":"wiki/open/OPEN-03 Glossary.md"}
+{"s":"OPEN-03","p":"tags","o":"terminology","kind":"attr","file":"wiki/open/OPEN-03 Glossary.md"}
+{"s":"OPEN-03","p":"tags","o":"definitions","kind":"attr","file":"wiki/open/OPEN-03 Glossary.md"}
+{"s":"OPEN-01","p":"related","o":"- \"[[OPEN-00 Contradiction Register]]","kind":"link","file":"wiki/open/OPEN-01 Open Questions.md","resolved":false}
+{"s":"OPEN-01","p":"status","o":"canonical","kind":"attr","file":"wiki/open/OPEN-01 Open Questions.md"}
+{"s":"OPEN-01","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/open/OPEN-01 Open Questions.md"}
+{"s":"OPEN-01","p":"tags","o":"open-questions","kind":"attr","file":"wiki/open/OPEN-01 Open Questions.md"}
+{"s":"OPEN-01","p":"tags","o":"unresolved","kind":"attr","file":"wiki/open/OPEN-01 Open Questions.md"}
+{"s":"OPEN-01","p":"tags","o":"research","kind":"attr","file":"wiki/open/OPEN-01 Open Questions.md"}
+{"s":"OPEN-00","p":"related","o":"- \"[[SPEC-00 Canonical Statement]]","kind":"link","file":"wiki/open/OPEN-00 Contradiction Register.md","resolved":false}
+{"s":"OPEN-00","p":"status","o":"canonical","kind":"attr","file":"wiki/open/OPEN-00 Contradiction Register.md"}
+{"s":"OPEN-00","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/open/OPEN-00 Contradiction Register.md"}
+{"s":"OPEN-00","p":"tags","o":"contradictions","kind":"attr","file":"wiki/open/OPEN-00 Contradiction Register.md"}
+{"s":"OPEN-00","p":"tags","o":"register","kind":"attr","file":"wiki/open/OPEN-00 Contradiction Register.md"}
+{"s":"OPEN-00","p":"tags","o":"errors","kind":"attr","file":"wiki/open/OPEN-00 Contradiction Register.md"}
+{"s":"OPEN-00","p":"tags","o":"bugs","kind":"attr","file":"wiki/open/OPEN-00 Contradiction Register.md"}
+{"s":"EXT-03","p":"related","o":"- \"[[EXT-00 How to Extend the Protocol]]","kind":"link","file":"wiki/extend/EXT-03 Adding a Substrate.md","resolved":false}
+{"s":"EXT-03","p":"status","o":"canonical","kind":"attr","file":"wiki/extend/EXT-03 Adding a Substrate.md"}
+{"s":"EXT-03","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/extend/EXT-03 Adding a Substrate.md"}
+{"s":"EXT-03","p":"tags","o":"extension","kind":"attr","file":"wiki/extend/EXT-03 Adding a Substrate.md"}
+{"s":"EXT-03","p":"tags","o":"substrate","kind":"attr","file":"wiki/extend/EXT-03 Adding a Substrate.md"}
+{"s":"EXT-03","p":"tags","o":"hardware","kind":"attr","file":"wiki/extend/EXT-03 Adding a Substrate.md"}
+{"s":"EXT-03","p":"tags","o":"circuit","kind":"attr","file":"wiki/extend/EXT-03 Adding a Substrate.md"}
+{"s":"EXT-03","p":"tags","o":"sourcemap","kind":"attr","file":"wiki/extend/EXT-03 Adding a Substrate.md"}
+{"s":"EXT-01","p":"related","o":"- \"[[EXT-00 How to Extend the Protocol]]","kind":"link","file":"wiki/extend/EXT-01 Adding a Dimension.md","resolved":false}
+{"s":"EXT-01","p":"status","o":"canonical","kind":"attr","file":"wiki/extend/EXT-01 Adding a Dimension.md"}
+{"s":"EXT-01","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/extend/EXT-01 Adding a Dimension.md"}
+{"s":"EXT-01","p":"tags","o":"extension","kind":"attr","file":"wiki/extend/EXT-01 Adding a Dimension.md"}
+{"s":"EXT-01","p":"tags","o":"dimension","kind":"attr","file":"wiki/extend/EXT-01 Adding a Dimension.md"}
+{"s":"EXT-01","p":"tags","o":"D-axis","kind":"attr","file":"wiki/extend/EXT-01 Adding a Dimension.md"}
+{"s":"EXT-02","p":"related","o":"- \"[[EXT-00 How to Extend the Protocol]]","kind":"link","file":"wiki/extend/EXT-02 Adding a Symbol.md","resolved":false}
+{"s":"EXT-02","p":"status","o":"canonical","kind":"attr","file":"wiki/extend/EXT-02 Adding a Symbol.md"}
+{"s":"EXT-02","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/extend/EXT-02 Adding a Symbol.md"}
+{"s":"EXT-02","p":"tags","o":"extension","kind":"attr","file":"wiki/extend/EXT-02 Adding a Symbol.md"}
+{"s":"EXT-02","p":"tags","o":"symbol","kind":"attr","file":"wiki/extend/EXT-02 Adding a Symbol.md"}
+{"s":"EXT-02","p":"tags","o":"regex","kind":"attr","file":"wiki/extend/EXT-02 Adding a Symbol.md"}
+{"s":"EXT-02","p":"tags","o":"grammar","kind":"attr","file":"wiki/extend/EXT-02 Adding a Symbol.md"}
+{"s":"EXT-05","p":"related","o":"- \"[[EXT-00 How to Extend the Protocol]]","kind":"link","file":"wiki/extend/EXT-05 Review Checklist.md","resolved":false}
+{"s":"EXT-05","p":"status","o":"canonical","kind":"attr","file":"wiki/extend/EXT-05 Review Checklist.md"}
+{"s":"EXT-05","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/extend/EXT-05 Review Checklist.md"}
+{"s":"EXT-05","p":"tags","o":"review","kind":"attr","file":"wiki/extend/EXT-05 Review Checklist.md"}
+{"s":"EXT-05","p":"tags","o":"checklist","kind":"attr","file":"wiki/extend/EXT-05 Review Checklist.md"}
+{"s":"EXT-05","p":"tags","o":"quality","kind":"attr","file":"wiki/extend/EXT-05 Review Checklist.md"}
+{"s":"EXT-00","p":"related","o":"- \"[[SPEC-00 Canonical Statement]]","kind":"link","file":"wiki/extend/EXT-00 How to Extend the Protocol.md","resolved":false}
+{"s":"EXT-00","p":"status","o":"canonical","kind":"attr","file":"wiki/extend/EXT-00 How to Extend the Protocol.md"}
+{"s":"EXT-00","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/extend/EXT-00 How to Extend the Protocol.md"}
+{"s":"EXT-00","p":"tags","o":"extension","kind":"attr","file":"wiki/extend/EXT-00 How to Extend the Protocol.md"}
+{"s":"EXT-00","p":"tags","o":"guide","kind":"attr","file":"wiki/extend/EXT-00 How to Extend the Protocol.md"}
+{"s":"EXT-00","p":"tags","o":"how-to","kind":"attr","file":"wiki/extend/EXT-00 How to Extend the Protocol.md"}
+{"s":"EXT-04","p":"related","o":"- \"[[EXT-00 How to Extend the Protocol]]","kind":"link","file":"wiki/extend/EXT-04 Literate Workflow.md","resolved":false}
+{"s":"EXT-04","p":"status","o":"canonical","kind":"attr","file":"wiki/extend/EXT-04 Literate Workflow.md"}
+{"s":"EXT-04","p":"tags","o":"omi-imo","kind":"attr","file":"wiki/extend/EXT-04 Literate Workflow.md"}
+{"s":"EXT-04","p":"tags","o":"literate","kind":"attr","file":"wiki/extend/EXT-04 Literate Workflow.md"}
+{"s":"EXT-04","p":"tags","o":"workflow","kind":"attr","file":"wiki/extend/EXT-04 Literate Workflow.md"}
+{"s":"EXT-04","p":"tags","o":"extract","kind":"attr","file":"wiki/extend/EXT-04 Literate Workflow.md"}
+{"s":"EXT-04","p":"tags","o":"distill","kind":"attr","file":"wiki/extend/EXT-04 Literate Workflow.md"}
+{"s":"EXT-04","p":"tags","o":"specify","kind":"attr","file":"wiki/extend/EXT-04 Literate Workflow.md"}
+{"s":"EXT-04","p":"tags","o":"implement","kind":"attr","file":"wiki/extend/EXT-04 Literate Workflow.md"}
+{"s":"EXT-04","p":"tags","o":"verify","kind":"attr","file":"wiki/extend/EXT-04 Literate Workflow.md"}

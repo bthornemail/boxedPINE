@@ -1,0 +1,49 @@
+THE EARNED SPINE — 32 resolved edges across 15 subjects
+
+  canvasl-metaverse-browser-api
+      related → meta-log-db-rfc2119-specification
+      prerequisites → meta-log-db-rfc2119-specification
+  canvasl-metaverse-browser-examples
+      related → canvasl-metaverse-browser-api
+      prerequisites → canvasl-metaverse-browser-api
+  frontmatter-validation-setup
+      related → meta-log-db-rfc2119-specification
+      related → canvasl-metaverse-browser-api
+      prerequisites → meta-log-db-rfc2119-specification
+  meta-log-db-documentation-home
+      related → meta-log-db-rfc2119-specification
+  meta-log-db-glossary
+      related → meta-log-db-rfc2119-specification
+      related → canvasl-metaverse-browser-api
+  meta-log-db-linking-setup
+      related → meta-log-db-rfc2119-specification
+  meta-log-db-readme
+      related → meta-log-db-rfc2119-specification
+      related → canvasl-metaverse-browser-api
+  meta-log-db-rfc2119-specification
+      related → canvasl-metaverse-browser-api
+  migration-guide-metabrowser-adapter-to-canvasl-browser
+      related → canvasl-metaverse-browser-api
+      related → meta-log-db-rfc2119-specification
+      prerequisites → canvasl-metaverse-browser-api
+  phase-3-complete
+      related → phase-3-next-steps-complete
+  phase-3-next-steps-complete
+      related → phase-3-complete
+      prerequisites → phase-3-complete
+  r5rs-examples
+      related → meta-log-db-rfc2119-specification
+      related → canvasl-metaverse-browser-api
+      prerequisites → meta-log-db-rfc2119-specification
+  shacl-examples
+      related → meta-log-db-rfc2119-specification
+      related → canvasl-metaverse-browser-api
+      prerequisites → meta-log-db-rfc2119-specification
+  sparql-examples
+      related → meta-log-db-rfc2119-specification
+      related → canvasl-metaverse-browser-api
+      prerequisites → meta-log-db-rfc2119-specification
+  testing-guide-canvasl-metaverse-browser
+      related → canvasl-metaverse-browser-api
+      related → meta-log-db-rfc2119-specification
+      prerequisites → meta-log-db-rfc2119-specification

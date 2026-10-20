@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fano Plane of Revelation - Interactive Visualization</title>
+    <style>
+        :root {
+            --bg: #0f1724;
+            --card: #0b1220;
+            --muted: #94a3b8;
+            --accent: #7c3aed;
+            --accent-2: #06b6d4;
+            --glass: rgba(255,255,255,0.03);
+            --text: #e6eef8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(180deg, #071024 0%, var(--bg) 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        
+        .app {
+            display: flex;
+            height: 100vh;
+            gap: 18px;
+            padding: 18px;
+        }
+        
+        .canvas {
+            flex: 1;
+            border-radius: 14px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            box-shadow: 0 6px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+            padding: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        h1 {
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .lead {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+        }
+        
+        .btn {
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.03);
+            padding: 8px 10px;
+            border-radius: 10px;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .btn.active {
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            color: white;
+            border: 0;
+            box-shadow: 0 6px 18px rgba(124,58,237,0.18);
+        }
+        
+        .side {
+            width: 420px;
+            min-width: 320px;
+            max-width: 480px;
+            border-radius: 12px;
+            padding: 14px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            box-shadow: 0 6px 30px rgba(2,6,23,0.6);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        
+        .node-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .badge {
+            padding: 6px 8px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.02);
+            font-size: 12px;
+            color: var(--muted);
+        }
+        
+        pre {
+            background: rgba(0,0,0,0.15);
+            padding: 10px;
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 12px;
+            overflow: auto;
+            max-height: 260px;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 13px;
+            color: var(--muted);
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        
+        .dot.origin { background: var(--error); }
+        .dot.law { background: var(--warning); }
+        .dot.word { background: var(--accent); }
+        .dot.wisdom { background: var(--accent-2); }
+        .dot.judgment { background: var(--success); }
+        .dot.renewal { background: #8b5cf6; }
+        .dot.boundary { background: #f97316; }
+        
+        .small {
+            font-size: 12px;
+            color: var(--muted);
+        }
+        
+        .hint {
+            color: var(--muted);
+            font-size: 12px;
+        }
+        
+        svg {
+            width: 100%;
+            height: calc(100% - 56px);
+            display: block;
+        }
+        
+        .node-circle {
+            cursor: grab;
+            transition: all 0.2s;
+        }
+        
+        .node-circle:hover {
+            stroke: #fff;
+            stroke-width: 2.4;
+            filter: drop-shadow(0 10px 22px rgba(0,0,0,0.6));
+        }
+        
+        .node-label {
+            fill: #e6eef8;
+            font-size: 12px;
+            pointer-events: none;
+            font-weight: 600;
+        }
+        
+        .link {
+            stroke: rgba(255,255,255,0.06);
+            stroke-width: 2;
+            transition: all 0.2s;
+        }
+        
+        .link.highlight {
+            stroke: rgba(124,58,237,0.9);
+            stroke-width: 3.4;
+            filter: drop-shadow(0 6px 16px rgba(124,58,237,0.14));
+        }
+        
+        .node-circle.highlight {
+            stroke: #fff;
+            stroke-width: 2.4;
+            filter: drop-shadow(0 10px 22px rgba(0,0,0,0.6));
+        }
+        
+        @media (max-width: 980px) {
+            .app {
+                flex-direction: column;
+            }
+            .side {
+                width: 100%;
+            }
+            svg {
+                height: 360px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="canvas card">
+            <div class="header">
+                <div>
+                    <h1>Fano Plane of Revelation</h1>
+                    <p class="lead">Interactive visualization of the seven abstractions and seven story-lines</p>
+                </div>
+                <div class="controls">
+                    <button id="toggleStories" class="btn active">Show Stories</button>
+                    <button id="toggleAbstractions" class="btn">Show Abstractions</button>
+                    <button id="toggleNarratives" class="btn">Show Narratives</button>
+                </div>
+            </div>
+            
+            <svg id="svgRoot" viewBox="0 0 1200 640" preserveAspectRatio="xMidYMid meet">
+                <!-- SVG content will be generated by JavaScript -->
+            </svg>
+            
+            <div style="position: absolute; right: 22px; bottom: 18px; background: rgba(0,0,0,0.18); padding: 8px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.03);">
+                <div class="small">Tip: Click nodes to explore. Use controls to switch views.</div>
+            </div>
+        </div>
+        
+        <aside class="side">
+            <div class="card">
+                <div class="node-title">
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="font-weight: 700; font-size: 15px" id="panelTitle">Select a node</div>
+                        <div class="small" id="panelSubtitle">Fano plane details appear here</div>
+                    </div>
+                    <div style="margin-left: auto">
+                        <span class="badge" id="panelBadge">fano</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="flex: 1; overflow: auto">
+                <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between">
+                    <div style="display: flex; flex-direction: column">
+                        <div style="font-weight: 700">Details / YAML</div>
+                        <div class="small">The Fano plane structure and biblical connections</div>
+                    </div>
+                    <div class="small" id="selectedConnections"></div>
+                </div>
+                
+                <pre id="yamlView">// Click a node to view details</pre>
+            </div>
+            
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center">
+                    <div>
+                        <div style="font-weight: 700">Legend</div>
+                        <div class="small">Seven abstractions</div>
+                    </div>
+                    <div class="legend">
+                        <div class="legend-item"><span class="dot origin"></span> Origin</div>
+                        <div class="legend-item"><span class="dot law"></span> Law</div>
+                        <div class="legend-item"><span class="dot word"></span> Word</div>
+                        <div class="legend-item"><span class="dot wisdom"></span> Wisdom</div>
+                        <div class="legend-item"><span class="dot judgment"></span> Judgment</div>
+                        <div class="legend-item"><span class="dot renewal"></span> Renewal</div>
+                        <div class="legend-item"><span class="dot boundary"></span> Boundary</div>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="small">Built for Brian James Thorne — mapping wisdom ↔ geometry ↔ consciousness</footer>
+        </aside>
+    </div>
+
+    <script>
+        // Fano plane data structure
+        const fanoData = {
+            points: [
+                {
+                    id: 1,
+                    name: "Origin",
+                    color: "#ef4444",
+                    description: "The point of beginning, the source of all geometric construction",
+                    consciousness: "The origin of awareness, the source of all consciousness",
+                    biblical: "Genesis 1:1 - 'In the beginning God created the heavens and the earth'",
+                    geometric: "The geometric origin (0,0,0) in 3D space",
+                    connections: [2, 4, 3]
+                },
+                {
+                    id: 2,
+                    name: "Law",
+                    color: "#f59e0b",
+                    description: "The pattern that constrains and organizes geometric space",
+                    consciousness: "The rules that govern consciousness and behavior",
+                    biblical: "Torah - 'The law of the Lord is perfect, reviving the soul'",
+                    geometric: "The geometric constraints that define valid constructions",
+                    connections: [1, 3, 5]
+                },
+                {
+                    id: 3,
+                    name: "Word",
+                    color: "#7c3aed",
+                    description: "The expression of geometric principles through communication",
+                    consciousness: "The means by which consciousness expresses and communicates",
+                    biblical: "John 1:1 - 'In the beginning was the Word, and the Word was with God'",
+                    geometric: "The geometric expression of principles through symbols",
+                    connections: [2, 4, 6]
+                },
+                {
+                    id: 4,
+                    name: "Wisdom",
+                    color: "#06b6d4",
+                    description: "The understanding of geometric relationships and patterns",
+                    consciousness: "The ability to discern and understand consciousness patterns",
+                    biblical: "Proverbs 8:22 - 'The Lord possessed me at the beginning of His way'",
+                    geometric: "The geometric understanding of relationships and patterns",
+                    connections: [1, 3, 5]
+                },
+                {
+                    id: 5,
+                    name: "Judgment",
+                    color: "#10b981",
+                    description: "The evaluation and differentiation of geometric structures",
+                    consciousness: "The ability to evaluate and differentiate consciousness states",
+                    biblical: "Noah - 'The Lord saw that the wickedness of man was great'",
+                    geometric: "The geometric evaluation of structures and relationships",
+                    connections: [2, 4, 6]
+                },
+                {
+                    id: 6,
+                    name: "Renewal",
+                    color: "#8b5cf6",
+                    description: "The transformation and renewal of geometric structures",
+                    consciousness: "The ability to transform and renew consciousness states",
+                    biblical: "Resurrection - 'He is not here; he has risen, just as he said'",
+                    geometric: "The geometric transformation and renewal of structures",
+                    connections: [3, 5, 7]
+                },
+                {
+                    id: 7,
+                    name: "Boundary",
+                    color: "#f97316",
+                    description: "The limit and protection of geometric space",
+                    consciousness: "The boundary that defines and protects consciousness",
+                    biblical: "Eden - 'You must not eat from the tree of knowledge'",
+                    geometric: "The geometric boundary that defines and protects space",
+                    connections: [4, 6, 1]
+                }
+            ],
+            lines: [
+                {
+                    id: 1,
+                    points: [1, 2, 4],
+                    name: "Creation through Law and Word",
+                    narrative: "Origin → Law → Wisdom",
+                    biblical: "Genesis 1:1 - Creation through Law and Word",
+                    geometric: "The evolution from source to constraint to understanding"
+                },
+                {
+                    id: 2,
+                    points: [2, 3, 5],
+                    name: "Law discerned through judgment and wisdom",
+                    narrative: "Law → Word → Judgment",
+                    biblical: "Moses → Prophets - Law discerned through judgment",
+                    geometric: "The evolution from constraint to expression to evaluation"
+                },
+                {
+                    id: 3,
+                    points: [3, 4, 6],
+                    name: "Wisdom emerges from speech and origin",
+                    narrative: "Word → Wisdom → Renewal",
+                    biblical: "Proverbs 8 / Sirach 24 - Wisdom emerges from speech",
+                    geometric: "The evolution from expression to understanding to transformation"
+                },
+                {
+                    id: 4,
+                    points: [4, 5, 7],
+                    name: "Wisdom learns through limit and suffering",
+                    narrative: "Wisdom → Judgment → Boundary",
+                    biblical: "Job / Christ Passion - Wisdom learns through suffering",
+                    geometric: "The evolution from understanding to evaluation to protection"
+                },
+                {
+                    id: 5,
+                    points: [5, 6, 1],
+                    name: "Judgment defines boundary of new creation",
+                    narrative: "Judgment → Renewal → Origin",
+                    biblical: "Revelation's New Heaven - Judgment defines new creation",
+                    geometric: "The evolution from evaluation to transformation to source"
+                },
+                {
+                    id: 6,
+                    points: [6, 7, 2],
+                    name: "Renewal bounded by moral law",
+                    narrative: "Renewal → Boundary → Law",
+                    biblical: "Covenant cycles - Renewal bounded by moral law",
+                    geometric: "The evolution from transformation to protection to constraint"
+                },
+                {
+                    id: 7,
+                    points: [7, 1, 3],
+                    name: "Boundary defines boundary of new creation",
+                    narrative: "Boundary → Origin → Word",
+                    biblical: "Eden / Crown of Thorns - Boundary defines new creation",
+                    geometric: "The evolution from protection to source to expression"
+                }
+            ]
+        };
+
+        // Initialize SVG
+        const svg = document.getElementById('svgRoot');
+        const w = 1200, h = 640;
+        svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+
+        // Create defs for arrowheads
+        const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+        defs.innerHTML = `
+            <marker id="arrow" markerWidth="6" markerHeight="6" refX="10" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L6,3 z" fill="rgba(255,255,255,0.08)"></path>
+            </marker>
+        `;
+        svg.appendChild(defs);
+
+        // Layout nodes in Fano plane configuration
+        const cx = w/2, cy = h/2, radius = Math.min(w,h)/4;
+        fanoData.points.forEach((point, i) => {
+            const angle = (i * 2 * Math.PI) / 7;
+            point.x = cx + Math.cos(angle) * radius;
+            point.y = cy + Math.sin(angle) * radius;
+            point.r = 24;
+        });
+
+        // Create links group and nodes group
+        const linkLayer = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        const nodeLayer = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        svg.appendChild(linkLayer);
+        svg.appendChild(nodeLayer);
+
+        // Render links
+        const linkElems = [];
+        fanoData.lines.forEach(line => {
+            const points = line.points.map(id => fanoData.points.find(p => p.id === id));
+            if (points.length === 3) {
+                // Create curved line connecting the three points
+                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                const [p1, p2, p3] = points;
+                
+                // Create a smooth curve through the three points
+                const pathData = `M ${p1.x} ${p1.y} Q ${p2.x} ${p2.y} ${p3.x} ${p3.y}`;
+                path.setAttribute('d', pathData);
+                path.setAttribute('class', 'link');
+                path.setAttribute('marker-end', 'url(#arrow)');
+                
+                linkLayer.appendChild(path);
+                line.elem = path;
+                linkElems.push(line);
+            }
+        });
+
+        // Render nodes
+        const nodeElems = [];
+        fanoData.points.forEach(point => {
+            const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            g.setAttribute('transform', `translate(${point.x},${point.y})`);
+            g.style.cursor = 'grab';
+            
+            // Circle
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute('class', 'node-circle');
+            circle.setAttribute('r', point.r);
+            circle.setAttribute('fill', point.color);
+            circle.setAttribute('fill-opacity', 0.12);
+            circle.setAttribute('stroke', 'rgba(255,255,255,0.06)');
+            circle.setAttribute('stroke-width', 1.6);
+            
+            // Label
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute('class', 'node-label');
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('alignment-baseline', 'middle');
+            text.setAttribute('dy', '0.35em');
+            text.textContent = point.name;
+            
+            // Small indicator
+            const small = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            small.setAttribute('r', 6);
+            small.setAttribute('cx', -point.r + 8);
+            small.setAttribute('cy', -point.r + 8);
+            small.setAttribute('fill', point.color);
+            small.setAttribute('fill-opacity', 0.98);
+            small.setAttribute('stroke', 'rgba(0,0,0,0.14)');
+            small.setAttribute('stroke-width', '1');
+            
+            g.appendChild(circle);
+            g.appendChild(small);
+            g.appendChild(text);
+            
+            nodeLayer.appendChild(g);
+            point.g = g;
+            point.circle = circle;
+            point.text = text;
+            nodeElems.push(point);
+        });
+
+        // Selection panel
+        let selected = null;
+        const yamlView = document.getElementById('yamlView');
+        const panelTitle = document.getElementById('panelTitle');
+        const panelSubtitle = document.getElementById('panelSubtitle');
+        const panelBadge = document.getElementById('panelBadge');
+        const selectedConnections = document.getElementById('selectedConnections');
+
+        function clearSelection() {
+            selected = null;
+            panelTitle.textContent = "Select a node";
+            panelSubtitle.textContent = "Fano plane details appear here";
+            panelBadge.textContent = "fano";
+            yamlView.textContent = "// Click a node to view details";
+            selectedConnections.textContent = "";
+            nodeElems.forEach(n => n.circle.classList.remove('highlight'));
+            linkElems.forEach(l => l.elem.classList.remove('highlight'));
+        }
+
+        function selectNode(node) {
+            selected = node;
+            panelTitle.textContent = node.name;
+            panelSubtitle.textContent = node.description;
+            panelBadge.textContent = `point ${node.id}`;
+            
+            // Show YAML-like block
+            const block = {
+                id: node.id,
+                name: node.name,
+                description: node.description,
+                consciousness: node.consciousness,
+                biblical: node.biblical,
+                geometric: node.geometric,
+                connections: node.connections
+            };
+            
+            selectedConnections.textContent = `Connections: ${node.connections.join(', ')}`;
+            yamlView.textContent = yamlStringify(block);
+            
+            // Highlight node and its connections
+            nodeElems.forEach(nd => nd.circle.classList.remove('highlight'));
+            linkElems.forEach(l => l.elem.classList.remove('highlight'));
+            
+            node.circle.classList.add('highlight');
+            linkElems.forEach(l => {
+                if (l.points.includes(node.id)) {
+                    l.elem.classList.add('highlight');
+                }
+            });
+        }
+
+        // YAML-like serializer
+        function yamlStringify(obj) {
+            let s = "";
+            s += `id: ${obj.id}\n`;
+            s += `name: ${obj.name}\n`;
+            if (obj.description) s += `description: |\n  ${obj.description}\n`;
+            if (obj.consciousness) s += `consciousness: |\n  ${obj.consciousness}\n`;
+            if (obj.biblical) s += `biblical: |\n  ${obj.biblical}\n`;
+            if (obj.geometric) s += `geometric: |\n  ${obj.geometric}\n`;
+            if (obj.connections && obj.connections.length) {
+                s += `connections:\n`;
+                obj.connections.forEach(x => s += `  - ${x}\n`);
+            }
+            return s;
+        }
+
+        // Event listeners
+        nodeElems.forEach(node => {
+            const g = node.g;
+            g.addEventListener('click', (ev) => {
+                ev.stopPropagation();
+                selectNode(node);
+            });
+        });
+
+        svg.addEventListener('click', () => {
+            clearSelection();
+        });
+
+        // Toggle controls
+        const toggleStories = document.getElementById('toggleStories');
+        const toggleAbstractions = document.getElementById('toggleAbstractions');
+        const toggleNarratives = document.getElementById('toggleNarratives');
+
+        let showStories = true, showAbstractions = false, showNarratives = false;
+
+        toggleStories.addEventListener('click', () => {
+            showStories = !showStories;
+            toggleStories.classList.toggle('active', showStories);
+            linkLayer.style.display = showStories ? 'block' : 'none';
+        });
+
+        toggleAbstractions.addEventListener('click', () => {
+            showAbstractions = !showAbstractions;
+            toggleAbstractions.classList.toggle('active', showAbstractions);
+            // Toggle abstraction details
+        });
+
+        toggleNarratives.addEventListener('click', () => {
+            showNarratives = !showNarratives;
+            toggleNarratives.classList.toggle('active', showNarratives);
+            // Toggle narrative details
+        });
+
+        // Initialize
+        clearSelection();
+    </script>
+</body>
+</html>
