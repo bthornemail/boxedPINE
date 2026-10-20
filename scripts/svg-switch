@@ -1,0 +1,62 @@
+#!/bin/sh
+# svg-switch — the command-line twin of the Light Garden's two switches.
+#
+# It toggles the TEXT PAYLOAD of an SVG — the content of <text>/<tspan> — and
+# never the FRAME (tags, attributes, geometry). Frame vs payload = literal vs
+# reading. You cannot get caught in the representation with this tool: it will
+# not touch the circuit, only the filter over it.
+#
+#   --rev        reverse the direction of the payload   (twin of CSS dir / `rev`)
+#   --enc        rot13 the letters of the payload        (twin of an ASCII/EBCDIC `tr`)
+#   --tr A B     literal tr map A->B on the payload      (this IS `tr`, arbitrary)
+#
+# Each switch is its own inverse: apply it twice and you are back at the root.
+# Switches compose. Reads FILE (or stdin), writes the toggled SVG to stdout.
+#
+#   svg-switch --rev in.svg
+#   svg-switch --enc in.svg | svg-switch --enc   # identity
+#
+REV=0; ENC=0; S1=""; S2=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --rev) REV=1; shift;;
+    --enc) ENC=1; shift;;
+    --tr)  S1="$2"; S2="$3"; shift 3;;
+    --)    shift; break;;
+    -h|--help) sed -n '2,20p' "$0"; exit 0;;
+    -*)    echo "svg-switch: unknown option $1" >&2; exit 2;;
+    *)     break;;
+  esac
+done
+
+awk -v REV="$REV" -v ENC="$ENC" -v S1="$S1" -v S2="$S2" '
+BEGIN{
+  lo="abcdefghijklmnopqrstuvwxyz"; up="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  if(ENC){ for(i=1;i<=26;i++){ j=(i+12)%26+1;
+            m[substr(lo,i,1)]=substr(lo,j,1); m[substr(up,i,1)]=substr(up,j,1); } MAP=1 }
+  if(length(S1)){ for(i=1;i<=length(S1);i++){ a=substr(S1,i,1); b=substr(S2,i,1);
+            if(b=="") b=substr(S2,length(S2),1); m[a]=b; } MAP=1 }
+}
+{ buf = buf $0 "\n" }
+END{
+  n=length(buf); inTag=0; inText=0; tag=""; txt="";
+  for(i=1;i<=n;i++){
+    c=substr(buf,i,1);
+    if(inTag){ tag=tag c; if(c==">"){ handle(tag); printf "%s",tag; inTag=0; tag="" } continue }
+    if(c=="<"){ if(inText && length(txt)){ printf "%s",xform(txt); txt="" } inTag=1; tag=c; continue }
+    if(inText) txt=txt c; else printf "%s",c;
+  }
+  if(length(txt)) printf "%s",xform(txt);
+}
+function handle(t,   body){
+  body=substr(t,2);                                   # drop leading <
+  if(body ~ /^\/(text|tspan)[ \t\n>]/){ inText=0; return }
+  if(body ~ /^(text|tspan)[ \t\n>]/ && t !~ /\/>$/) inText=1;
+}
+function xform(s,   r,i,c,out){
+  r=s;
+  if(MAP){ out=""; for(i=1;i<=length(r);i++){ c=substr(r,i,1); out=out (c in m ? m[c] : c) } r=out }
+  if(REV){ out=""; for(i=1;i<=length(r);i++) out=substr(r,i,1) out; r=out }
+  return r;
+}
+' "$@"
