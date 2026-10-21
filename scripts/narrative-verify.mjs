@@ -3,14 +3,14 @@
 // save template each have their sha256 recorded in narrative.verify.json. This recomputes
 // those hashes and confirms the canon still replays to the same bytes — the trace is intact.
 //   node scripts/narrative-verify.mjs [artifactsDir]
-// default artifactsDir: omi-files/light-garden/narrative-series/Artifacts
+// default artifactsDir: public/narrative/canon (the shipped canon the gate serves)
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 
 const repo = new URL('..', import.meta.url);
 const dir = process.argv[2]
   ? new URL(process.argv[2].replace(/\/?$/, '/'), `file://${process.cwd()}/`)
-  : new URL('omi-files/light-garden/narrative-series/Artifacts/', repo);
+  : new URL('public/narrative/canon/', repo);
 
 const v = JSON.parse(readFileSync(new URL('narrative.verify.json', dir), 'utf8'));
 const sha = (p) => 'sha256:' + createHash('sha256').update(readFileSync(new URL(p, dir))).digest('hex');
