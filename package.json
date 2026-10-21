@@ -10,7 +10,8 @@
     "environment:build": "node scripts/build-environment.mjs build && vite build",
     "environment:run": "node scripts/build-environment.mjs run",
     "preview": "vite preview",
-    "test": "node --test src/testbed/*.test.ts"
+    "test": "node --test src/testbed/*.test.ts",
+    "verify": "tsc && vite build && node --test src/testbed/*.test.ts && make -C proofs js && make -C proofs busybox && make -C proofs svg && node scripts/narrative-verify.mjs && node scripts/digest.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.6.4",
