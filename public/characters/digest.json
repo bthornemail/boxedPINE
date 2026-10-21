@@ -1,0 +1,85 @@
+{
+  "note": "stateless digest: each character set folds (XOR of its 16 places) to 0 when intact (XNOR, the 15-complement, to 15); the 2 Hasse diagrams (place 0 read / 15 write) index all agents, collated ls (KNOWN) / ls -r (UNKOW) — the cat -An/rev modem; no hash is identity, the tag names the agent and the fold is the digest",
+  "characters": [
+    {
+      "tag": "ASABIYAH",
+      "files": 16,
+      "trace": 0,
+      "xnorTrace": 0,
+      "intact": true,
+      "tagOK": true,
+      "read": "Hasse_XOR.svg",
+      "write": "Hasse_XNOR.svg"
+    },
+    {
+      "tag": "ENOCH",
+      "files": 16,
+      "trace": 0,
+      "xnorTrace": 0,
+      "intact": true,
+      "tagOK": true,
+      "read": "Hasse_XOR.svg",
+      "write": "Hasse_XNOR.svg"
+    },
+    {
+      "tag": "GENESIS",
+      "files": 16,
+      "trace": 0,
+      "xnorTrace": 0,
+      "intact": true,
+      "tagOK": true,
+      "read": "Hasse_XOR.svg",
+      "write": "Hasse_XNOR.svg"
+    },
+    {
+      "tag": "METATRON",
+      "files": 16,
+      "trace": 0,
+      "xnorTrace": 0,
+      "intact": true,
+      "tagOK": true,
+      "read": "Hasse_XOR.svg",
+      "write": "Hasse_XNOR.svg"
+    },
+    {
+      "tag": "OBSERVER",
+      "files": 16,
+      "trace": 0,
+      "xnorTrace": 0,
+      "intact": true,
+      "tagOK": true,
+      "read": "Hasse_XOR.svg",
+      "write": "Hasse_XNOR.svg"
+    },
+    {
+      "tag": "SOLOMON",
+      "files": 16,
+      "trace": 0,
+      "xnorTrace": 0,
+      "intact": true,
+      "tagOK": true,
+      "read": "Hasse_XOR.svg",
+      "write": "Hasse_XNOR.svg"
+    },
+    {
+      "tag": "SOLON",
+      "files": 16,
+      "trace": 0,
+      "xnorTrace": 0,
+      "intact": true,
+      "tagOK": true,
+      "read": "Hasse_XOR.svg",
+      "write": "Hasse_XNOR.svg"
+    },
+    {
+      "tag": "SPEAKER",
+      "files": 16,
+      "trace": 0,
+      "xnorTrace": 0,
+      "intact": true,
+      "tagOK": true,
+      "read": "Hasse_XOR.svg",
+      "write": "Hasse_XNOR.svg"
+    }
+  ]
+}
