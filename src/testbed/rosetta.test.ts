@@ -325,7 +325,7 @@ import { MEDIA_FEATURES, deriveFeatures, FRAME_BITS, frameIndex, frameOf, frameD
 import { propagate, traceVtt, backpropagate, CACHE, type Reading } from '../../rosetta/src/trace.vtt.ts';
 
 test('The media frame: 24 keyword features from the spec pack into 35 bits; two frames XOR to their differences', () => {
-  const spec = new URL('../../_archive/_inbox/Media Queries Level 5.md', import.meta.url);
+  const spec = new URL('./fixtures/Media Queries Level 5.md', import.meta.url);
   if (existsSync(spec)) assert.deepEqual(deriveFeatures(readFileSync(spec, 'utf8')), MEDIA_FEATURES); // derived, not typed
   assert.equal(MEDIA_FEATURES.length, 24);
   assert.equal(FRAME_BITS, 35);
