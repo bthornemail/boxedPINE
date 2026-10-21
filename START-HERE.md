@@ -69,6 +69,18 @@ The criterion is the same as the repo's: **reconstruct-and-say-no.**
 ## Pick up at any point
 
 The git history **is** the derivation order — how this was reached, step by step.
-Every commit is a checkpoint; `git log` is the path. You are not meant to accept
-the conclusion. You are meant to be able to rebuild it, and to find where, if
-anywhere, it says no.
+Every commit is a checkpoint; `git log` is the path. The turning points are named
+stops you can stand at with `git checkout`:
+
+| stop | `git checkout …` |
+|------|------------------|
+| one axiom — propagation; the only input a regex + a seed | `stop/1-axiom` |
+| one place the 2D map, the 2.5D, and the 3D scene derive from | `stop/2-plane` |
+| the Agent Commons — eight characters in 3D | `stop/3-commons` |
+| the fail-safe — distance-from-0, mirror guard, exclusivity gate | `stop/4-fail-safe` |
+| the narrative gate portal + the canon verify spine | `stop/5-gate` |
+| the geometry seed | `stop/6-universe` |
+| the one full build — reconstruct from first principles | `stop/7-full-build` |
+
+You are not meant to accept the conclusion. You are meant to be able to rebuild
+it, and to find where, if anywhere, it says no.
