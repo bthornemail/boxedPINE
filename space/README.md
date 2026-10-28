@@ -83,6 +83,7 @@ Prior work that informs this folder (see [wiki/usecases/USE-00 Use Case Scenario
 | `src/exchange.ts`, `src/trace.ts` | The exchange (compareExchange through a Proxy, the Catch-22 reset); the 65,536 trace | ✅ tested |
 | `src/story.ts`, `src/score.ts`, `src/sound.ts`, `src/witness.ts` | The story on the plane; the score, sound graph and witness video | ✅ tested (sound and witness in headless Chrome) |
 | `src/identity.ts` | Identity without hashing, and its chain | ✅ tested |
+| `guest.html`, `src/guest.ts` | The Plan 9 guest's own screen in the room: frames from the host's `unbound/PLAN9/frames.py` (a QEMU screendump as PNG) drawn to a canvas, whose `captureStream` is a video carrying the narrative's WebVTT; the video on a plane in three.js, seen from any angle (drag, `?angle=`) or in VR | ✅ seen in headless Chrome, 0 and 60 degrees |
 | `unbound/PLAN9/space/floor.c`, `observe.c` (beside this project) | `plane.ts`'s floor in Plan 9 C with draw(2) and event(2): the twelve sectors, the rim, the eight characters at their hues stepping `gnomon.ts`'s K once a frame; the Observer attaches with mach(2), reads each state, interjects (stop, write, start) or asks under constraints (exact, ideal, min, max over the K orbit) without writing | ✅ states equal `gnomon.ts`'s |
 
 ## ⟦Placeholders⟧ for the author

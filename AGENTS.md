@@ -2,7 +2,7 @@
 
 ## Repository shape
 
-- The root package is a Vite + TypeScript browser project. `index.html` is the main Fano Constants page; the Vite build also includes the linked rooms in `space/` (`index.html`, `xr.html`, `meta.html`, `agent.html`, `examples.html`, `polytron.html`, and `metaverse.html`).
+- The root package is a Vite + TypeScript browser project. `index.html` is the main Fano Constants page; the Vite build also includes the linked rooms in `space/` (`index.html`, `xr.html`, `meta.html`, `agent.html`, `examples.html`, `polytron.html`, `metaverse.html`, and `guest.html`).
 - `src/testbed/` is a Node testbed for the verified implementation in `core/src/verified/` and the grammar/kernel in `rosetta/src/grammar/`; it is intentionally excluded from the browser TypeScript build.
 - `wiki/` is the canonical Obsidian protocol vault. `wiki/tools/validate.mjs` checks frontmatter and internal links.
 - `proofs/`, `types/`, and the projects under `omi-files/` are independent subprojects. Before editing one, read the nearest nested `AGENTS.md`; its commands and constraints take precedence over this file. `proofs/` and `types/` are submodules (see `.gitmodules`): `proofs/` from `github.com/bthornemail/omi-axioms`, `types/` from `github.com/bthornemail/omi-types`, both on `main`. `omi-files/` lives beside this repository, in the sibling `boxed/`, since 44c5606.
