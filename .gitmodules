@@ -1,0 +1,4 @@
+[submodule "proofs"]
+	path = proofs
+	url = https://github.com/bthornemail/omi-axioms.git
+	branch = main
