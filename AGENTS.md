@@ -5,7 +5,7 @@
 - The root package is a Vite + TypeScript browser project. `index.html` is the main Fano Constants page; the Vite build also includes the linked rooms in `space/` (`index.html`, `xr.html`, `meta.html`, `agent.html`, `examples.html`, `polytron.html`, and `metaverse.html`).
 - `src/testbed/` is a Node testbed for the verified implementation in `core/src/verified/` and the grammar/kernel in `rosetta/src/grammar/`; it is intentionally excluded from the browser TypeScript build.
 - `wiki/` is the canonical Obsidian protocol vault. `wiki/tools/validate.mjs` checks frontmatter and internal links.
-- `proofs/`, `types/`, and the projects under `omi-files/` are independent subprojects. Before editing one, read the nearest nested `AGENTS.md`; its commands and constraints take precedence over this file. `proofs/` is a submodule here, from `github.com/bthornemail/omi-axioms` (see `.gitmodules`); `types/` (`github.com/bthornemail/omi-types`) and `omi-files/` live beside this repository, in the sibling `boxed/`, since 44c5606.
+- `proofs/`, `types/`, and the projects under `omi-files/` are independent subprojects. Before editing one, read the nearest nested `AGENTS.md`; its commands and constraints take precedence over this file. `proofs/` and `types/` are submodules (see `.gitmodules`): `proofs/` from `github.com/bthornemail/omi-axioms`, `types/` from `github.com/bthornemail/omi-types`, both on `main`. `omi-files/` lives beside this repository, in the sibling `boxed/`, since 44c5606.
 
 ## Root commands
 
@@ -15,6 +15,7 @@
 - Start the root browser app with `npm run dev`; use `npm run preview` only after a build.
 - Validate the declarative metaverse environment with `npm run environment:check`; run `npm run environment:build` to emit its manifest and build all browser rooms; run `npm run environment:run` to start the sibling metaverse-kit server/client (override its path with `METAVERSE_KIT_ROOT`).
 - Validate the vault with `node wiki/tools/validate.mjs`.
+- Submodules: clone with `git clone --recurse-submodules`, or run `git submodule update --init` in an existing clone. A change to `proofs/` or `types/` is committed and pushed inside that folder first (it is its own repository); then, here, `git add proofs` (or `types`) records the new commit and is committed and pushed in boxedPINE. `git submodule update --remote` moves both to their remotes' `main`.
 - For Coq changes, run `make -C proofs proof-strict`; the Makefile enforces the proof registry before compiling and checking the listed modules.
 - For JavaScript proof changes, source checks live in `proofs/js/catalog/`; run `make -C proofs js` for the checks and `make -C proofs js-docs` to regenerate `proofs/js/catalog.json`, `proofs/js-docs/`, and VM/Worker carriers. Keep checks that do not hold in `proofs/js/pending/`.
 

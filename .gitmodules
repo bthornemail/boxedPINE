@@ -2,3 +2,7 @@
 	path = proofs
 	url = https://github.com/bthornemail/omi-axioms.git
 	branch = main
+[submodule "types"]
+	path = types
+	url = https://github.com/bthornemail/omi-types.git
+	branch = main
