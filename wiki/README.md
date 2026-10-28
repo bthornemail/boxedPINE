@@ -14,6 +14,12 @@ related:
   - "[[META-02 Evidence and Confidence]]"
   - "[[META-03 Change Log]]"
   - "[[META-04 Repository Frame]]"
+  - "[[SRC-09 Try XOR Catch XNOR Finally]]"
+  - "[[SRC-10 The Ontology Conversation]]"
+  - "[[SRC-11 The UI Brain Dump]]"
+  - "[[SRC-12 The Continuation Brain Dump]]"
+  - "[[SRC-13 Provenance of the OMI Trees and the Metaverse Spine]]"
+  - "[[SRC-14 Polytron the Commons and the Cave]]"
   - "[[SRC-99 Source Index]]"
   - "[[SPEC-00 Canonical Statement]]"
   - "[[SPEC-01 The Three Laws]]"
@@ -38,6 +44,8 @@ related:
   - "[[SPEC-23 The Rosetta Stone]]"
   - "[[SPEC-24 Observers]]"
   - "[[SPEC-25 The Iff]]"
+  - "[[SPEC-26 The Prompt Tree]]"
+  - "[[SPEC-27 The Prompt Tree Index]]"
   - "[[SPEC-30 The Symbol Table G]]"
   - "[[SPEC-31 Declaration Syntax]]"
   - "[[SPEC-32 Mnemonics and Axes]]"
@@ -59,6 +67,11 @@ related:
   - "[[SPEC-55 ASCII Folds]]"
   - "[[SPEC-60 Test Vectors]]"
   - "[[SPEC-61 Implementation Status]]"
+  - "[[SPEC-62 Sexagesimal XOR Delineation]]"
+  - "[[SPEC-63 Block Partition and OCR]]"
+  - "[[SPEC-64 Three Cubes]]"
+  - "[[SPEC-65 Hamming Code Delta]]"
+  - "[[SPEC-66 BOM Swap Table]]"
   - "[[SPEC-67 The Block and Its Closure]]"
   - "[[EXT-00 How to Extend the Protocol]]"
   - "[[EXT-01 Adding a Dimension]]"
@@ -116,11 +129,11 @@ wiki/
 ├── spec/
 │   ├── 00-canonical/             — canonical statement, laws, conformance, notation
 │   ├── 10-foundations/           — primitive, ruler, XOR, knots, delta, Fano
-│   ├── 20-architecture/          — dimensions, inversion, Blob, Rosetta, observers, iff
+│   ├── 20-architecture/          — dimensions, inversion, Blob, Rosetta, observers, iff, prompt tree
 │   ├── 30-grammar/               — symbols, declarations, mnemonics, forms, phases, orbits
 │   ├── 40-hardware/              — 6T, 8T, sourcemap, primes, virtual breadboard
 │   ├── 50-runtime/               — stream, canvas, REPL, clocks, web, ASCII
-│   └── 60-verification/          — test vectors, implementation status
+│   └── 60-verification/          — test vectors, implementation status, sexagesimal, blocks, cubes, Hamming, BOM
 ├── extend/                       — extension guides
 ├── open/                         — contradictions, questions, glossary, discarded
 ├── progress/                     — trackers of progress toward a goal
@@ -143,6 +156,12 @@ wiki/
 | [[SRC-06 Phases vs Attributes vs Constraints vs Configurations]] | Google Search: Phases vs Attributes | Extracted |
 | [[SRC-07 The OMI-IMO Complete Synthesis]] | The OMI-IMO Complete Synthesis | Read directly |
 | [[SRC-08 XOR Gate Built with Transistors]] | XOR Gate Built with Transistors | Extracted |
+| [[SRC-09 Try XOR Catch XNOR Finally]] | Try XOR Catch XNOR Finally as the Fano Plane of the Fold | Taken in |
+| [[SRC-10 The Ontology Conversation]] | The Ontology Conversation | Taken in |
+| [[SRC-11 The UI Brain Dump]] | The UI Brain Dump | Taken in |
+| [[SRC-12 The Continuation Brain Dump]] | The Continuation Brain Dump | Taken in |
+| [[SRC-13 Provenance of the OMI Trees and the Metaverse Spine]] | Provenance of the OMI Trees and the Metaverse Spine | Taken in |
+| [[SRC-14 Polytron the Commons and the Cave]] | Polytron, the Commons and the Cave | Taken in |
 
 ## The Spec Notes
 
@@ -150,11 +169,11 @@ wiki/
 |-------|-------|
 | Canonical | [[SPEC-00 Canonical Statement]], [[SPEC-01 The Three Laws]], [[SPEC-02 Conformance Criteria]], [[SPEC-03 Notation OMI-Lisp]], [[SPEC-04 First Principles]], [[SPEC-05 The Axiom of Propagation]], [[SPEC-06 The Circulator]], [[SPEC-07 The Fundamental Invariants]], [[SPEC-08 The Derivation Path]], [[SPEC-09 The Structure Map]] |
 | Foundations | [[SPEC-10 The Primitive]], [[SPEC-11 The Three Primitives]], [[SPEC-12 The Ruler]], [[SPEC-13 XOR Algebra]], [[SPEC-14 Knots and Binds]], [[SPEC-15 The Delta Transform]], [[SPEC-16 The Fano Invariant]] |
-| Architecture | [[SPEC-20 The Dimensional Axis]], [[SPEC-21 The Inversion Law]], [[SPEC-22 The Blob]], [[SPEC-23 The Rosetta Stone]], [[SPEC-24 Observers]], [[SPEC-25 The Iff]] |
+| Architecture | [[SPEC-20 The Dimensional Axis]], [[SPEC-21 The Inversion Law]], [[SPEC-22 The Blob]], [[SPEC-23 The Rosetta Stone]], [[SPEC-24 Observers]], [[SPEC-25 The Iff]], [[SPEC-26 The Prompt Tree]], [[SPEC-27 The Prompt Tree Index]] |
 | Grammar | [[SPEC-30 The Symbol Table G]], [[SPEC-31 Declaration Syntax]], [[SPEC-32 Mnemonics and Axes]], [[SPEC-33 The Quadratic Forms]], [[SPEC-34 Phases Attributes Constraints Configurations]], [[SPEC-35 Reflections and Orbits]], [[SPEC-36 The Literal Separation]], [[SPEC-37 The Catalog Coordinate]] |
 | Hardware | [[SPEC-40 The 6T XOR Circuit]], [[SPEC-41 The 8T XOR Circuit]], [[SPEC-42 Circuit Sourcemap]], [[SPEC-43 Prime Gaps and Sextuplets]], [[SPEC-44 The Virtual Breadboard]] |
 | Runtime | [[SPEC-50 Stream Transport]], [[SPEC-51 JSON Canvas Interchange]], [[SPEC-52 The REPL and the Digest]], [[SPEC-53 Clocks and Periods]], [[SPEC-54 The Web Platform Layers]], [[SPEC-55 ASCII Folds]] |
-| Verification | [[SPEC-60 Test Vectors]], [[SPEC-61 Implementation Status]], [[SPEC-67 The Block and Its Closure]] |
+| Verification | [[SPEC-60 Test Vectors]], [[SPEC-61 Implementation Status]], [[SPEC-62 Sexagesimal XOR Delineation]], [[SPEC-63 Block Partition and OCR]], [[SPEC-64 Three Cubes]], [[SPEC-65 Hamming Code Delta]], [[SPEC-66 BOM Swap Table]], [[SPEC-67 The Block and Its Closure]] |
 
 ## The Extension Guides
 

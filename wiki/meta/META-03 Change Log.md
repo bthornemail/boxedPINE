@@ -280,6 +280,10 @@ tags: [omi-imo, meta, changelog, history]
 - I-220 (2026-10-14): the commit predicted and depicted: its name is the hash form of its literal, reproduced by SHA-1 written out; not known before the literal; a prefix found by search. SRC-14 gains The Coincidence Space. The plane (`space/src/plane.ts`) joins the 2D canvas, the 2.5D map and the 3D floor. The author's command-line record scripts in `src/` are excluded from the browser build, their bytes unchanged. [[SRC-14 Polytron the Commons and the Cave]]
 - I-221 (2026-10-14): the commit literal through 13 other hashes, 3 checksums, the delta-law fold and two ciphers; the lead (170 = 0xAA bits from DEADBEEF in the first 32 bits) filed as a test before the run (5ecc2ee); the held-out bits summed 224: the null holds. [[SRC-14 Polytron the Commons and the Cave]]
 
+## 2026-10-28
+
+- The README's index caught up with the vault: [[SRC-09 Try XOR Catch XNOR Finally]] to [[SRC-14 Polytron the Commons and the Cave]], [[SPEC-26 The Prompt Tree]], [[SPEC-27 The Prompt Tree Index]] and [[SPEC-62 Sexagesimal XOR Delineation]] to [[SPEC-66 BOM Swap Table]] added to its links, tables and folder tree; no note changed.
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`
