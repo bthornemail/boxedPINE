@@ -30,6 +30,12 @@ h1{font:600 1.5rem/1.1 var(--display);margin:0}
 #cue{min-height:3.2em;border-left:3px solid var(--sel);padding-left:8px;overflow-wrap:anywhere}
 #status.off{color:var(--accent)}
 #xr:empty{display:none}
+fieldset{border:1px solid var(--rule);border-radius:6px;display:flex;gap:12px;padding:6px 10px}
+#answer:empty{display:none}
+#answer{margin:0;white-space:pre-wrap;font:inherit;color:var(--muted)}
+input{font:inherit;color:inherit;background:none;border:1px solid var(--rule);border-radius:4px;padding:3px 6px}
+button{font:inherit;color:inherit;background:none;border:1px solid var(--rule);border-radius:4px;padding:4px 9px;cursor:pointer}
+#yes{border-color:var(--accent);color:var(--accent)}
 video,#frame{display:none}
 </style>
 </head>
@@ -38,9 +44,20 @@ video,#frame{display:none}
 <nav class="space-nav" aria-label="Space rooms"><a href="./index.html">Commons</a><a href="./xr.html">Breadboard</a><a href="./meta.html">Meta</a><a href="./agent.html">Agent</a><a href="./polytron.html">Polytron</a></nav>
 <section class="panel" aria-label="Guest frame">
   <h1>Guest frame</h1>
-  <p>The Plan 9 guest's own screen, as a video in the room: drag to look from any side, or enter VR.</p>
+  <p>The Plan 9 guest's own screen, as a video in the room, and its eight agents on the floor from the guest's own state: drag to look from any side, or enter VR.</p>
   <div><span class="label">Frame</span> <span id="status">waiting for the guest</span></div>
   <div><span class="label">Cue</span><div id="cue">—</div></div>
+  <div><span class="label">Agents</span> <span id="astatus">waiting for agentd</span></div>
+  <fieldset id="modes"><legend class="label">Observer</legend>
+    <label><input type="radio" name="mode" value="read" checked> read</label>
+    <label><input type="radio" name="mode" value="constrain"> constrain</label>
+    <label><input type="radio" name="mode" value="interject"> interject</label>
+  </fieldset>
+  <div id="agent">Pick an agent on the floor.</div>
+  <form id="ask" hidden><input id="spec" aria-label="Constraint" value="ideal=0000" size="22"> <button>Ask</button></form>
+  <form id="write" hidden><input id="state" aria-label="State in hex" value="0000" size="6" pattern="[0-9A-Fa-f]{1,4}"> <button>Interject…</button></form>
+  <div id="confirm" hidden><button id="yes">Write it</button> <button id="no" type="button">Cancel</button></div>
+  <pre id="answer"></pre>
   <div id="xr"></div>
 </section>
 <canvas id="frame" width="1024" height="768"></canvas>
