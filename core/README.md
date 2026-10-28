@@ -21,13 +21,10 @@ Status of the whole project, level by level: [wiki/progress/PROG-00 Homoiconic S
 | `src/verified/period.ts` | The periods of 1/7 and 1/73 (6, 8), the two prime gaps (sum 6, product 8), and the lens 60 ⊕ 64 that keeps both periods | ✅ |
 | `src/verified/fano.ts` | The sixteen Fano constants: the XOR-closed 7-bit masks, two-step convergence of any byte, duality at index i ⊕ 15, and a whole-number reader for the Fano files | ✅ |
 | `src/verified/loopback.ts` | A MAC folded to a 127/8 loopback address; index 0 served by CUPS IPP at 127.0.0.1:631; NAT64 in 64:ff9b:1::/48 | ✅ |
-| `src/broadcast.ts` | The headless proxy presenter: `launchBroadcast(declared: RegExp, defined: string)` returns `proxy()` (one step forward), `reflect()` (one step back) and `extant()`, each a compare-exchange on the iExtant | Author's core example |
-| `src/model.ts` | `Node` (bind / apply / eval / pin) and `Domain` (declarations, expressions, values, variables): the Node is where iExtant meets the user, inside a Domain | Author's core example |
-| `src/animation.frame.ts` | Frequency spectra, like an `OscillatorNode` in the DOM; the sexagesimal XOR loop | Author's core example |
-| `src/scene.ts` | three.js scene with a tetrahedron; it belongs to `space/` (see `space/README.md`) | Author's example for `space/` |
+| `src/verified/cycle.ts` | Pure bit-shift meta-cycles: a one-hot ring of 16 inside the swap32 crystal (60 ↔ 63), 32 ticks of shifts and XOR; the tick source differs, the cycle does not (SPEC-07 I-88) | ✅ |
+| `src/verified/index.ts` | The verified findings in one place: every module above, re-exported | ✅ |
 | `src/index.ts` | The type system and the old frozen G | Example; the live grammar is `rosetta/src/grammar/` |
-| `src/ffi.ts`, `src/tree-sitter.ts` | Experiments | Placeholders |
-| `assets/` | Canonical statement YAML, a WebVTT track, the ASCII table, a JSON Canvas | Reference material |
+| `src/prompt.treemap.ts`, `src/comments.json` | The author's treemap prompt, and the orbit blocks as comment lines | Author's |
 
 ## Use case scenarios
 
@@ -41,9 +38,9 @@ Prior work that informs this folder (see [wiki/usecases/USE-00 Use Case Scenario
 4. **Indices, not values.** Positions combine by XOR, walk, compare and complement, never `+` or `×` (wiki: OPEN-03 Glossary, *index*).
 5. **Old code moves to `_archive/`**; it is not deleted.
 
-`src/broadcast.ts`, `src/model.ts`, `src/animation.frame.ts` and `src/index.ts` are byte-for-byte the same as the copies in `_archive/`; these are the working copies.
+Moved out of this folder: `broadcast.ts` to `repl/src/`, `scene.ts` to `space/src/`, and the assets (a WebVTT track, the canonical statement YAML, a JSON Canvas) to `rosetta/src/assets/`. `model.ts`, `animation.frame.ts`, `ffi.ts` and `tree-sitter.ts` went to the sibling `boxed/_archive/` (`ffi.ts` and `tree-sitter.ts` under `_deprecated/`), as rule 5 says.
 
-The REPL is development tooling, so it lives in the repository's `src/`: `src/server.ts` (the headless REPL over HTTP) and `src/define.commands.ts` (its commands). The commands' cues are in `rosetta/src/assets/commands.vtt`.
+The REPL is development tooling, so it lives in `repl/src/`: `server.ts` (the headless REPL over HTTP) and `define.commands.ts` (its commands). The commands' cues are in `rosetta/src/assets/commands.vtt`.
 
 ## ⟦Placeholders⟧ for the author
 

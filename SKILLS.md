@@ -37,3 +37,7 @@ Uppercase terms change a scene: an agent's tag, then `P1`–`P7` and `L1`–`L7`
 ## [SKILL_09: BUILD_NULL_ROLE]
 
 `node scripts/polytron-commons.mjs`, `node scripts/character-trees.mjs`, `node scripts/story-index.mjs`, `node scripts/ascii-mask.mjs`: regenerate the Commons' data (synset agents, colours, each character's set of 16, the story's passages, the 65,536-pair mask) from their sources.
+
+## [SKILL_10: BUILD_ORDER_FORMAT]
+
+Text tracks, one WebVTT cue per step, the time the order and never UTC (SPEC-07 I-79). `node rosetta/src/walkthrough.ts` regenerates `rosetta/src/assets/walkthrough.vtt` from SPEC-08, eight seconds a cue; `rosetta/src/trace.vtt.ts` keeps a trace as a track of the last 16 cues (I-84), served by the port server at `/trace.vtt`; `rosetta/src/agent.ts` lands message n on slot 1 + (n−1) mod 14 of the 16-index. The narrative of the 8 agents is written the same way beside this project, in `unbound/VTT/NARRATIVE` (Plan 9's `unbound/PLAN9/src/vtt.rc`): one track per canon series, a voice per tag, each cue on its agent's slot of `public/characters/<TAG>`.

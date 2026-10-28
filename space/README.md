@@ -6,7 +6,7 @@ This folder is the **visual and interactive environment**: what a visitor sees a
 - The circuit is modelled in an `OfflineAudioContext`, as `breadboard/` already does on a 2D canvas.
 - The animation frame is its input and output.
 - Rendering goes through a three.js adapter on an `OffscreenCanvas`, so it runs on any platform.
-- The starting example is `core/src/scene.ts`, a three.js scene with a tetrahedron.
+- The starting example is `space/src/scene.ts`, a three.js scene with a tetrahedron.
 
 ⟦What do the 360 and 65536 axes carry: degrees of rotation, and an index into the 2¹⁶ Blob?⟧
 
@@ -83,6 +83,7 @@ Prior work that informs this folder (see [wiki/usecases/USE-00 Use Case Scenario
 | `src/exchange.ts`, `src/trace.ts` | The exchange (compareExchange through a Proxy, the Catch-22 reset); the 65,536 trace | ✅ tested |
 | `src/story.ts`, `src/score.ts`, `src/sound.ts`, `src/witness.ts` | The story on the plane; the score, sound graph and witness video | ✅ tested (sound and witness in headless Chrome) |
 | `src/identity.ts` | Identity without hashing, and its chain | ✅ tested |
+| `unbound/PLAN9/space/floor.c`, `observe.c` (beside this project) | `plane.ts`'s floor in Plan 9 C with draw(2) and event(2): the twelve sectors, the rim, the eight characters at their hues stepping `gnomon.ts`'s K once a frame; the Observer attaches with mach(2), reads each state, interjects (stop, write, start) or asks under constraints (exact, ideal, min, max over the K orbit) without writing | ✅ states equal `gnomon.ts`'s |
 
 ## ⟦Placeholders⟧ for the author
 

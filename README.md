@@ -168,6 +168,8 @@ The protocol's runtime is the composition of seven layers:
 
 The rooms in `space/` are a projection of the protocol (see `space/README.md`): a 3D playground and z-indexed 2D and 2.5D maps where agents carry their sets of 16 (14 Fano planes and the Hasse XOR and XNOR), walk the story on the Fano plane, exchange their state through `Atomics.compareExchange`, and are reached by their tags. `AGENTS.md` describes them for coding agents; `SKILLS.md` lists the skills, each named only in tag literals.
 
+The story is also kept as text tracks (WebVTT), one cue per step with the order as its time: the walkthrough of SPEC-08 (`rosetta/src/walkthrough.ts`), a trace with a cache of 16 cues (`rosetta/src/trace.vtt.ts`), and the narrative of the 8 agents, a voice per tag, each cue lighting the agent's next Fano plane the way `rosetta/src/agent.ts` tracks a conversation. `SKILLS.md` names the commands.
+
 A reader opens a story with two switches: direction and encoding. `scripts/svg-switch` is their command-line twin (`tr` + `rev`, one POSIX file, BusyBox-shaped). It toggles only the text payload of an SVG — the content of `<text>`/`<tspan>` — and never the frame (tags, attributes, geometry): frame vs payload is literal vs reading. `--rev` is the direction switch, `--enc` the encoding switch, `--tr A B` an arbitrary map; each is its own inverse, so toggling twice returns to the root.
 
 ## The Shape
