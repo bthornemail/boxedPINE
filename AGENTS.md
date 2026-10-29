@@ -27,7 +27,7 @@
 - `rosetta/src/grammar/interface.ts` is the non-authoritative interface carrier: Proxy and Reflect perform access, Catch returns structured outcomes, and tagged templates preserve literal strings plus interpolated values.
 - Keep human record ordinals and zero-based storage indices distinct; use `indexOfOrdinal`/`ordinalOfIndex` at the interface boundary instead of shifting proof or runtime values implicitly.
 - `space/polytron.html` is a browser projection of `omi-files/polytron`; its authoritative renderer and verification remain the Polytron C/OpenGL ES/QEMU sources, governed by `omi-files/polytron/AGENTS.md`.
-- `space/metaverse.html` is a gateway to the sibling `/home/main/omi/metaverse-kit` client, normally at `http://localhost:3000`; that project owns the event-sourced world runtime, server, and deterministic replay spine.
+- `space/metaverse.html` reads Metaverse Kit's world served native from Plan 9 (unbound `PLAN9/src/mkfs.c` and `mkd.c`, started in the guest by `rc mkworld.rc -s`, normally at `http://127.0.0.1:18001`, the manifest's `runtime.worldUrl`); the kit itself, `/home/main/devops/metaverse-kit` (its client normally at `http://localhost:3000`), owns the event-sourced runtime the port is checked against.
 
 ## Agent channel
 

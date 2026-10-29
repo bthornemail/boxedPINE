@@ -24,8 +24,8 @@ string(manifest.schema, 'schema');
 string(manifest.id, 'id');
 string(manifest.title, 'title');
 if (manifest.schema !== 'boxedpine.metaverse.environment.v0') fail(`unsupported schema ${manifest.schema}`);
-exact(manifest.runtime, ['kind', 'rootEnv', 'clientUrl', 'serverUrl', 'world', 'space', 'tile'], 'runtime');
-for (const key of ['kind', 'rootEnv', 'clientUrl', 'serverUrl', 'world', 'space', 'tile']) string(manifest.runtime[key], `runtime.${key}`);
+exact(manifest.runtime, ['kind', 'rootEnv', 'clientUrl', 'serverUrl', 'world', 'space', 'tile', 'worldUrl'], 'runtime');
+for (const key of ['kind', 'rootEnv', 'clientUrl', 'serverUrl', 'world', 'space', 'tile', 'worldUrl']) string(manifest.runtime[key], `runtime.${key}`);
 if (manifest.runtime.kind !== 'metaverse-kit') fail(`unsupported runtime ${manifest.runtime.kind}`);
 if (!Array.isArray(manifest.projections) || manifest.projections.length === 0 || manifest.projections.some((x) => typeof x !== 'string' || !x)) fail('projections must be a non-empty string array');
 
@@ -58,7 +58,7 @@ if (mode === 'build') {
   process.exit(0);
 }
 
-const kitRoot = resolve(process.env.METAVERSE_KIT_ROOT ?? '/home/main/omi/metaverse-kit');
+const kitRoot = resolve(process.env.METAVERSE_KIT_ROOT ?? '/home/main/devops/metaverse-kit');
 if (!existsSync(resolve(kitRoot, 'package.json'))) fail(`metaverse-kit not found at ${kitRoot}; set METAVERSE_KIT_ROOT`);
 const children = [
   spawn('npm', ['run', 'dev:server'], { cwd: kitRoot, stdio: 'inherit' }),

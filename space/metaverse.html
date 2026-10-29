@@ -8,24 +8,27 @@
     :root { color-scheme:dark; --ink:#edf0e9; --muted:#9da6ad; --line:#34404a; --panel:#10151bdd; --cyan:#74c8c0; --gold:#e2b66c; }
     * { box-sizing:border-box; }
     html,body { margin:0; min-height:100%; background:#0c1015; color:var(--ink); font:13px/1.5 "JetBrains Mono",ui-monospace,monospace; }
-    #world { position:fixed; inset:0; border:0; width:100%; height:100%; background:#0c1015; }
+    #world { position:fixed; inset:0; width:100%; height:100%; background:#0c1015; }
     .panel { position:fixed; top:16px; left:16px; z-index:2; width:min(430px,calc(100vw - 32px)); max-height:calc(100vh - 32px); overflow:auto; padding:15px; border:1px solid var(--line); border-radius:9px; background:var(--panel); backdrop-filter:blur(12px); }
     nav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; } nav a,button { color:inherit; background:none; border:1px solid var(--line); border-radius:5px; padding:6px 9px; text-decoration:none; font:inherit; cursor:pointer; } nav a:hover,nav a:focus-visible,button:hover,button:focus-visible { color:var(--cyan); border-color:var(--cyan); }
     .kicker,.label { color:var(--muted); font-size:10px; letter-spacing:.1em; text-transform:uppercase; } h1 { margin:3px 0 8px; font:600 2rem/1 Georgia,serif; } p { color:var(--muted); }
-    .row { display:flex; gap:7px; flex-wrap:wrap; } input { min-width:0; flex:1; color:var(--ink); background:#182129; border:1px solid var(--line); border-radius:5px; padding:7px 9px; font:inherit; }
-    #status { margin-top:10px; color:var(--gold); } details { margin-top:14px; color:var(--muted); } summary { color:var(--ink); cursor:pointer; } code { color:var(--cyan); }
+    .row { display:flex; gap:7px; flex-wrap:wrap; } input,select,textarea { min-width:0; flex:1; color:var(--ink); background:#182129; border:1px solid var(--line); border-radius:5px; padding:7px 9px; font:inherit; }
+    #status { margin-top:10px; color:var(--gold); } details { margin-top:14px; color:var(--muted); } summary { color:var(--ink); cursor:pointer; } code { color:var(--cyan); } textarea { width:100%; margin:7px 0; resize:vertical; } pre { max-height:220px; overflow:auto; white-space:pre-wrap; word-break:break-all; font-size:11px; color:var(--muted); }
   </style>
 </head>
 <body>
-  <iframe id="world" title="Metaverse Kit living world" src="http://localhost:3000"></iframe>
+  <canvas id="world" aria-label="The tile seen from above: each live node at the x and z of its position, its links drawn"></canvas>
   <section class="panel" aria-labelledby="title">
     <nav aria-label="Space rooms"><a href="./index.html">Commons</a><a href="./xr.html">Breadboard</a><a href="./meta.html">Meta</a><a href="./agent.html">Agent</a><a href="./polytron.html">Polytron</a></nav>
-    <div class="kicker">Metaverse Kit · event-sourced world</div>
+    <div class="kicker">Metaverse Kit · native on Plan 9</div>
     <h1 id="title">Living World</h1>
-    <p>This room connects the Commons to the sibling Metaverse Kit runtime: append-only events, deterministic replay, 2D and 3D projections, presence, and local-first world state.</p>
-    <div class="row"><input id="src" value="http://localhost:3000" aria-label="Metaverse client URL"><button id="connect" type="button">Connect</button><a id="open" href="http://localhost:3000" target="_blank" rel="noreferrer">Open</a></div>
-    <div id="status" role="status">Looking for the client at localhost:3000.</div>
-    <details><summary>If the world is not running</summary><p>In a terminal: <code>cd /home/main/omi/metaverse-kit</code>, then run <code>npm run dev:server</code> and <code>npm run dev:client</code>. The client uses port 3000 and the server uses port 8080.</p></details>
+    <p>The kit's world served from Plan 9: each tile an append-only file of events, one a line in the kit's own order, and its state the kit's fold of them, one node a line. An event is appended only when the grammar accepts it.</p>
+    <div class="row"><input id="src" value="http://127.0.0.1:18001" aria-label="Plan 9 world URL"><button id="connect" type="button">Connect</button></div>
+    <div class="row" style="margin-top:7px"><label class="label" for="tile" style="align-self:center">Tile</label><select id="tile"></select></div>
+    <div id="status" role="status">Looking for the world at 127.0.0.1:18001.</div>
+    <details><summary>Append an event</summary><textarea id="event" rows="5" aria-label="One event line" placeholder="event_id … timestamp … operation update_transform … node_id … transform …"></textarea><button id="append" type="button">Append</button></details>
+    <details><summary>The state, as Plan 9 folds it</summary><pre id="lines"></pre></details>
+    <details><summary>If the world is not running</summary><p>In the Plan 9 guest (unbound PLAN9, <code>sh run.sh</code>): <code>rc mkworld.rc -s</code> starts the world (mkfs) and serves it on port 8001, the host's 18001. The kit's own client, from <code>/home/main/devops/metaverse-kit</code> (<code>npm run dev:server</code> and <code>npm run dev:client</code>), is at <a id="client" href="http://localhost:3000" target="_blank" rel="noreferrer">localhost:3000</a>.</p></details>
   </section>
   <script type="module" src="./src/metaverse.ts"></script>
 </body>

@@ -9,7 +9,8 @@
     "serverUrl": "http://localhost:8080",
     "world": "world",
     "space": "demo",
-    "tile": "z0/x0/y0"
+    "tile": "z0/x0/y0",
+    "worldUrl": "http://127.0.0.1:18001"
   },
   "projections": [
     "commons",
