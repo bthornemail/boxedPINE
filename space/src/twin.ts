@@ -6,7 +6,12 @@
 // icon (XOR, separate) and be identical everywhere else (XNOR, the same).
 import { atHue, toFloor } from './plane.ts';
 import { CHARACTERS } from './characters.ts';
-import type { FromWorker, Icon } from './twin-worker.ts';
+import type { FromWorker } from './twin-worker.ts';
+
+// ?mode=3d: each view renders the Commons with three.js (twin3d-worker.ts), Solomon a sphere in A
+// and the glTF model in B; the worker sends Solomon's box on the screen with each frame
+const mode3d = new URLSearchParams(location.search).get('mode') === '3d';
+type Box = { x0: number; y0: number; x1: number; y1: number };
 
 const SIZE = 512, TICKS = 48, FPS = 8;
 const params = new URLSearchParams(location.search);
@@ -29,14 +34,17 @@ function iconBox() {
 }
 
 type View = { worker: Worker; recorder: MediaRecorder; chunks: Blob[]; frames: Map<number, Uint8ClampedArray> };
+let box3d: Box | undefined;
 
-function view(canvasId: string, liveId: string, icon: Icon): View {
+function view(canvasId: string, liveId: string, icon: string): View {
   const canvas = $<HTMLCanvasElement>(canvasId);
   const stream = canvas.captureStream(FPS);
   $<HTMLVideoElement>(liveId).srcObject = stream;
   const off = canvas.transferControlToOffscreen();
-  const worker = new Worker(new URL('./twin-worker.ts', import.meta.url), { type: 'module' });
-  worker.postMessage({ canvas: off, icon }, [off]);
+  const worker = mode3d
+    ? new Worker(new URL('./twin3d-worker.ts', import.meta.url), { type: 'module' })
+    : new Worker(new URL('./twin-worker.ts', import.meta.url), { type: 'module' });
+  worker.postMessage({ canvas: off, icon, model: new URL('./assets/shiba.glb', import.meta.url).href }, [off]);
   const chunks: Blob[] = [];
   const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
   recorder.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data); };
@@ -52,7 +60,7 @@ function track(video: HTMLVideoElement) {
 
 /** Compare one tick's two frames: how many pixels differ, and how many of them outside the icon. */
 function compare(a: Uint8ClampedArray, b: Uint8ClampedArray) {
-  const box = iconBox();
+  const box = mode3d && box3d ? box3d : iconBox();
   let differ = 0, outside = 0;
   for (let i = 0; i < a.length; i += 4) {
     if (a[i] !== b[i] || a[i + 1] !== b[i + 1] || a[i + 2] !== b[i + 2] || a[i + 3] !== b[i + 3]) {
@@ -65,13 +73,15 @@ function compare(a: Uint8ClampedArray, b: Uint8ClampedArray) {
 }
 
 async function run() {
-  const A = view('canvas-a', 'live-a', 'disc');
+  if (mode3d) { $('cap-a').textContent = 'A · live · Solomon a sphere (3D)'; $('cap-b').textContent = 'B · live · Solomon a glTF model (3D)'; }
+  const A = view('canvas-a', 'live-a', mode3d ? 'sphere' : 'disc');
   // ?falsify: B also draws a stray mark away from Solomon, so the check must fail
-  const B = view('canvas-b', 'live-b', params.has('falsify') ? 'stray' : 'square');
+  const B = view('canvas-b', 'live-b', params.has('falsify') ? 'stray' : mode3d ? 'gltf' : 'square');
   const log = $<HTMLPreElement>('log');
   const results: { tick: number; differ: number; outside: number }[] = [];
   const got = (v: View) => (e: MessageEvent<FromWorker>) => {
     v.frames.set(e.data.tick, e.data.pixels);
+    if (e.data.box) box3d = e.data.box;
     const a = A.frames.get(e.data.tick), b = B.frames.get(e.data.tick);
     if (a && b) {
       const r = compare(a, b);
@@ -104,7 +114,7 @@ async function run() {
   }
   const xor = results.every((r) => r.differ > 0), xnor = results.every((r) => r.outside === 0);
   const verdict = $<HTMLParagraphElement>('verdict');
-  const source = plan9 ? `States from the Plan 9 floor (agentd), its ticks ${floorTicks[0]} to ${floorTicks[floorTicks.length - 1]}. ` : 'States stepped by K in the browser. ';
+  const source = (mode3d ? 'In 3D, Solomon a sphere in A and a glTF model in B. ' : '') + (plan9 ? `States from the Plan 9 floor (agentd), its ticks ${floorTicks[0]} to ${floorTicks[floorTicks.length - 1]}. ` : 'States stepped by K in the browser. ');
   verdict.textContent = source + `${results.length} ticks compared. Separate (XOR, the icon differs every tick): ${xor ? 'yes' : 'no'}. The same (XNOR, nothing differs outside the icon): ${xnor ? 'yes' : 'no'}.`;
   verdict.dataset.pass = String(xor && xnor);
   document.body.dataset.done = 'true';
