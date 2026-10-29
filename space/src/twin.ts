@@ -11,6 +11,14 @@ import type { FromWorker, Icon } from './twin-worker.ts';
 const SIZE = 512, TICKS = 48, FPS = 8;
 const params = new URLSearchParams(location.search);
 const vtt = params.get('vtt') ?? 'http://127.0.0.1:8790/vtt/NARRATIVE/canticle.vtt';
+// ?source=plan9: each tick, one snapshot of the Plan 9 floor's states from agentd, given to both views
+const plan9 = params.get('source') === 'plan9';
+const agentd = params.get('agents') ?? 'http://127.0.0.1:18000/agents';
+
+async function floorStates(): Promise<{ tick: number; states: Record<string, number> }> {
+  const r = await (await fetch(agentd, { cache: 'no-store' })).json() as { tick: number; agents: { tag: string; state: string }[] };
+  return { tick: r.tick, states: Object.fromEntries(r.agents.map((a) => [a.tag, parseInt(a.state, 16)])) };
+}
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 
 /** Solomon's icon region on the floor: his disc, with room for either icon. */
@@ -75,8 +83,15 @@ async function run() {
   A.worker.onmessage = got(A);
   B.worker.onmessage = got(B);
   A.recorder.start(); B.recorder.start();
+  const floorTicks: number[] = [];
   for (let t = 0; t < TICKS; t++) {
-    A.worker.postMessage({ tick: t }); B.worker.postMessage({ tick: t });
+    if (plan9) {
+      const f = await floorStates();
+      floorTicks.push(f.tick);
+      A.worker.postMessage({ tick: t, states: f.states }); B.worker.postMessage({ tick: t, states: f.states });
+    } else {
+      A.worker.postMessage({ tick: t }); B.worker.postMessage({ tick: t });
+    }
     await new Promise((r) => setTimeout(r, 1000 / FPS));
   }
   await new Promise((r) => setTimeout(r, 400));
@@ -89,7 +104,8 @@ async function run() {
   }
   const xor = results.every((r) => r.differ > 0), xnor = results.every((r) => r.outside === 0);
   const verdict = $<HTMLParagraphElement>('verdict');
-  verdict.textContent = `${results.length} ticks compared. Separate (XOR, the icon differs every tick): ${xor ? 'yes' : 'no'}. The same (XNOR, nothing differs outside the icon): ${xnor ? 'yes' : 'no'}.`;
+  const source = plan9 ? `States from the Plan 9 floor (agentd), its ticks ${floorTicks[0]} to ${floorTicks[floorTicks.length - 1]}. ` : 'States stepped by K in the browser. ';
+  verdict.textContent = source + `${results.length} ticks compared. Separate (XOR, the icon differs every tick): ${xor ? 'yes' : 'no'}. The same (XNOR, nothing differs outside the icon): ${xnor ? 'yes' : 'no'}.`;
   verdict.dataset.pass = String(xor && xnor);
   document.body.dataset.done = 'true';
 }

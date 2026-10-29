@@ -8,7 +8,7 @@ import { CHARACTERS } from './characters.ts';
 import { K, hex16 } from './gnomon.ts';
 
 export type Icon = 'disc' | 'square' | 'stray';
-export type ToWorker = { canvas: OffscreenCanvas; icon: Icon } | { tick: number };
+export type ToWorker = { canvas: OffscreenCanvas; icon: Icon } | { tick: number; states?: Record<string, number> };
 export type FromWorker = { tick: number; pixels: Uint8ClampedArray };
 
 let ctx: OffscreenCanvasRenderingContext2D | null = null;
@@ -28,11 +28,12 @@ function statesAt(tick: number): Map<string, number> {
   return out;
 }
 
-function draw(tick: number) {
+function draw(tick: number, given?: Record<string, number>) {
   if (!ctx) return;
   const marks: Mark[] = CHARACTERS.map((c) => ({ at: atHue(c.hue), hue: c.hue, name: c.tag }));
   drawFloor(ctx, size, marks);
-  const states = statesAt(tick);
+  // the states: given by the page (the Plan 9 floor's, through agentd), or stepped here by K
+  const states = given ? new Map(Object.entries(given)) : statesAt(tick);
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.font = `${Math.round(size / 56)}px monospace`;
@@ -67,7 +68,7 @@ self.onmessage = (e: MessageEvent<ToWorker>) => {
     draw(0);
     return;
   }
-  draw(m.tick);
+  draw(m.tick, m.states);
   const pixels = ctx!.getImageData(0, 0, size, size).data;
   (self as unknown as Worker).postMessage({ tick: m.tick, pixels } satisfies FromWorker, [pixels.buffer]);
 };
