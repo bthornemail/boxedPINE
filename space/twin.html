@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Twin</title>
+  <style>
+    :root { color-scheme: dark; --bg: #0c1015; --panel: #151c24; --ink: #edf0e9; --muted: #9fb0bd; --rule: #34404a; --pass: #7fd3a4; --fail: #f08a7a; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, sans-serif; }
+    main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; display: grid; gap: 18px; }
+    h1 { margin: 0; font-size: 1.5rem; }
+    p { margin: 0; max-width: 72ch; color: var(--muted); }
+    .pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+    figure { margin: 0; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 10px; display: grid; gap: 8px; min-width: 0; }
+    figcaption { font: 600 .8rem monospace; color: var(--muted); }
+    canvas, video { width: 100%; height: auto; aspect-ratio: 1; background: #000; border-radius: 4px; }
+    .hidden { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+    #verdict { color: var(--ink); font-weight: 600; }
+    #verdict[data-pass="true"] { color: var(--pass); }
+    #verdict[data-pass="false"] { color: var(--fail); }
+    pre { margin: 0; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 10px; max-height: 220px; overflow: auto; font-size: .8rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+<main>
+  <h1>The Twin</h1>
+  <p>The final check: one story drawn twice from the same states, each on a canvas handed to a worker, each its own video. Only Solomon's icon differs: a disc in A, a square in B. Watch them live, then replay both. Every frame is compared: the views must differ only inside Solomon's icon (separate, XOR) and be identical everywhere else (the same, XNOR).</p>
+  <canvas id="canvas-a" class="hidden" width="512" height="512"></canvas>
+  <canvas id="canvas-b" class="hidden" width="512" height="512"></canvas>
+  <div class="pair">
+    <figure><figcaption>A · live · Solomon a disc</figcaption><video id="live-a" autoplay muted playsinline></video></figure>
+    <figure><figcaption>B · live · Solomon a square</figcaption><video id="live-b" autoplay muted playsinline></video></figure>
+  </div>
+  <p id="verdict">Running…</p>
+  <div class="pair">
+    <figure><figcaption>A · replay</figcaption><video id="replay-a" controls playsinline></video></figure>
+    <figure><figcaption>B · replay</figcaption><video id="replay-b" controls playsinline></video></figure>
+  </div>
+  <pre id="log"></pre>
+</main>
+<script type="module" src="./src/twin.ts"></script>
+</body>
+</html>
