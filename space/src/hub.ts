@@ -30,6 +30,7 @@ const stations: Station[] = [
   { title: 'Polytron', room: './polytron.html', description: 'polyforms + GPU pipeline', color: 0xd68be8, position: [-3.2, 1.05, 2.5], shape: 'dali' },
   { title: 'Map', room: './map.html', description: 'colour wheel · 2D and 2.5D', color: 0x9acd32, position: [-2.3, .9, -2.7], shape: 'column' },
   { title: 'Living world', room: './metaverse.html', description: 'event-sourced simulation', color: 0x80b8e8, position: [3.2, 1.05, 2.5], shape: 'orb' },
+  { title: 'Plan 9 floor', room: './guest.html', description: 'the Commons on Plan 9, in QEMU', color: 0xf0d080, position: [2.3, .9, -2.7], shape: 'column' },
 ];
 
 const host = document.querySelector<HTMLElement>('#scene')!;
@@ -297,6 +298,23 @@ soundButton.onclick = () => {
   soundButton.textContent = 'sound off';
 };
 document.body.appendChild(soundButton);
+// ── The Plan 9 agents: the same eight on the Commons floor running in QEMU (unbound PLAN9/space/floor.c),
+// read from agentd once a second (?agents= to move it); each character carries its Plan 9 state and tick ──
+const agentsURL = new URLSearchParams(location.search).get('agents') ?? 'http://127.0.0.1:18000/agents';
+const plan9 = { tick: -1, states: new Map<string, string>() };
+async function pollPlan9() {
+  try {
+    const r = await (await fetch(agentsURL, { cache: 'no-store' })).json() as { tick: number; agents: { tag: string; state: string }[] };
+    plan9.tick = r.tick;
+    for (const a of r.agents) plan9.states.set(a.tag, a.state);
+    document.body.dataset.plan9tick = String(r.tick);
+    document.body.dataset.plan9 = r.agents.map((a) => `${a.tag}:${a.state}`).join(' ');
+  } catch { plan9.tick = -1; delete document.body.dataset.plan9tick; }
+}
+pollPlan9();
+setInterval(pollPlan9, 1000);
+const plan9Line = (tag: string) => (plan9.tick < 0 ? 'Plan 9: not running' : `P9 ${plan9.states.get(tag) ?? '----'} t${plan9.tick}`);
+
 let frameCount = 0;
 function liveFrame(time: number) {
   frameCount++;
@@ -307,7 +325,7 @@ function liveFrame(time: number) {
     const s = storyStep(l.walker, storyPassages);
     const state = fileOf(frameCount) === 'Hasse_XOR' ? 'read' : 'write';
     if (audio && l.graph) for (const e of scoreOf([{ point: s.point, line: s.line, state }])) l.graph.params.get(`${e.node}.${e.param}`)?.setValueAtTime(e.value, audio.currentTime);
-    const text = `${l.c.tag}|line ${s.line} via P${s.point}|${written(l.state)}/128 ${state}`;
+    const text = `${l.c.tag}|line ${s.line} via P${s.point}|${written(l.state)}/128 ${state}|${plan9Line(l.c.tag)}`;
     if (text !== l.last) { l.last = text; const fresh = textSprite(text.split('|'), l.c.hue === null ? '#ffffff' : `hsl(${l.c.hue} 80% 65%)`); fresh.position.copy(l.label.position); l.group.remove(l.label); l.label.material.map?.dispose(); l.label = fresh; l.group.add(fresh); }
   }
   if (audio) {
@@ -322,6 +340,7 @@ const links = [
   [[-3.2, .18, 2.5], [0, .18, 0]],
   [[3.2, .18, 2.5], [0, .18, 0]],
   [[-2.3, .18, -2.7], [0, .18, 0]],
+  [[2.3, .18, -2.7], [0, .18, 0]],
 ] as const;
 for (const [from, to] of links) {
   const material = new THREE.LineBasicMaterial({ color: 0x3d6770, transparent: true, opacity: .7 });
@@ -350,7 +369,26 @@ function pick(ray: THREE.Raycaster) {
   const hit = ray.intersectObjects([...selectable, floor], false)[0];
   const station = hit?.object.userData.station as Station | undefined;
   if (station) { window.location.href = station.room; return; }
-  if (hit?.object === floor && hit.uv) { selected = nearest(fromUv(hit.uv), floorMarks(), 0.2)?.name; floorDrawn = -Infinity; }
+  if (hit?.object === floor && hit.uv) { selected = nearest(fromUv(hit.uv), floorMarks(), 0.2)?.name; floorDrawn = -Infinity; showAgent(selected); }
+}
+
+// The selected character's Plan 9 views: its agent on the guest's floor, and the twin driven by the floor
+const agentPanel = document.createElement('div');
+agentPanel.style.cssText = 'position:fixed;left:16px;bottom:16px;z-index:5;font:13px monospace;padding:8px 10px;background:#10151bd9;color:#edf0e9;border:1px solid #34404a;border-radius:5px;display:none;line-height:1.6';
+document.body.appendChild(agentPanel);
+function showAgent(tag?: string) {
+  const c = live.find((l) => l.c.tag === tag);
+  if (!c || !tag) { agentPanel.style.display = 'none'; return; }
+  agentPanel.replaceChildren();
+  const head = document.createElement('div');
+  head.textContent = `${tag} · ${plan9Line(tag)}`;
+  agentPanel.appendChild(head);
+  for (const [text, href] of [['on the Plan 9 floor', `./guest.html?agent=${tag}`], ['in the twin, from Plan 9', './twin.html?source=plan9']] as const) {
+    const a = document.createElement('a');
+    a.href = href; a.textContent = text; a.style.cssText = 'display:block;color:#9acd32';
+    agentPanel.appendChild(a);
+  }
+  agentPanel.style.display = 'block';
 }
 function choose(event: PointerEvent) {
   const rect = renderer.domElement.getBoundingClientRect();
