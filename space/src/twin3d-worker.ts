@@ -3,7 +3,8 @@
 // and fall with their states, the same in both views; only Solomon differs, a sphere in one
 // and a glTF model (space/src/assets/shiba.glb) in the other (global.vtt replay-video, gltf).
 // Each frame's pixels go back to the page with Solomon's box on the screen (the union of both
-// icons' bounds, projected), inside which the two views may differ and outside which not.
+// icons' bounds, projected), inside which the two views may differ and outside which not; or, with
+// a pose (the walk, walk.ts), the camera where the walker stands and that region as a mask.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { atHue, toWorld } from './plane.ts';
@@ -12,8 +13,13 @@ import { K } from './gnomon.ts';
 
 export type Icon = 'sphere' | 'gltf' | 'stray';
 // 'stray' is the glTF icon and, besides, a cube away from Solomon
-export type ToWorker = { canvas: OffscreenCanvas; icon: Icon; model: string } | { tick: number; states?: Record<string, number> };
-export type FromWorker = { tick: number; pixels: Uint8ClampedArray; box?: { x0: number; y0: number; x1: number; y1: number } };
+// a pose puts the camera where the walker stands (walk.ts): first person, eye height 1.6
+export type Pose = { x: number; z: number; yaw: number; pitch: number };
+export type ToWorker = { canvas: OffscreenCanvas; icon: Icon; model: string } | { tick: number; states?: Record<string, number>; pose?: Pose };
+// with a pose, mask in place of box: 1 where Solomon's region (both icons' bounds) is on the screen,
+// rendered alone, so the region holds however the walker stands, behind him or beside him
+// and seen: 1 where Solomon's own icon shows in this view, the scene drawn black around it, depth tested
+export type FromWorker = { tick: number; pixels: Uint8ClampedArray; box?: { x0: number; y0: number; x1: number; y1: number }; mask?: Uint8Array; seen?: Uint8Array };
 
 let renderer: THREE.WebGLRenderer | null = null;
 let size = 0;
@@ -32,6 +38,11 @@ scene.add(floor);
 
 const figures = new Map<string, THREE.Object3D>();
 let solomonBounds = new THREE.Box3();
+let stray = false;
+// Solomon's region alone, white on black, rendered off screen for the mask
+const maskScene = new THREE.Scene();
+maskScene.background = new THREE.Color(0x000000);
+let maskTarget: THREE.WebGLRenderTarget | null = null;
 
 function place(tag: string, obj: THREE.Object3D) {
   const c = CHARACTERS.find((x) => x.tag === tag)!;
@@ -67,6 +78,7 @@ async function build(icon: Icon, model: string) {
     g.add(m);
     place('SOLOMON', g);
   }
+  stray = icon === 'stray';
   if (icon === 'stray') {
     // the falsifier: a small cube away from Solomon, which the comparison must catch
     const cube = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.4, 0.4), new THREE.MeshStandardMaterial({ color: 0xffffff }));
@@ -76,6 +88,49 @@ async function build(icon: Icon, model: string) {
   // Solomon's region: both icons' bounds at the highest rise, in world space
   const at = figures.get('SOLOMON')!.position;
   solomonBounds = new THREE.Box3(new THREE.Vector3(at.x - 0.75, -0.1, at.z - 0.75), new THREE.Vector3(at.x + 0.75, 1.75, at.z + 0.75));
+  const dim = solomonBounds.getSize(new THREE.Vector3()), mid = solomonBounds.getCenter(new THREE.Vector3());
+  const region = new THREE.Mesh(new THREE.BoxGeometry(dim.x, dim.y, dim.z), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+  region.position.copy(mid);
+  maskScene.add(region);
+}
+
+// the walker's falsifier: a cube held before the eyes, low and to the left, away from Solomon wherever he is
+const held = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 0.08), new THREE.MeshStandardMaterial({ color: 0xffffff }));
+held.position.set(-0.22, -0.16, -0.6);
+
+function stand(pose: Pose) {
+  camera.position.set(pose.x, 1.6, pose.z);
+  camera.rotation.set(pose.pitch, pose.yaw, 0, 'YXZ');
+  camera.updateMatrixWorld();
+  if (stray && !held.parent) { camera.add(held); scene.add(camera); }
+}
+
+function targetMask(draw: THREE.Scene): Uint8Array {
+  if (!maskTarget) maskTarget = new THREE.WebGLRenderTarget(size, size);
+  renderer!.setRenderTarget(maskTarget);
+  renderer!.render(draw, camera);
+  const raw = new Uint8Array(size * size * 4);
+  renderer!.readRenderTargetPixels(maskTarget, 0, 0, size, size, raw);
+  renderer!.setRenderTarget(null);
+  const mask = new Uint8Array(size * size);
+  for (let i = 0; i < mask.length; i++) mask[i] = raw[i * 4]! > 0 ? 1 : 0;
+  return mask;
+}
+const regionMask = () => targetMask(maskScene);
+
+// where Solomon's icon shows: every mesh drawn black but his, drawn white, the depth test kept
+const black = new THREE.MeshBasicMaterial({ color: 0x000000 }), white = new THREE.MeshBasicMaterial({ color: 0xffffff });
+function seenMask(): Uint8Array {
+  const his = new Set<THREE.Object3D>();
+  figures.get('SOLOMON')?.traverse((o) => his.add(o));
+  const saved = new Map<THREE.Mesh, THREE.Material | THREE.Material[]>();
+  scene.traverse((o) => { if (o instanceof THREE.Mesh) { saved.set(o, o.material); o.material = his.has(o) ? white : black; } });
+  const bg = scene.background;
+  scene.background = new THREE.Color(0x000000);
+  const mask = targetMask(scene);
+  scene.background = bg;
+  for (const [o, m] of saved) o.material = m;
+  return mask;
 }
 
 function screenBox() {
@@ -106,10 +161,13 @@ self.onmessage = async (e: MessageEvent<ToWorker>) => {
   const states = m.states ?? statesAt(m.tick);
   // each rises with its state's low byte: the story as motion, the same in both views
   for (const [tag, obj] of figures) obj.position.y = ((states[tag] ?? 0) & 0xff) / 255 * 0.6;
+  const mask = m.pose ? (stand(m.pose), regionMask()) : undefined;
+  const seen = m.pose ? seenMask() : undefined;
   renderer!.render(scene, camera);
   const gl = renderer!.getContext();
   const raw = new Uint8Array(size * size * 4);
   gl.readPixels(0, 0, size, size, gl.RGBA, gl.UNSIGNED_BYTE, raw);
   const pixels = new Uint8ClampedArray(raw.buffer);
-  (self as unknown as Worker).postMessage({ tick: m.tick, pixels, box: screenBox() } satisfies FromWorker, [pixels.buffer]);
+  if (mask && seen) (self as unknown as Worker).postMessage({ tick: m.tick, pixels, mask, seen } satisfies FromWorker, [pixels.buffer, mask.buffer, seen.buffer]);
+  else (self as unknown as Worker).postMessage({ tick: m.tick, pixels, box: screenBox() } satisfies FromWorker, [pixels.buffer]);
 };
