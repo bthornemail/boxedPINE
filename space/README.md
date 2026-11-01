@@ -98,6 +98,8 @@ The author: "update documentation an vtt cues so that every html page can share 
 - **The text track.** The narrative WebVTT (`?vtt=`, normally `http://127.0.0.1:8790/vtt/NARRATIVE/canticle.vtt`), one URL for every page. `attachTrack(media, src?, label?)` attaches a track and tells every page each cue it enters; `onCue(c)` hears them. The twin, the walk and the walk-through attach their tracks this way.
 - **The media streams.** `offer(name, stream)` offers a stream by name; `watch(name)` returns it on any other page. The offer, the answer and the candidates go over the channel, and the stream itself over a local `RTCPeerConnection`, since a `MediaStream` does not cross a channel. The twin offers its two views, the walk its two, and the walk-through its four-view picture in picture.
 
+The narrative levels the pages stand at (the walk embedded in the podcast, the story in the walk) are in `PORTAL.md`.
+
 On each page the portal is a `<commons-portal>` element in a shadow root, in the lower left corner. It shows the shared tick and states, the cue and the page it came from, a link to every room, and the streams on offer; choosing one shows it. In the console, `portal` gives the same functions.
 
 Checked in headless Chrome with two pages (map and gate): one page read the floor and both showed tick 3269; a red canvas offered on map arrived on gate as 219, 20, 30 (drawn as 220, 20, 30); a podcast cue entered on gate was heard on map; and when the reading page closed, the other took the lock.
