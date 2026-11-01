@@ -13,9 +13,11 @@
 // the streams on offer, any of which it can show.
 
 export type Floor = { tick: number; states: Record<string, number> };
+export type World = { tiles: { space: string; tile: string; state: string }[] };
 export type Cue = { id: string; start: number; end: number; text: string; from: string };
 type Msg =
   | { kind: 'floor'; floor: Floor; from: string }
+  | { kind: 'world'; world: World; from: string }
   | { kind: 'cue'; cue: Cue }
   | { kind: 'hello'; from: string; page: string }
   | { kind: 'streams'; from: string; page: string; names: string[] }
@@ -25,6 +27,7 @@ type Msg =
 
 const params = new URLSearchParams(location.search);
 export const AGENTD = params.get('agents') ?? 'http://127.0.0.1:18000/agents';
+export const WORLD = (params.get('world') ?? 'http://127.0.0.1:18001').replace(/\/$/, '');
 export const NARRATIVE = params.get('vtt') ?? 'http://127.0.0.1:8790/vtt/NARRATIVE/canticle.vtt';
 export const ROOMS = ['index', 'map', 'twin', 'walk', 'walkthrough', 'guest', 'xr', 'metaverse', 'polytron', 'agent', 'meta', 'gate', 'serial', 'examples', 'sound-check'];
 const page = location.pathname.split('/').pop()?.replace(/\.html$/, '') || 'index';
@@ -57,6 +60,27 @@ export async function floorNow(): Promise<Floor> {
   if (!latest) told(await readFloor());
   return latest!;
 }
+
+// ── the world: Metaverse Kit's, served from Plan 9 (mkd), one reader, every page told ──
+let world: World | null = null;
+let worldReader = false;
+const worldWatchers = new Set<(w: World) => void>();
+const toldWorld = (w: World) => { world = w; for (const x of worldWatchers) x(w); };
+async function readWorld(): Promise<World> {
+  const tiles = (await (await fetch(`${WORLD}/tiles`, { cache: 'no-store' })).text()).split('\n').filter(Boolean).map((l) => l.split(' ') as [string, string]);
+  return { tiles: await Promise.all(tiles.map(async ([space, tile]) => ({ space, tile, state: await (await fetch(`${WORLD}/state?${space}&${tile}`, { cache: 'no-store' })).text() }))) };
+}
+if ('locks' in navigator) {
+  navigator.locks.request('commons-portal-world', async () => {
+    worldReader = true;
+    for (;;) {
+      try { const w = await readWorld(); post({ kind: 'world', world: w, from: me }); toldWorld(w); } catch { /* the world is away; try again */ }
+      await new Promise((r) => setTimeout(r, 2000));
+    }
+  });
+}
+/** Every world the portal hears: each tile's state, as the Plan 9 world server folds it. */
+export function onWorld(watch: (w: World) => void) { worldWatchers.add(watch); if (world) watch(world); return () => worldWatchers.delete(watch); }
 
 // ── the text track: one narrative, the cue every page is on ───────────
 let cue: Cue | null = null;
@@ -113,10 +137,12 @@ channel.onmessage = async (e: MessageEvent<Msg>) => {
   const m = e.data;
   switch (m.kind) {
     case 'floor': if (!reader) told(m.floor); break;
+    case 'world': if (!worldReader) toldWorld(m.world); break;
     case 'cue': cued(m.cue); break;
     case 'hello':
       if (offered.size) post({ kind: 'streams', from: me, page, names: [...offered.keys()] });
       if (latest && reader) post({ kind: 'floor', floor: latest, from: me });
+      if (world && worldReader) post({ kind: 'world', world, from: me });
       if (cue) post({ kind: 'cue', cue });
       break;
     case 'streams': streamsBy.set(m.from, { names: m.names, page: m.page }); changed(); break;
@@ -172,6 +198,7 @@ class CommonsPortal extends HTMLElement {
       .muted { color: #9fb0bd; }
     </style><details><summary>portal · <span class="tick">no floor yet</span></summary><div class="body">
       <div class="cue muted">no cue yet</div>
+      <div class="world muted">no world yet</div>
       <nav></nav>
       <div class="streams muted">no streams on offer</div>
       <video muted playsinline autoplay hidden></video>
@@ -179,6 +206,7 @@ class CommonsPortal extends HTMLElement {
     const $ = (s: string) => root.querySelector(s) as HTMLElement;
     $('nav').innerHTML = ROOMS.map((r) => `<a href="./${r}.html"${r === page ? ' aria-current="page"' : ''}>${r}</a>`).join('');
     onFloor((f) => { $('.tick').textContent = `tick ${f.tick} · ${Object.values(f.states).map((s) => s.toString(16).toUpperCase().padStart(4, '0')).join(' ')}`; });
+    onWorld((w) => { const el = $('.world'); el.textContent = `world: ${w.tiles.map((t) => `${t.space} ${t.tile} ${t.state.split('\n').filter((l) => l.startsWith('node_id ') && !/ deleted /.test(l)).length} nodes`).join(' · ')}`; el.classList.remove('muted'); });
     onCue((c) => { const el = $('.cue'); el.textContent = `${c.from}: ${c.text}`; el.classList.remove('muted'); });
     const video = root.querySelector('video')!;
     const list = () => {
@@ -192,4 +220,4 @@ class CommonsPortal extends HTMLElement {
 if (!customElements.get('commons-portal')) customElements.define('commons-portal', CommonsPortal);
 if (!document.querySelector('commons-portal')) document.body?.appendChild(document.createElement('commons-portal'));
 
-(window as unknown as { portal: unknown }).portal = { onFloor, floorNow, onCue, attachTrack, offer, watch, streams, get reader() { return reader; }, get latest() { return latest; }, get cue() { return cue; } };
+(window as unknown as { portal: unknown }).portal = { onFloor, floorNow, onCue, attachTrack, offer, watch, streams, get reader() { return reader; }, get latest() { return latest; }, get cue() { return cue; }, get world() { return world; }, onWorld };

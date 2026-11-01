@@ -7,6 +7,7 @@ Every page in `space/` is a portal to the same architecture. Each page is a view
 `src/portal.ts` is included by every page. Through one `BroadcastChannel` (`commons-portal`) the pages share three things. The details and the check are in `README.md`, under "The portal".
 
 - **The state.** The Plan 9 floor (`unbound/PLAN9/space/floor.c`), read through agentd (normally `http://127.0.0.1:18000/agents`). The open pages elect one reader with a Web Lock, and it tells every page the tick and the eight states, once a second. When that page closes, another takes the lock. No page is fixed as the master.
+- **The world.** Metaverse Kit's world as the Plan 9 world server folds it (`mkd`, normally `http://127.0.0.1:18001`): one page reads its tiles and their states, and every page is told. The Commons shows each tile's live nodes above the Living world station.
 - **The text track.** The narrative WebVTT (normally `http://127.0.0.1:8790/vtt/NARRATIVE/canticle.vtt`), one URL for every page. A page playing a track tells every page each cue it enters (`attachTrack`, `onCue`). The time is the media's own, along its cues; the floor's tick is the floor's own.
 - **The media streams.** A page offers a stream by name (`offer`), and any page can watch it (`watch`). The stream travels over a local `RTCPeerConnection`, because a `MediaStream` cannot cross a channel.
 - **The geometry.** `src/plane.ts` maps a place, (u, v, layer), to the 2D floor, the 2.5D map and the 3D scene, and back. Every page uses it.

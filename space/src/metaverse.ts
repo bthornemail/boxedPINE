@@ -3,6 +3,7 @@
 // state is the kit's fold (src/zmk.c) of its append-only events, one node a line; this room draws the
 // nodes from above (x and z of each position), their links, and appends an event when the grammar
 // (wsn/mkevent.wsn) accepts it. The kit's own client stays reachable below.
+import { parse, hue, type WorldNode } from './world.ts';
 const $ = <T extends HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
 const canvas = $<HTMLCanvasElement>('#world');
 const source = $<HTMLInputElement>('#src');
@@ -12,8 +13,7 @@ const lines = $<HTMLPreElement>('#lines');
 const draft = $<HTMLTextAreaElement>('#event');
 const client = $<HTMLAnchorElement>('#client');
 
-type Node = { id: string; kind: string; deleted: boolean; transform: string[]; properties: [string, string][]; links: [string, string][]; blocks: string[] };
-const BLOCKS = ['geometry', 'media', 'text', 'document'];
+type Node = WorldNode;
 
 function validSource(value: string) {
   try {
@@ -24,20 +24,7 @@ function validSource(value: string) {
   }
 }
 
-/** One state line: node_id N kind K [deleted] transform (10) properties (k v)... links (rel to)... [block ...]... */
-function parse(line: string): Node {
-  const t = line.split(' ');
-  const n: Node = { id: t[1], kind: t[3], deleted: t[4] === 'deleted', transform: [], properties: [], links: [], blocks: [] };
-  let i = t.indexOf('transform', 4) + 1;
-  n.transform = t.slice(i, i + 10);
-  i += 11; // past "properties"
-  for (; i < t.length && t[i] !== 'links'; i += 2) n.properties.push([t[i], t[i + 1]]);
-  for (i++; i < t.length && !BLOCKS.includes(t[i]); i += 2) n.links.push([t[i], t[i + 1]]);
-  if (i < t.length) n.blocks = t.slice(i).join(' ').split(new RegExp(` (?=${BLOCKS.join('|')} kind )`));
-  return n;
-}
 
-const hue = (s: string) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 360, 7);
 
 function draw(nodes: Node[]) {
   const ctx = canvas.getContext('2d')!;

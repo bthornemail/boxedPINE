@@ -1,4 +1,5 @@
-import { onFloor } from './portal.ts';
+import { onFloor, onWorld } from './portal.ts';
+import { parseState, hue as kindHue } from './world.ts';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { VRButton } from 'three/addons/webxr/VRButton.js';
@@ -156,6 +157,37 @@ function stationMesh(station: Station) {
   stationGroups.push(group);
 }
 stations.forEach(stationMesh);
+
+// The Plan 9 world at the Living world station (Metaverse Kit's world, served by unbound PLAN9 mkfs and
+// mkd, read through the portal): above the orb, each tile a layer, its live nodes at their x and z, fitted
+// to the tile as the Living World fits them, each coloured by its kind as there.
+const livingWorld = stationGroups[stations.findIndex((s) => s.title === 'Living world')]!;
+const worldGroup = new THREE.Group();
+worldGroup.position.y = 1.05;
+livingWorld.add(worldGroup);
+onWorld((w) => {
+  worldGroup.clear();
+  let total = 0;
+  w.tiles.forEach((t, layer) => {
+    const live = parseState(t.state).filter((n) => !n.deleted);
+    total += live.length;
+    const xs = live.map((n) => Number(n.transform[0])), zs = live.map((n) => Number(n.transform[2]));
+    const [x0, x1, z0, z1] = [Math.min(...xs, -1), Math.max(...xs, 1), Math.min(...zs, -1), Math.max(...zs, 1)];
+    const k = 1.5 / Math.max(x1 - x0, z1 - z0), y = layer * .32;
+    const disc = new THREE.Mesh(new THREE.RingGeometry(.86, .9, 48), new THREE.MeshBasicMaterial({ color: 0x80b8e8, transparent: true, opacity: .45, side: THREE.DoubleSide }));
+    disc.rotation.x = -Math.PI / 2; disc.position.y = y;
+    worldGroup.add(disc);
+    for (const n of live) {
+      const color = new THREE.Color().setHSL(kindHue(n.kind) / 360, .6, .6);
+      const geometry = n.kind.endsWith('rectangle') ? new THREE.BoxGeometry(.11, .11, .11) : new THREE.SphereGeometry(.065, 16, 10);
+      const m = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: .35 }));
+      m.position.set((Number(n.transform[0]) - (x0 + x1) / 2) * k, y + .06, (Number(n.transform[2]) - (z0 + z1) / 2) * k);
+      worldGroup.add(m);
+    }
+  });
+  document.body.dataset.worldTiles = String(w.tiles.length);
+  document.body.dataset.worldNodes = String(total);
+});
 
 // Polytron's gnomon (tetra-gnomon-anim.c) at the Polytron station: K(p, 0x1D) from
 // 0x4242, a dial of 8 points, one lit per step, with the state and its SID.
