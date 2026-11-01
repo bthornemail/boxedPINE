@@ -40,5 +40,6 @@ try {
   out.textContent = JSON.stringify({ ok: pass, storedReplayExact, replayExact: same, pcm16Differing: pcmDiffer, maxDiff, differing, firstDiff, peak: Math.max(...L.map(Math.abs)), samples: L.length, rows });
 } catch (e) { out.textContent = JSON.stringify({ ok: false, error: String(e) }); }
 </script>
+<script type="module" src="./src/portal.ts"></script>
 </body>
 </html>

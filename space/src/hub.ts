@@ -1,3 +1,4 @@
+import { onFloor } from './portal.ts';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { VRButton } from 'three/addons/webxr/VRButton.js';
@@ -300,19 +301,14 @@ soundButton.onclick = () => {
 document.body.appendChild(soundButton);
 // ── The Plan 9 agents: the same eight on the Commons floor running in QEMU (unbound PLAN9/space/floor.c),
 // read from agentd once a second (?agents= to move it); each character carries its Plan 9 state and tick ──
-const agentsURL = new URLSearchParams(location.search).get('agents') ?? 'http://127.0.0.1:18000/agents';
+// (now through the portal, portal.ts: one page reads the floor and tells every open page)
 const plan9 = { tick: -1, states: new Map<string, string>() };
-async function pollPlan9() {
-  try {
-    const r = await (await fetch(agentsURL, { cache: 'no-store' })).json() as { tick: number; agents: { tag: string; state: string }[] };
-    plan9.tick = r.tick;
-    for (const a of r.agents) plan9.states.set(a.tag, a.state);
-    document.body.dataset.plan9tick = String(r.tick);
-    document.body.dataset.plan9 = r.agents.map((a) => `${a.tag}:${a.state}`).join(' ');
-  } catch { plan9.tick = -1; delete document.body.dataset.plan9tick; }
-}
-pollPlan9();
-setInterval(pollPlan9, 1000);
+onFloor((f) => {
+  plan9.tick = f.tick;
+  for (const [tag, s] of Object.entries(f.states)) plan9.states.set(tag, s.toString(16).toUpperCase().padStart(4, '0'));
+  document.body.dataset.plan9tick = String(f.tick);
+  document.body.dataset.plan9 = Object.entries(f.states).map(([t, s]) => `${t}:${s.toString(16).toUpperCase().padStart(4, '0')}`).join(' ');
+});
 const plan9Line = (tag: string) => (plan9.tick < 0 ? 'Plan 9: not running' : `P9 ${plan9.states.get(tag) ?? '----'} t${plan9.tick}`);
 
 let frameCount = 0;

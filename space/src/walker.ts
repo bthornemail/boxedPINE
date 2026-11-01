@@ -5,6 +5,7 @@ import { atHue, drawFloor, fromWorld, toFloor, FLOOR, type Mark } from './plane.
 import { CHARACTERS } from './characters.ts';
 import { K } from './gnomon.ts';
 import type { FromWorker, Icon, Pose } from './twin3d-worker.ts';
+import { floorNow } from './portal.ts';
 
 export const TAGS = CHARACTERS.map((c) => c.tag);
 
@@ -42,8 +43,8 @@ export function floor(plan9: boolean, agentd: string) {
       browserTick++;
       return out;
     }
-    const r = await (await fetch(agentd, { cache: 'no-store' })).json() as { tick: number; agents: { tag: string; state: string }[] };
-    return { tick: r.tick, states: Object.fromEntries(r.agents.map((a) => [a.tag, parseInt(a.state, 16)])) };
+    void agentd;	// the portal reads it (portal.ts ?agents=), once for every open page
+    return floorNow();
   };
 }
 

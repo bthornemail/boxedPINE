@@ -12,6 +12,7 @@
 // Solomon's region (separate, XOR) and nowhere else (the same, XNOR). ?falsify gives B a cube held
 // before the eyes, which must fail. ?auto walks a fixed path, for a check without hands.
 import type { Icon, Pose } from './twin3d-worker.ts';
+import { attachTrack, offer } from './portal.ts';
 import { AUTO, START, compare, drawWalker, floor, frame, line, same, stepPose, view, type Step } from './walker.ts';
 
 const SIZE = 384, STEP_MS = 250, MAX_STEPS = 480;
@@ -32,6 +33,7 @@ async function run() {
     const canvas = $<HTMLCanvasElement>(id);
     const stream = canvas.captureStream(1000 / STEP_MS);
     $<HTMLVideoElement>(vid).srcObject = stream;
+    offer(`walk ${icon}`, stream);
     const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
     const chunks: Blob[] = [];
     recorder.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data); };
@@ -71,9 +73,7 @@ async function run() {
   for (const [x, id] of [[A, 'replay-a'], [B, 'replay-b']] as const) {
     const video = $<HTMLVideoElement>(id);
     video.src = URL.createObjectURL(new Blob(x.chunks, { type: 'video/webm' }));
-    const t = document.createElement('track');
-    t.kind = 'captions'; t.label = 'the narrative'; t.src = vtt; t.default = true;
-    video.crossOrigin = 'anonymous'; video.appendChild(t);
+    attachTrack(video, vtt);
   }
   const text = trace.map(line).join('\n') + '\n';
   const a = $<HTMLAnchorElement>('trace');

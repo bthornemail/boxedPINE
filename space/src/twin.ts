@@ -7,6 +7,7 @@
 import { atHue, toFloor } from './plane.ts';
 import { CHARACTERS } from './characters.ts';
 import type { FromWorker } from './twin-worker.ts';
+import { attachTrack, floorNow, offer } from './portal.ts';
 
 // ?mode=3d: each view renders the Commons with three.js (twin3d-worker.ts), Solomon a sphere in A
 // and the glTF model in B; the worker sends Solomon's box on the screen with each frame
@@ -18,12 +19,8 @@ const params = new URLSearchParams(location.search);
 const vtt = params.get('vtt') ?? 'http://127.0.0.1:8790/vtt/NARRATIVE/canticle.vtt';
 // ?source=plan9: each tick, one snapshot of the Plan 9 floor's states from agentd, given to both views
 const plan9 = params.get('source') === 'plan9';
-const agentd = params.get('agents') ?? 'http://127.0.0.1:18000/agents';
-
-async function floorStates(): Promise<{ tick: number; states: Record<string, number> }> {
-  const r = await (await fetch(agentd, { cache: 'no-store' })).json() as { tick: number; agents: { tag: string; state: string }[] };
-  return { tick: r.tick, states: Object.fromEntries(r.agents.map((a) => [a.tag, parseInt(a.state, 16)])) };
-}
+// the floor through the portal (portal.ts): one page reads agentd, every open page is told
+const floorStates = floorNow;
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 
 /** Solomon's icon region on the floor: his disc, with room for either icon. */
@@ -40,6 +37,7 @@ function view(canvasId: string, liveId: string, icon: string): View {
   const canvas = $<HTMLCanvasElement>(canvasId);
   const stream = canvas.captureStream(FPS);
   $<HTMLVideoElement>(liveId).srcObject = stream;
+  offer(`twin ${icon}`, stream);
   const off = canvas.transferControlToOffscreen();
   const worker = mode3d
     ? new Worker(new URL('./twin3d-worker.ts', import.meta.url), { type: 'module' })
@@ -51,12 +49,7 @@ function view(canvasId: string, liveId: string, icon: string): View {
   return { worker, recorder, chunks, frames: new Map() };
 }
 
-function track(video: HTMLVideoElement) {
-  const t = document.createElement('track');
-  t.kind = 'captions'; t.label = 'the narrative'; t.src = vtt; t.default = true;
-  video.crossOrigin = 'anonymous';
-  video.appendChild(t);
-}
+const track = (video: HTMLVideoElement) => attachTrack(video, vtt);
 
 /** Compare one tick's two frames: how many pixels differ, and how many of them outside the icon. */
 function compare(a: Uint8ClampedArray, b: Uint8ClampedArray) {

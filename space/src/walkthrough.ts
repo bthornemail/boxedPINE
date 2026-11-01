@@ -18,6 +18,7 @@
 import { project, atHue, FLOOR, LAYER, MAP_RIM, type PlanePoint } from './plane.ts';
 import { CHARACTERS } from './characters.ts';
 import type { Icon, Pose } from './twin3d-worker.ts';
+import { attachTrack, offer } from './portal.ts';
 import { AUTO, START, TAGS, compare, drawWalker, floor, frame, line, same, stepPose, view, type Step, type View } from './walker.ts';
 
 const Q = 256;	// each view's side; the composite is 2Q square
@@ -148,6 +149,7 @@ async function begin(media: string, vtt: string) {
   const ctx = pip.canvas.getContext('2d')!;
   const stream = pip.canvas.captureStream(8);
   pip.video.srcObject = stream;
+  offer('walkthrough, four views', stream);
   const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
   const chunks: Blob[] = [];
   recorder.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data); };
@@ -155,9 +157,7 @@ async function begin(media: string, vtt: string) {
   const podcast = $<HTMLVideoElement>('podcast');
   podcast.crossOrigin = 'anonymous';
   podcast.src = media;
-  const track = document.createElement('track');
-  track.kind = 'captions'; track.label = 'the podcast'; track.src = vtt; track.default = true;
-  podcast.appendChild(track);
+  const track = attachTrack(podcast, vtt, 'the podcast');
   podcast.playbackRate = Number(params.get('rate') ?? 1);
 
   const falsify = params.has('falsify');
@@ -204,9 +204,7 @@ async function begin(media: string, vtt: string) {
     await new Promise<void>((r) => { recorder.onstop = () => r(); recorder.stop(); });
     const replay = $<HTMLVideoElement>('replay');
     replay.src = URL.createObjectURL(new Blob(chunks, { type: 'video/webm' }));
-    const t = document.createElement('track');
-    t.kind = 'captions'; t.label = 'the podcast'; t.src = vtt; t.default = true;
-    replay.crossOrigin = 'anonymous'; replay.appendChild(t);
+    attachTrack(replay, vtt, 'the podcast');
     const traceLink = $<HTMLAnchorElement>('trace');
     traceLink.href = URL.createObjectURL(new Blob([trace.map(cuedLine).join('\n') + '\n'], { type: 'text/plain' }));
     traceLink.hidden = false;
