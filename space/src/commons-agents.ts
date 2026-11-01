@@ -51,3 +51,19 @@ export function namedSynset(text: string, synsets: SynsetAgent[]): SynsetAgent |
   const t = ` ${text.toLowerCase().replace(/[^a-z' ]+/g, ' ')} `;
   return [...synsets].sort((a, b) => b.word.length - a.word.length).find((s) => t.includes(` ${s.word.toLowerCase()} `));
 }
+
+// ── the 144 colour synsets as a static router ─────────────────────────
+// The author (I-199): "the WordNet was a synset-based router". The 144 (color, the 138 below it,
+// and the five above it to entity) form one tree, each synset's one hypernym its parent; so between
+// any two there is exactly one route, up to their lowest common ancestor and down. Fixed by the
+// tree, it needs no table: the route is read off the parents.
+export type Colour = { id: number; word: string; parent: number | null; depth: number };
+/** The route from one synset to another: the ids along it, both ends included. */
+export function synsetRoute(colours: Colour[], from: number, to: number): number[] {
+  const parent = new Map(colours.map((c) => [c.id, c.parent] as const));
+  const up = (id: number) => { const p: number[] = []; for (let x: number | null | undefined = id; x != null; x = parent.get(x)) p.push(x); return p; };
+  const a = up(from), b = up(to), inB = new Set(b);
+  const i = a.findIndex((x) => inB.has(x));
+  if (i < 0) throw new RangeError(`no route from ${from} to ${to}`);
+  return [...a.slice(0, i + 1), ...b.slice(0, b.indexOf(a[i]!)).reverse()];
+}

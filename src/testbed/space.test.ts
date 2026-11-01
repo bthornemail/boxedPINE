@@ -665,3 +665,39 @@ test('CODEX: the predicate embodied at the centre, its choices leaving tags, the
   assert.equal(zip('BRIAN', 'CODEX', 'DEEPSEEK'), 'EXHTE', 'the three reflections close to EXHTE, not to NUL');
   assert.ok(toTag('EXHTE'), 'EXHTE is itself a tag: the witness persists');
 });
+
+test('The 144 colour synsets are one tree, so a static router: one route between any two (I-199)', async () => {
+  const { synsetRoute } = await import('../../space/src/commons-agents.ts');
+  const { readFileSync } = await import('node:fs');
+  const colours = JSON.parse(readFileSync(new URL('../../public/polytron/colors.json', import.meta.url), 'utf8')).colors as { id: number; word: string; parent: number | null; depth: number }[];
+  const ids = new Set(colours.map((c) => c.id));
+  // predicted before: 144 synsets, one root (entity), 143 parent edges, every parent among them
+  assert.equal(colours.length, 144);
+  assert.deepEqual(colours.filter((c) => c.parent === null).map((c) => c.word), ['entity']);
+  assert.equal(colours.filter((c) => c.parent !== null && ids.has(c.parent)).length, 143);
+  // every pair one route, each step along a parent edge, its length the depths' sum less twice the meeting's
+  const byId = new Map(colours.map((c) => [c.id, c]));
+  let pairs = 0, longest = 0;
+  for (const a of colours) for (const b of colours) {
+    if (a.id >= b.id) continue;
+    const r = synsetRoute(colours, a.id, b.id);
+    assert.equal(r[0], a.id); assert.equal(r[r.length - 1], b.id);
+    assert.equal(new Set(r).size, r.length, 'a route visits a synset once');
+    for (let i = 1; i < r.length; i++) { const x = byId.get(r[i - 1]!)!, y = byId.get(r[i]!)!; assert.ok(x.parent === y.id || y.parent === x.id, 'each step a parent edge'); }
+    const meet = r.reduce((m, id) => (byId.get(id)!.depth < byId.get(m)!.depth ? id : m));
+    assert.equal(r.length - 1, a.depth + b.depth - 2 * byId.get(meet)!.depth);
+    pairs++; longest = Math.max(longest, r.length - 1);
+  }
+  assert.equal(pairs, 10296);
+  assert.ok(longest <= 18, 'no route longer than twice the deepest depth');
+  assert.equal(longest, 9, 'found: the longest is entity to the deepest, 9 (two deep leaves meet at color or below)');
+  // the falsifier: give one synset a second parent (burgundy under blue as well as dark red) and the
+  // graph is no tree: from burgundy up to color there are then two routes, so a fixed route needs the tree
+  const word = (w: string) => colours.find((c) => c.word === w)!.id;
+  const parents = new Map<number, number[]>(colours.map((c) => [c.id, c.parent === null ? [] : [c.parent]]));
+  parents.get(word('burgundy'))!.push(word('blue'));
+  const routes = (x: number, goal: number): number => (x === goal ? 1 : parents.get(x)!.reduce((n, p) => n + routes(p, goal), 0));
+  assert.equal(routes(word('burgundy'), word('color')), 2);
+  parents.get(word('burgundy'))!.pop();
+  assert.equal(routes(word('burgundy'), word('color')), 1);
+});
