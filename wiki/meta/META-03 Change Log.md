@@ -284,6 +284,10 @@ tags: [omi-imo, meta, changelog, history]
 
 - The README's index caught up with the vault: [[SRC-09 Try XOR Catch XNOR Finally]] to [[SRC-14 Polytron the Commons and the Cave]], [[SPEC-26 The Prompt Tree]], [[SPEC-27 The Prompt Tree Index]] and [[SPEC-62 Sexagesimal XOR Delineation]] to [[SPEC-66 BOM Swap Table]] added to its links, tables and folder tree; no note changed.
 
+## 2026-11-02
+
+- The Hasse pair's rings corrected (author, 2026-11-02: "yes lets correct it and update the documetns where it comes from also", for the SVGs as transport carrier and pop-up book portal). Each pair in `proofs/svg/hasse` (built by `proofs/svg/tools/build.mjs`) now rings the point its rule and complement share in both colours, red inside and blue outside, as the rules are ringed red and blue on the left; each tree set's `Hasse_XOR` keeps every red ring (XOR and point 6) and `Hasse_XNOR` every blue (XNOR and point 6), where `Hasse_XNOR` had kept the red ring on point 6. Regenerated for the 8 characters and 9 projects; the digest unchanged, every set intact. `src/testbed/space.test.ts` checks that each variant carries one colour and differs from the other only in title, rings and place, and the diagram as drawn: the 16 rules in rows of 1, 4, 6, 4, 1, its 32 edges the one-bit steps, 24 chains (4 through XOR, 4 through XNOR), a rule and its complement one Fano point, the 7 pairs making the 7 lines.
+
 ## Pending
 
 - Transcribe the audio file `How_an_AI_Dismantled_the_Omi-Dom-Stack.m4a`

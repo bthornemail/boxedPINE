@@ -22,9 +22,11 @@ const inline = (name, x, y, w, h) => {
   const [, W, H] = /width="([\d.]+)"[\s\S]*?height="([\d.]+)"/.exec(fano(name));
   return `<svg x="${x}" y="${y}" width="${w}" height="${h}" viewBox="0 0 ${W} ${H}">${inner}</svg>`;
 };
+// The pair rings XOR red and XNOR blue on the left, and their shared point 6 in both on the right; each
+// variant keeps one colour, every red ring for XOR (read) and every blue for XNOR (write).
 export const diagram = (keep) => pair
   .replace(/<title>[^<]*<\/title>/, `<title>${keep === 'ring' ? 'XOR: the read state' : 'XNOR: the write state'} (a Hasse diagram pair, point 6)</title>`)
-  .replace(keep === 'ring' ? /<circle class="ring2"[^>]*\/>/g : /<circle class="ring" cx="490" cy="360"[^>]*\/>/g, '')
+  .replace(keep === 'ring' ? /<circle class="ring2"[^>]*\/>\n?/g : /<circle class="ring"[^>]*\/>\n?/g, '')
   .replace(/<image href="..\/fano\/(Fano_(?:empty|full))\.svg" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"\/>/g, (_, n, x, y, w, h) => inline(n, x, y, w, h))
   .replaceAll('href="../fano/', 'href="./');
 

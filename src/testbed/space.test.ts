@@ -231,13 +231,51 @@ test('Each character has its own set of 16: the 14 Fano planes and two Hasse dia
     c.set.forEach((path, i) => assert.deepEqual(readBorder(pub(path)), { name: c.tag, cues: [i] }, `${path}: whose, and which of the 16`));
     for (let i = 1; i < 15; i++) assert.equal(clearBorder(pub(c.set[i]!)), clearBorder(readFileSync(new URL(`../../proofs/svg/fano/${INDEX16[i]}.svg`, import.meta.url), 'utf8')), `${c.set[i]}: the plane as drawn`);
     const [xor, xnor] = [pub(c.set[0]!), pub(c.set[15]!)];
-    assert.ok(xor.includes('class="ring" cx="490"') && !xor.includes('class="ring2"'), 'the XOR diagram marks XOR');
-    assert.ok(xnor.includes('class="ring2" cx="630"') && !xnor.includes('class="ring" cx="490"'), 'the XNOR diagram marks XNOR');
+    const rings = (d: string, cls: string) => [...d.matchAll(new RegExp(`<circle class="${cls}" cx="([\\d.]+)"`, 'g'))].map((m) => m[1]);
+    assert.deepEqual([rings(xor, 'ring'), rings(xor, 'ring2')], [['490', '1808.9045536'], []], 'the XOR diagram is red alone: XOR on the left, point 6 on the right');
+    assert.deepEqual([rings(xnor, 'ring2'), rings(xnor, 'ring')], [['630', '1808.9045536'], []], 'the XNOR diagram is blue alone: XNOR on the left, point 6 on the right');
+    const rest = (d: string) => clearBorder(d).replace(/<title>[^<]*<\/title>/, '').replace(/<circle class="ring2?"[^>]*\/>\n?/g, '');
+    assert.equal(rest(xor), rest(xnor), 'the two variants differ only in their title, their rings and their place');
     for (const d of [xor, xnor]) {
       assert.ok(!d.includes('../fano/') && !/href="\.\/Fano_(empty|full)/.test(d) && !d.includes('Hasse_'), 'every node is one of the 16 or drawn inline; nothing points at itself');
       assert.ok(!/\s(sodipodi|inkscape):/.test(d), 'no editor namespaces left inline');
     }
   }
+});
+
+test('The Hasse pair as drawn: the 16 rules, their 32 one-bit steps and 24 chains; a rule and its complement one Fano point, the 7 pairs making the 7 lines', async () => {
+  const { readFileSync } = await import('node:fs');
+  const d = readFileSync(new URL('../../public/characters/METATRON/Hasse_XOR.svg', import.meta.url), 'utf8');
+  const w = (v: number) => [...v.toString(2)].filter((c) => c === '1').length;
+  // each rule a name and its four bits under it, at its place; the point's icon above it
+  const nodes = [...d.matchAll(/<text x="([\d.]+)" y="([\d.]+)" text-anchor="middle">[^<]+<\/text>\s*<text class="small" x="[\d.]+" y="[\d.]+" text-anchor="middle">([01]{4})<\/text>/g)]
+    .map((m) => ({ x: +m[1]!, y: +m[2]!, v: parseInt(m[3]!, 2) }));
+  assert.equal(new Set(nodes.map((n) => n.v)).size, 16, 'the 16 rules');
+  const rows = new Map<number, number[]>();
+  for (const n of nodes) rows.set(n.y, [...(rows.get(n.y) ?? []), n.v]);
+  assert.deepEqual([...rows.keys()].sort((a, b) => b - a).map((y) => rows.get(y)!.length), [1, 4, 6, 4, 1], 'rows of 1, 4, 6, 4, 1');
+  assert.ok([...rows.values()].every((r) => new Set(r.map(w)).size === 1), 'each row one weight');
+  // an edge from a rule's top (its name 60 below) to a rule's bottom (its name 18 above)
+  const at = (x: number, y: number) => nodes.find((n) => Math.abs(n.x - x) < 1 && Math.abs(n.y - y) < 2)!.v;
+  const key = (a: number, b: number) => `${Math.min(a, b)}-${Math.max(a, b)}`;
+  const edges = new Set([...d.matchAll(/<line class="edge" x1="([\d.]+)" y1="([\d.]+)" x2="([\d.]+)" y2="([\d.]+)"\/>/g)]
+    .map((m) => m.slice(1).map(Number)).filter(([x1]) => x1! < 1000).map(([x1, y1, x2, y2]) => key(at(x1!, y1! + 60), at(x2!, y2! - 18))));
+  const steps = nodes.flatMap((a) => nodes.filter((b) => (a.v & b.v) === a.v && w(a.v ^ b.v) === 1).map((b) => key(a.v, b.v)));
+  assert.deepEqual([...edges].sort(), steps.sort(), 'the edges are the one-bit steps, 32');
+  const up = (v: number) => nodes.filter((b) => (v & b.v) === v && w(b.v ^ v) === 1).map((b) => b.v);
+  const chains = (v: number): number[][] => (v === 15 ? [[15]] : up(v).flatMap((u) => chains(u).map((c) => [v, ...c])));
+  const all = chains(0);
+  assert.equal(all.length, 24, 'FALSE to TRUE, 4! chains: the tetrahedron\'s flags, its 4 vertices the 4 bits');
+  assert.equal(all.filter((c) => c.includes(6)).length, 4, 'through XOR, 2! x 2!');
+  assert.equal(all.filter((c) => c.includes(9)).length, 4, 'through XNOR, 2! x 2!');
+  const point = new Map([...d.matchAll(/<image href="\.\/Fano_point_(\d)\.svg"[^>]*\/>\s*<text x="[\d.]+" y="[\d.]+" text-anchor="middle">[^<]+<\/text>\s*<text class="small" x="[\d.]+" y="[\d.]+" text-anchor="middle">([01]{4})<\/text>/g)]
+    .map((m) => [parseInt(m[2]!, 2), +m[1]!]));
+  assert.equal(point.size, 14, 'every rule but the constants carries a point');
+  for (const [v, p] of point) assert.equal(point.get(v ^ 15), p, 'a rule and its complement, one point (dark and light)');
+  assert.deepEqual([point.get(6), point.get(9)], [6, 6], 'XOR and XNOR, point 6');
+  const rule = new Map([...point].map(([v, p]) => [p, v]));
+  for (const [a, b, c] of [[1, 3, 2], [1, 5, 4], [1, 7, 6], [2, 6, 4], [2, 7, 5], [3, 5, 6], [4, 7, 3]] as const)
+    assert.ok([0, 15].includes(rule.get(a)! ^ rule.get(b)! ^ rule.get(c)!), `line ${a} ${b} ${c}: its pairs XOR to FALSE or TRUE`);
 });
 
 test('Atomics.compareExchange(svg, 60 ^ frame, 127, 63): as I-133, 128 bytes of 127; in 128 frames every byte reads XOR and writes XNOR; the next 128, the other way', async () => {
