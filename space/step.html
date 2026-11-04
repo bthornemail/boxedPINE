@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Coxeter Step</title>
+<link rel="stylesheet" href="/step/step.css">
+<style>
+:root{--paper:#f6f6f2;--ink:#1d1f24;--muted:#5d636e;--rule:#d9dad3;--accent:#2b5fa8;--mono:ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#15171b;--ink:#e8e8e3;--muted:#9aa0aa;--rule:#2c3038;--accent:#7aa7e8;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#15171b;--ink:#e8e8e3;--muted:#9aa0aa;--rule:#2c3038;--accent:#7aa7e8;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.5 var(--mono);padding:16px;display:grid;gap:12px;justify-items:center}
+#stage{width:min(600px,100%)}
+#stage svg{width:100%;height:auto;display:block}
+#cue{min-height:1.5em;color:var(--accent)}
+button{font:inherit;padding:6px 12px;border:1px solid var(--rule);border-radius:4px;background:transparent;color:var(--ink);cursor:pointer}
+.note{color:var(--muted);max-width:600px}
+</style>
+</head>
+<body>
+<p class="note">The Coxeter step (proofs/svg/e8/step.svg), an instantiation portal: its 30 frames are a text track, carried by a silent 15-second loop through the portal, so every page in the Commons is cued by the frame; the SVG's own clock follows the track.</p>
+<div id="stage" class="coxeter-step"></div>
+<div id="cue">press play</div>
+<button id="play">play</button>
+<script type="module">
+import { attachTrack, onCue } from './src/portal.ts';
+const stage = document.getElementById('stage');
+stage.innerHTML = await (await fetch('/step/step.svg')).text();
+const svg = stage.querySelector('svg');
+svg.pauseAnimations(); svg.setCurrentTime(0);
+// a silent loop of 15 seconds, 8 kHz, 8-bit mono, as the track's clock
+const n = 15 * 8000, wav = new Uint8Array(44 + n).fill(128);
+const dv = new DataView(wav.buffer), w = (o, s) => [...s].forEach((c, i) => wav[o + i] = c.charCodeAt(0));
+w(0, 'RIFF'); dv.setUint32(4, 36 + n, true); w(8, 'WAVEfmt '); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+dv.setUint32(24, 8000, true); dv.setUint32(28, 8000, true); dv.setUint16(32, 1, true); dv.setUint16(34, 8, true); w(36, 'data'); dv.setUint32(40, n, true);
+const audio = new Audio(URL.createObjectURL(new Blob([wav], { type: 'audio/wav' })));
+audio.loop = true;
+attachTrack(audio, '/step/step.vtt', 'the Coxeter step');
+onCue((c) => {
+  if (!c.id.startsWith('step-')) return;
+  document.getElementById('cue').textContent = `${c.text}  (from ${c.from})`;
+  document.documentElement.style.setProperty('--step-frame', c.id.slice(5));
+  svg.setCurrentTime(audio.currentTime);	// the SVG's clock follows the track
+});
+document.getElementById('play').onclick = () => { audio.currentTime = 0; svg.unpauseAnimations(); audio.play(); };
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+/* the Coxeter step's frames (proofs/svg/e8/step.svg): 30 discrete frames over 15s */
+@property --step-frame { syntax: "<integer>"; inherits: true; initial-value: 0; }
+@property --step-angle { syntax: "<angle>"; inherits: true; initial-value: 0deg; }
+@keyframes coxeter-step {
+  0% { --step-frame: 0; --step-angle: 0deg; }
+  3.333% { --step-frame: 1; --step-angle: -12deg; }
+  6.673% { --step-frame: 2; --step-angle: -24deg; }
+  10% { --step-frame: 3; --step-angle: -36deg; }
+  13.333% { --step-frame: 4; --step-angle: -48deg; }
+  16.667% { --step-frame: 5; --step-angle: -60deg; }
+  20% { --step-frame: 6; --step-angle: -72deg; }
+  23.333% { --step-frame: 7; --step-angle: -84deg; }
+  26.667% { --step-frame: 8; --step-angle: -96deg; }
+  30% { --step-frame: 9; --step-angle: -108deg; }
+  33.327% { --step-frame: 10; --step-angle: -120deg; }
+  36.673% { --step-frame: 11; --step-angle: -132deg; }
+  40% { --step-frame: 12; --step-angle: -144deg; }
+  43.333% { --step-frame: 13; --step-angle: -156deg; }
+  46.673% { --step-frame: 14; --step-angle: -168deg; }
+  50% { --step-frame: 15; --step-angle: -180deg; }
+  53.333% { --step-frame: 16; --step-angle: -192deg; }
+  56.667% { --step-frame: 17; --step-angle: -204deg; }
+  60% { --step-frame: 18; --step-angle: -216deg; }
+  63.333% { --step-frame: 19; --step-angle: -228deg; }
+  66.667% { --step-frame: 20; --step-angle: -240deg; }
+  70% { --step-frame: 21; --step-angle: -252deg; }
+  73.333% { --step-frame: 22; --step-angle: -264deg; }
+  76.673% { --step-frame: 23; --step-angle: -276deg; }
+  80% { --step-frame: 24; --step-angle: -288deg; }
+  83.333% { --step-frame: 25; --step-angle: -300deg; }
+  86.673% { --step-frame: 26; --step-angle: -312deg; }
+  90% { --step-frame: 27; --step-angle: -324deg; }
+  93.333% { --step-frame: 28; --step-angle: -336deg; }
+  96.673% { --step-frame: 29; --step-angle: -348deg; }
+}
+.coxeter-step { animation: coxeter-step 15s steps(1, end) infinite; }

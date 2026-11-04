@@ -778,3 +778,23 @@ test('CODEX\'s set of 16: the 14 Fano planes and 2 Hasse diagrams, each margin c
   files.forEach((svg: string, i: number) => { if (i !== 7) traceFile(u, svg); });
   assert.deepEqual(marked(u), pairsOfTag('CODEX').sort((a: number, b: number) => a - b), 'one file missing: it shows at CODEX\'s pairs');
 });
+
+test('The Coxeter step as an instantiation portal: its 30 frames read from the SVG\'s own animation, as a text track and CSS', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { framesOf, toVTT, toCSS } = await import('../../space/src/step-track.ts');
+  const svg = readFileSync(new URL('../../proofs/svg/e8/step.svg', import.meta.url), 'utf8');
+  const f = framesOf(svg);
+  assert.equal(f.length, 30, 'thirty frames, one turn');
+  assert.ok(f.every((x) => x.angle === -12 * x.k), 'a turn of 12 degrees a frame');
+  assert.ok(f.every((x) => Math.abs(x.start - x.k / 2) <= 0.0015 && Math.abs(x.end - (x.k + 1) / 2) <= 0.0015), 'half a second a frame, to within the SVG\'s keyTimes (four places, 0.75 ms) and the track\'s milliseconds');
+  assert.ok(f.every((x, i) => i === 0 || x.start === f[i - 1]!.end), 'the frames follow one another, no gap');
+  assert.equal(f[15]!.angle, -180, 'frame 15: c^15 = -1, the root at the other end of its diameter');
+  assert.ok(f.every((x) => x.half === (x.k < 15 ? 'c+r' : 'c-r')), 'the first 15 frames c + r, the next c - r');
+  assert.equal(readFileSync(new URL('../../public/step/step.vtt', import.meta.url), 'utf8'), toVTT(f), 'public/step/step.vtt is the track as read');
+  assert.equal(readFileSync(new URL('../../public/step/step.css', import.meta.url), 'utf8'), toCSS(f), 'public/step/step.css is the CSS as read');
+  assert.equal(readFileSync(new URL('../../public/step/step.svg', import.meta.url), 'utf8'), svg, 'public/step/step.svg is the SVG as it is');
+  const vtt = toVTT(f);
+  assert.ok(vtt.startsWith('WEBVTT') && (vtt.match(/-->/g) ?? []).length === 30, 'a WebVTT track of 30 cues');
+  // the falsifier: a continuous rotation is not a set of frames
+  assert.throws(() => framesOf(svg.replace('calcMode="discrete"', 'calcMode="linear"')), /discrete/, 'a linear turn: no frames to cue');
+});
