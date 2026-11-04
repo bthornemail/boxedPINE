@@ -13,7 +13,7 @@ import { daliCross, grow, type Cell } from './polyform.ts';
 import { namedSynset, placeOf, speakerSeed, stepAgent, synsetDeclaration, synsetSeed, type SynsetAgent } from './commons-agents.ts';
 import { BRIDGE_PORT } from '../../rosetta/src/agent.ts';
 import { CHARACTERS } from './characters.ts';
-import { termOf } from './directors.ts';
+import { termOf, productionOf } from './directors.ts';
 import { avatarSvg } from './avatar.ts';
 import { newWalker, step as storyStep, type Passage } from './story.ts';
 import { buildAgent, type AgentGraph } from './sound.ts';
@@ -381,6 +381,7 @@ ringRoad.rotation.x = -Math.PI / 2;
 scene.add(ringRoad);
 fetch(new URL('../narrative/timeline.ndjson', location.href)).then((r) => r.text()).then((t) => {
   const districts = districtsOf(seriesOf(t.trim().split('\n').map((l) => JSON.parse(l) as { series_path: string })));
+  const roles = productionOf(districts);	// each district its production role and Aegean sign (directors.ts)
   for (const d of districts) {
     const [x, z] = d.centre, colour = new THREE.Color(`hsl(${d.hue}, 45%, 32%)`);
     const plate = new THREE.Mesh(new THREE.CylinderGeometry(d.radius, d.radius + 0.25, 0.18, 64), new THREE.MeshStandardMaterial({ color: colour, roughness: 0.8 }));
@@ -398,7 +399,8 @@ fetch(new URL('../narrative/timeline.ndjson', location.href)).then((r) => r.text
     const mid = FLOOR + len / 2;
     road.position.set(Math.sin(d.angle) * mid, 0.005, -Math.cos(d.angle) * mid);
     scene.add(road);
-    const label = textSprite([d.name, `${d.nodes} nodes · district ${d.order + 1} of ${districts.length}`], `hsl(${d.hue} 80% 70%)`);
+    const role = roles[d.order]!;
+    const label = textSprite([`${role.aegean} ${d.name}`, `${role.role.toLowerCase()} · ${d.nodes} nodes`], `hsl(${d.hue} 80% 70%)`);
     label.scale.multiplyScalar(3.2);
     label.position.set(x, 3.2, z);
     scene.add(label);

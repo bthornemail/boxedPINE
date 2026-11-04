@@ -898,6 +898,15 @@ test('The directors: the board\'s eight terms bound to the eight characters by o
   assert.deepEqual(['Solomon', 'Solon', 'ʿAsabiyyah', 'Enoch', 'Metatron', 'Metatron/Enoch'].map((n) => directorOfSpeaker(n)?.term),
     ['Inside director', 'Outside director', 'Executive director', 'Non-executive director', 'Director', 'Director'], 'the gate\'s speakers, through the cast; Enoch becoming Metatron takes Metatron\'s');
   assert.equal(directorOfSpeaker('Nobody'), undefined, 'no one cast, no term');
+  assert.deepEqual(DIRECTORS.map((d) => d.braille.codePointAt(0)! - 0x2800), [1, 2, 4, 8, 16, 32, 64, 128], 'each term its Braille dot, 1 to 8');
+  const { readFileSync } = await import('node:fs');
+  const { seriesOf, districtsOf } = await import('../../space/src/city.ts');
+  const { productionOf } = await import('../../space/src/directors.ts');
+  const tl = readFileSync(new URL('../../public/narrative/timeline.ndjson', import.meta.url), 'utf8').trim().split('\n').map((l) => JSON.parse(l));
+  const p = productionOf(districtsOf(seriesOf(tl)));
+  assert.deepEqual(p.map((x) => x.aegean.codePointAt(0)!.toString(16)), ['10107', '10108', '10109', '1010a', '1010b', '1010c', '1010d', '1010e', '1010f'], 'the nine roles the Aegean signs ONE to NINE');
+  assert.deepEqual(p.map((x) => `${x.district}: ${x.role}`).slice(0, 2), ['Core Octad: Animation director', 'Prelude: Artistic director'], 'each role a district, in the canon\'s order');
+  assert.throws(() => productionOf([]), /nine districts/, 'nine roles want nine districts');
   // the falsifier: the terms are words, not tags (rosetta TAG, /^[A-Z0-9]{1,8}$/): EXECUTIVE has nine letters
   assert.ok(!/^[A-Z0-9]{1,8}$/.test('EXECUTIVE'), 'a term is not a tag: EXECUTIVE is nine letters');
 });

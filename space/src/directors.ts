@@ -14,10 +14,28 @@ export const DIRECTOR_TERMS = [
   'Non-executive director', 'De facto director', 'Shadow director', 'Nominee director',
 ] as const;
 export type Term = (typeof DIRECTOR_TERMS)[number];
-export type Bound = { point: number; tag: string; term: Term; hue: number | null };
+export type Bound = { point: number; tag: string; term: Term; hue: number | null; braille: string };
 
-/** The eight bindings, point 1 to 8. */
-export const DIRECTORS: Bound[] = DIRECTOR_TERMS.map((term, i) => ({ point: i + 1, tag: CHARACTER_TAGS[i + 1]!, term, hue: CHARACTER_HUES[i + 1] ?? null }));
+/** The eight bindings, point 1 to 8, each term its Braille dot (the author: "if the 8 we just did are the braille"):
+ *  term n dot n, the cell U+2800 + 2^(n - 1). */
+export const DIRECTORS: Bound[] = DIRECTOR_TERMS.map((term, i) => ({ point: i + 1, tag: CHARACTER_TAGS[i + 1]!, term, hue: CHARACTER_HUES[i + 1] ?? null, braille: String.fromCodePoint(0x2800 + (1 << i)) }));
+
+// The production: the nine arts directors (Wikipedia, Board of directors, Arts and design, in its order), the author:
+// "this is the aegean for this narrtive production", "the hue is basically like a mood ring for the trajector toward
+// these directives". Bound by ordinal to the nine Aegean signs of a band, ONE to NINE (U+10107 to U+1010F), and to the
+// canon's nine series, the city's districts (city.ts), in the canon's order, each role its district's hue.
+export const PRODUCTION_ROLES = [
+  'Animation director', 'Artistic director', 'Creative director', 'Design director', 'Film director',
+  'Music director', 'Music video director', 'Television director', 'Theatre director',
+] as const;
+export type Role = (typeof PRODUCTION_ROLES)[number];
+export type Production = { order: number; role: Role; aegean: string; district: string; hue: number };
+
+/** The nine bindings, given the districts in the canon's order (districtsOf). */
+export function productionOf(districts: { name: string; hue: number }[]): Production[] {
+  if (districts.length !== PRODUCTION_ROLES.length) throw new Error(`nine districts for nine roles, not ${districts.length}`);
+  return PRODUCTION_ROLES.map((role, i) => ({ order: i + 1, role, aegean: String.fromCodePoint(0x10107 + i), district: districts[i]!.name, hue: districts[i]!.hue }));
+}
 
 /** A character's term by its tag. */
 export const termOf = (tag: string): Term | undefined => DIRECTORS.find((d) => d.tag === tag)?.term;
