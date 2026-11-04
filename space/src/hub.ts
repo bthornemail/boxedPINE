@@ -1,6 +1,7 @@
 import { onFloor, onWorld, onCue } from './portal.ts';
-import { cellOf, wall, frameAt, SIDE, type Face } from './cube256.ts';
+import { localCellOf, wall, frameAt, SIDE, LOCAL, type Face } from './cube256.ts';
 import { RIM } from './plane.ts';
+import { seriesOf, districtsOf, CITY_RING } from './city.ts';
 import { parseState, hue as kindHue } from './world.ts';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -42,9 +43,9 @@ const stations: Station[] = [
 const host = document.querySelector<HTMLElement>('#scene')!;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0c1015);
-scene.fog = new THREE.Fog(0x0c1015, 9, 25);
+scene.fog = new THREE.Fog(0x0c1015, 30, 190);	// opened out for the city round the Commons (city.ts)
 
-const camera = new THREE.PerspectiveCamera(45, 1, .1, 40);
+const camera = new THREE.PerspectiveCamera(45, 1, .1, 420);
 camera.position.set(7, 5.8, 9.5);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
@@ -57,7 +58,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 1, 0);
 controls.enableDamping = true;
 controls.minDistance = 5;
-controls.maxDistance = 16;
+controls.maxDistance = 130;
 controls.maxPolarAngle = Math.PI * .48;
 
 scene.add(new THREE.HemisphereLight(0xddeeff, 0x18202a, 1.8));
@@ -337,20 +338,20 @@ const codexAt = new THREE.Group();
 codexAt.position.set(...CODEX_AT);
 scene.add(codexAt);
 standForm(CODEX_TAG, codexAt, 0);
-// ── The normalised space (cube256.ts): the Commons as a 256-cube of byte cells, its outline, and its back and side
-// walls as alpha maps of the members by Hamming distance, read again on the step's frame (half a second, or the
+// ── The normalised space (cube256.ts): the local frame, ten Commons across, a 256-cube of byte cells, its outline,
+// and its back and side walls as alpha maps of the members by Hamming distance, read again on the step's frame (half a second, or the
 // step room's cue through the portal) ──
-const cubeBox = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2 * RIM, 2 * RIM, 2 * RIM)), new THREE.LineBasicMaterial({ color: 0x74c8c0, transparent: true, opacity: 0.25 }));
-cubeBox.position.set(0, RIM, 0);
+const cubeBox = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(LOCAL, LOCAL, LOCAL)), new THREE.LineBasicMaterial({ color: 0x74c8c0, transparent: true, opacity: 0.25 }));
+cubeBox.position.set(0, LOCAL / 2, 0);
 scene.add(cubeBox);
 const walls = (['xy', 'zy'] as Face[]).map((f) => {
   const rgba = new Uint8Array(SIDE * SIDE * 4);
   for (let i = 0; i < SIDE * SIDE; i++) rgba.set([0x74, 0xc8, 0xc0, 0], i * 4);
   const tex = new THREE.DataTexture(rgba, SIDE, SIDE, THREE.RGBAFormat);
   tex.magFilter = THREE.NearestFilter;
-  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2 * RIM, 2 * RIM), new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, depthWrite: false }));
-  if (f === 'xy') mesh.position.set(0, RIM, -RIM);
-  else { mesh.position.set(-RIM, RIM, 0); mesh.rotation.y = Math.PI / 2; }
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(LOCAL, LOCAL), new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, depthWrite: false }));
+  if (f === 'xy') mesh.position.set(0, LOCAL / 2, -LOCAL / 2);
+  else { mesh.position.set(-LOCAL / 2, LOCAL / 2, 0); mesh.rotation.y = Math.PI / 2; }
   scene.add(mesh);
   return { f, rgba, tex };
 });
@@ -358,7 +359,7 @@ let wallFrame = -1;
 function readWalls(frame: number) {
   if (frame === wallFrame) return;
   wallFrame = frame;
-  const members = [...live.map((l) => cellOf([l.group.position.x, l.group.position.y, l.group.position.z])), cellOf([codexAt.position.x, codexAt.position.y, codexAt.position.z])];
+  const members = [...live.map((l) => localCellOf([l.group.position.x, l.group.position.y, l.group.position.z])), localCellOf([codexAt.position.x, codexAt.position.y, codexAt.position.z])];
   for (const w of walls) {
     const alpha = wall(members, w.f);
     for (let i = 0; i < alpha.length; i++) w.rgba[i * 4 + 3] = alpha[i]! >> 2;	// a quarter strength, the room seen through it
@@ -367,6 +368,42 @@ function readWalls(frame: number) {
 }
 setInterval(() => readWalls(frameAt(performance.now() / 1000)), 100);
 onCue((c) => { if (c.id.startsWith('step-')) readWalls(Number(c.id.slice(5))); });
+// ── The city round the Commons (city.ts): the canon's nine series as districts on a ring, sized by their nodes,
+// a road to each from the Commons and a ring road joining them; the Commons and its automatons as they were ──
+const cityGround = new THREE.Mesh(new THREE.RingGeometry(FLOOR + 0.2, CITY_RING + 14, 160, 1), new THREE.MeshStandardMaterial({ color: 0x10141a, roughness: 0.95 }));
+cityGround.rotation.x = -Math.PI / 2;
+cityGround.position.y = -0.02;
+scene.add(cityGround);
+const roadMat = new THREE.MeshStandardMaterial({ color: 0x232a33, roughness: 0.9 });
+const ringRoad = new THREE.Mesh(new THREE.RingGeometry(CITY_RING - 0.9, CITY_RING + 0.9, 160), roadMat);
+ringRoad.rotation.x = -Math.PI / 2;
+scene.add(ringRoad);
+fetch(new URL('../narrative/timeline.ndjson', location.href)).then((r) => r.text()).then((t) => {
+  const districts = districtsOf(seriesOf(t.trim().split('\n').map((l) => JSON.parse(l) as { series_path: string })));
+  for (const d of districts) {
+    const [x, z] = d.centre, colour = new THREE.Color(`hsl(${d.hue}, 45%, 32%)`);
+    const plate = new THREE.Mesh(new THREE.CylinderGeometry(d.radius, d.radius + 0.25, 0.18, 64), new THREE.MeshStandardMaterial({ color: colour, roughness: 0.8 }));
+    plate.position.set(x, 0.09, z);
+    plate.receiveShadow = true;
+    scene.add(plate);
+    const edge = new THREE.Mesh(new THREE.TorusGeometry(d.radius + 0.05, 0.05, 6, 96), new THREE.MeshBasicMaterial({ color: new THREE.Color(`hsl(${d.hue}, 70%, 60%)`) }));
+    edge.rotation.x = Math.PI / 2;
+    edge.position.set(x, 0.19, z);
+    scene.add(edge);
+    const len = Math.hypot(x, z) - FLOOR - d.radius;
+    const road = new THREE.Mesh(new THREE.PlaneGeometry(1.4, len), roadMat);
+    road.rotation.x = -Math.PI / 2;
+    road.rotation.z = -d.angle;
+    const mid = FLOOR + len / 2;
+    road.position.set(Math.sin(d.angle) * mid, 0.005, -Math.cos(d.angle) * mid);
+    scene.add(road);
+    const label = textSprite([d.name, `${d.nodes} nodes · district ${d.order + 1} of ${districts.length}`], `hsl(${d.hue} 80% 70%)`);
+    label.scale.multiplyScalar(3.2);
+    label.position.set(x, 3.2, z);
+    scene.add(label);
+  }
+}).catch(() => { /* no narrative: the Commons alone */ });
+
 let audio: AudioContext | null = null;
 const soundButton = document.createElement('button');
 soundButton.textContent = 'sound';

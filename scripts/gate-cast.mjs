@@ -12,7 +12,7 @@ for (const n of tl) {
   const line = files.get(n.series_path)?.[n.source_line - 1];
   if (!line) continue;
   const s = JSON.parse(line), name = s.name ?? s.character;
-  if (name) nodes.push({ seq: n.seq, node_id: n.node_id, event: n.event, name });
+  if (name) nodes.push({ seq: n.seq, node_id: n.node_id, event: n.event, name, quote: s.quote ?? s.text ?? "" });
 }
 const missing = [...files].filter(([, v]) => !v).map(([k]) => k);
 if (missing.length) throw new Error(`canon files missing: ${missing.join(', ')}`);

@@ -4,25 +4,44 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>The Gate in 3D</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,400;6..72,1,400&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-:root{--paper:#f6f6f2;--ink:#1d1f24;--muted:#5d636e;--rule:#d9dad3;--accent:#8a7638;--mono:ui-monospace,Menlo,monospace}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#15171b;--ink:#e8e8e3;--muted:#9aa0aa;--rule:#2c3038;--accent:#e8c56a;color-scheme:dark}}
-:root[data-theme="dark"]{--paper:#15171b;--ink:#e8e8e3;--muted:#9aa0aa;--rule:#2c3038;--accent:#e8c56a;color-scheme:dark}
+:root{--ink:#e8e8e3;--muted:#9aa0aa;--gold:#e8c56a;--golddim:#8a7638;--glass:rgba(10,12,16,.62);--rule:rgba(255,255,255,.12);
+  --display:"Newsreader",Georgia,serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace}
 *{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.5 var(--mono);padding:16px;display:grid;gap:10px;justify-items:center}
-#stage{width:min(1000px,100%);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
-#stage canvas{display:block;width:100%}
-.row{width:min(1000px,100%);display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-#frame{color:var(--accent)} #compare{color:var(--muted)}
-button{font:inherit;padding:6px 12px;border:1px solid var(--rule);border-radius:4px;background:transparent;color:var(--ink);cursor:pointer}
-.note{color:var(--muted);width:min(1000px,100%);margin:0}
+html,body{margin:0;height:100%;background:#05070c;color:var(--ink);font:13px/1.5 var(--mono);overflow:hidden}
+#stage{position:fixed;inset:0}
+#stage canvas{display:block;width:100%;height:100%}
+.hud{position:fixed;left:16px;top:16px;max-width:min(420px,calc(100% - 32px));padding:10px 14px;background:var(--glass);border:1px solid var(--rule);border-radius:8px;backdrop-filter:blur(6px)}
+.hud .t{font:600 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--golddim)}
+.hud #frame{color:var(--muted);font-size:11px}
+.caption{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);width:min(760px,calc(100% - 32px));padding:14px 20px;background:var(--glass);border:1px solid var(--rule);border-radius:10px;backdrop-filter:blur(6px);text-align:center;transition:opacity .4s}
+.caption .who{font:600 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--gold);min-height:1em}
+.caption .line{font:italic 400 clamp(16px,2.2vw,22px)/1.4 var(--display);margin-top:4px}
+.bar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;width:calc(100% - 32px)}
+button{font:600 12px var(--mono);padding:8px 14px;border:1px solid var(--rule);border-radius:6px;background:var(--glass);color:var(--ink);cursor:pointer}
+button:hover{border-color:var(--gold);color:var(--gold)}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+#compare{color:var(--muted);font-size:11px}
+#enter{position:fixed;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(20,24,34,.55),rgba(3,4,8,.92));z-index:5;transition:opacity .8s}
+#enter .card{text-align:center;padding:24px}
+#enter h1{font:400 clamp(40px,8vw,84px)/1 var(--display);margin:0;letter-spacing:.01em}
+#enter p{color:var(--muted);max-width:520px;margin:14px auto 22px}
+#enter.gone{opacity:0;pointer-events:none}
+#VRButton{bottom:auto!important;top:16px!important;right:16px!important;left:auto!important}
+@media (max-width:600px){.caption{bottom:110px}}
 </style>
 </head>
 <body>
-<p class="note">The gate in 3D: the narrative the gate plays (Solomon, Solon and ʿAsabiyyah at the gate, narrated by Enoch and Metatron), its 235 nodes at their places in the normalised cube, a frame each on the step's clock; the cast's forms stand at the gate, the speaker lifting. Recast Solomon and the production replays; the two traces differ only inside his slots.</p>
 <div id="stage"></div>
-<div class="row"><button id="recast">recast Solomon</button><span id="frame"></span></div>
-<div class="row"><span id="compare">the canon cast: the trace as written</span></div>
+<div class="hud"><div class="t">The Gate · in the normalised cube</div><div id="frame">—</div></div>
+<div class="caption" id="caption"><div class="who" id="who"></div><div class="line" id="line">Three figures came to the gate of the city.</div></div>
+<div class="bar"><button id="recast">recast Solomon</button><span id="compare">the canon cast: the trace as written</span></div>
+<div id="enter"><div class="card">
+  <h1>The Gate</h1>
+  <p>Solomon, Solon and ʿAsabiyyah at the gate; Enoch, who becomes Metatron. Their forms are their names. The sun turns with the step: fifteen frames of day, fifteen of night.</p>
+  <button id="go">enter, with sound</button>
+</div></div>
 <script type="module" src="./src/gate3d.ts"></script>
 <script type="module" src="./src/portal.ts"></script>
 </body>

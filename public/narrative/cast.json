@@ -5,91 +5,106 @@
    "seq": 4,
    "node_id": "canon:canon-core-octad.ndjson#L5",
    "event": "character",
-   "name": "Solomon"
+   "name": "Solomon",
+   "quote": "Order does not begin with law. It begins with right relation."
   },
   {
    "seq": 5,
    "node_id": "canon:canon-core-octad.ndjson#L6",
    "event": "character",
-   "name": "Solon"
+   "name": "Solon",
+   "quote": "Law is not the enemy of wisdom. It is what remains when wisdom is unevenly distributed."
   },
   {
    "seq": 6,
    "node_id": "canon:canon-core-octad.ndjson#L7",
    "event": "character",
-   "name": "ʿAsabiyyah"
+   "name": "ʿAsabiyyah",
+   "quote": "No law stands without loyalty. No wisdom rules without belonging."
   },
   {
    "seq": 12,
    "node_id": "canon:canon-core-octad.ndjson#L14",
    "event": "character",
-   "name": "Solomon"
+   "name": "Solomon",
+   "quote": "Solomon walked east. He followed the paths where language fractured slowly, where stories survived longer than structures."
   },
   {
    "seq": 13,
    "node_id": "canon:canon-core-octad.ndjson#L15",
    "event": "character",
-   "name": "Solon"
+   "name": "Solon",
+   "quote": "Solon walked west. He followed the roads that straightened themselves, where law replaced memory."
   },
   {
    "seq": 14,
    "node_id": "canon:canon-core-octad.ndjson#L16",
    "event": "character",
-   "name": "ʿAsabiyyah"
+   "name": "ʿAsabiyyah",
+   "quote": "ʿAsabiyyah walked everywhere. He listened to what bound people together when wisdom disagreed and laws changed."
   },
   {
    "seq": 17,
    "node_id": "canon:canon-core-octad.ndjson#L19",
    "event": "warning",
-   "name": "Solomon"
+   "name": "Solomon",
+   "quote": "And those who cannot be measured will be called unnecessary. And those who refuse measurement will be called dangerous."
   },
   {
    "seq": 23,
    "node_id": "canon:canon-core-octad.ndjson#L29",
    "event": "insight",
-   "name": "ʿAsabiyyah"
+   "name": "ʿAsabiyyah",
+   "quote": "It is humanity judging itself without reference to anything higher."
   },
   {
    "seq": 29,
    "node_id": "canon:canon-core-octad.ndjson#L35",
    "event": "insight",
-   "name": "Solomon"
+   "name": "Solomon",
+   "quote": "Number is a servant. Logos is the source. When the servant rules, the house becomes efficient — and uninhabitable."
   },
   {
    "seq": 45,
    "node_id": "canon:canon-core-octad.ndjson#L54",
    "event": "appearance",
-   "name": "Metatron/Enoch"
+   "name": "Metatron/Enoch",
+   "quote": "Those who knew the old stories would have said: 'This is Metatron.' Those who remembered deeper still would have whispered: 'This is the one who walked as Enoch and did not die.'"
   },
   {
    "seq": 53,
    "node_id": "canon:canon-core-octad.ndjson#L62",
    "event": "character",
-   "name": "Solomon"
+   "name": "Solomon",
+   "quote": "The flood was not sent because humanity built. It came because humanity forgot why it built."
   },
   {
    "seq": 54,
    "node_id": "canon:canon-core-octad.ndjson#L63",
    "event": "character",
-   "name": "Solon"
+   "name": "Solon",
+   "quote": "A city is not rebellion. It is memory made durable. A tower is not pride by itself. It is coordination made visible."
   },
   {
    "seq": 55,
    "node_id": "canon:canon-core-octad.ndjson#L64",
    "event": "character",
-   "name": "ʿAsabiyyah"
+   "name": "ʿAsabiyyah",
+   "quote": "You speak of wisdom. You speak of law. But neither of you speak of belonging."
   },
   {
    "seq": 62,
    "node_id": "canon:canon-core-octad.ndjson#L72",
    "event": "identity",
-   "name": "Enoch"
+   "name": "Enoch",
+   "quote": "I was a scribe before I was a watcher. I wrote what I could see. Names. Generations. Ages. Beginnings and endings."
   },
   {
    "seq": 63,
    "node_id": "canon:canon-core-octad.ndjson#L73",
    "event": "identity",
-   "name": "Metatron"
+   "name": "Metatron",
+   "quote": "I became what later voices would name Metatron — not a god, not a ruler, but a boundary. The one who stands near the Presence so that the Presence need not dominate. The one who watches so that humanity may still choose."
   }
  ]
 }

@@ -815,10 +815,18 @@ test('The characters\' forms: each a glTF from its name in its own hue, read bac
 });
 
 test('The normalised space: a 256-cube of byte cells, its walls alpha maps by Hamming distance, one member\'s a row of Pascal\'s triangle', async () => {
-  const { cellOf, placeOfCell, wall, frameAt, SIDE } = await import('../../space/src/cube256.ts');
+  const { cellOf, placeOfCell, wall, frameAt, SIDE, CELL, SPAN } = await import('../../space/src/cube256.ts');
   const { RIM } = await import('../../space/src/plane.ts');
-  assert.deepEqual([...cellOf([-RIM, 0, -RIM])], [0, 0, 0], 'the corner, cell 0 0 0');
-  assert.deepEqual([...cellOf([100, -5, 100])], [255, 0, 255], 'outside, capped at the walls');
+  assert.equal(CELL, 2 * RIM, 'a cell the Commons\' square');
+  assert.equal(SPAN, 256 * 2 * RIM, 'the cube 256 Commons across: 256 times what it was');
+  for (const p of [[0, 0, 0], [-RIM, 0, -RIM], [RIM - 0.01, 2 * RIM - 0.01, RIM - 0.01]] as [number, number, number][]) assert.deepEqual([...cellOf(p)], [128, 0, 128], `the Commons, all of it, one cell: (128, 0, 128) at ${p}`);
+  assert.deepEqual([...cellOf([-RIM - 128 * CELL, 0, -RIM - 128 * CELL])], [0, 0, 0], 'the far corner, cell 0 0 0');
+  assert.deepEqual([...cellOf([1e6, -5, 1e6])], [255, 0, 255], 'outside, capped at the walls');
+  const { localCellOf, LOCAL } = await import('../../space/src/cube256.ts');
+  assert.equal(LOCAL, 10 * CELL, 'the local frame, ten Commons across');
+  assert.deepEqual([...localCellOf([0, 0, 0])], [128, 0, 128], 'the Commons at the local frame\'s centre');
+  assert.deepEqual([...localCellOf([-LOCAL / 2, 0, -LOCAL / 2])], [0, 0, 0], 'its corner');
+  assert.deepEqual([...localCellOf([1e6, 1e6, -1e6])], [255, 255, 0], 'outside it, capped');
   for (const c of [[0, 0, 0], [17, 128, 255], [255, 255, 255], [3, 200, 99]]) assert.deepEqual([...cellOf(placeOfCell(Uint8Array.from(c)))], c, `cell ${c}: its centre is in it`);
   const m = Uint8Array.of(0x5a, 0x33, 0xc1);
   for (const f of ['xy', 'zy', 'xz'] as const) {
@@ -862,4 +870,19 @@ test('The gate\'s production as a literal trace: recast Solomon and replay, the 
   const first = nodes[10]!.node_id;
   moved.set(first, { x: 0.01, y: 0.01, z: 0.01 });
   assert.ok(compare(a, trace(nodes, moved, named, GATE_CAST)).outside > 0, 'a node moved: a difference outside');
+});
+
+test('The city: the canon\'s nine series as districts round the Commons, sized by their nodes, none overlapping', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { seriesOf, districtsOf, clearOfCommons, clearOf } = await import('../../space/src/city.ts');
+  const tl = readFileSync(new URL('../../public/narrative/timeline.ndjson', import.meta.url), 'utf8').trim().split('\n').map((l) => JSON.parse(l));
+  const s = seriesOf(tl);
+  assert.deepEqual(s.map((x) => x.nodes), [69, 12, 22, 83, 11, 7, 6, 17, 8], 'nine series in the canon\'s order, 235 nodes');
+  const d = districtsOf(s);
+  assert.deepEqual(d.map((x) => x.name), ['Core Octad', 'Prelude', 'Epilogue', 'Revelation', 'Tetragrammatron', 'Logos', 'AGI', 'Covenant', 'Canticle']);
+  assert.ok(d.every((x) => clearOfCommons(x) > 0), 'every district clear of the Commons\' floor');
+  assert.ok(d.every((a, i) => d.every((b, j) => i === j || clearOf(a, b) > 0)), 'no two districts overlap');
+  assert.ok(d.every((x, i) => i === 0 || x.angle > d[i - 1]!.angle), 'round the ring in the canon\'s order');
+  assert.ok(d[3]!.radius > d[6]!.radius, 'Revelation (83 nodes) larger than AGI (6)');
+  assert.deepEqual(districtsOf(s), d, 'the same districts every time');
 });
