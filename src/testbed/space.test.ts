@@ -813,3 +813,28 @@ test('The characters\' forms: each a glTF from its name in its own hue, read bac
   assert.deepEqual(lookOfHue(0).rgb, [224, 82, 82], 'hue 0 at 70% and 60%: red');
   assert.deepEqual(lookOfHue(null).rgb, [153, 153, 153], 'no hue: grey (the Observer)');
 });
+
+test('The normalised space: a 256-cube of byte cells, its walls alpha maps by Hamming distance, one member\'s a row of Pascal\'s triangle', async () => {
+  const { cellOf, placeOfCell, wall, frameAt, SIDE } = await import('../../space/src/cube256.ts');
+  const { RIM } = await import('../../space/src/plane.ts');
+  assert.deepEqual([...cellOf([-RIM, 0, -RIM])], [0, 0, 0], 'the corner, cell 0 0 0');
+  assert.deepEqual([...cellOf([100, -5, 100])], [255, 0, 255], 'outside, capped at the walls');
+  for (const c of [[0, 0, 0], [17, 128, 255], [255, 255, 255], [3, 200, 99]]) assert.deepEqual([...cellOf(placeOfCell(Uint8Array.from(c)))], c, `cell ${c}: its centre is in it`);
+  const m = Uint8Array.of(0x5a, 0x33, 0xc1);
+  for (const f of ['xy', 'zy', 'xz'] as const) {
+    const w = wall([m], f);
+    assert.equal(w.length, SIDE * SIDE, `${f}: 65,536 bytes`);
+    const counts = new Map<number, number>();
+    for (const a of w) counts.set(a, (counts.get(a) ?? 0) + 1);
+    const C = (n: number, k: number) => { let r = 1; for (let i = 1; i <= k; i++) r = (r * (n - k + i)) / i; return r; };
+    for (let h = 0; h <= 15; h++) assert.equal(counts.get(255 - 16 * h), C(16, h), `${f}: ${C(16, h)} pixels at Hamming distance ${h}`);
+    assert.equal(counts.get(0), 1, `${f}: one pixel at distance 16, the complement`);
+  }
+  assert.equal(wall([m], 'xy')[0x5a + 256 * 0x33], 255, 'the member\'s projection, alpha 255');
+  const two = wall([m, Uint8Array.of(0xa5, 0xcc, 0x3e)], 'xy');
+  assert.equal(two[0xa5 + 256 * 0xcc], 255, 'a second member lit at its own projection');
+  assert.deepEqual([0, 0.49, 0.5, 7.5, 14.9, 15].map(frameAt), [0, 0, 1, 15, 29, 0], 'the step\'s frame: half a second, 30 to a turn');
+  // the falsifier: a wall by distance in space, not in bits, is not Pascal's row
+  const near = (u: number, v: number) => Math.max(0, 255 - 16 * (Math.abs(u - 0x5a) + Math.abs(v - 0x33)));
+  assert.notEqual([...Array(65536).keys()].filter((i) => near(i & 255, i >> 8) === 255 - 16).length, 16, 'by distance in space, not 16 at one step');
+});

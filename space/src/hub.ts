@@ -1,4 +1,6 @@
-import { onFloor, onWorld } from './portal.ts';
+import { onFloor, onWorld, onCue } from './portal.ts';
+import { cellOf, wall, frameAt, SIDE, type Face } from './cube256.ts';
+import { RIM } from './plane.ts';
 import { parseState, hue as kindHue } from './world.ts';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -335,6 +337,36 @@ const codexAt = new THREE.Group();
 codexAt.position.set(...CODEX_AT);
 scene.add(codexAt);
 standForm(CODEX_TAG, codexAt, 0);
+// ── The normalised space (cube256.ts): the Commons as a 256-cube of byte cells, its outline, and its back and side
+// walls as alpha maps of the members by Hamming distance, read again on the step's frame (half a second, or the
+// step room's cue through the portal) ──
+const cubeBox = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2 * RIM, 2 * RIM, 2 * RIM)), new THREE.LineBasicMaterial({ color: 0x74c8c0, transparent: true, opacity: 0.25 }));
+cubeBox.position.set(0, RIM, 0);
+scene.add(cubeBox);
+const walls = (['xy', 'zy'] as Face[]).map((f) => {
+  const rgba = new Uint8Array(SIDE * SIDE * 4);
+  for (let i = 0; i < SIDE * SIDE; i++) rgba.set([0x74, 0xc8, 0xc0, 0], i * 4);
+  const tex = new THREE.DataTexture(rgba, SIDE, SIDE, THREE.RGBAFormat);
+  tex.magFilter = THREE.NearestFilter;
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2 * RIM, 2 * RIM), new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, depthWrite: false }));
+  if (f === 'xy') mesh.position.set(0, RIM, -RIM);
+  else { mesh.position.set(-RIM, RIM, 0); mesh.rotation.y = Math.PI / 2; }
+  scene.add(mesh);
+  return { f, rgba, tex };
+});
+let wallFrame = -1;
+function readWalls(frame: number) {
+  if (frame === wallFrame) return;
+  wallFrame = frame;
+  const members = [...live.map((l) => cellOf([l.group.position.x, l.group.position.y, l.group.position.z])), cellOf([codexAt.position.x, codexAt.position.y, codexAt.position.z])];
+  for (const w of walls) {
+    const alpha = wall(members, w.f);
+    for (let i = 0; i < alpha.length; i++) w.rgba[i * 4 + 3] = alpha[i]! >> 2;	// a quarter strength, the room seen through it
+    w.tex.needsUpdate = true;
+  }
+}
+setInterval(() => readWalls(frameAt(performance.now() / 1000)), 100);
+onCue((c) => { if (c.id.startsWith('step-')) readWalls(Number(c.id.slice(5))); });
 let audio: AudioContext | null = null;
 const soundButton = document.createElement('button');
 soundButton.textContent = 'sound';
