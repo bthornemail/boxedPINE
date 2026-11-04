@@ -15,8 +15,9 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { proofBlob } from '../../rosetta/src/proof.blob.ts';
 import { CONSTANTS } from '../../core/src/verified/fano.ts';
 
-/** The image: 1 MiB (an SD card's size must be a power of two). */
-export const IMAGE_BYTES = 1 << 20;
+/** The image: 2 MiB (an SD card's size must be a power of two). It was 1 MiB until the proof tree outgrew it at
+ *  I-250 (137 records, 1,055,744 bytes on their sectors); doubled, the next power of two. */
+export const IMAGE_BYTES = 1 << 21;
 /** Where the sixteen constants sit: right after the 8,192-byte proof Blob. */
 export const CONSTANTS_AT = 8192;
 
