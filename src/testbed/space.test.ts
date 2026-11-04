@@ -763,3 +763,18 @@ test('CODEX\'s form: a glTF model generated from its name\'s code points, the sa
   dot.translation[0] = -dot.translation[0];
   assert.notEqual(readForm(JSON.stringify(moved)), TAG, 'one dot moved: another name');
 });
+
+test('CODEX\'s set of 16: the 14 Fano planes and 2 Hasse diagrams, each margin carrying its tag and place; an intact set traces to zero', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { readBorder } = await import('../../space/src/border.ts');
+  const { newTrace, traceFile, marked, pairsOfTag } = await import('../../space/src/trace.ts');
+  const { SET16 } = await import('../../scripts/tree-set.mjs');
+  const files = SET16.map((n: string) => readFileSync(new URL(`../../public/avatars/CODEX/${n}.svg`, import.meta.url), 'utf8'));
+  files.forEach((svg: string, i: number) => assert.deepEqual(readBorder(svg), { name: 'CODEX', cues: [i] }, `${SET16[i]}: CODEX, place ${i}`));
+  const t = newTrace();
+  for (const svg of files) traceFile(t, svg);
+  assert.deepEqual(marked(t), [], 'an intact set traces to zero');
+  const u = newTrace();
+  files.forEach((svg: string, i: number) => { if (i !== 7) traceFile(u, svg); });
+  assert.deepEqual(marked(u), pairsOfTag('CODEX').sort((a: number, b: number) => a - b), 'one file missing: it shows at CODEX\'s pairs');
+});
