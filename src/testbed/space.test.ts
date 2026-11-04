@@ -838,3 +838,28 @@ test('The normalised space: a 256-cube of byte cells, its walls alpha maps by Ha
   const near = (u: number, v: number) => Math.max(0, 255 - 16 * (Math.abs(u - 0x5a) + Math.abs(v - 0x33)));
   assert.notEqual([...Array(65536).keys()].filter((i) => near(i & 255, i >> 8) === 255 - 16).length, 16, 'by distance in space, not 16 at one step');
 });
+
+test('The gate\'s production as a literal trace: recast Solomon and replay, the traces differ only inside his slots', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { trace, compare, recast, GATE_CAST, FRAME } = await import('../../space/src/production.ts');
+  const read = (f: string) => readFileSync(new URL(`../../public/narrative/${f}`, import.meta.url), 'utf8');
+  const nodes = read('timeline.ndjson').trim().split('\n').map((l) => JSON.parse(l) as { seq: number; node_id: string });
+  const places = new Map((JSON.parse(read('scene.patch.json')) as { entities: { id: string; position: { x: number; y: number; z: number } }[] }).entities.map((e) => [e.id, e.position]));
+  const named = (JSON.parse(read('cast.json')) as { nodes: { node_id: string; name: string }[] }).nodes;
+  assert.equal(nodes.length, 235, 'the gate\'s 235 nodes');
+  assert.equal(named.length, 15, '15 of them a named character\'s, from Light Garden\'s canon lines');
+  const a = trace(nodes, places, named, GATE_CAST);
+  assert.equal(a.length, 235 * FRAME, 'a frame a node, 11 bytes each');
+  assert.deepEqual(trace(nodes, places, named, GATE_CAST), a, 'replayed, the same trace');
+  const b = trace(nodes, places, named, recast(GATE_CAST, 'Solomon', 'CODEX'));
+  const d = compare(a, b);
+  const solomon = named.filter((n) => n.name === 'Solomon').length;
+  assert.equal(d.frames.length, solomon, `recast: only Solomon's ${solomon} frames differ`);
+  assert.equal(d.outside, 0, 'the same everywhere outside his slots: every place, every other speaker (XNOR)');
+  assert.ok(d.inside > 0, 'and differ inside them (XOR)');
+  // the falsifier: a node moved is a difference outside the slots
+  const moved = new Map(places);
+  const first = nodes[10]!.node_id;
+  moved.set(first, { x: 0.01, y: 0.01, z: 0.01 });
+  assert.ok(compare(a, trace(nodes, moved, named, GATE_CAST)).outside > 0, 'a node moved: a difference outside');
+});

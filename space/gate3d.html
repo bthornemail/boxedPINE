@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Gate in 3D</title>
+<style>
+:root{--paper:#f6f6f2;--ink:#1d1f24;--muted:#5d636e;--rule:#d9dad3;--accent:#8a7638;--mono:ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#15171b;--ink:#e8e8e3;--muted:#9aa0aa;--rule:#2c3038;--accent:#e8c56a;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#15171b;--ink:#e8e8e3;--muted:#9aa0aa;--rule:#2c3038;--accent:#e8c56a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.5 var(--mono);padding:16px;display:grid;gap:10px;justify-items:center}
+#stage{width:min(1000px,100%);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+#stage canvas{display:block;width:100%}
+.row{width:min(1000px,100%);display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+#frame{color:var(--accent)} #compare{color:var(--muted)}
+button{font:inherit;padding:6px 12px;border:1px solid var(--rule);border-radius:4px;background:transparent;color:var(--ink);cursor:pointer}
+.note{color:var(--muted);width:min(1000px,100%);margin:0}
+</style>
+</head>
+<body>
+<p class="note">The gate in 3D: the narrative the gate plays (Solomon, Solon and ʿAsabiyyah at the gate, narrated by Enoch and Metatron), its 235 nodes at their places in the normalised cube, a frame each on the step's clock; the cast's forms stand at the gate, the speaker lifting. Recast Solomon and the production replays; the two traces differ only inside his slots.</p>
+<div id="stage"></div>
+<div class="row"><button id="recast">recast Solomon</button><span id="frame"></span></div>
+<div class="row"><span id="compare">the canon cast: the trace as written</span></div>
+<script type="module" src="./src/gate3d.ts"></script>
+<script type="module" src="./src/portal.ts"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+{
+ "source": "boxed omi-files/light-garden, each node_id's line, its name or character",
+ "nodes": [
+  {
+   "seq": 4,
+   "node_id": "canon:canon-core-octad.ndjson#L5",
+   "event": "character",
+   "name": "Solomon"
+  },
+  {
+   "seq": 5,
+   "node_id": "canon:canon-core-octad.ndjson#L6",
+   "event": "character",
+   "name": "Solon"
+  },
+  {
+   "seq": 6,
+   "node_id": "canon:canon-core-octad.ndjson#L7",
+   "event": "character",
+   "name": "ʿAsabiyyah"
+  },
+  {
+   "seq": 12,
+   "node_id": "canon:canon-core-octad.ndjson#L14",
+   "event": "character",
+   "name": "Solomon"
+  },
+  {
+   "seq": 13,
+   "node_id": "canon:canon-core-octad.ndjson#L15",
+   "event": "character",
+   "name": "Solon"
+  },
+  {
+   "seq": 14,
+   "node_id": "canon:canon-core-octad.ndjson#L16",
+   "event": "character",
+   "name": "ʿAsabiyyah"
+  },
+  {
+   "seq": 17,
+   "node_id": "canon:canon-core-octad.ndjson#L19",
+   "event": "warning",
+   "name": "Solomon"
+  },
+  {
+   "seq": 23,
+   "node_id": "canon:canon-core-octad.ndjson#L29",
+   "event": "insight",
+   "name": "ʿAsabiyyah"
+  },
+  {
+   "seq": 29,
+   "node_id": "canon:canon-core-octad.ndjson#L35",
+   "event": "insight",
+   "name": "Solomon"
+  },
+  {
+   "seq": 45,
+   "node_id": "canon:canon-core-octad.ndjson#L54",
+   "event": "appearance",
+   "name": "Metatron/Enoch"
+  },
+  {
+   "seq": 53,
+   "node_id": "canon:canon-core-octad.ndjson#L62",
+   "event": "character",
+   "name": "Solomon"
+  },
+  {
+   "seq": 54,
+   "node_id": "canon:canon-core-octad.ndjson#L63",
+   "event": "character",
+   "name": "Solon"
+  },
+  {
+   "seq": 55,
+   "node_id": "canon:canon-core-octad.ndjson#L64",
+   "event": "character",
+   "name": "ʿAsabiyyah"
+  },
+  {
+   "seq": 62,
+   "node_id": "canon:canon-core-octad.ndjson#L72",
+   "event": "identity",
+   "name": "Enoch"
+  },
+  {
+   "seq": 63,
+   "node_id": "canon:canon-core-octad.ndjson#L73",
+   "event": "identity",
+   "name": "Metatron"
+  }
+ ]
+}
