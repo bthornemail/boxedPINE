@@ -14,6 +14,7 @@ import { namedSynset, placeOf, speakerSeed, stepAgent, synsetDeclaration, synset
 import { BRIDGE_PORT } from '../../rosetta/src/agent.ts';
 import { CHARACTERS } from './characters.ts';
 import { termOf, productionOf } from './directors.ts';
+import { placesOf, SLOTS, TIME } from './variations.ts';
 import { avatarSvg } from './avatar.ts';
 import { newWalker, step as storyStep, type Passage } from './story.ts';
 import { buildAgent, type AgentGraph } from './sound.ts';
@@ -406,6 +407,31 @@ fetch(new URL('../narrative/timeline.ndjson', location.href)).then((r) => r.text
     scene.add(label);
   }
 }).catch(() => { /* no narrative: the Commons alone */ });
+
+// ── The variations (variations.ts): the Name's fifteen variations on the 60-in-64 dial, each at the slot its letters'
+// 6-dot cells XOR to, between the Commons and the city; words that close alike stand on one marker (a line and its
+// reversal; YHWH and FIRE), the held four slots (60 to 63) drawn darker ──
+const DIAL = (FLOOR + CITY_RING) / 2;
+const dialRing = new THREE.Mesh(new THREE.RingGeometry(DIAL - 0.06, DIAL + 0.06, 256), new THREE.MeshBasicMaterial({ color: 0x5a6b78, side: THREE.DoubleSide }));
+dialRing.rotation.x = -Math.PI / 2;
+dialRing.position.y = 0.02;
+scene.add(dialRing);
+for (let s = 0; s < SLOTS; s++) {
+  const a = (s / SLOTS) * 2 * Math.PI, tick = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.04, s % 4 ? 0.35 : 0.7), new THREE.MeshBasicMaterial({ color: s >= TIME ? 0x2a2f36 : 0x7d8f9c }));
+  tick.position.set(Math.sin(a) * DIAL, 0.03, -Math.cos(a) * DIAL);
+  tick.rotation.y = -a;
+  scene.add(tick);
+}
+for (const p of placesOf()) {
+  const x = Math.sin(p.angle) * DIAL, z = -Math.cos(p.angle) * DIAL, h = 0.6 + 0.45 * p.members.length;
+  const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.22, h, 12), new THREE.MeshStandardMaterial({ color: p.members.length > 1 ? 0xe2b44a : 0x9cc2ff, emissive: p.members.length > 1 ? 0x3a2a08 : 0x0c1a2c, roughness: 0.5 }));
+  pillar.position.set(x, h / 2, z);
+  scene.add(pillar);
+  const label = textSprite([`${p.cell} ${p.slot}`, ...p.members.map((m) => (m.hebrew ? `${m.text} ${m.verse ?? ''}` : m.text))], p.members.length > 1 ? '#e2b44a' : '#9cc2ff');
+  label.scale.multiplyScalar(1.4);
+  label.position.set(x, h + 0.9, z);
+  scene.add(label);
+}
 
 let audio: AudioContext | null = null;
 const soundButton = document.createElement('button');

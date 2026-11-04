@@ -910,3 +910,18 @@ test('The directors: the board\'s eight terms bound to the eight characters by o
   // the falsifier: the terms are words, not tags (rosetta TAG, /^[A-Z0-9]{1,8}$/): EXECUTIVE has nine letters
   assert.ok(!/^[A-Z0-9]{1,8}$/.test('EXECUTIVE'), 'a term is not a tag: EXECUTIVE is nine letters');
 });
+
+test('The variations: fifteen words on the 60-in-64 dial at their 6-dot cells\' XOR, eleven places; a line meets its reversal, YHWH meets FIRE', async () => {
+  const { VARIATIONS, placesOf, slotOf, SLOTS, TIME } = await import('../../space/src/variations.ts');
+  assert.equal(VARIATIONS.length, 15);
+  const places = placesOf();
+  assert.equal(places.length, 11, 'fifteen words, eleven places');
+  assert.ok(places.every((p) => p.slot >= 0 && p.slot < SLOTS && !p.held), 'every place carries time (below 60)');
+  assert.equal(slotOf('YHWH'), 7, 'YHWH: dots 1 2 3');
+  assert.equal(slotOf('FIRE'), slotOf('YHWH'), 'FIRE and YHWH, one slot');
+  for (const k of ['IS', 'OF', 'WAS']) assert.equal(slotOf(`GOD ${k} WORD`), slotOf(`WORD ${k} GOD`), `GOD ${k} WORD meets its reversal`);
+  assert.equal(slotOf('YAHWEH'), slotOf('YHWH') ^ slotOf('A') ^ slotOf('E'), 'YAHWEH: YHWH with A and E');
+  assert.deepEqual(places.filter((p) => p.members.length > 1).map((p) => p.slot), [3, 7, 40, 50], 'the four meeting places');
+  assert.equal(TIME, 60);
+  assert.throws(() => slotOf('Yhwh'), /not a 6-dot letter/, 'lower case is not in the table: the letters are the capitals');
+});
