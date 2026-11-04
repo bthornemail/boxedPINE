@@ -798,3 +798,18 @@ test('The Coxeter step as an instantiation portal: its 30 frames read from the S
   // the falsifier: a continuous rotation is not a set of frames
   assert.throws(() => framesOf(svg.replace('calcMode="discrete"', 'calcMode="linear"')), /discrete/, 'a linear turn: no frames to cue');
 });
+
+test('The characters\' forms: each a glTF from its name in its own hue, read back to its name; CODEX\'s cyan unchanged', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { formOf, readForm, lookOfHue, CODEX_LOOK } = await import('../../space/src/codex-form.ts');
+  const { CHARACTERS } = await import('../../space/src/characters.ts');
+  assert.deepEqual(CODEX_LOOK.rgb, [0x74, 0xc8, 0xc0], 'CODEX, the Commons\' cyan');
+  for (const c of CHARACTERS) {
+    const text = readFileSync(new URL(`../../public/avatars/${c.tag}.gltf`, import.meta.url), 'utf8');
+    assert.equal(text, formOf(c.tag, lookOfHue(c.hue)), `${c.tag}: the file is its form as generated`);
+    assert.equal(readForm(text), c.tag, `${c.tag}: read back to its name`);
+    assert.equal(JSON.parse(text).nodes[0].extras.css['--form-hue'], c.hue === null ? 'none' : String(c.hue), `${c.tag}: its hue`);
+  }
+  assert.deepEqual(lookOfHue(0).rgb, [224, 82, 82], 'hue 0 at 70% and 60%: red');
+  assert.deepEqual(lookOfHue(null).rgb, [153, 153, 153], 'no hue: grey (the Observer)');
+});

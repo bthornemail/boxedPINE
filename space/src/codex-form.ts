@@ -46,7 +46,15 @@ function places(tag: string): Place[] {
 
 /** sRGB to linear, rounded to six places so the bytes stay the same everywhere. */
 const lin = (c: number) => { const s = c / 255; return Math.round((s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4) * 1e6) / 1e6; };
-const cyan = [0x74, 0xc8, 0xc0].map(lin);	// #74c8c0, the Commons' cyan (HUE 174, codex.ts)
+/** A form's colour: its hue (none for the Observer) and its sRGB. CODEX's is the Commons' own cyan, #74c8c0
+ *  (HUE 174, codex.ts); a character's its hue on the rim at 70% saturation and 60% lightness, as avatar.ts draws it. */
+export type Look = { hue: number | null; rgb: [number, number, number] };
+export const CODEX_LOOK: Look = { hue: HUE, rgb: [0x74, 0xc8, 0xc0] };
+export function lookOfHue(hue: number | null): Look {
+  const s = hue === null ? 0 : 0.7, l = 0.6, h = (hue ?? 0) / 360;
+  const f = (n: number) => { const k = (n + h * 12) % 12, a = s * Math.min(l, 1 - l); return Math.round((l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1))) * 255); };
+  return { hue, rgb: [f(0), f(8), f(4)] };
+}
 
 /** The cube: 24 vertices (4 a face, for flat normals), 36 indices, half-size CUBE / 2. */
 function cubeBuffer(): { bytes: Uint8Array; positions: number; normals: number; indices: number } {
@@ -75,13 +83,13 @@ const base64 = (b: Uint8Array) => { let s = ""; for (const x of b) s += String.f
 const hex = (n: number) => n.toString(16).toUpperCase().padStart(4, "0");
 
 /** The CSS values the Commons binds the form by. */
-export function cssOf(tag: string): Record<string, string> {
+export function cssOf(tag: string, look: Look = CODEX_LOOK): Record<string, string> {
   const as = [...tag].map((c) => addressOf(c.codePointAt(0)!));
   return {
     "--form-tag": JSON.stringify(tag),
     "--form-aegean": JSON.stringify(as.map((a) => String.fromCodePoint(a.aegean)).join("")),
     "--form-braille": JSON.stringify(as.map((a) => String.fromCodePoint(a.high, a.low)).join("")),
-    "--form-hue": String(HUE),
+    "--form-hue": look.hue === null ? "none" : String(look.hue),
     "--form-slices": String(as.length),
     "--form-dots": String(as.reduce((n, a) => n + popcount(a.high - 0x2800) + popcount(a.low - 0x2800), 0)),
   };
@@ -89,7 +97,7 @@ export function cssOf(tag: string): Record<string, string> {
 const popcount = (b: number) => { let k = 0; for (; b; b &= b - 1) k++; return k; };
 
 /** The glTF 2.0 model of a tag, as JSON text: one buffer (the cube), two meshes (a dot, the spine), a node a place. */
-export function formOf(tag: string = CODEX_TAG): string {
+export function formOf(tag: string = CODEX_TAG, look: Look = CODEX_LOOK): string {
   const ps = places(tag);
   const { bytes, positions, normals, indices } = cubeBuffer();
   const h = CUBE / 2;
@@ -98,7 +106,7 @@ export function formOf(tag: string = CODEX_TAG): string {
     scene: 0,
     scenes: [{ name: `${tag} form`, nodes: [0] }],
     nodes: [
-      { name: tag, children: ps.map((_, i) => i + 1), extras: { tag, addresses: [...tag].map((c) => { const a = addressOf(c.codePointAt(0)!); return `U+${hex(a.codePoint)} U+${hex(a.aegean)} U+${hex(a.high)} U+${hex(a.low)}`; }), css: cssOf(tag) } },
+      { name: tag, children: ps.map((_, i) => i + 1), extras: { tag, addresses: [...tag].map((c) => { const a = addressOf(c.codePointAt(0)!); return `U+${hex(a.codePoint)} U+${hex(a.aegean)} U+${hex(a.high)} U+${hex(a.low)}`; }), css: cssOf(tag, look) } },
       ...ps.map((p) => ({ name: p.name, mesh: p.mesh, translation: p.t, ...(p.s ? { scale: p.s } : {}) })),
     ],
     meshes: [
@@ -106,7 +114,7 @@ export function formOf(tag: string = CODEX_TAG): string {
       { name: "spine", primitives: [{ attributes: { POSITION: 0, NORMAL: 1 }, indices: 2, material: 1 }] },
     ],
     materials: [
-      { name: "dot", pbrMetallicRoughness: { baseColorFactor: [...cyan, 1], metallicFactor: 0, roughnessFactor: 0.6 } },
+      { name: "dot", pbrMetallicRoughness: { baseColorFactor: [...look.rgb.map(lin), 1], metallicFactor: 0, roughnessFactor: 0.6 } },
       { name: "spine", pbrMetallicRoughness: { baseColorFactor: [0.807, 0.565, 0.162, 1], metallicFactor: 0.2, roughnessFactor: 0.5 } },
     ],
     accessors: [

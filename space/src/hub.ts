@@ -3,6 +3,8 @@ import { parseState, hue as kindHue } from './world.ts';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { VRButton } from 'three/addons/webxr/VRButton.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { TAG as CODEX_TAG, AT as CODEX_AT } from './codex.ts';
 import { gnomon, hex16 } from './gnomon.ts';
 import { daliCross, grow, type Cell } from './polyform.ts';
 import { namedSynset, placeOf, speakerSeed, stepAgent, synsetDeclaration, synsetSeed, type SynsetAgent } from './commons-agents.ts';
@@ -317,6 +319,22 @@ const live: Live[] = CHARACTERS.map((c, i) => {
   const state = newState();
   return { c, group, label, walker: newWalker(c.seed, c.line), gate: frameGate(state), state, next: 1500 + i * 230, last: '' };
 });
+// ── The forms: each character's glTF, generated from its name (codex-form.ts), standing beside its avatar, and
+// CODEX's at the centre (codex.ts), to meet at the gate as glTF models; about two units tall, its base on the floor ──
+const forms = new GLTFLoader();
+function standForm(tag: string, parent: THREE.Object3D, dx: number) {
+  forms.load(new URL(`../avatars/${tag}.gltf`, location.href).href, (g) => {
+    const height = [...tag].length * 5, s = 2 / height;
+    g.scene.scale.setScalar(s);
+    g.scene.position.set(dx, height * s, 0);
+    parent.add(g.scene);
+  }, undefined, () => { /* no form: the avatar stands alone */ });
+}
+for (const l of live) standForm(l.c.tag, l.group, 0.9);
+const codexAt = new THREE.Group();
+codexAt.position.set(...CODEX_AT);
+scene.add(codexAt);
+standForm(CODEX_TAG, codexAt, 0);
 let audio: AudioContext | null = null;
 const soundButton = document.createElement('button');
 soundButton.textContent = 'sound';
