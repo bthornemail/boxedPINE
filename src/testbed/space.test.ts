@@ -886,3 +886,18 @@ test('The city: the canon\'s nine series as districts round the Commons, sized b
   assert.ok(d[3]!.radius > d[6]!.radius, 'Revelation (83 nodes) larger than AGI (6)');
   assert.deepEqual(districtsOf(s), d, 'the same districts every time');
 });
+
+test('The directors: the board\'s eight terms bound to the eight characters by ordinal, each with its colour, the narrative\'s speakers reached through the cast', async () => {
+  const { DIRECTORS, DIRECTOR_TERMS, termOf, directorOfSpeaker } = await import('../../space/src/directors.ts');
+  const { CHARACTER_TAGS } = await import('../../space/src/border.ts');
+  assert.equal(DIRECTOR_TERMS.length, 8);
+  assert.deepEqual(DIRECTORS.map((d) => d.tag), Object.values(CHARACTER_TAGS), 'each character once, by its point');
+  assert.equal(new Set(DIRECTORS.map((d) => d.term)).size, 8, 'each term once');
+  assert.deepEqual(DIRECTORS.map((d) => d.hue), [0, 30, 60, 120, 240, 270, 300, null], 'each term its character\'s hue; the Observer none');
+  assert.equal(termOf('SOLOMON'), 'Inside director');
+  assert.deepEqual(['Solomon', 'Solon', 'ʿAsabiyyah', 'Enoch', 'Metatron', 'Metatron/Enoch'].map((n) => directorOfSpeaker(n)?.term),
+    ['Inside director', 'Outside director', 'Executive director', 'Non-executive director', 'Director', 'Director'], 'the gate\'s speakers, through the cast; Enoch becoming Metatron takes Metatron\'s');
+  assert.equal(directorOfSpeaker('Nobody'), undefined, 'no one cast, no term');
+  // the falsifier: the terms are words, not tags (rosetta TAG, /^[A-Z0-9]{1,8}$/): EXECUTIVE has nine letters
+  assert.ok(!/^[A-Z0-9]{1,8}$/.test('EXECUTIVE'), 'a term is not a tag: EXECUTIVE is nine letters');
+});

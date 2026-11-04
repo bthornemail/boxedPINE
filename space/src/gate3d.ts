@@ -13,6 +13,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { onCue } from './portal.ts';
 import { RIM } from './plane.ts';
 import { trace, compare, recast, GATE_CAST, type Cast, type Node, type Place, type Named } from './production.ts';
+import { directorOfSpeaker } from './directors.ts';
 
 const $ = (id: string) => document.getElementById(id)!;
 type TNode = Node & { event: string; text: string };
@@ -179,7 +180,9 @@ function show(i: number) {
   if (speaker && placeOf(speaker) === 'Enoch · Metatron') put('Enoch · Metatron', cast[speaker]!);
   for (const [place, at] of standing) at.lift = speaker && placeOf(speaker) === place ? 1 : 0;
   const line = c?.quote || n.text;
-  $('who').textContent = speaker ? `${speaker}${cast[speaker] !== GATE_CAST[speaker] ? ` · recast as ${cast[speaker]}` : ''}` : n.event === 'paragraph' ? '' : n.event;
+  const bound = speaker ? directorOfSpeaker(speaker) : undefined;	// the speaker's term and colour (directors.ts)
+  $('who').textContent = speaker ? `${speaker}${bound ? ` · ${bound.term.toLowerCase()}` : ''}${cast[speaker] !== GATE_CAST[speaker] ? ` · recast as ${cast[speaker]}` : ''}` : n.event === 'paragraph' ? '' : n.event;
+  $('who').style.color = bound ? (bound.hue === null ? '#e8e8e3' : `hsl(${bound.hue} 80% 68%)`) : '';
   if (line) $('line').textContent = line;
   $('caption').style.opacity = line ? '1' : '0.35';
   $('frame').textContent = `node ${i + 1} of ${nodes.length} · ${n.node_id.replace('canon:canon-', '').replace('.ndjson#L', ' · line ')} · step frame ${stepFrame} · ${stepFrame < 15 ? 'day (c + r)' : 'night (c - r)'}`;

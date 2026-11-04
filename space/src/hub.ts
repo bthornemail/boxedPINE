@@ -13,6 +13,7 @@ import { daliCross, grow, type Cell } from './polyform.ts';
 import { namedSynset, placeOf, speakerSeed, stepAgent, synsetDeclaration, synsetSeed, type SynsetAgent } from './commons-agents.ts';
 import { BRIDGE_PORT } from '../../rosetta/src/agent.ts';
 import { CHARACTERS } from './characters.ts';
+import { termOf } from './directors.ts';
 import { avatarSvg } from './avatar.ts';
 import { newWalker, step as storyStep, type Passage } from './story.ts';
 import { buildAgent, type AgentGraph } from './sound.ts';
@@ -315,7 +316,7 @@ const live: Live[] = CHARACTERS.map((c, i) => {
   avatar.scale.set(1.2, 1.2, 1);
   avatar.position.y = 1.2;
   group.add(avatar);
-  const label = textSprite([c.tag, `line ${c.line}`], c.hue === null ? '#ffffff' : `hsl(${c.hue} 80% 65%)`);
+  const label = textSprite([c.tag, `${termOf(c.tag)?.toLowerCase() ?? ''} · line ${c.line}`], c.hue === null ? '#ffffff' : `hsl(${c.hue} 80% 65%)`);
   label.position.y = 2.25;
   group.add(label);
   scene.add(group);
