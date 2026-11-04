@@ -17,8 +17,9 @@ export type Node = { seq: number; node_id: string };
 export type Named = { node_id: string; name: string };
 export type Cast = Record<string, string>;
 
-/** The cast as the canon names it: each name its character's tag (border.ts); the joint appearance "Metatron/Enoch"
- *  cast as METATRON, a choice. */
+/** The cast as the canon names it: each name its character's tag (border.ts). Enoch and Metatron are separate, and
+ *  appear one at a time, Enoch becoming Metatron (the author), so the joint appearance "Metatron/Enoch" is
+ *  Metatron's, the one become; at the gate they share one place (gate3d.ts). */
 export const GATE_CAST: Cast = { Solomon: 'SOLOMON', Solon: 'SOLON', 'ʿAsabiyyah': 'ASABIYAH', Enoch: 'ENOCH', Metatron: 'METATRON', 'Metatron/Enoch': 'METATRON' };
 
 const cap = (v: number) => Math.max(0, Math.min(255, Math.floor(v * 256)));

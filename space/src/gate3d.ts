@@ -48,20 +48,27 @@ for (const x of [-RIM * 0.75, RIM * 0.75]) {
   scene.add(pillar);
 }
 const loader = new GLTFLoader();
-const standing = new Map<string, THREE.Group>();	// name -> the group its form stands in
-const names = [...new Set(Object.keys(GATE_CAST))].filter((n) => named.some((m) => m.name === n));
-names.forEach((name, i) => {
+// a place a figure: Enoch and Metatron one place, one at a time, like day and night (the author: "they should be
+// separate as they only appear one at a time like day or night, enoch becomes metatron, so the 8 are 7 becuase the
+// self dual figure"): it shows Enoch's form until Metatron appears, Metatron's after
+const placeOf = (name: string) => (name === 'Enoch' || name === 'Metatron' || name === 'Metatron/Enoch' ? 'Enoch · Metatron' : name);
+const standing = new Map<string, { g: THREE.Group; tag: string }>();	// place -> its group and the form standing there
+const places3 = [...new Set(Object.keys(GATE_CAST).filter((n) => named.some((m) => m.name === n)).map(placeOf))];
+places3.forEach((place, i) => {
   const g = new THREE.Group();
-  g.position.set((i - (names.length - 1) / 2) * 1.6, 0, -RIM * 0.6);
+  g.position.set((i - (places3.length - 1) / 2) * 1.8, 0, -RIM * 0.6);
   scene.add(g);
-  standing.set(name, g);
+  standing.set(place, { g, tag: '' });
 });
+function put(place: string, tag: string) {
+  const at = standing.get(place)!;
+  if (at.tag === tag) return;
+  at.tag = tag;
+  at.g.clear();
+  loader.load(`/avatars/${tag}.gltf`, (m) => { if (at.tag !== tag) return; const h = [...tag].length * 5, s = 2.4 / h; m.scene.scale.setScalar(s); m.scene.position.y = h * s; at.g.add(m.scene); });
+}
 function stand(cast: Cast) {
-  for (const [name, g] of standing) {
-    g.clear();
-    const tag = cast[name]!;
-    loader.load(`/avatars/${tag}.gltf`, (m) => { const h = [...tag].length * 5, s = 2.4 / h; m.scene.scale.setScalar(s); m.scene.position.y = h * s; g.add(m.scene); });
-  }
+  for (const place of standing.keys()) put(place, place === 'Enoch · Metatron' ? cast['Enoch']! : cast[place]!);
 }
 
 // the production, played: a frame a node on the step's clock; recast and replayed, compared
@@ -74,11 +81,13 @@ function show(i: number) {
   const n = nodes[i]!;
   cursor.position.set(...world(places.get(n.node_id) ?? { x: 0.5, y: 0.5, z: 0.5 }));
   const speaker = who.get(n.node_id);
-  for (const [name, g] of standing) g.scale.setScalar(name === speaker ? 1.35 : 1);
+  if (speaker && placeOf(speaker) === 'Enoch · Metatron') put('Enoch · Metatron', cast[speaker]!);	// Enoch becomes Metatron
+  for (const [place, at] of standing) at.g.scale.setScalar(speaker && placeOf(speaker) === place ? 1.35 : 1);
   $('frame').textContent = `frame ${i + 1} of ${nodes.length} · ${n.node_id.replace('canon:', '')}${speaker ? ` · ${speaker} as ${cast[speaker]}` : ''}`;
 }
 $('recast').onclick = () => {
   cast = cast === GATE_CAST ? recast(GATE_CAST, 'Solomon', 'CODEX') : GATE_CAST;
+  for (const at of standing.values()) at.tag = '';
   stand(cast);
   const d = compare(original, trace(nodes, places, named, cast));
   $('compare').textContent = cast === GATE_CAST ? 'the canon cast: the trace as written' : `Solomon recast as CODEX and replayed: ${d.frames.length} frames differ, ${d.inside} bytes inside his slots, ${d.outside} outside`;
