@@ -739,3 +739,27 @@ test('The 144 colour synsets are one tree, so a static router: one route between
   parents.get(word('burgundy'))!.pop();
   assert.equal(routes(word('burgundy'), word('color')), 1);
 });
+
+test('CODEX\'s form: a glTF model generated from its name\'s code points, the same every time, read back to its name from its cubes\' places alone', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { formOf, readForm, addressOf, cssOf } = await import('../../space/src/codex-form.ts');
+  const { TAG } = await import('../../space/src/codex.ts');
+  const { CHARACTER_TAGS } = await import('../../space/src/border.ts');
+  assert.deepEqual(addressOf(0x43), { codePoint: 0x43, aegean: 0x10107, high: 0x2800, low: 0x2843 }, 'C: plane 0, Aegean ONE; its bytes the blank cell and U+2843 (ztranslate)');
+  const text = formOf(TAG);
+  assert.equal(formOf(TAG), text, 'the same tag, the same bytes');
+  assert.equal(readFileSync(new URL('../../public/avatars/CODEX.gltf', import.meta.url), 'utf8'), text, 'public/avatars/CODEX.gltf is the form as generated');
+  const g = JSON.parse(text);
+  assert.equal(g.asset.version, '2.0');
+  assert.equal(g.nodes.filter((n: { mesh?: number }) => n.mesh === 0).length, 16, 'CODEX: 16 dots, its letters\' Braille cells');
+  assert.equal(g.nodes.filter((n: { mesh?: number }) => n.mesh === 1).length, 1, 'one stroke: plane 0, Aegean ONE');
+  assert.equal(cssOf(TAG)['--form-braille'], JSON.stringify('⠀⡃⠀⡏⠀⡄⠀⡅⠀⡘'), 'its CSS carries the cells');
+  const tags = [TAG, ...Object.values(CHARACTER_TAGS)];
+  for (const t of tags) assert.equal(readForm(formOf(t)), t, `${t}: the form reads back to its tag`);
+  assert.equal(new Set(tags.map((t) => formOf(t))).size, tags.length, 'nine tags, nine forms');
+  // the falsifier: one dot moved to the other side reads back another name
+  const moved = JSON.parse(text);
+  const dot = moved.nodes.find((n: { mesh?: number }) => n.mesh === 0);
+  dot.translation[0] = -dot.translation[0];
+  assert.notEqual(readForm(JSON.stringify(moved)), TAG, 'one dot moved: another name');
+});

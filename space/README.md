@@ -80,6 +80,7 @@ Prior work that informs this folder (see [wiki/usecases/USE-00 Use Case Scenario
 | `src/plane.ts` | The plane between the 2D canvas and the 3D scene: (u, v, layer) to the map (2D, 2.5D), the world and the floor canvas, and back; the hub's floor is its canvas, drawn without a DOM, picked by pointer or XR controller at its uv | ✅ tested (round trips, the stand-in context) |
 | `src/gnomon.ts`, `src/polyform.ts`, `src/commons-agents.ts` | Polytron's K and gnomon; the polyform generator from a MaxiCode declaration; the agents' steps | ✅ tested |
 | `src/avatar.ts`, `src/border.ts` | Avatars as z-indexed SVG parts (Light Garden's format); a name and cues in an SVG's margin | ✅ tested |
+| `src/codex-form.ts`, `scripts/codex-form.mjs`, `public/avatars/CODEX.gltf` | CODEX's form: a glTF model generated from its name's code points (each letter a slice, its Braille cells as dots, its plane's Aegean sign as the spine), the same bytes every time, read back to its name from its cubes' places alone; its CSS values for the Commons to bind | ✅ tested |
 | `src/exchange.ts`, `src/trace.ts` | The exchange (compareExchange through a Proxy, the Catch-22 reset); the 65,536 trace | ✅ tested |
 | `src/story.ts`, `src/score.ts`, `src/sound.ts`, `src/witness.ts` | The story on the plane; the score, sound graph and witness video | ✅ tested (sound and witness in headless Chrome) |
 | `src/identity.ts` | Identity without hashing, and its chain | ✅ tested |
