@@ -62,27 +62,27 @@ async function loadTiles() {
   const r = await fetch(`${base()}/tiles`, { cache: 'no-store' });
   const tiles = (await r.text()).trim().split('\n').filter(Boolean);
   const keep = tileSel.value;
-  tileSel.replaceChildren(...tiles.map((t) => new Option(t, t.replace(' ', '&'))));
-  if (tiles.some((t) => t.replace(' ', '&') === keep)) tileSel.value = keep;
+  tileSel.replaceChildren(...tiles.map((t) => new Option(t, t.replace(' ', '/'))));
+  if (tiles.some((t) => t.replace(' ', '/') === keep)) tileSel.value = keep;
 }
 
 async function refresh() {
   if (!validSource(source.value.trim())) { status.textContent = 'Use a localhost or 127.0.0.1 world URL.'; return; }
   try {
     if (!tileSel.value) await loadTiles();
-    const [state, events] = await Promise.all(['state', 'events'].map(async (f) => (await fetch(`${base()}/${f}?${tileSel.value}`, { cache: 'no-store' })).text()));
+    const [state, events] = await Promise.all(['state', 'events'].map(async (f) => (await fetch(`${base()}/${f}/${tileSel.value}`, { cache: 'no-store' })).text()));
     const nodes = state.trim().split('\n').filter(Boolean).map(parse);
     draw(nodes);
     lines.textContent = state;
     const deleted = nodes.filter((n) => n.deleted).length;
-    status.textContent = `${tileSel.value.replace('&', ' ')}: ${events.trim().split('\n').filter(Boolean).length} events, ${nodes.length - deleted} nodes live, ${deleted} deleted. From Plan 9 at ${new URL(base()).host}.`;
+    status.textContent = `${tileSel.value.replace('/', ' ')}: ${events.trim().split('\n').filter(Boolean).length} events, ${nodes.length - deleted} nodes live, ${deleted} deleted. From Plan 9 at ${new URL(base()).host}.`;
   } catch {
     status.textContent = `No world at ${base()}. In the Plan 9 guest: rc mkworld.rc -s (unbound PLAN9/src).`;
   }
 }
 
 async function append() {
-  const r = await fetch(`${base()}/events?${tileSel.value}`, { method: 'POST', body: draft.value.trim() + '\n' });
+  const r = await fetch(`${base()}/events/${tileSel.value}`, { method: 'POST', body: draft.value.trim() + '\n' });
   status.textContent = r.ok ? `Appended. ${(await r.text()).trim()}` : `Refused: ${(await r.text()).trim()}`;
   if (r.ok) await refresh();
 }

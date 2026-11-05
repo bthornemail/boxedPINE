@@ -12,7 +12,7 @@
 // More than one coding agent (Claude Code, OpenCode) can share it. Each starts
 // its own copy with AGENT_NAME set; the first holds the port, and any later one
 // finds the port taken and relays its tools through the first, over
-//   GET  /agent/inbox?since=n   and   POST /agent/message
+//   GET  /agent/inbox/n   and   POST /agent/message   (the path is the query: no query strings)
 // which answer only requests without an Origin header (a program on this
 // machine, never a web page: browsers always send Origin on those).
 //
@@ -48,8 +48,10 @@ const http = createServer((req, res) => {
   if (req.url?.startsWith('/agent/')) {
     if (origin) { res.writeHead(403).end('agents only'); return; }
     const url = new URL(req.url, 'http://bridge');
-    if (req.method === 'GET' && url.pathname === '/agent/inbox') {
-      const since = Number(url.searchParams.get('since') ?? 0);
+    if (url.search) { res.writeHead(400).end('no query strings: the path is the query, /agent/inbox/n'); return; }
+    const inbox = url.pathname.match(/^\/agent\/inbox(?:\/(\d+))?$/);
+    if (req.method === 'GET' && inbox) {
+      const since = Number(inbox[1] ?? 0);
       res.writeHead(200, { 'content-type': 'application/json' }).end(JSON.stringify(posted.filter((p) => p.id > since && p.from === 'author')));
       return;
     }
@@ -145,7 +147,7 @@ async function deliver(m: Message): Promise<{ id: number; listening: number }> {
 }
 async function authorSince(since: number): Promise<Posted[]> {
   if (!relay) return posted.filter((p) => p.id > since && p.from === 'author');
-  const r = await fetch(`${primary}/agent/inbox?since=${since}`);
+  const r = await fetch(`${primary}/agent/inbox/${since}`);
   if (!r.ok) throw new Error(`the shared bridge did not answer: ${r.status}`);
   return (await r.json()) as Posted[];
 }

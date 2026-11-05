@@ -68,7 +68,7 @@ const worldWatchers = new Set<(w: World) => void>();
 const toldWorld = (w: World) => { world = w; for (const x of worldWatchers) x(w); };
 async function readWorld(): Promise<World> {
   const tiles = (await (await fetch(`${WORLD}/tiles`, { cache: 'no-store' })).text()).split('\n').filter(Boolean).map((l) => l.split(' ') as [string, string]);
-  return { tiles: await Promise.all(tiles.map(async ([space, tile]) => ({ space, tile, state: await (await fetch(`${WORLD}/state?${space}&${tile}`, { cache: 'no-store' })).text() }))) };
+  return { tiles: await Promise.all(tiles.map(async ([space, tile]) => ({ space, tile, state: await (await fetch(`${WORLD}/state/${space}/${tile}`, { cache: 'no-store' })).text() }))) };
 }
 if ('locks' in navigator) {
   navigator.locks.request('commons-portal-world', async () => {
