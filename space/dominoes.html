@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dominoes</title>
+<meta name="description" content="The extended slide rule as an infinite board: a repetend's digits and a lexeme's bytes as dominoes, laid by hand into a path that plays as a text track through the portal.">
+<style>
+  :root { --bg: #0d1116; --ink: #e6e9ec; --muted: #8d97a2; --accent: #e2b44a; --blue: #9cc2ff; --ok: #7fd18b; --rule: #2b3540; --panel: #141b22; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font: 14px/1.45 system-ui, sans-serif; }
+  body { display: grid; grid-template-rows: auto auto 1fr auto; overflow: hidden; }
+  header { padding: 10px 16px 6px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; }
+  h1 { font: 600 1.25rem Georgia, serif; margin: 0; }
+  header p { margin: 0; color: var(--muted); font-size: 12.5px; max-width: 80ch; }
+  .controls { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 0 16px 8px; }
+  .controls fieldset { border: 1px solid var(--rule); border-radius: 6px; padding: 4px 6px; margin: 0; display: flex; gap: 4px; align-items: center; }
+  .controls legend { font-size: 11px; color: var(--muted); padding: 0 4px; }
+  input, select, button { font: 13px ui-monospace, monospace; padding: 5px 8px; border: 1px solid var(--rule); border-radius: 4px; background: var(--panel); color: var(--ink); min-width: 0; }
+  input[type=number] { width: 4.6em; }
+  input.word { width: 9em; }
+  button { cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  #board { position: relative; overflow: hidden; touch-action: none; cursor: grab; border-top: 1px solid var(--rule); }
+  #board.panning { cursor: grabbing; }
+  #board canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  #tray { display: flex; gap: 6px; overflow-x: auto; padding: 8px 16px; border-top: 1px solid var(--rule); background: #10161c; min-height: 64px; align-items: center; touch-action: pan-x; }
+  #tray:empty::before { content: 'Make tiles above; drag them onto the board.'; color: var(--muted); font-size: 12.5px; }
+  #tray.drop { outline: 2px dashed var(--accent); outline-offset: -4px; }
+  .tile { flex: none; display: grid; grid-template-columns: 1fr 1fr; width: 64px; height: 34px; border: 1px solid #c9ced4; border-radius: 5px; background: #f3efe4; color: #1b1f24; cursor: grab; touch-action: none; user-select: none; position: relative; }
+  /* a domino is an element bound by its id; its dots are data attributes, drawn through the CSSOM by attr() */
+  .tile::before, .tile::after { display: grid; place-items: center; font: 600 15px ui-monospace, monospace; }
+  .tile::before { content: attr(data-a); }
+  .tile::after { content: attr(data-b); border-left: 1px solid #8f969d; }
+  .tile small { position: absolute; right: 2px; bottom: -1px; font-size: 9px; color: #6b737b; }
+  .ghost { position: fixed; pointer-events: none; z-index: 9; opacity: .85; }
+  .readout { min-height: 4.4em; padding: 6px 16px 34px; font: 12.5px/1.6 ui-monospace, monospace; color: var(--muted); overflow-wrap: anywhere; border-top: 1px solid var(--rule); }
+  .readout b { color: var(--ink); font-weight: 600; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  audio { display: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Dominoes</h1>
+  <p>The extended slide rule as a board. A repetend's digits, two to a domino, each digit in the Aegean set of its place (the five sets cycled); a lexeme's bytes, a byte to a domino, high and low nibble, its 8-dot Braille cell. Drag tiles onto the board; the order you lay them is the path, and the path plays as a text track, one cue a domino, to every room. Drag the empty board to pan, wheel or pinch to zoom, double-click a domino to turn it, drag it back to the tray to lift it.</p>
+</header>
+<div class="controls">
+  <fieldset><legend>repetend</legend>
+    <label class="sr" for="q">q</label>1/<input id="q" type="number" min="2" max="9999" value="17">
+    <label for="b">base</label><input id="b" type="number" min="2" max="36" value="10">
+    <button id="addRep">tiles</button>
+  </fieldset>
+  <fieldset><legend>lexeme</legend>
+    <select id="pick" aria-label="A variation"></select>
+    <input id="word" class="word" aria-label="A lexeme" value="YHWH">
+    <button id="addLex">tiles</button>
+  </fieldset>
+  <fieldset><legend>path</legend>
+    <button id="play">play as cues</button>
+    <button id="vtt">.vtt</button>
+    <button id="clear">clear</button>
+  </fieldset>
+</div>
+<div id="board"><canvas id="cv"></canvas></div>
+<div id="tray" aria-label="Tiles to lay"></div>
+<div class="readout" id="readout" aria-live="polite"></div>
+<script type="module">
+import { repetendOf, repetendDominoes, lexemeDominoes, parityOf, joint, vttOf } from './src/dominoes.ts';
+import { VARIATIONS } from './src/variations.ts';
+import { onCue, attachTrack } from './src/portal.ts';
+import { portParity } from '../rosetta/src/agent.ts';
+
+const $ = (id) => document.getElementById(id);
+const board = $('board'), cv = $('cv'), cx = cv.getContext('2d'), tray = $('tray');
+const CELL = 44;			// a half-domino's side at zoom 1
+const KEY = 'dominoes.board.v1';
+
+// ── the state: tiles in the tray, dominoes on the board (the order laid is the path), the view ──
+let trayTiles = [], laid = [], view = { x: 0, y: 0, z: 1 }, lit = -1, label = 'path';
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ trayTiles, laid, view, label })); } catch {} };
+try { const s = JSON.parse(localStorage.getItem(KEY) ?? 'null'); if (s) ({ trayTiles = [], laid = [], view = view, label = 'path' } = s); } catch {}
+
+// ── the tray ──
+const ids = new Map();
+const tileEl = (t) => {
+  const el = document.createElement('div'); el.className = 'tile';
+  // the id binds the domino (its source and place, as its cue's id); the dots are its data attributes
+  const base = `${t.from}-${t.k + 1}`.replace(/[^A-Za-z0-9_-]+/g, '-'), n = (ids.get(base) ?? 0) + 1; ids.set(base, n);
+  el.id = n > 1 ? `${base}-${n}` : base;
+  Object.assign(el.dataset, { a: t.faces[0], b: t.faces[1], halves: t.halves.join(' '), kind: t.kind });
+  if (t.braille) el.dataset.braille = t.braille;
+  el.innerHTML = `<small>${t.braille ?? ''}</small>`;
+  el.title = `${t.from}, domino ${t.k + 1}: ${t.halves.join(' | ')}`;
+  return el;
+};
+function drawTray() {
+  ids.clear();
+  tray.replaceChildren(...trayTiles.map((t, i) => { const el = tileEl(t); el.addEventListener('pointerdown', (e) => fromTray(e, i)); return el; }));
+}
+
+// ── world and screen ──
+const toWorld = (sx, sy) => { const r = board.getBoundingClientRect(); return [(sx - r.left - r.width / 2) / (CELL * view.z) + view.x, (sy - r.top - r.height / 2) / (CELL * view.z) + view.y]; };
+const toScreen = (wx, wy) => { const r = board.getBoundingClientRect(); return [(wx - view.x) * CELL * view.z + r.width / 2, (wy - view.y) * CELL * view.z + r.height / 2]; };
+const cells = (d) => d.v ? [[d.gx, d.gy], [d.gx, d.gy + 1]] : [[d.gx, d.gy], [d.gx + 1, d.gy]];
+const occupied = (gx, gy, skip) => laid.some((d) => d !== skip && cells(d).some(([x, y]) => x === gx && y === gy));
+const fits = (d, skip) => cells(d).every(([x, y]) => !occupied(x, y, skip));
+const at = (wx, wy) => { const gx = Math.floor(wx), gy = Math.floor(wy); for (let i = laid.length - 1; i >= 0; i--) if (cells(laid[i]).some(([x, y]) => x === gx && y === gy)) return i; return -1; };
+const overTray = (e) => { const r = tray.getBoundingClientRect(); return e.clientY >= r.top && e.clientY <= r.bottom; };
+
+// ── dragging: from the tray onto the board, a laid domino about, the board itself ──
+let drag = null;
+const ghost = (t) => { const g = tileEl(t); g.classList.add('ghost'); document.body.appendChild(g); return g; };
+function fromTray(e, i) {
+  e.preventDefault();
+  const t = trayTiles[i]; drag = { kind: 'tray', i, t, el: ghost(t) };
+  moveGhost(e); capture(e);
+}
+const moveGhost = (e) => { if (drag?.el) { drag.el.style.left = `${e.clientX - 32}px`; drag.el.style.top = `${e.clientY - 17}px`; } };
+function capture(e) { addEventListener('pointermove', onMove); addEventListener('pointerup', onUp, { once: true }); addEventListener('pointercancel', onUp, { once: true }); }
+
+const pointers = new Map(); let pinch = null;
+const lift = (e) => { pointers.delete(e.pointerId); if (pointers.size < 2) pinch = null; };
+addEventListener('pointerup', lift); addEventListener('pointercancel', lift);
+board.addEventListener('pointerdown', (e) => {
+  pointers.set(e.pointerId, [e.clientX, e.clientY]);
+  if (pointers.size === 2) { const [a, b] = [...pointers.values()]; pinch = { d: Math.hypot(a[0] - b[0], a[1] - b[1]), z: view.z }; drag = null; return; }
+  const [wx, wy] = toWorld(e.clientX, e.clientY), i = at(wx, wy);
+  if (i >= 0) { const d = laid[i]; drag = { kind: 'laid', d, dx: wx - d.gx, dy: wy - d.gy, from: [d.gx, d.gy] }; }
+  else { drag = { kind: 'pan', sx: e.clientX, sy: e.clientY, vx: view.x, vy: view.y }; board.classList.add('panning'); }
+  capture(e);
+});
+function onMove(e) {
+  if (pointers.has(e.pointerId)) pointers.set(e.pointerId, [e.clientX, e.clientY]);
+  if (pinch && pointers.size === 2) { const [a, b] = [...pointers.values()]; view.z = Math.min(4, Math.max(0.2, pinch.z * Math.hypot(a[0] - b[0], a[1] - b[1]) / pinch.d)); return draw(); }
+  if (!drag) return;
+  tray.classList.toggle('drop', drag.kind !== 'pan' && overTray(e));
+  if (drag.kind === 'tray') return moveGhost(e);
+  if (drag.kind === 'pan') { view.x = drag.vx - (e.clientX - drag.sx) / (CELL * view.z); view.y = drag.vy - (e.clientY - drag.sy) / (CELL * view.z); return draw(); }
+  const [wx, wy] = toWorld(e.clientX, e.clientY);
+  drag.d.gx = Math.round(wx - drag.dx); drag.d.gy = Math.round(wy - drag.dy); draw();
+}
+function onUp(e) {
+  removeEventListener('pointermove', onMove);
+  board.classList.remove('panning'); tray.classList.remove('drop');
+  const d = drag; drag = null; if (!d) return;
+  if (d.kind === 'tray') {
+    d.el.remove();
+    if (!overTray(e)) {
+      const [wx, wy] = toWorld(e.clientX, e.clientY), n = { t: d.t, gx: Math.floor(wx - 0.5), gy: Math.floor(wy), v: false };
+      if (fits(n)) { laid.push(n); trayTiles.splice(d.i, 1); drawTray(); }
+    }
+  } else if (d.kind === 'laid') {
+    if (overTray(e)) { laid.splice(laid.indexOf(d.d), 1); trayTiles.push(d.d.t); drawTray(); }
+    else if (!fits(d.d, d.d)) { [d.d.gx, d.d.gy] = d.from; }
+  }
+  save(); draw();
+}
+board.addEventListener('dblclick', (e) => {
+  const [wx, wy] = toWorld(e.clientX, e.clientY), i = at(wx, wy); if (i < 0) return;
+  const d = laid[i]; d.v = !d.v; if (!fits(d, d)) d.v = !d.v; save(); draw();
+});
+board.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const [wx, wy] = toWorld(e.clientX, e.clientY);
+  view.z = Math.min(4, Math.max(0.2, view.z * Math.exp(-e.deltaY * 0.0015)));
+  const [nx, ny] = toWorld(e.clientX, e.clientY); view.x += wx - nx; view.y += wy - ny; save(); draw();
+}, { passive: false });
+
+// ── drawing ──
+function draw() {
+  const r = board.getBoundingClientRect(), dpr = devicePixelRatio || 1;
+  if (cv.width !== Math.round(r.width * dpr) || cv.height !== Math.round(r.height * dpr)) { cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr); }
+  cx.setTransform(dpr, 0, 0, dpr, 0, 0); cx.clearRect(0, 0, r.width, r.height);
+  const s = CELL * view.z;
+  // the grid, faint, every cell; every fifth stronger (the five Aegean sets)
+  const [x0, y0] = toWorld(r.left, r.top), [x1, y1] = toWorld(r.right, r.bottom);
+  for (let gx = Math.floor(x0); gx <= x1; gx++) { const [sx] = toScreen(gx, 0); cx.strokeStyle = gx % 5 ? 'rgba(255,255,255,.04)' : 'rgba(255,255,255,.09)'; cx.beginPath(); cx.moveTo(sx, 0); cx.lineTo(sx, r.height); cx.stroke(); }
+  for (let gy = Math.floor(y0); gy <= y1; gy++) { const [, sy] = toScreen(0, gy); cx.strokeStyle = gy % 5 ? 'rgba(255,255,255,.04)' : 'rgba(255,255,255,.09)'; cx.beginPath(); cx.moveTo(0, sy); cx.lineTo(r.width, sy); cx.stroke(); }
+  // the path's joints: consecutive dominoes whose ends touch
+  for (let k = 1; k < laid.length; k++) {
+    const a = laid[k - 1], b = laid[k], ea = cells(a)[1], sb = cells(b)[0];
+    const [ax, ay] = toScreen(ea[0] + 0.5, ea[1] + 0.5), [bx, by] = toScreen(sb[0] + 0.5, sb[1] + 0.5);
+    const touch = Math.abs(ea[0] - sb[0]) + Math.abs(ea[1] - sb[1]) === 1, j = joint(a.t, b.t);
+    cx.strokeStyle = touch ? (j.matched ? '#7fd18b' : 'rgba(226,180,74,.8)') : 'rgba(156,194,255,.25)';
+    cx.lineWidth = touch ? 3 : 1.5; cx.setLineDash(touch ? [] : [4, 5]);
+    cx.beginPath(); cx.moveTo(ax, ay); cx.lineTo(bx, by); cx.stroke(); cx.setLineDash([]);
+    if (touch && !j.matched && s > 26) { cx.fillStyle = '#e2b44a'; cx.font = `600 ${Math.max(9, s * 0.24)}px ui-monospace, monospace`; cx.textAlign = 'center'; cx.fillText(`⊕${j.xor.toString(16).toUpperCase()}`, (ax + bx) / 2, (ay + by) / 2 - 4); }
+  }
+  // the dominoes
+  laid.forEach((d, k) => {
+    const [px, py] = toScreen(d.gx, d.gy), w = d.v ? s : 2 * s, h = d.v ? 2 * s : s, pad = Math.max(1, s * 0.05);
+    cx.fillStyle = k === lit ? '#ffe9a8' : '#f3efe4'; cx.strokeStyle = k === lit ? '#e2b44a' : '#c9ced4'; cx.lineWidth = k === lit ? 3 : 1;
+    cx.beginPath(); cx.roundRect(px + pad, py + pad, w - 2 * pad, h - 2 * pad, s * 0.14); cx.fill(); cx.stroke();
+    cx.strokeStyle = '#8f969d'; cx.lineWidth = 1; cx.beginPath();
+    if (d.v) { cx.moveTo(px + pad * 3, py + s); cx.lineTo(px + s - pad * 3, py + s); } else { cx.moveTo(px + s, py + pad * 3); cx.lineTo(px + s, py + s - pad * 3); }
+    cx.stroke();
+    cx.fillStyle = '#1b1f24'; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.font = `600 ${s * 0.44}px ui-monospace, monospace`;
+    cells(d).forEach(([gx, gy], h2) => { const [sx, sy] = toScreen(gx + 0.5, gy + 0.5); cx.fillText(d.t.faces[h2], sx, sy); });
+    if (s > 22) {
+      cx.font = `${s * 0.2}px ui-monospace, monospace`; cx.fillStyle = '#6b737b'; cx.textAlign = 'left'; cx.textBaseline = 'top';
+      cx.fillText(`${k + 1}${d.t.braille ? ' ' + d.t.braille : ''}`, px + pad * 3, py + pad * 2);
+    }
+  });
+  readout();
+}
+addEventListener('resize', draw);
+
+// ── the readout: the path's parity, the gate's port for it, the block design's turn ──
+function readout() {
+  const path = laid.map((d) => d.t), p = parityOf(path), touching = [], base = 8736;
+  for (let k = 1; k < laid.length; k++) { const ea = cells(laid[k - 1])[1], sb = cells(laid[k])[0]; if (Math.abs(ea[0] - sb[0]) + Math.abs(ea[1] - sb[1]) === 1) touching.push(joint(laid[k - 1].t, laid[k].t)); }
+  const matched = touching.filter((j) => j.matched).length, digits = path.filter((t) => t.kind === 'repetend').length * 2;
+  const g = (a, b) => (b ? g(b, a % b) : a), turn = digits ? (digits * 5) / g(digits, 5) : 0;
+  $('readout').innerHTML = laid.length
+    ? `path <b>${laid.length}</b> dominoes · joined end to end <b>${touching.length}</b>, matched <b>${matched}</b> · parity (all halves XORed) <b>${p.toString(16).toUpperCase()}</b> = ${p}, the gate's port on 8736..8751 <b>${base | (p ^ portParity(base))}</b>${digits ? ` · ${digits} digits through the five Aegean sets come round after <b>${turn}</b>` : ''}${lit >= 0 ? ` · cue on domino <b>${lit + 1}</b>` : ''}`
+    : 'The board is empty. Make tiles, then drag them on.';
+}
+
+// ── tiles from the controls ──
+const pick = $('pick'), word = $('word');
+pick.innerHTML = VARIATIONS.map((v) => `<option>${v.text}</option>`).join('');
+pick.value = 'YHWH';
+pick.addEventListener('change', () => { word.value = pick.value; });
+$('addRep').addEventListener('click', () => {
+  const q = +$('q').value, b = +$('b').value;
+  try {
+    const ts = repetendDominoes(q, b);
+    if (!ts.length) { $('readout').textContent = `1/${q} ends in base ${b} (0.${repetendOf(q, b).pre.join('')}): no repetend, no dominoes.`; return; }
+    if (ts.length > 256) { $('readout').textContent = `1/${q} in base ${b} repeats over ${ts.length * 2} digits; the tray takes 512 at most.`; return; }
+    trayTiles.push(...ts); label = `1-${q}-base-${b}`; drawTray(); save();
+  } catch (err) { $('readout').textContent = String(err.message ?? err); }
+});
+$('addLex').addEventListener('click', () => { if (!word.value) return; trayTiles.push(...lexemeDominoes(word.value)); label = word.value; drawTray(); save(); });
+$('clear').addEventListener('click', () => { trayTiles.push(...laid.map((d) => d.t)); laid = []; lit = -1; drawTray(); save(); draw(); });
+
+// ── the path as a text track ──
+const vttUrl = () => URL.createObjectURL(new Blob([vttOf(laid.map((d) => d.t), label)], { type: 'text/vtt' }));
+$('vtt').addEventListener('click', () => { if (!laid.length) return; const a = document.createElement('a'); a.href = vttUrl(); a.download = `${label}.vtt`; a.click(); });
+// a silent clip as long as the path, so the track's cues enter in time and the portal tells every room
+function silence(seconds) {
+  const rate = 8000, n = rate * seconds, buf = new ArrayBuffer(44 + n), v = new DataView(buf), w = (o, s) => [...s].forEach((c, i) => v.setUint8(o + i, c.charCodeAt(0)));
+  w(0, 'RIFF'); v.setUint32(4, 36 + n, true); w(8, 'WAVEfmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, rate, true); v.setUint32(28, rate, true); v.setUint16(32, 1, true); v.setUint16(34, 8, true); w(36, 'data'); v.setUint32(40, n, true);
+  new Uint8Array(buf, 44).fill(128);
+  return URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
+}
+let media = null;
+$('play').addEventListener('click', () => {
+  if (!laid.length) return;
+  media?.remove(); media = document.createElement('audio'); media.src = silence(laid.length + 1); document.body.appendChild(media);
+  attachTrack(media, vttUrl(), label); media.play().catch(() => {});
+});
+// every cue the portal carries: this path's own cues light their domino; any other room's cue steps the path on
+const own = () => label.replace(/[^A-Za-z0-9_-]+/g, '-') || 'path';
+onCue((c) => {
+  if (!laid.length) return;
+  const m = c.id.match(/^(.*)-(\d+)$/);
+  lit = m && m[1] === own() ? +m[2] - 1 : (lit + 1) % laid.length;
+  draw();
+});
+
+drawTray(); draw();
+</script>
+</body>
+</html>

@@ -939,3 +939,28 @@ test("The domino cube: a word's bytes three at a time are cells of the 256-cube,
   const [a] = onFace([10, 20, 30], '+z'), [b] = onFace([10, 20, 30], '-z');
   assert.ok(Math.abs(a + b - 1) < 1e-12, 'the back face mirrors the front');
 });
+
+test("Dominoes: the extended slide rule; a repetend two digits a domino through the five Aegean sets, a lexeme a byte a domino, a path a text track", async () => {
+  const { repetendOf, repetendDominoes, lexemeDominoes, parityOf, joint, vttOf, aegeanOf, AEGEAN_SETS } = await import('../../space/src/dominoes.ts');
+  const { tagParity } = await import('../../rosetta/src/agent.ts');
+  assert.deepEqual(repetendOf(17).digits.join(''), '0588235294117647', '1/17 repeats over 16');
+  assert.deepEqual(repetendOf(6), { pre: [1], digits: [6] }, '1/6 = 0.1(6)');
+  assert.deepEqual(repetendOf(8).digits, [], '1/8 ends');
+  const pairs = repetendDominoes(17).map((t) => t.halves[0] * 10 + t.halves[1]);
+  assert.deepEqual(pairs, [5, 88, 23, 52, 94, 11, 76, 47], "the author's 0.05..88...23..52...94..11...76..47");
+  for (let k = 0; k < 4; k++) assert.equal(pairs[k]! + pairs[k + 4]!, 99, 'each pair and the pair four after it sum to 99');
+  assert.equal(repetendDominoes(7, 10).length, 3, '1/7: six digits, three dominoes');
+  assert.equal(repetendDominoes(3, 10).length, 1, '1/3: one digit, taken twice to close a domino');
+  assert.equal(AEGEAN_SETS.length, 5, 'ONE, TEN, ONE HUNDRED, ONE THOUSAND, TEN THOUSAND');
+  assert.equal(aegeanOf(1, 0), '\u{10107}'); assert.equal(aegeanOf(9, 4), '\u{10133}', 'NINETY THOUSAND'); assert.equal(aegeanOf(0, 2), '·');
+  assert.equal(aegeanOf(1, 5), aegeanOf(1, 0), 'the sets cycle every five places');
+  const m = lexemeDominoes('METATRON');
+  assert.equal(m.length, 8); assert.deepEqual(m[0]!.halves, [4, 13], "M = 0x4D"); assert.equal(m[0]!.braille, '\u{284D}');
+  for (const tag of ['METATRON', 'SOLOMON', 'SOLON', 'ASABIYAH', 'ENOCH', 'SPEAKER', 'GENESIS', 'OBSERVER'])
+    assert.equal(parityOf(lexemeDominoes(tag)), tagParity(tag), `${tag}: the path's parity is the gate's nibble`);
+  assert.deepEqual(joint({ halves: [1, 2] }, { halves: [2, 5] }), { matched: true, xor: 0 });
+  assert.deepEqual(joint({ halves: [1, 2] }, { halves: [7, 5] }), { matched: false, xor: 5 });
+  const v = vttOf(lexemeDominoes('YAH'), 'YAH');
+  assert.match(v, /^WEBVTT/); assert.equal(v.match(/-->/g)!.length, 3, 'one cue a domino');
+  assert.match(v, /YAH-2\n00:00:01\.000 --> 00:00:02\.000\nYAH 2: 4\|1/, 'a second a cue, its id the label and the place');
+});
