@@ -1,6 +1,13 @@
 // The mouse: change any CSS variable, any attribute, any property of any element of the page with the mouse alone.
 // The author, 2026-11-04: "i want to vhane any css variable any dom vataible any jsdom binding, a mosue shoud be the
-// only thing i need to do any fuckig thing". Carried by the portal into every room.
+// only thing i need to do any fuckig thing", then "its not only use miouse dumy, its that we only have one fucking
+// function atomix compare and exchange". Carried by the portal into every room.
+//
+// One function writes: Atomics.compareExchange. Each value lives in its own memory, its UTF-8 and zeros after, grown
+// when a longer value needs the room (no limit on the values or their length); a change is the bytes exchanged, each
+// from what it was to what it will be, and if any byte is not what was expected (another writer was there first) the
+// bytes already exchanged are exchanged back and the change is refused. The DOM and the CSS are the view: after an
+// exchange the element is given the value as read back from the memory.
 //
 // The round button at the bottom right picks: the next click selects the element under it (the page does not get
 // that click), and the panel shows the element's CSS variables (every --name the page's style sheets and inline
@@ -19,6 +26,39 @@ type Item = { kind: 'var' | 'attr' | 'prop'; name: string; get: () => string; se
 const NUM = /^(-?\d*\.?\d+(?:e[-+]?\d+)?)([a-z%]*)$/i;
 const COLOR = /^(#[0-9a-f]{3,8}|rgba?\(.*\)|hsla?\(.*\))$/i;
 const WORDS = ['YHWH', 'YAHWEH', 'YAH', 'GOD IS WORD', 'GOD OF WORD', 'GOD WAS WORD', 'WORD IS GOD', 'WORD OF GOD', 'WORD WAS GOD'];
+
+/** A value's memory: its UTF-8, zeros after; grown when a value needs more room, never limited. */
+export type Cell = { mem: Uint8Array };
+const enc = new TextEncoder(), dec = new TextDecoder();
+/** All the cells the mouse holds, for any other reader (window.commonsMemory). */
+export const MEMORY: Cell[] = [];
+/** A cell's value, read back. */
+export function readCell(c: Cell): string {
+  const n = c.mem.indexOf(0);
+  return dec.decode(c.mem.subarray(0, n < 0 ? c.mem.length : n));
+}
+/** The one write: each byte compare-exchanged from what it was to what it will be; all or none. The room grows first
+ *  if the new value needs it (the old bytes carried over as they are), so the exchange is never refused for size. */
+export function exchangeCell(c: Cell, from: string, to: string): boolean {
+  const a = enc.encode(from), b = enc.encode(to);
+  if (b.length >= c.mem.length) { const m = new Uint8Array(2 ** Math.ceil(Math.log2(b.length + 1))); m.set(c.mem); c.mem = m; }
+  for (let i = 0; i < c.mem.length; i++) {
+    const was = a[i] ?? 0, next = b[i] ?? 0;
+    if (Atomics.compareExchange(c.mem, i, was, next) !== was) {
+      for (let j = 0; j < i; j++) Atomics.compareExchange(c.mem, j, b[j] ?? 0, a[j] ?? 0);
+      return false;
+    }
+    if (i >= Math.max(a.length, b.length)) break;
+  }
+  return true;
+}
+/** An item held in its cell: its value read from the cell, written only by the exchange, the element the view. */
+function held(kind: Item['kind'], name: string, was: string, view: (v: string) => void): Item {
+  const c: Cell = { mem: new Uint8Array(16) };
+  MEMORY.push(c);
+  exchangeCell(c, '', was);
+  return { kind, name, was, get: () => readCell(c), set: (v) => { if (exchangeCell(c, readCell(c), v)) view(readCell(c)); } };
+}
 
 /** Every custom property the page declares, from its style sheets and inline styles. */
 export function customProperties(doc: Document = document): string[] {
@@ -51,12 +91,11 @@ export const cellOf = (byte: number) => String.fromCodePoint(0x2800 + byte);
 function itemsOf(el: Element): Item[] {
   const items: Item[] = [], h = el as HTMLElement, cs = getComputedStyle(el);
   for (const name of customProperties(el.ownerDocument)) {
-    const was = cs.getPropertyValue(name).trim();
-    items.push({ kind: 'var', name, was, get: () => getComputedStyle(el).getPropertyValue(name).trim(), set: (v) => h.style.setProperty(name, v) });
+    items.push(held('var', name, cs.getPropertyValue(name).trim(), (v) => h.style.setProperty(name, v)));
   }
   for (const a of Array.from(el.attributes)) {
     if (a.name === 'style') continue;
-    items.push({ kind: 'attr', name: a.name, was: a.value, get: () => el.getAttribute(a.name) ?? '', set: (v) => el.setAttribute(a.name, v) });
+    items.push(held('attr', a.name, a.value, (v) => el.setAttribute(a.name, v)));
   }
   const props = new Set<string>(Object.keys(el));
   for (const p of ['hidden', 'title', 'value', 'checked', 'disabled', 'open', 'currentTime', 'volume', 'playbackRate']) if (p in el) props.add(p);
@@ -64,11 +103,7 @@ function itemsOf(el: Element): Item[] {
   for (const p of props) {
     const v = (el as unknown as Record<string, unknown>)[p];
     if (v !== null && typeof v === 'object' || typeof v === 'function') continue;
-    const was = String(v);
-    items.push({
-      kind: 'prop', name: p, was, get: () => String((el as unknown as Record<string, unknown>)[p]),
-      set: (s) => { const r = el as unknown as Record<string, unknown>; r[p] = typeof v === 'boolean' ? s === 'true' : typeof v === 'number' ? Number(s) : s; },
-    });
+    items.push(held('prop', p, String(v), (s) => { const r = el as unknown as Record<string, unknown>; r[p] = typeof v === 'boolean' ? s === 'true' : typeof v === 'number' ? Number(s) : s; }));
   }
   return items;
 }
@@ -203,4 +238,5 @@ class CommonsMouse extends HTMLElement {
 }
 
 if (!customElements.get('commons-mouse')) customElements.define('commons-mouse', CommonsMouse);
+if (typeof window !== 'undefined') (window as unknown as { commonsMemory: Cell[] }).commonsMemory = MEMORY;
 if (typeof document !== 'undefined' && !document.querySelector('commons-mouse')) document.body?.appendChild(document.createElement('commons-mouse'));

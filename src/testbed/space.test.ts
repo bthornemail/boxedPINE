@@ -977,3 +977,16 @@ test("The mouse: a number scrubbed by a drag, a byte as a Braille cell's eight d
   assert.deepEqual(dotsOf(0x59), [1, 0, 0, 1, 1, 0, 1, 0], 'Y is dots 1, 4, 5, 7');
   assert.equal(cellOf(0x59), '⡙');
 });
+
+test("The mouse's one write: a value's bytes compare-exchanged all or none, its room grown, never limited", async () => {
+  const { exchangeCell, readCell } = await import('../../space/src/mouse.ts');
+  const c = { mem: new Uint8Array(4) };
+  assert.ok(exchangeCell(c, '', 'YHWH')); assert.equal(readCell(c), 'YHWH');
+  assert.ok(exchangeCell(c, 'YHWH', 'YAH')); assert.equal(readCell(c), 'YAH', 'the shorter value: the bytes after it exchanged to zero');
+  assert.equal(exchangeCell(c, 'YHWH', 'GOD'), false, 'expected YHWH, found YAH: refused');
+  assert.equal(readCell(c), 'YAH', 'a refused change leaves every byte as it was');
+  c.mem[2] = 0x5A;	// another writer changes the third byte
+  assert.equal(exchangeCell(c, 'YAH', 'WORD'), false); assert.equal(readCell(c), 'YAZ', 'the first two bytes exchanged back');
+  const long = 'In the beginning God created the heaven and the earth. '.repeat(40);
+  assert.ok(exchangeCell(c, 'YAZ', long)); assert.equal(readCell(c), long, `${long.length} bytes: the room grown, no limit`);
+});
