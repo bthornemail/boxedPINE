@@ -1,5 +1,7 @@
 # pinEboxed
 
+A metaverse building kit based on an autonomous continuum of the Agent Commons in Plan 9: a real-time, infinite world generation.
+
 An Obsidian vault and Obsidian plugin for the OMI-IMO protocol — an Atomic Compare-and-Exchange Lisp.
 
 ## The Protocol
