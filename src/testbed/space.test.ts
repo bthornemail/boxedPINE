@@ -925,3 +925,17 @@ test('The variations: fifteen words on the 60-in-64 dial at their 6-dot cells\' 
   assert.equal(TIME, 60);
   assert.throws(() => slotOf('Yhwh'), /not a 6-dot letter/, 'lower case is not in the table: the letters are the capitals');
 });
+
+test("The domino cube: a word's bytes three at a time are cells of the 256-cube, its dominoes a closed loop, laid one a step frame", async () => {
+  const { cellsOf, dominoesOf, periodOf, onFace, FACES } = await import('../../space/src/domino-cube.ts');
+  assert.deepEqual(cellsOf('YHWH'), [[89, 72, 87], [72, 0, 0]], 'YHWH: Y H W, then H padded');
+  const ds = dominoesOf('YHWH');
+  assert.equal(ds.length, 2);
+  assert.deepEqual(ds.at(-1)!.to, ds[0]!.from, 'the last domino returns to the first cell: a loop');
+  assert.deepEqual(periodOf('YHWH'), { period: 2, together: 30 });
+  assert.deepEqual(periodOf('GOD IS WORD'), { period: 4, together: 60 }, '11 bytes, 4 cells; lcm(4, 30) = 60 frames');
+  assert.equal(Object.keys(FACES).length, 6, 'six faces, +-x +-y +-z');
+  for (const f of Object.keys(FACES) as (keyof typeof FACES)[]) { const [u, v] = onFace([0, 0, 0], f); assert.ok(u > 0 && u < 1 && v > 0 && v < 1); }
+  const [a] = onFace([10, 20, 30], '+z'), [b] = onFace([10, 20, 30], '-z');
+  assert.ok(Math.abs(a + b - 1) < 1e-12, 'the back face mirrors the front');
+});
