@@ -964,3 +964,16 @@ test("Dominoes: the extended slide rule; a repetend two digits a domino through 
   assert.match(v, /^WEBVTT/); assert.equal(v.match(/-->/g)!.length, 3, 'one cue a domino');
   assert.match(v, /YAH-2\n00:00:01\.000 --> 00:00:02\.000\nYAH 2: 4\|1/, 'a second a cue, its id the label and the place');
 });
+
+test("The mouse: a number scrubbed by a drag, a byte as a Braille cell's eight dots", async () => {
+  (globalThis as unknown as { HTMLElement: unknown }).HTMLElement ??= class {};
+  (globalThis as unknown as { customElements: unknown }).customElements ??= { get: () => true, define: () => {} };
+  const { scrub, dotsOf, cellOf } = await import('../../space/src/mouse.ts');
+  assert.equal(scrub('17', 10), '27', 'an integer steps by 1 a unit of drag');
+  assert.equal(scrub('12px', -3), '9px', 'the unit kept');
+  assert.equal(scrub('0.5', 2), '0.7', 'one decimal place, a step of 0.1');
+  assert.equal(scrub('300', 1), '305', 'a large number steps by 5');
+  assert.equal(scrub('red', 4), 'red', 'not a number: unchanged');
+  assert.deepEqual(dotsOf(0x59), [1, 0, 0, 1, 1, 0, 1, 0], 'Y is dots 1, 4, 5, 7');
+  assert.equal(cellOf(0x59), '⡙');
+});

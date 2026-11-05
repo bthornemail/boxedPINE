@@ -217,6 +217,7 @@ class CommonsPortal extends HTMLElement {
     list();
   }
 }
+import './mouse.ts';
 if (!customElements.get('commons-portal')) customElements.define('commons-portal', CommonsPortal);
 if (!document.querySelector('commons-portal')) document.body?.appendChild(document.createElement('commons-portal'));
 
